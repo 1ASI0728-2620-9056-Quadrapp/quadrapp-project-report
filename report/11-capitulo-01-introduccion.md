@@ -50,11 +50,11 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
       <td>Descripción por completar.</td>
     </tr>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="../assets/capitulo-01/piero-sulca.jpg" alt="Sulca Sanchez, Piero Angel" width="160"></td>
       <td>Sulca Sanchez, Piero Angel</td>
-      <td>Por completar</td>
+      <td>u202423711</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Curso la carrera de Ingeniería de Software y tengo experiencia en desarrollo web trabajando con equipos pequeños. Me apasiona el Front End, sobre todo cuando hay espacio para el diseño creativo: interfaces 3D, animaciones, productos que se ven y se sienten distintos. En el equipo puedo aportar en levantamiento de requerimientos, diseño de interfaces, desarrollo web con React y TypeScript, diseño de bases de datos. En el equipo aporto organización y colaboración.</td>
     </tr>
   </tbody>
 </table>

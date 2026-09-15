@@ -24,4 +24,4 @@
 | Bejarano Martinez, Alvaro Leandro | Por completar |
 | Melgarejo Gomez, Marcia Victoria | Por completar |
 | Nanfuñay Liza, Pedro Jesus | Por completar |
-| Sulca Sanchez, Piero Angel | Por completar |
+| Sulca Sanchez, Piero Angel | u202423711 |
