@@ -286,11 +286,11 @@ Frente a esta problemática, Quadrapp busca atender inicialmente a conductores d
 8. Nuestra principal competencia serán plataformas de estacionamiento como Apparka, sistemas tradicionales de control de acceso y soluciones de parking inteligente orientadas principalmente a mostrar disponibilidad actual, gestionar pagos o automatizar el ingreso de vehículos.
 9. Nuestro mayor riesgo es que la predicción de disponibilidad no alcance un nivel de precisión suficiente para generar confianza en los conductores, debido a información incompleta, fallas en sensores o cambios inesperados en el comportamiento de ocupación del estacionamiento.
 10. ¿Cuáles son las suposiciones que, si se demuestran falsas, harán que el proyecto fracase?
-  - Los conductores no considerarán útil una predicción si perciben diferencias frecuentes entre la probabilidad mostrada y la disponibilidad real al momento de llegar.
-  - Las universidades podrían no estar dispuestas a invertir en infraestructura IoT, cámaras y dispositivos Edge si el beneficio operativo no justifica su costo de implementación.
-  - La cantidad y calidad de los datos históricos podría ser insuficiente para generar predicciones confiables durante las primeras etapas de adopción.
-  - Las fallas en sensores, cámaras o conectividad podrían afectar la información utilizada para calcular la ocupación y disponibilidad futura.
-  - Los usuarios podrían continuar prefiriendo métodos tradicionales de ingreso y pago si los procesos automatizados no reducen significativamente los tiempos de espera.
+    - Los conductores no considerarán útil una predicción si perciben diferencias frecuentes entre la probabilidad mostrada y la disponibilidad real al momento de llegar.
+    - Las universidades podrían no estar dispuestas a invertir en infraestructura IoT, cámaras y dispositivos Edge si el beneficio operativo no justifica su costo de implementación.
+    - La cantidad y calidad de los datos históricos podría ser insuficiente para generar predicciones confiables durante las primeras etapas de adopción.
+    - Las fallas en sensores, cámaras o conectividad podrían afectar la información utilizada para calcular la ocupación y disponibilidad futura.
+    - Los usuarios podrían continuar prefiriendo métodos tradicionales de ingreso y pago si los procesos automatizados no reducen significativamente los tiempos de espera.
 
 **Business Outcomes:**
 1. Lograr que al menos una institución educativa implemente un piloto de Quadrapp durante el primer año de operación.
@@ -305,31 +305,31 @@ Frente a esta problemática, Quadrapp busca atender inicialmente a conductores d
 Conductores de la comunidad educativa (estudiantes, docentes y personal administrativo) que se trasladen regularmente al campus, y administradores de estacionamientos universitarios responsables de supervisar la ocupación y operación de dichos espacios.
 
 2. ¿Dónde encajaría nuestro producto en la vida o trabajo del usuario?
-  - Para los conductores: Antes y durante su desplazamiento hacia la universidad, utilizando la aplicación móvil para consultar disponibilidad actual, conocer la probabilidad de encontrar un espacio al momento estimado de llegada, realizar reservas y gestionar su acceso al estacionamiento.
-  - Para los administradores: Durante la operación diaria del estacionamiento, utilizando un dashboard para supervisar la ocupación, revisar accesos, reservas, comportamiento histórico y períodos de mayor demanda.
+    - Para los conductores: Antes y durante su desplazamiento hacia la universidad, utilizando la aplicación móvil para consultar disponibilidad actual, conocer la probabilidad de encontrar un espacio al momento estimado de llegada, realizar reservas y gestionar su acceso al estacionamiento.
+    - Para los administradores: Durante la operación diaria del estacionamiento, utilizando un dashboard para supervisar la ocupación, revisar accesos, reservas, comportamiento histórico y períodos de mayor demanda.
 
 3. ¿Qué problemas resuelve el producto para el usuario?
-  - Incertidumbre sobre la disponibilidad de estacionamientos al momento de llegar al campus.
-  - Tiempo perdido recorriendo estacionamientos sin espacios disponibles.
-  - Congestión generada durante los horarios de mayor demanda.
-  - Falta de información anticipada para planificar y decidir hacia qué estacionamiento dirigirse.
-  - Procesos manuales o poco eficientes para controlar el ingreso y salida de vehículos.
+    - Incertidumbre sobre la disponibilidad de estacionamientos al momento de llegar al campus.
+    - Tiempo perdido recorriendo estacionamientos sin espacios disponibles.
+    - Congestión generada durante los horarios de mayor demanda.
+    - Falta de información anticipada para planificar y decidir hacia qué estacionamiento dirigirse.
+    - Procesos manuales o poco eficientes para controlar el ingreso y salida de vehículos.
 
 4. ¿En qué contexto utiliza el usuario el producto?
-  - Los conductores utilizarán principalmente la aplicación móvil mientras planifican o realizan su desplazamiento hacia el campus, consultando la disponibilidad actual y estimada según su tiempo aproximado de llegada.
-  - Los administradores utilizarán el dashboard durante la jornada académica para supervisar el estado de los estacionamientos, revisar períodos de alta ocupación y controlar los procesos de ingreso y salida.
+    - Los conductores utilizarán principalmente la aplicación móvil mientras planifican o realizan su desplazamiento hacia el campus, consultando la disponibilidad actual y estimada según su tiempo aproximado de llegada.
+    - Los administradores utilizarán el dashboard durante la jornada académica para supervisar el estado de los estacionamientos, revisar períodos de alta ocupación y controlar los procesos de ingreso y salida.
 
 5. ¿Qué características son esenciales para el usuario? ¿Y por qué?
-  - Predicción de disponibilidad futura: Permite conocer la probabilidad de encontrar un espacio en tiempo real mientras el conductor se encuentre desplazando a su punto de llegada.
-  - Disponibilidad en tiempo real: Proporciona información actualizada sobre espacios libres y ocupados.
-  - Reservas de estacionamiento: Permite asegurar un espacio cuando el usuario lo requiera, realizando el pago correspondiente.
-  - Reconocimiento automático de placas: Agiliza los procesos de ingreso, salida y asociación del vehículo con el usuario.
-  - Acceso mediante QR: Funciona como alternativa cuando el reconocimiento de placas no pueda realizarse correctamente.
-  - Dashboard de gestión: Permite a los administradores analizar ocupación, demanda y patrones históricos del estacionamiento.
+    - Predicción de disponibilidad futura: Permite conocer la probabilidad de encontrar un espacio en tiempo real mientras el conductor se encuentre desplazando a su punto de llegada.
+    - Disponibilidad en tiempo real: Proporciona información actualizada sobre espacios libres y ocupados.
+    - Reservas de estacionamiento: Permite asegurar un espacio cuando el usuario lo requiera, realizando el pago correspondiente.
+    - Reconocimiento automático de placas: Agiliza los procesos de ingreso, salida y asociación del vehículo con el usuario.
+    - Acceso mediante QR: Funciona como alternativa cuando el reconocimiento de placas no pueda realizarse correctamente.
+    - Dashboard de gestión: Permite a los administradores analizar ocupación, demanda y patrones históricos del estacionamiento.
 
 6. ¿Cómo debería verse y comportarse el producto?
-  - La aplicación móvil debe mostrar de manera clara la disponibilidad actual del estacionamiento y la probabilidad estimada de encontrar un espacio al momento de llegada, evitando presentar la predicción como una garantía absoluta.
-  - El aplicación web debe centralizar la ocupación actual, reservas, ingresos, salidas,información histórica y predicciones, presentando los datos de forma comprensible en un dashboard para apoyar la toma de decisiones del administrador.
+    - La aplicación móvil debe mostrar de manera clara la disponibilidad actual del estacionamiento y la probabilidad estimada de encontrar un espacio al momento de llegada, evitando presentar la predicción como una garantía absoluta.
+    - El aplicación web debe centralizar la ocupación actual, reservas, ingresos, salidas,información histórica y predicciones, presentando los datos de forma comprensible en un dashboard para apoyar la toma de decisiones del administrador.
 
 **User Outcomes:**
 1. Los conductores quieren reducir la incertidumbre antes de dirigirse hacia un estacionamiento, conociendo qué tan probable es encontrar un espacio cuando lleguen al campus.
@@ -340,32 +340,42 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
 
 **Features Assumptions:**
 1. **Predicción de disponibilidad futura**
-- Suposición: Si combinamos la ocupación actual obtenida mediante IoT con reservas, vehículos próximos al campus, datos históricos, fecha, hora, horarios académicos y tiempo estimado de llegada, podremos calcular una probabilidad útil de encontrar un espacio disponible cuando el conductor llegue.
-- Riesgo: Si la predicción presenta errores frecuentes debido a cambios inesperados en la demanda o datos insuficientes, los conductores podrían perder confianza en la funcionalidad.
+    - Suposición: Si combinamos la ocupación actual obtenida mediante IoT con reservas, vehículos próximos al campus, datos históricos, fecha, hora, horarios académicos y tiempo estimado de llegada, podremos calcular una probabilidad útil de encontrar un espacio disponible cuando el conductor llegue.
+    - Riesgo: Si la predicción presenta errores frecuentes debido a cambios inesperados en la demanda o datos insuficientes, los conductores podrían perder confianza en la funcionalidad.
 
 2. **Monitoreo de ocupación mediante IoT**
-- Suposición: Los sensores IoT permitirán identificar cambios de ocupación en los espacios de estacionamiento y mantener actualizada la información utilizada por la aplicación y el sistema de predicción.
-- Riesgo: Fallas en sensores, problemas de conectividad o lecturas incorrectas podrían provocar diferencias entre la ocupación registrada por el sistema y la ocupación real.
+    - Suposición: Los sensores IoT permitirán identificar cambios de ocupación en los espacios de estacionamiento y mantener actualizada la información utilizada por la aplicación y el sistema de predicción.
+    - Riesgo: Fallas en sensores, problemas de conectividad o lecturas incorrectas podrían provocar diferencias entre la ocupación registrada por el sistema y la ocupación real.
 
 3. **Procesamiento mediante Edge Computing**
-- Suposición: Procesar localmente eventos relacionados con sensores, cámaras, ingresos y salidas permitirá responder rápidamente ante cambios de ocupación y reducir la dependencia constante de servicios externos o de la nube.
-- Riesgo: La distribución del procesamiento entre dispositivos Edge y servicios centrales podría aumentar la complejidad de sincronización, mantenimiento y recuperación ante fallos.
+    - Suposición: Procesar localmente eventos relacionados con sensores, cámaras, ingresos y salidas permitirá responder rápidamente ante cambios de ocupación y reducir la dependencia constante de servicios externos o de la nube.
+    - Riesgo: La distribución del procesamiento entre dispositivos Edge y servicios centrales podría aumentar la complejidad de sincronización, mantenimiento y recuperación ante fallos.
 
 4. **Reconocimiento automático de placas**
-- Suposición: Utilizar cámaras para reconocer las placas permitirá identificar automáticamente a los vehículos autorizados y agilizar los procesos de ingreso, salida y cobro del estacionamiento.
-- Riesgo: Factores como iluminación, suciedad, posición del vehículo o deterioro de la placa podrían impedir una identificación correcta y generar demoras en el acceso.
+    - Suposición: Utilizar cámaras para reconocer las placas permitirá identificar automáticamente a los vehículos autorizados y agilizar los procesos de ingreso, salida y cobro del estacionamiento.
+    - Riesgo: Factores como iluminación, suciedad, posición del vehículo o deterioro de la placa podrían impedir una identificación correcta y generar demoras en el acceso.
 
 5. **Acceso alternativo mediante QR**
-- Suposición: Proporcionar un código QR permitirá que el conductor pueda ingresar o salir del estacionamiento cuando el reconocimiento automático de placas falle, evitando depender de tickets físicos.
-- Riesgo: Si el mecanismo alternativo requiere demasiados pasos o genera demoras durante horas punta, podría ocasionar colas en los puntos de acceso.
+    - Suposición: Proporcionar un código QR permitirá que el conductor pueda ingresar o salir del estacionamiento cuando el reconocimiento automático de placas falle, evitando depender de tickets físicos.
+    - Riesgo: Si el mecanismo alternativo requiere demasiados pasos o genera demoras durante horas punta, podría ocasionar colas en los puntos de acceso.
 
 6. **Dashboard de gestión y análisis**
-- Suposición: Los administradores utilizarán un dashboard con información sobre ocupación actual, datos históricos, predicciones, reservas e ingresos para identificar patrones de demanda y mejorar la gestión de los estacionamientos.
-- Riesgo: Si la información presentada es difícil de interpretar o no permite tomar acciones concretas, los administradores podrían continuar utilizando métodos tradicionales de gestión.
+    - Suposición: Los administradores utilizarán un dashboard con información sobre ocupación actual, datos históricos, predicciones, reservas e ingresos para identificar patrones de demanda y mejorar la gestión de los estacionamientos.
+    - Riesgo: Si la información presentada es difícil de interpretar o no permite tomar acciones concretas, los administradores podrían continuar utilizando métodos tradicionales de gestión.
 
 #### 1.2.2.3. Lean UX Hypothesis Statements
 
-*Pendiente de elaboración.*
+- Creemos que los conductores reducirán el tiempo que dedican a buscar estacionamiento si pueden conocer la probabilidad de encontrar un espacio al momento de su llegada. Lo sabremos cuando al menos el 60 % consulte la predicción antes de ingresar al campus, la precisión alcance un mínimo del 80 % y el tiempo de búsqueda se reduzca en al menos un 20 %.
+
+- Creemos que los sensores IoT permitirán mantener información confiable y actualizada sobre la ocupación de los estacionamientos. Lo confimaremos cuando la disponibilidad de los datos se mantenga por encima del 95 % durante el período piloto.
+
+- Creemos que el procesamiento local permitirá mantener el monitoreo del estacionamiento incluso cuando existan interrupciones temporales de conexión con la nube. Lo confirmaremos cuando los eventos continúen procesándose localmente y los datos pendientes puedan sincronizarse posteriormente sin pérdidas relevantes.
+
+- Creemos que el reconocimiento automático de placas agilizará el ingreso y salida de vehículos al reducir los procesos manuales de identificación. Lo sabremos cuando el tiempo promedio de acceso y salida disminuya al menos un 25 % respecto al proceso actual.
+
+- Creemos que el uso de códigos QR permitirá mantener un proceso de acceso rápido cuando el reconocimiento de placas falle. Lo confirmaremos cuando la mayoría de estos casos puedan resolverse mediante QR sin utilizar tickets físicos ni requerir intervención manual.
+
+- Creemos que los administradores podrán gestionar mejor los estacionamientos si cuentan con información centralizada sobre ocupación, reservas, historial y predicciones. Lo confirmaremos cuando utilicen el dashboard durante la operación diaria y la información les permita tomar decisiones sobre la disponibilidad y demanda de los espacios. Ahora continuemos con el Canvas.
 
 #### 1.2.2.4. Lean UX Canvas
 
