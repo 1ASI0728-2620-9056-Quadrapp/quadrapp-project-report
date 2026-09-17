@@ -379,7 +379,7 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
 
 #### 1.2.2.4. Lean UX Canvas
 
-*Pendiente de elaboración.*
+![LeanUXCanvas_Quadrapp](./assets/capitulo-01/LeanUXCanvas_Quadrapp.png)
 
 ## 1.3. Segmentos objetivo
 
