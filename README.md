@@ -514,7 +514,21 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
-*Pendiente de elaboración.*
+Frente a Apparka, Quadrapp no buscará competir únicamente mediante funciones como búsqueda de estacionamientos, pagos, reservas o reconocimiento de placas. La estrategia será diferenciarse mediante la predicción de disponibilidad futura, orientada específicamente a conductores que se desplazan hacia campus universitarios.
+
+Frente a ParkHelp, se buscará complementar el uso de sensores, cámaras y sistemas de monitoreo con una capa predictiva que transforme los datos obtenidos del estacionamiento en información útil para anticipar la disponibilidad al momento de llegada del conductor.
+
+Frente a ParkMobile, Quadrapp priorizará una experiencia adaptada al contexto universitario, incorporando información propia de la comunidad educativa, como horarios académicos, patrones históricos de ocupación y períodos recurrentes de alta demanda.
+
+**Tácticas principales:**
+- Implementar pilotos en universidades antes de realizar despliegues de mayor escala.
+- Recopilar datos históricos desde las primeras etapas para mejorar progresivamente las predicciones.
+- Medir de forma continua la precisión de la predicción y compararla con la disponibilidad real.
+- Mantener reconocimiento de placas como mecanismo principal de acceso y QR como alternativa.
+- Utilizar Edge Computing para mantener parte de la operación ante interrupciones de conectividad.
+- Mostrar a los administradores métricas de ocupación, demanda y comportamiento histórico mediante un dashboard.
+- Establecer alianzas directas con universidades para facilitar la adopción de la solución.
+- Utilizar los resultados de los pilotos como evidencia del impacto de Quadrapp en tiempos de búsqueda, flujo vehicular y utilización de los espacios.
 
 ## 2.2. Entrevistas
 
