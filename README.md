@@ -404,7 +404,33 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 4.2.4. Bounded Context Canvases
 
-*Pendiente de elaboración.*
+**Parking Sensing:**
+
+![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensing_Canvases.png)
+
+**Occupancy:**
+
+![Occupancy_Canvases](./assets/capitulo-04/Occupancy_Canvases.png)
+
+**Prediction & Advisory:**
+
+![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&Advisory_Canvases.png)
+
+**Parking Configuration:**
+
+![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfiguration_Canvases.png)
+
+**Notifications:**
+
+![Notifications_Canvases](./assets/capitulo-04/Notifications_Canvases.png)
+
+**Analytics:**
+
+![Analytics_Canvases](./assets/capitulo-04/Analytics_Canvases.png)
+
+**IAM:**
+
+![IAM_Canvases](./assets/capitulo-04/IAM_Canvases.png)
 
 ### 4.2.5. Context Mapping
 
