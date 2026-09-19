@@ -415,11 +415,9 @@ La literatura sobre estacionamientos universitarios relaciona la falta de dispon
 
 ### 2.2.1. Diseño de entrevistas
 
-Las entrevistas buscan validar el problema antes de proponer una solución: cuánto tiempo pierde realmente un conductor al buscar estacionamiento en el campus, con qué información cuenta al momento de salir de su casa y cómo el personal encargado del estacionamiento conoce y gestiona la ocupación. Se diseñó un guion por segmento objetivo, con preguntas abiertas que evitan mencionar Quadrapp durante el desarrollo de la conversación, de modo que el entrevistado describa su experiencia actual y no evalúe una propuesta.
+Las entrevistas buscan validar el problema antes de proponer una solución: cuánto tiempo pierde realmente un conductor al buscar estacionamiento en el campus, con qué información cuenta al momento de salir de su casa y cómo el personal encargado del estacionamiento conoce y gestiona la ocupación. Se diseñó un guion por segmento objetivo. Las preguntas priorizan la experiencia actual del entrevistado y los hechos recientes sobre las opiniones generales. Las referencias a la tecnología y los escenarios hipotéticos se utilizan para explorar actitudes y expectativas sin mencionar Quadrapp. Sus respuestas se analizarán como preferencias declaradas y no como evidencia de un comportamiento real.
 
 Cada guion se organiza en cuatro bloques. Las **preguntas de perfil** sitúan al entrevistado en su contexto y recogen sus hábitos, herramientas y disposición ante la tecnología. Las **preguntas principales** exploran el proceso tal como ocurre hoy, pidiendo que el entrevistado narre episodios concretos y recientes en lugar de opiniones generales. Las **preguntas complementarias** cubren situaciones excepcionales y restricciones del entorno. La **pregunta de cierre** proyecta el escenario deseado y abre espacio para lo que el guion no previó.
-
-Antes de iniciar la grabación se completa una ficha de datos generales, que toma alrededor de un minuto y aporta las variables objetivas y subjetivas que luego alimentan los User Personas y los Empathy Maps.
 
 **Ficha de datos generales del entrevistado**
 
@@ -469,33 +467,43 @@ Este segmento vive el problema en primera persona y de forma recurrente, por lo 
 
 #### Segmento 2: Administradores de estacionamientos universitarios
 
-Este segmento reúne a quienes supervisan la operación diaria del estacionamiento: jefes de logística y operaciones, supervisores de turno y operadores de puerta. El guion se concentra en cómo conocen hoy la ocupación de sus espacios, con qué herramientas cuentan, cómo reaccionan cuando el estacionamiento se satura y qué información les falta para anticiparse. Se indaga también en el registro manual de datos y en los reclamos que reciben, porque de ahí surgen los indicadores que la consola de operación deberá mostrar.
+Este segmento reúne a quienes supervisan la operación diaria del estacionamiento: jefes de logística y operaciones, supervisores de turno y operadores de puerta. El guion se concentra en cómo conocen la ocupación, cómo reaccionan ante la saturación y qué información necesitan para gestionar el estacionamiento. Para que la entrevista dure entre tres y cinco minutos, se plantean ocho preguntas breves. Las repreguntas entre paréntesis son opcionales y solo se utilizan cuando la respuesta principal no proporciona suficiente información.
+
+**Datos generales y de configuración del estacionamiento**
+
+| Dato | Detalle |
+| --- | --- |
+| Cargo y tiempo en el puesto | |
+| Responsabilidad en la operación | |
+| Campus y nombre del estacionamiento | |
+| Capacidad total | Cantidad de espacios |
+| Zonas | Cantidad y nombres |
+| Horario de funcionamiento | |
+| Accesos vehiculares | Cantidad de entradas y salidas |
+| Control de ingreso | Credencial, lista, barrera u otro mecanismo |
+| Equipamiento y sistemas actuales | Tipo, cantidad y ubicación general de cámaras, sensores, tranqueras, lectores u otros |
+| Personal por turno | Cantidad y funciones |
+| Responsable de aprobar cambios tecnológicos | Área o cargo |
 
 *Preguntas de perfil*
 
-1. Cuéntanos cuál es tu cargo, desde cuándo lo ocupas y qué estacionamientos o accesos están bajo tu responsabilidad.
-2. ¿Qué herramientas usas a diario en tu trabajo? ¿Qué tan cómodo te sientes incorporando tecnología nueva a la operación?
-3. ¿Cuántas personas participan en la operación diaria y cómo se coordinan entre ustedes durante el turno?
+1. ¿Cuál es tu función principal durante un turno habitual?
 
 *Preguntas principales*
 
-4. Descríbenos cómo funciona el estacionamiento: capacidad, horarios, zonas y control de ingreso.
-5. En este momento, ¿cómo sabes cuántos espacios libres hay? ¿Qué tan confiable es ese dato y cada cuánto lo actualizas?
-6. ¿Con qué frecuencia se llena? Cuéntanos qué haces cuando ocurre y cómo coordinas con el personal de vigilancia.
-7. ¿Registras las entradas, las salidas o la ocupación? ¿Cómo lo haces y cuánto tiempo te toma?
-8. ¿Alguien te pide reportes de ocupación? ¿Quién, con qué frecuencia y para qué los usa?
-9. Descríbenos el peor día que recuerdes en el estacionamiento. ¿Qué pasó y cómo lo resolviste?
-10. ¿Qué reclamos recibes y de parte de quién? ¿Cómo llegan hasta ti?
-11. ¿Qué información te falta hoy para tomar mejores decisiones? ¿Cómo sabes si un día la operación salió bien?
+2. Cuéntanos la última vez que el estacionamiento se llenó o estuvo cerca de llenarse. ¿Qué hiciste? (¿Cómo lo detectaste? ¿Con quién te coordinaste? ¿Cuál fue el resultado?)
+3. ¿Cómo sabes durante un turno cuántos espacios están disponibles? (¿De dónde obtienes el dato? ¿Cada cuánto se actualiza? ¿Qué tan confiable es?)
+4. ¿Cómo manejan actualmente la información de entradas, salidas y ocupación? (¿Quién la registra? ¿Dónde se almacena? ¿Cómo se preparan los reportes?)
+5. ¿Cuál es el problema que se repite con mayor frecuencia durante la operación? (¿Cuándo ocurrió por última vez? ¿Qué información te faltó para resolverlo?)
 
 *Preguntas complementarias*
 
-12. ¿Con qué equipamiento cuentan actualmente: cámaras, sensores, tranqueras, lectores de credencial? ¿Qué ocurre cuando alguno falla?
-13. Si la universidad quisiera implementar una herramienta nueva para el estacionamiento, ¿quién toma esa decisión y qué requisitos suele exigir la institución?
+6. ¿Qué cambia durante el inicio de ciclo, los exámenes o los eventos masivos? (¿Cómo se preparan? ¿Qué dificultad suele presentarse?)
+7. Cuéntanos la última vez que falló un equipo de control del estacionamiento. ¿Cómo continuaron operando? (¿Quién atendió la falla? ¿Cuánto tiempo duró?)
 
 *Pregunta de cierre*
 
-14. Si contaras con la ocupación en tiempo real y con el histórico de los últimos meses, ¿qué decisión tomarías distinto? ¿Hay algo que no te hayamos preguntado y consideres importante?
+8. Si pudieras disponer de una información que hoy no tienes, ¿cuál te ayudaría más a gestionar el estacionamiento y por qué?
 
 ### 2.2.2. Registro de entrevistas
 
