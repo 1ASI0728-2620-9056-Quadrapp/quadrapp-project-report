@@ -227,7 +227,7 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
     <tr>
       <td><img src="assets/capitulo-01/yo.png" alt="Bejarano Martinez, Alvaro Leandro" width="160"></td>
       <td>Bejarano Martinez, Alvaro Leandro</td>
-      <td>Por completar</td>
+      <td>U202311640</td>
       <td>Ingeniería de Software</td>
       <td>Curso la carrera de Ingeniería de Software y me destaco por mi perseverancia, organización y capacidad para trabajar en equipo. Me esfuerzo por mantener un ambiente estructurado dentro del grupo, donde cada miembro se sienta valorado y sus ideas sean escuchadas y respetadas. Mi compromiso es fomentar la colaboración efectiva, asegurando que cada contribución se integre de manera ordenada y alineada con los objetivos comunes del equipo.</td>
     </tr>
