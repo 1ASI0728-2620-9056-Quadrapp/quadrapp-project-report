@@ -198,9 +198,25 @@ del ABET – EAC - Student Outcome 3.
 
 ### 1.1.1. Descripción de la Startup
 
-Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su producto para este proyecto es Quadrapp.
+**Nombre de la Startup:** Integra Labs
 
-*Pendiente de completar la descripción del modelo de negocio y la propuesta de valor.*
+En Integra Labs desarrollamos soluciones tecnológicas que conectan la infraestructura física de las instituciones educativas con herramientas digitales de gestión. Nuestro primer producto, **Quadrapp**, busca reducir la incertidumbre que experimentan los conductores al buscar estacionamiento en un campus universitario. Mediante sensores IoT instalados en los espacios y accesos del estacionamiento, la solución registra su nivel de ocupación y emplea estos datos para mostrar la disponibilidad actual y estimar las condiciones que encontrará cada conductor al llegar. Quadrapp se ofrece bajo un modelo B2B SaaS: la institución educativa contrata el servicio, su comunidad accede a la información desde una aplicación móvil y el personal responsable supervisa la operación mediante una consola web.
+
+**Colaboraciones Estratégicas**
+
+Para desarrollar y operar Quadrapp, establecemos alianzas con instituciones educativas y proveedores tecnológicos. Las universidades de Lima Metropolitana participan como clientes y colaboradoras en la validación de la solución, ya que facilitan entornos de prueba para instalar los sensores y contrastar la información del sistema con mediciones realizadas en campo. Asimismo, los proveedores de hardware IoT suministran los sensores y brindan soporte durante su implementación. Esta colaboración se complementa con servicios de nube, mapas y mensajería, necesarios para procesar la información, calcular el tiempo estimado de llegada y verificar los correos institucionales. La integración flexible de estos servicios permite sustituir proveedores sin comprometer la continuidad del producto.
+
+**Innovación y Tecnología**
+
+El valor diferencial de Quadrapp no radica únicamente en identificar espacios libres, sino en anticipar su disponibilidad. Los sensores instalados en cada espacio y en los accesos transmiten información mediante un gateway MQTT. A partir de estos datos, un modelo predictivo estima la ocupación para los siguientes 15, 30, 45 y 60 minutos, considerando también el comportamiento histórico, el calendario académico y los eventos del campus. La predicción se combina con el tiempo estimado de llegada del usuario para comunicarle la probabilidad de encontrar un espacio y ofrecerle una recomendación comprensible. Además, la solución prescinde de cámaras y del reconocimiento de placas: el tiempo de llegada se calcula en el dispositivo y el servidor recibe únicamente la cantidad estimada de minutos, no la ubicación del conductor.
+
+**Visión**
+
+> Aspiramos a que, en los próximos diez años, las comunidades universitarias de Lima Metropolitana puedan anticipar las condiciones de estacionamiento antes de dirigirse al campus y reduzcan así la incertidumbre de sus desplazamientos. A partir de esta experiencia, buscamos extender la solución a otras ciudades de la región.
+
+**Misión**
+
+> En Integra Labs transformamos los datos de ocupación de los estacionamientos universitarios en información oportuna y pronósticos basados en datos, para que los conductores tomen mejores decisiones antes de dirigirse al campus y el personal responsable gestione sus instalaciones con mayor eficiencia. Desarrollamos esta labor con resultados medibles, recopilando solo los datos personales indispensables y manteniendo una solución independiente de proveedores específicos de hardware.
 
 ### 1.1.2. Perfiles de integrantes del equipo
 
