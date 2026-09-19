@@ -440,7 +440,547 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 ## 3.2. User Stories
 
-*Pendiente de elaboración.*
+**Epics:**
+
+| Epic ID | Título                                        | Descripción                                                                                                                                                                            | User Stories Asociadas                   |
+| ------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| EP01    | Acceso e identidad                            | Permitir que estudiantes, docentes y administradores accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura.                                    | US01, US02, US03                         |
+| EP02    | Disponibilidad de estacionamientos            | Permitir consultar el estado actual de los estacionamientos universitarios, incluyendo espacios disponibles, ocupados y estados desconocidos por zona.                                 | US04, US05, US06, US07, US08             |
+| EP03    | Predicción y asesoría de llegada              | Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento.                                    | US09, US10, US11, US12, US13, US14, US15 |
+| EP04    | Gestión e infraestructura de estacionamientos | Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores IoT utilizados para detectar la ocupación. | US16, US17, US18, US19, US20, US21       |
+| EP05    | Analítica y notificaciones                    | Permitir consultar información histórica de ocupación y periodos de mayor demanda, así como gestionar alertas y preferencias de notificación para los usuarios.                        | US22, US23, US24, US25                   |
+
+
+**User Stories:**
+
+<table> <thead> <tr> <th>Epic / US ID</th> <th>Título</th> <th>Descripción</th> <th>Criterios de Aceptación (Escenarios)</th> <th>Relacionado</th> </tr> </thead> <tbody>
+
+<tr>
+  <td><strong>US01</strong></td>
+  <td>Inicio de sesión institucional</td>
+  <td>Como estudiante, docente o personal administrativo, quiero iniciar sesión con mi cuenta institucional para acceder a las funcionalidades de QuadRapp según mi rol.</td>
+  <td>
+    <strong>Escenario 1: Inicio de sesión exitoso.</strong><br>
+    Dado que el usuario posee una cuenta institucional válida,<br>
+    cuando ingresa a QuadRapp e inicia sesión,<br>
+    entonces el sistema permite su acceso a la aplicación.<br><br>
+    <strong>Escenario 2: Credenciales inválidas.</strong><br>
+    Dado que el usuario proporciona credenciales incorrectas,<br>
+    cuando intenta iniciar sesión,<br>
+    entonces el sistema muestra un mensaje indicando que las credenciales no son válidas.<br><br>
+    <strong>Escenario 3: Sesión activa.</strong><br>
+    Dado que el usuario ya tiene una sesión válida,<br>
+    cuando vuelve a abrir la aplicación,<br>
+    entonces el sistema mantiene su acceso sin solicitar nuevamente sus credenciales.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>US02</strong></td>
+  <td>Cerrar sesión</td>
+  <td>Como usuario, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo.</td>
+  <td>
+    <strong>Escenario 1: Cierre exitoso.</strong><br>
+    Dado que el usuario tiene una sesión activa,<br>
+    cuando selecciona la opción "Cerrar sesión",<br>
+    entonces el sistema finaliza su sesión.<br><br>
+    <strong>Escenario 2: Acceso posterior al cierre.</strong><br>
+    Dado que el usuario cerró su sesión,<br>
+    cuando intenta acceder a una funcionalidad protegida,<br>
+    entonces el sistema solicita nuevamente la autenticación.<br><br>
+    <strong>Escenario 3: Confirmación.</strong><br>
+    Dado que el usuario selecciona "Cerrar sesión",<br>
+    cuando confirma la acción,<br>
+    entonces el sistema lo redirige a la pantalla de inicio de sesión.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>US03</strong></td>
+  <td>Gestionar sesión expirada</td>
+  <td>Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a QuadRapp.</td>
+  <td>
+    <strong>Escenario 1: Sesión expirada.</strong><br>
+    Dado que la sesión del usuario ha expirado,<br>
+    cuando intenta acceder a una funcionalidad protegida,<br>
+    entonces el sistema solicita una nueva autenticación.<br><br>
+    <strong>Escenario 2: Expiración durante el uso.</strong><br>
+    Dado que el usuario está utilizando la aplicación,<br>
+    cuando su sesión expira,<br>
+    entonces el sistema muestra un mensaje indicando que debe iniciar sesión nuevamente.<br><br>
+    <strong>Escenario 3: Nueva autenticación.</strong><br>
+    Dado que la sesión anterior expiró,<br>
+    cuando el usuario se autentica nuevamente de forma correcta,<br>
+    entonces puede continuar utilizando QuadRapp.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>US04</strong></td>
+  <td>Consultar estacionamientos universitarios</td>
+  <td>Como usuario, quiero visualizar los estacionamientos disponibles dentro de mi universidad para identificar las áreas donde puedo estacionar.</td>
+  <td>
+    <strong>Escenario 1: Estacionamientos disponibles.</strong><br>
+    Dado que existen estacionamientos configurados,<br>
+    cuando el usuario ingresa a la sección de estacionamientos,<br>
+    entonces el sistema muestra los estacionamientos disponibles.<br><br>
+    <strong>Escenario 2: Estacionamiento fuera de servicio.</strong><br>
+    Dado que un estacionamiento se encuentra fuera de servicio,<br>
+    cuando el usuario consulta los estacionamientos,<br>
+    entonces el sistema indica que dicho estacionamiento no se encuentra disponible.<br><br>
+    <strong>Escenario 3: Sin estacionamientos configurados.</strong><br>
+    Dado que no existen estacionamientos registrados,<br>
+    cuando el usuario accede a la sección,<br>
+    entonces el sistema muestra un mensaje informativo.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>US05</strong></td>
+  <td>Consultar disponibilidad actual</td>
+  <td>Como usuario, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar.</td>
+  <td>
+    <strong>Escenario 1: Espacios disponibles.</strong><br>
+    Dado que existen datos actualizados de los sensores,<br>
+    cuando el usuario consulta un estacionamiento,<br>
+    entonces el sistema muestra los espacios libres y ocupados.<br><br>
+    <strong>Escenario 2: Espacio ocupado.</strong><br>
+    Dado que un sensor determina que un espacio está ocupado,<br>
+    cuando se actualiza la información de disponibilidad,<br>
+    entonces el espacio se muestra como ocupado.<br><br>
+    <strong>Escenario 3: Espacio libre.</strong><br>
+    Dado que un sensor determina que un espacio está libre,<br>
+    cuando se actualiza la información,<br>
+    entonces el espacio se muestra como disponible.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>US06</strong></td>
+  <td>Consultar disponibilidad por zona</td>
+  <td>Como usuario, quiero visualizar la disponibilidad agrupada por zonas para identificar rápidamente dónde existe mayor disponibilidad.</td>
+  <td>
+    <strong>Escenario 1: Consulta por zona.</strong><br>
+    Dado que un estacionamiento posee varias zonas,<br>
+    cuando el usuario consulta su disponibilidad,<br>
+    entonces el sistema muestra el estado de cada zona.<br><br>
+    <strong>Escenario 2: Zona con espacios disponibles.</strong><br>
+    Dado que una zona contiene espacios libres y ocupados,<br>
+    cuando el usuario consulta la zona,<br>
+    entonces el sistema muestra su disponibilidad correspondiente.<br><br>
+    <strong>Escenario 3: Zona sin información.</strong><br>
+    Dado que una zona no posee información actualizada,<br>
+    cuando el usuario consulta su estado,<br>
+    entonces el sistema indica que la información no está disponible.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>US07</strong></td>
+  <td>Actualizar disponibilidad</td>
+  <td>Como usuario, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real.</td>
+  <td>
+    <strong>Escenario 1: Cambio a ocupado.</strong><br>
+    Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>
+    cuando el evento es procesado,<br>
+    entonces el sistema actualiza el estado del espacio.<br><br>
+    <strong>Escenario 2: Cambio a libre.</strong><br>
+    Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>
+    cuando el evento es procesado,<br>
+    entonces el sistema refleja el nuevo estado.<br><br>
+    <strong>Escenario 3: Sin nuevos eventos.</strong><br>
+    Dado que no existen nuevos eventos de los sensores,<br>
+    cuando el usuario consulta la disponibilidad,<br>
+    entonces el sistema conserva el último estado válido registrado.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>US08</strong></td>
+  <td>Gestionar estado desconocido</td>
+  <td>Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real.</td>
+  <td>
+    <strong>Escenario 1: Sensor sin comunicación.</strong><br>
+    Dado que un sensor deja de enviar información durante el periodo configurado,<br>
+    cuando se supera el tiempo establecido,<br>
+    entonces el espacio pasa al estado <strong>UNKNOWN</strong>.<br><br>
+    <strong>Escenario 2: Espacio desconocido.</strong><br>
+    Dado que un espacio se encuentra en estado UNKNOWN,<br>
+    cuando el usuario consulta la disponibilidad,<br>
+    entonces el sistema no lo muestra como libre ni ocupado con certeza.<br><br>
+    <strong>Escenario 3: Recuperación del sensor.</strong><br>
+    Dado que un sensor vuelve a enviar información válida,<br>
+    cuando el sistema recibe el nuevo evento,<br>
+    entonces actualiza nuevamente el estado del espacio.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>US09</strong></td>
+  <td>Consultar predicción de disponibilidad</td>
+  <td>Como usuario, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus.</td>
+  <td>
+    <strong>Escenario 1: Predicción disponible.</strong><br>
+    Dado que existen datos históricos suficientes,<br>
+    cuando el usuario consulta una predicción,<br>
+    entonces el sistema muestra la disponibilidad estimada.<br><br>
+    <strong>Escenario 2: Identificación del horizonte.</strong><br>
+    Dado que existe una predicción disponible,<br>
+    cuando el usuario la consulta,<br>
+    entonces el sistema indica el periodo futuro al que corresponde.<br><br>
+    <strong>Escenario 3: Predicción no disponible.</strong><br>
+    Dado que no existe una predicción disponible,<br>
+    cuando el usuario realiza la consulta,<br>
+    entonces el sistema muestra un mensaje informativo.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US10</strong></td>
+  <td>Consultar diferentes horizontes de predicción</td>
+  <td>Como usuario, quiero consultar predicciones a 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad antes de mi llegada.</td>
+  <td>
+    <strong>Escenario 1: Todos los horizontes disponibles.</strong><br>
+    Dado que existen predicciones válidas,<br>
+    cuando el usuario consulta la información futura,<br>
+    entonces visualiza las predicciones de 15, 30, 45 y 60 minutos.<br><br>
+    <strong>Escenario 2: Información parcial.</strong><br>
+    Dado que solamente existen predicciones para algunos horizontes,<br>
+    cuando el usuario realiza la consulta,<br>
+    entonces el sistema muestra los datos disponibles e indica los faltantes.<br><br>
+    <strong>Escenario 3: Predicción vencida.</strong><br>
+    Dado que una predicción ya no corresponde al periodo vigente,<br>
+    cuando el usuario consulta la información,<br>
+    entonces el sistema evita mostrarla como predicción actual.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US11</strong></td>
+  <td>Visualizar nivel de saturación</td>
+  <td>Como usuario, quiero visualizar el nivel de saturación esperado del estacionamiento para comprender rápidamente su disponibilidad futura.</td>
+  <td>
+    <strong>Escenario 1: Baja saturación.</strong><br>
+    Dado que la predicción indica una ocupación baja,<br>
+    cuando el sistema genera el resultado,<br>
+    entonces muestra la categoría <strong>LOW</strong>.<br><br>
+    <strong>Escenario 2: Saturación limitada.</strong><br>
+    Dado que la predicción indica una ocupación cercana al límite,<br>
+    cuando el sistema genera el resultado,<br>
+    entonces muestra la categoría <strong>LIMITED</strong>.<br><br>
+    <strong>Escenario 3: Alta saturación.</strong><br>
+    Dado que la predicción indica una ocupación alta,<br>
+    cuando el sistema genera el resultado,<br>
+    entonces muestra la categoría <strong>HIGH</strong>.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US12</strong></td>
+  <td>Gestionar predicciones con datos insuficientes</td>
+  <td>Como usuario, quiero recibir información clara cuando no existan suficientes datos para generar una predicción confiable.</td>
+  <td>
+    <strong>Escenario 1: Datos históricos insuficientes.</strong><br>
+    Dado que el sistema no posee suficientes datos históricos,<br>
+    cuando el usuario solicita una predicción,<br>
+    entonces el sistema informa que la predicción no está disponible.<br><br>
+    <strong>Escenario 2: Datos inconsistentes.</strong><br>
+    Dado que los datos históricos presentan inconsistencias,<br>
+    cuando el sistema intenta generar una predicción,<br>
+    entonces evita mostrar una predicción no confiable.<br><br>
+    <strong>Escenario 3: Datos suficientes.</strong><br>
+    Dado que posteriormente existen suficientes datos válidos,<br>
+    cuando se ejecuta nuevamente la predicción,<br>
+    entonces el sistema puede generar el resultado.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US13</strong></td>
+  <td>Obtener asesoría de llegada</td>
+  <td>Como usuario, quiero recibir una asesoría basada en la disponibilidad prevista y mi tiempo estimado de llegada para conocer las condiciones esperadas al llegar.</td>
+  <td>
+    <strong>Escenario 1: ETA válido.</strong><br>
+    Dado que el usuario proporciona un tiempo estimado de llegada válido,<br>
+    cuando solicita la asesoría,<br>
+    entonces el sistema consulta la predicción correspondiente.<br><br>
+    <strong>Escenario 2: Predicción disponible.</strong><br>
+    Dado que existe una predicción para el momento estimado de llegada,<br>
+    cuando se genera la asesoría,<br>
+    entonces el sistema muestra la categoría de disponibilidad esperada.<br><br>
+    <strong>Escenario 3: Sin información suficiente.</strong><br>
+    Dado que no existe información suficiente para generar la asesoría,<br>
+    cuando el usuario realiza la consulta,<br>
+    entonces el sistema informa que no está disponible.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US14</strong></td>
+  <td>Actualizar asesoría según ETA</td>
+  <td>Como usuario, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista.</td>
+  <td>
+    <strong>Escenario 1: Cambio de ETA.</strong><br>
+    Dado que cambia el tiempo estimado de llegada,<br>
+    cuando el usuario solicita una actualización,<br>
+    entonces el sistema recalcula la asesoría.<br><br>
+    <strong>Escenario 2: Nuevo horizonte.</strong><br>
+    Dado que el nuevo ETA corresponde a otro horizonte de predicción,<br>
+    cuando se actualiza la asesoría,<br>
+    entonces el sistema utiliza la predicción correspondiente.<br><br>
+    <strong>Escenario 3: Nuevo ETA sin predicción.</strong><br>
+    Dado que no existe una predicción para el nuevo ETA,<br>
+    cuando el usuario solicita la actualización,<br>
+    entonces el sistema informa que no existe información disponible.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US15</strong></td>
+  <td>Mostrar categoría de disponibilidad esperada</td>
+  <td>Como usuario, quiero visualizar una categoría simple de disponibilidad esperada para interpretar rápidamente las condiciones del estacionamiento al momento de mi llegada.</td>
+  <td>
+    <strong>Escenario 1: Disponibilidad favorable.</strong><br>
+    Dado que la disponibilidad esperada es favorable,<br>
+    cuando se genera la asesoría,<br>
+    entonces el sistema muestra la categoría <strong>LOW</strong>.<br><br>
+    <strong>Escenario 2: Disponibilidad limitada.</strong><br>
+    Dado que la disponibilidad esperada es limitada,<br>
+    cuando se genera la asesoría,<br>
+    entonces el sistema muestra la categoría <strong>LIMITED</strong>.<br><br>
+    <strong>Escenario 3: Alta ocupación esperada.</strong><br>
+    Dado que la disponibilidad esperada es desfavorable,<br>
+    cuando se genera la asesoría,<br>
+    entonces el sistema muestra la categoría <strong>HIGH</strong>.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>US16</strong></td>
+  <td>Registrar estacionamiento universitario</td>
+  <td>Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por QuadRapp.</td>
+  <td>
+    <strong>Escenario 1: Registro exitoso.</strong><br>
+    Dado que el administrador proporciona los datos obligatorios,<br>
+    cuando registra un estacionamiento,<br>
+    entonces el sistema crea el estacionamiento correctamente.<br><br>
+    <strong>Escenario 2: Datos incompletos.</strong><br>
+    Dado que faltan datos obligatorios,<br>
+    cuando el administrador intenta registrar el estacionamiento,<br>
+    entonces el sistema solicita completar la información requerida.<br><br>
+    <strong>Escenario 3: Registro duplicado.</strong><br>
+    Dado que el estacionamiento ya existe,<br>
+    cuando el administrador intenta registrarlo nuevamente,<br>
+    entonces el sistema impide la duplicación.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US17</strong></td>
+  <td>Configurar zonas y espacios</td>
+  <td>Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en QuadRapp.</td>
+  <td>
+    <strong>Escenario 1: Crear zona.</strong><br>
+    Dado que el administrador selecciona un estacionamiento,<br>
+    cuando crea una nueva zona,<br>
+    entonces la zona queda asociada al estacionamiento correspondiente.<br><br>
+    <strong>Escenario 2: Registrar espacio.</strong><br>
+    Dado que existe una zona configurada,<br>
+    cuando el administrador registra un espacio,<br>
+    entonces el espacio queda asociado a dicha zona.<br><br>
+    <strong>Escenario 3: Espacio duplicado.</strong><br>
+    Dado que un espacio ya existe dentro de una zona,<br>
+    cuando el administrador intenta registrarlo nuevamente,<br>
+    entonces el sistema impide la duplicación.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US18</strong></td>
+  <td>Asociar sensor a espacio</td>
+  <td>Como administrador de estacionamientos, quiero asociar cada sensor físico con su espacio correspondiente para identificar correctamente la ocupación.</td>
+  <td>
+    <strong>Escenario 1: Asociación exitosa.</strong><br>
+    Dado que existe un sensor registrado y un espacio configurado,<br>
+    cuando el administrador los asocia,<br>
+    entonces el sistema guarda la relación.<br><br>
+    <strong>Escenario 2: Sensor ya asociado.</strong><br>
+    Dado que el sensor ya se encuentra asociado a otro espacio,<br>
+    cuando el administrador intenta asociarlo nuevamente,<br>
+    entonces el sistema impide la asociación duplicada.<br><br>
+    <strong>Escenario 3: Desactivación.</strong><br>
+    Dado que un sensor deja de estar operativo,<br>
+    cuando el administrador lo desactiva,<br>
+    entonces el sistema conserva su relación histórica con el espacio.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US19</strong></td>
+  <td>Configurar accesos vehiculares</td>
+  <td>Como administrador de estacionamientos, quiero configurar los accesos de entrada y salida para registrar los movimientos de vehículos dentro del estacionamiento.</td>
+  <td>
+    <strong>Escenario 1: Registrar acceso.</strong><br>
+    Dado que el administrador configura un nuevo acceso,<br>
+    cuando proporciona sus datos,<br>
+    entonces el acceso queda asociado al estacionamiento correspondiente.<br><br>
+    <strong>Escenario 2: Acceso de entrada.</strong><br>
+    Dado que un acceso está configurado como entrada,<br>
+    cuando recibe un evento de movimiento vehicular,<br>
+    entonces el sistema registra el evento como ingreso.<br><br>
+    <strong>Escenario 3: Acceso de salida.</strong><br>
+    Dado que un acceso está configurado como salida,<br>
+    cuando recibe un evento de movimiento vehicular,<br>
+    entonces el sistema registra el evento como salida.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US20</strong></td>
+  <td>Monitorear salud de sensores</td>
+  <td>Como administrador de estacionamientos, quiero conocer el estado de los sensores para identificar dispositivos que presentan problemas de comunicación o funcionamiento.</td>
+  <td>
+    <strong>Escenario 1: Sensor operativo.</strong><br>
+    Dado que un sensor reporta periódicamente su estado,<br>
+    cuando el sistema recibe su reporte,<br>
+    entonces registra la última comunicación del dispositivo.<br><br>
+    <strong>Escenario 2: Sensor sin comunicación.</strong><br>
+    Dado que un sensor deja de enviar información durante el tiempo establecido,<br>
+    cuando se supera dicho periodo,<br>
+    entonces el sistema identifica el dispositivo como no disponible.<br><br>
+    <strong>Escenario 3: Recuperación.</strong><br>
+    Dado que un sensor vuelve a comunicarse,<br>
+    cuando el sistema recibe un nuevo reporte,<br>
+    entonces actualiza nuevamente su estado.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US21</strong></td>
+  <td>Reconciliar eventos de entrada y salida</td>
+  <td>Como sistema de ocupación, quiero contrastar los eventos de entrada y salida con los estados reportados por los sensores de espacios para detectar inconsistencias.</td>
+  <td>
+    <strong>Escenario 1: Registro de entrada.</strong><br>
+    Dado que un acceso registra el ingreso de un vehículo,<br>
+    cuando el evento es procesado,<br>
+    entonces el sistema incorpora el movimiento al contexto de ocupación.<br><br>
+    <strong>Escenario 2: Inconsistencia detectada.</strong><br>
+    Dado que los eventos de entrada y salida presentan diferencias respecto a los estados de los espacios,<br>
+    cuando el sistema realiza la validación,<br>
+    entonces identifica la inconsistencia.<br><br>
+    <strong>Escenario 3: Resolución.</strong><br>
+    Dado que posteriormente se reciben nuevos eventos válidos,<br>
+    cuando el sistema puede resolver la inconsistencia,<br>
+    entonces actualiza el estado de ocupación correspondiente.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US22</strong></td>
+  <td>Consultar historial de ocupación</td>
+  <td>Como administrador de estacionamientos, quiero consultar el historial de ocupación para analizar el comportamiento de los estacionamientos universitarios.</td>
+  <td>
+    <strong>Escenario 1: Consulta histórica.</strong><br>
+    Dado que existen registros históricos,<br>
+    cuando el administrador selecciona un periodo,<br>
+    entonces el sistema muestra la información correspondiente.<br><br>
+    <strong>Escenario 2: Filtrado por zona.</strong><br>
+    Dado que existen registros de diferentes zonas,<br>
+    cuando el administrador selecciona una zona,<br>
+    entonces el sistema muestra la información correspondiente a dicha zona.<br><br>
+    <strong>Escenario 3: Sin registros.</strong><br>
+    Dado que no existen datos para el periodo seleccionado,<br>
+    cuando el administrador realiza la consulta,<br>
+    entonces el sistema muestra un mensaje indicando que no existen registros.
+  </td>
+  <td>EP05</td>
+</tr>
+
+<tr>
+  <td><strong>US23</strong></td>
+  <td>Identificar horas de mayor ocupación</td>
+  <td>Como administrador de estacionamientos, quiero identificar los periodos con mayor ocupación para conocer los horarios de mayor demanda.</td>
+  <td>
+    <strong>Escenario 1: Identificación de horas pico.</strong><br>
+    Dado que existen suficientes datos históricos,<br>
+    cuando el administrador consulta la analítica,<br>
+    entonces el sistema muestra los periodos de mayor ocupación.<br><br>
+    <strong>Escenario 2: Comparación temporal.</strong><br>
+    Dado que existen datos de diferentes días y horarios,<br>
+    cuando el administrador consulta la información,<br>
+    entonces puede identificar variaciones en los niveles de ocupación.<br><br>
+    <strong>Escenario 3: Datos insuficientes.</strong><br>
+    Dado que no existen suficientes datos históricos,<br>
+    cuando el administrador consulta el análisis,<br>
+    entonces el sistema informa que no existe información suficiente.
+  </td>
+  <td>EP05</td>
+</tr>
+
+<tr>
+  <td><strong>US24</strong></td>
+  <td>Recibir alertas de baja disponibilidad</td>
+  <td>Como usuario, quiero recibir una alerta cuando la disponibilidad prevista del estacionamiento sea limitada o alta para anticipar posibles dificultades al estacionar.</td>
+  <td>
+    <strong>Escenario 1: Alerta generada.</strong><br>
+    Dado que el usuario tiene habilitadas las notificaciones,<br>
+    cuando la disponibilidad prevista alcanza el nivel configurado,<br>
+    entonces el sistema genera una alerta.<br><br>
+    <strong>Escenario 2: Notificaciones deshabilitadas.</strong><br>
+    Dado que el usuario deshabilitó las notificaciones,<br>
+    cuando se alcanza una condición de baja disponibilidad,<br>
+    entonces el sistema no envía una notificación push.<br><br>
+    <strong>Escenario 3: Evitar alertas repetitivas.</strong><br>
+    Dado que ya se envió una alerta para una condición determinada,<br>
+    cuando la misma condición continúa activa,<br>
+    entonces el sistema evita generar alertas repetitivas innecesarias.
+  </td>
+  <td>EP05</td>
+</tr>
+
+<tr>
+  <td><strong>US25</strong></td>
+  <td>Gestionar preferencias de notificaciones</td>
+  <td>Como usuario, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir.</td>
+  <td>
+    <strong>Escenario 1: Activar notificaciones.</strong><br>
+    Dado que el usuario accede a sus preferencias,<br>
+    cuando habilita las notificaciones,<br>
+    entonces el sistema guarda la configuración y permite recibir las alertas correspondientes.<br><br>
+    <strong>Escenario 2: Desactivar notificaciones.</strong><br>
+    Dado que el usuario deshabilita las notificaciones,<br>
+    cuando se genera una alerta posterior,<br>
+    entonces el sistema no envía la notificación push.<br><br>
+    <strong>Escenario 3: Modificar preferencias.</strong><br>
+    Dado que el usuario cambia sus preferencias,<br>
+    cuando guarda la configuración,<br>
+    entonces los nuevos valores se aplican a las siguientes notificaciones.
+  </td>
+  <td>EP05</td>
+</tr>
+</tbody> </table>
+
 
 ## 3.3. Impact Mapping
 
