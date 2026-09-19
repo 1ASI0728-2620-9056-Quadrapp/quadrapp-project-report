@@ -436,7 +436,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 #### Administradores de estacionamientos universitarios
 
-![To-Be Scenario Mapping – Administradores de estacionamientos universitarios](./assets/capitulo-03/to-be-administradores.png)
+![To-Be Scenario Mapping – Administradores de estacionamientos universitarios](./assets/capitulo-03/to-be-administradores.jpg)
 
 ## 3.2. User Stories
 
@@ -456,11 +456,24 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 ## 4.1. Strategic-Level Attribute-Driven Design
 
+En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicado a Quadrapp. Se define el propósito del diseño, los inputs del proceso (funcionalidad primaria, escenarios de atributos de calidad y restricciones), el backlog de Architectural Drivers, las decisiones de diseño con su evaluación de patrones y los escenarios de atributos de calidad refinados.
+
+
 ### 4.1.1. Design Purpose
 
-*Pendiente de elaboración.*
+El propósito del diseño es definir la arquitectura de alto nivel de Quadrapp, una solución que permite a los conductores de la comunidad educativa conocer no solo la disponibilidad actual de un estacionamiento universitario, sino también la probabilidad de encontrar un espacio libre al momento de su llegada. Con esto se busca reducir la incertidumbre, el tiempo de búsqueda y la congestión dentro y alrededor del campus, que son los problemas identificados en el Capítulo I.
+
+Para lograrlo, la arquitectura debe combinar información en tiempo real (sensores IoT y procesamiento Edge) con datos históricos, horarios académicos y tiempos estimados de llegada, para generar predicciones de disponibilidad. Al mismo tiempo, debe ofrecer a los administradores de estacionamientos universitarios un dashboard que centralice la ocupación, las reservas, los movimientos de vehículos, el comportamiento histórico y los períodos de mayor demanda, de modo que puedan pasar de una gestión reactiva a una preventiva.
+
+El diseño también debe respetar el contexto del negocio: el estacionamiento es gratuito para la comunidad educativa y el ingreso exige la credencial institucional, por lo que Quadrapp no gestiona cobros ni reemplaza el control de acceso. Su aporte está en la información, la predicción y la gestión.
+
+Las decisiones de esta sección orientan el diseño estratégico con Domain-Driven Design (4.2) y las vistas de arquitectura (4.3). Se priorizan los atributos de calidad que más afectan la confianza del conductor en la predicción: precisión, frescura de los datos, disponibilidad ante fallas de conectividad y desempeño en horas pico.
+
 
 ### 4.1.2. Attribute-Driven Design Inputs
+
+Los inputs del proceso ADD son la funcionalidad primaria con impacto en la arquitectura, los escenarios de atributos de calidad y las restricciones no negociables impuestas por el negocio y por el curso. A continuación se detalla cada uno.
+
 
 #### 4.1.2.1. Primary Functionality (Primary User Stories)
 
@@ -468,11 +481,24 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 #### 4.1.2.2. Quality Attribute Scenarios
 
-*Pendiente de elaboración.*
+Se identificaron ocho escenarios de atributos de calidad en primera instancia, a partir de los Business Outcomes, las Features Assumptions y los riesgos del Lean UX (sección 1.2.2). Cubren la precisión de la predicción, la frescura de los datos de ocupación, la disponibilidad ante caídas de conexión, el desempeño en horas pico, la integración con servicios externos, la calidad de los datos de sensores, la seguridad y la capacidad de incorporar nuevas instituciones.
+
+| ID | Atributo | Fuente | Estímulo | Artefacto | Entorno | Respuesta | Medida |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| QAS-01 | Correctness (precisión de la predicción) | Conductor de la comunidad educativa | Consulta la probabilidad de encontrar espacio para su hora estimada de llegada | Servicio de predicción de disponibilidad | Operación normal, con información histórica suficiente | Calcula la probabilidad combinando ocupación actual, reservas, histórico, horario académico y tiempo estimado de llegada, y la presenta como estimación, no como garantía | Al menos 80 % de aciertos en la categoría de disponibilidad (alta, media o baja) frente a la ocupación real a la hora de llegada, medido semanalmente |
+| QAS-02 | Performance (frescura de los datos) | Sensor IoT de un espacio | Cambia el estado de un espacio (libre u ocupado) | Nodo Edge y servicio de ocupación | Operación normal, con conexión a la nube | El nodo Edge valida el evento, actualiza la ocupación local y la propaga a la nube y a los clientes | Cambio visible en la app y el dashboard en 5 s o menos (percentil 95); procesamiento en Edge en 1 s o menos |
+| QAS-03 | Availability (tolerancia a desconexión) | Red o proveedor de conectividad | Se pierde la conexión entre el nodo Edge y la nube | Nodo Edge | Horario académico, incluyendo hora pico | El nodo Edge sigue procesando y almacenando eventos localmente y los sincroniza al restablecerse la conexión | 100 % de eventos procesados localmente durante la caída; sincronización en 5 min o menos tras la reconexión; pérdida de eventos de 0.1 % o menos |
+| QAS-04 | Performance y Scalability | Conductores de la comunidad educativa | Pico de consultas de disponibilidad al inicio o fin de clases | API de consulta de disponibilidad | Hora pico | Atiende las consultas escalando horizontalmente los servicios de lectura | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 % |
+| QAS-05 | Interoperability y Resilience | Servicio externo de tiempos de viaje | El servicio no responde o excede el tiempo de espera | Servicio de predicción (integración externa) | Operación normal | Detecta la falla, deja de invocar al servicio temporalmente y usa un tiempo de llegada basado en promedios históricos, informando que es aproximado | 100 % de consultas respondidas, sin errores visibles al usuario, en 3 s o menos |
+| QAS-06 | Reliability (calidad de los datos) | Sensor IoT | Falla o deja de enviar señal | Nodo Edge y servicio de monitoreo | Operación normal | Detecta la ausencia de señal, marca el espacio como "sin datos", reduce la confianza de la predicción y alerta al administrador | Detección en 60 s o menos; alerta en 1 min o menos; disponibilidad de datos de ocupación de 95 % o más |
+| QAS-07 | Security | Usuario no autenticado o sin el rol requerido | Intenta acceder al dashboard o a las reservas de otro usuario | API Gateway y servicio de identidad | Operación normal | Rechaza la solicitud y registra el intento en auditoría | 100 % de accesos no autorizados rechazados; registro en 1 s o menos; comunicaciones cifradas con TLS |
+| QAS-08 | Modifiability (multi-institución) | Equipo de Integra Labs | Incorporar una nueva universidad con sus estacionamientos, zonas y sensores | Plataforma de gestión de instituciones | Operación normal con instituciones ya activas | Registra la institución y su infraestructura mediante configuración, aislando sus datos de las demás | Alta en 1 día hábil o menos, sin cambios de código ni interrupción del servicio; aislamiento de datos del 100 % |
+
 
 #### 4.1.2.3. Constraints
 
-*Pendiente de elaboración.*
+
+
 
 ### 4.1.3. Architectural Drivers Backlog
 
@@ -480,7 +506,92 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 ### 4.1.4. Architectural Design Decisions
 
-*Pendiente de elaboración.*
+Las decisiones de diseño se tomaron en seis iteraciones, siguiendo los stages del Quality Attribute Workshop. En cada iteración se seleccionaron los drivers de mayor prioridad, se identificaron patrones y tácticas candidatas, y se evaluaron sus ventajas y desventajas frente a los escenarios de calidad y las restricciones. Cuando hubo más de tres candidatos, se consideraron los tres más relevantes. Los criterios de decisión fueron el cumplimiento de las medidas de respuesta, la alineación con DDD, el uso de tecnologías open-source y la viabilidad de implementación por el equipo.
+
+#### Candidate Pattern Evaluation Matrix
+
+**Iteración 1: Estilo arquitectónico** (Drivers: TS-01, TS-02, QAD-04)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| Monolito modular | Simple de desplegar y depurar; menor costo operativo. | Escala como una sola unidad; acopla la predicción con las consultas; dificulta aislar contextos. |
+| **Microservicios por Bounded Context con API Gateway** | Escala de forma independiente lectura y predicción; se alinea con los Bounded Contexts; permite tecnologías diversas. | Mayor complejidad operativa; consistencia eventual; requiere observabilidad. |
+| Serverless (FaaS) | Escalado automático y pago por uso. | Los arranques en frío afectan la latencia; poco adecuado para conexiones persistentes de dispositivos; dependencia del proveedor. |
+
+**Decisión:** microservicios por Bounded Context, expuestos mediante un API Gateway.
+
+**Iteración 2: Ingesta de ocupación y resiliencia** (Drivers: FD-05, QAD-02, QAD-03, QAD-06, TS-06)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Edge computing con Store-and-Forward (mensajería ligera local y cola persistente)** | Procesa localmente con baja latencia; sigue operando sin conexión; sincroniza sin pérdidas al reconectar. | Sincronización más compleja (orden y duplicados); requiere mantener el nodo Edge. |
+| Ingesta directa a la nube (cloud-centric) | Arquitectura más simple; un único punto de procesamiento. | Depende de la conexión; mayor latencia; se pierden datos ante caídas. |
+| Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; tráfico innecesario; no cumple los 5 s. |
+
+**Decisión:** Edge computing con Store-and-Forward y monitoreo de latidos (heartbeat) de sensores para detectar fallas.
+
+**Iteración 3: Consulta y distribución de datos** (Drivers: FD-01, QAD-02, QAD-04)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **CQRS con read model en caché, alimentado por eventos, y actualización push a clientes** | Consultas rápidas y escalables; datos frescos al recibir eventos. | Consistencia eventual; más componentes que mantener. |
+| Consulta directa a la base de datos transaccional | Simple; siempre consistente. | La carga de lectura en hora pico degrada el desempeño. |
+| Materialización batch periódica | Bajo costo de cómputo. | Datos desactualizados; no cumple la frescura de QAS-02. |
+
+**Decisión:** CQRS con read model en caché alimentado por eventos, más notificaciones push para app y dashboard.
+
+**Iteración 4: Predicción de disponibilidad** (Drivers: FD-02, QAD-01)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Servicio de predicción desacoplado con modelo de ML supervisado** | Aprovecha múltiples variables (hora, día, horario académico, reservas, tiempo de llegada); se puede reentrenar. | Requiere datos históricos suficientes; riesgo de arranque en frío. |
+| Heurística por promedios históricos por franja horaria | Simple y explicable; funciona con pocos datos. | Menos preciso ante cambios de demanda. |
+| Series temporales clásicas | Buen ajuste a patrones estacionales. | Incorpora con dificultad variables externas como reservas o tiempo de llegada. |
+
+**Decisión:** servicio de predicción desacoplado con modelo de ML, con la heurística por promedios históricos como contingencia mientras no haya datos suficientes. El modelo se reentrena periódicamente con datos nuevos.
+
+**Iteración 5: Integración externa y seguridad** (Drivers: QAD-05, QAD-07, TS-04, TS-07)
+
+*Integración con el servicio externo (QAD-05):*
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Circuit Breaker con fallback y Anti-Corruption Layer** | Evita cascadas de fallas; permite responder con un valor aproximado; aísla el modelo externo del dominio. | Requiere configurar umbrales y mantener el fallback. |
+| Reintentos con backoff | Fácil de implementar. | Aumenta la latencia durante la falla; no garantiza respuesta. |
+| Llamada directa sin protección | Menor esfuerzo inicial. | Una falla externa se propaga al usuario. |
+
+*Autenticación y autorización (QAD-07):*
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Autenticación con tokens (OAuth 2.0 y JWT) y control por roles (RBAC) en el API Gateway** | Estándar; sin estado; centraliza la seguridad; separa roles de conductor y administrador. | Requiere gestión de expiración y renovación de tokens. |
+| Sesiones de servidor con cookies | Simple para web. | Menos adecuado para app móvil y para escalar horizontalmente. |
+| API keys estáticas | Muy simples. | Débiles; no identifican al usuario ni sus roles. |
+
+**Decisión:** circuit breaker con fallback y Anti-Corruption Layer para el servicio externo; OAuth 2.0 con JWT y RBAC en el API Gateway; cifrado TLS en todas las comunicaciones.
+
+**Iteración 6: Soporte multi-institución** (Drivers: QAD-08, TS-02)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Multi-tenancy lógico (esquema compartido con identificador de institución)** | Alta de instituciones por configuración; menor costo de infraestructura. | Exige controles estrictos de aislamiento de datos. |
+| Instancia dedicada por institución | Aislamiento fuerte. | Alto costo operativo; no cumple el alta en 1 día hábil. |
+| Base de datos por institución | Buen aislamiento con infraestructura compartida. | Más complejidad de administración y migraciones. |
+
+**Decisión:** multi-tenancy lógico con identificador de institución en cada dato, con pruebas de aislamiento.
+
+**Resumen de decisiones adoptadas**
+
+| ID | Decisión | Drivers atendidos |
+| --- | --- | --- |
+| DD-01 | Microservicios por Bounded Context con API Gateway | TS-01, TS-02, QAD-04 |
+| DD-02 | Edge computing con Store-and-Forward y monitoreo de latidos | FD-05, QAD-02, QAD-03, QAD-06, TS-06 |
+| DD-03 | CQRS con read model en caché, eventos y notificaciones push | FD-01, QAD-02, QAD-04 |
+| DD-04 | Servicio de predicción con ML y contingencia heurística | FD-02, QAD-01 |
+| DD-05 | Circuit Breaker con fallback y Anti-Corruption Layer para el servicio externo | QAD-05, TS-04 |
+| DD-06 | OAuth 2.0 con JWT, RBAC en el API Gateway y TLS | QAD-07, TS-07 |
+| DD-07 | Multi-tenancy lógico por institución | QAD-08 |
+
 
 ### 4.1.5. Quality Attribute Scenario Refinements
 
