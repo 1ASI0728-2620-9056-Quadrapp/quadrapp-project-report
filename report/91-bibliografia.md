@@ -1,3 +1,0 @@
-# Bibliografía
-
-*Pendiente de elaboración.*
