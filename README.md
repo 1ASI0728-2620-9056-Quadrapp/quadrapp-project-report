@@ -982,6 +982,298 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 </tbody> </table>
 
 
+**Technical Stories:**
+
+<table>
+  <thead>
+    <tr>
+      <th>Epic / User Story ID</th>
+      <th>Título</th>
+      <th>Descripción</th>
+      <th>Criterios de Aceptación</th>
+      <th>Relacionado con (Epic ID)</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<tr>
+  <td><strong>TS01</strong></td>
+  <td>Configuración de autenticación y gestión de sesiones</td>
+  <td>Como desarrollador, quiero configurar el mecanismo de autenticación y gestión de sesiones de QuadRapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente.</td>
+  <td>
+    <strong>Escenario 1: Autenticación exitosa.</strong><br>
+    Dado que un usuario proporciona credenciales válidas,<br>
+    cuando el proveedor de identidad valida las credenciales,<br>
+    entonces el sistema permite el acceso a QuadRapp y establece una sesión válida.<br><br>
+    <strong>Escenario 2: Credenciales no válidas.</strong><br>
+    Dado que un usuario proporciona credenciales incorrectas,<br>
+    cuando el proveedor de identidad procesa la autenticación,<br>
+    entonces el acceso es rechazado y no se crea una sesión válida.<br><br>
+    <strong>Escenario 3: Sesión expirada.</strong><br>
+    Dado que la sesión del usuario ha expirado,<br>
+    cuando intenta acceder a una funcionalidad protegida,<br>
+    entonces el sistema solicita una nueva autenticación sin permitir el acceso a los recursos protegidos.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>TS02</strong></td>
+  <td>Configuración del API Gateway y BFF para la aplicación móvil</td>
+  <td>Como desarrollador, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de QuadRapp y facilitar la composición de información proveniente de diferentes contextos.</td>
+  <td>
+    <strong>Escenario 1: Enrutamiento de solicitudes.</strong><br>
+    Dado que la aplicación móvil envía una solicitud válida,<br>
+    cuando el gateway identifica el recurso solicitado,<br>
+    entonces enruta la solicitud al servicio correspondiente.<br><br>
+    <strong>Escenario 2: Composición de información.</strong><br>
+    Dado que la aplicación solicita información de un estacionamiento,<br>
+    cuando el BFF procesa la solicitud,<br>
+    entonces puede combinar la configuración del estacionamiento, el estado actual y la asesoría disponible en una respuesta para la aplicación móvil.<br><br>
+    <strong>Escenario 3: Servicio no disponible.</strong><br>
+    Dado que uno de los servicios solicitados no está disponible,<br>
+    cuando el gateway procesa la solicitud,<br>
+    entonces retorna una respuesta controlada sin exponer errores internos de los servicios.
+  </td>
+  <td>EP01, EP02, EP03</td>
+</tr>
+
+<tr>
+  <td><strong>TS03</strong></td>
+  <td>Configuración de persistencia y aislamiento de datos por contexto</td>
+  <td>Como desarrollador, quiero configurar la persistencia de datos de los principales contextos de QuadRapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades.</td>
+  <td>
+    <strong>Escenario 1: Persistencia de configuración.</strong><br>
+    Dado que un administrador registra la configuración de un estacionamiento,<br>
+    cuando el servicio procesa la información,<br>
+    entonces los datos del estacionamiento, zonas y espacios se almacenan correctamente.<br><br>
+    <strong>Escenario 2: Persistencia de ocupación.</strong><br>
+    Dado que se recibe un evento válido de cambio de estado de un espacio,<br>
+    cuando el contexto de ocupación procesa el evento,<br>
+    entonces actualiza el estado correspondiente y registra la información necesaria para su trazabilidad.<br><br>
+    <strong>Escenario 3: Separación de responsabilidades.</strong><br>
+    Dado que un contexto necesita consultar información de otro contexto,<br>
+    cuando se realiza la integración,<br>
+    entonces utiliza sus interfaces o eventos definidos sin acceder directamente a la persistencia interna del otro contexto.
+  </td>
+  <td>EP02, EP03, EP04, EP05</td>
+</tr>
+
+<tr>
+  <td><strong>TS04</strong></td>
+  <td>Implementación de ingesta de eventos IoT mediante gateway</td>
+  <td>Como desarrollador, quiero implementar la recepción de eventos provenientes de los sensores mediante un gateway IoT, para integrar las lecturas de los dispositivos físicos con los servicios de QuadRapp sin exponer directamente los sensores a Internet.</td>
+  <td>
+    <strong>Escenario 1: Recepción de evento de espacio.</strong><br>
+    Dado que un sensor detecta un cambio de estado en un espacio,<br>
+    cuando el gateway recibe y publica el evento,<br>
+    entonces el sistema registra un evento SpaceStateDetected con sensorId, estado, lectura, timestamp y eventId.<br><br>
+    <strong>Escenario 2: Recepción de evento de entrada o salida.</strong><br>
+    Dado que un sensor de acceso detecta el movimiento de un vehículo,<br>
+    cuando el gateway procesa el evento,<br>
+    entonces publica un evento VehicleMovementDetected indicando el acceso, dirección, timestamp y eventId.<br><br>
+    <strong>Escenario 3: Pérdida temporal de conectividad.</strong><br>
+    Dado que el gateway pierde temporalmente la conexión con el backend,<br>
+    cuando continúa recibiendo eventos de los sensores,<br>
+    entonces almacena temporalmente los eventos y los publica cuando se restablece la conectividad.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS05</strong></td>
+  <td>Configuración de comunicación MQTT para eventos IoT</td>
+  <td>Como desarrollador, quiero configurar MQTT para la comunicación entre el gateway y los servicios de QuadRapp, para transmitir eventos IoT de manera confiable y desacoplada.</td>
+  <td>
+    <strong>Escenario 1: Publicación de evento.</strong><br>
+    Dado que el gateway recibe un evento válido de un dispositivo,<br>
+    cuando publica el evento mediante MQTT,<br>
+    entonces el mensaje llega al tópico correspondiente utilizando QoS 1.<br><br>
+    <strong>Escenario 2: Reintento de entrega.</strong><br>
+    Dado que un mensaje no puede ser confirmado inicialmente,<br>
+    cuando MQTT procesa la entrega,<br>
+    entonces realiza el mecanismo de retransmisión correspondiente para alcanzar la entrega al consumidor.<br><br>
+    <strong>Escenario 3: Evento inválido.</strong><br>
+    Dado que llega un mensaje que no cumple con el esquema definido,<br>
+    cuando el consumidor valida el mensaje,<br>
+    entonces rechaza el evento y evita actualizar el estado de ocupación con información inválida.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS06</strong></td>
+  <td>Implementación de procesamiento e idempotencia de eventos de ocupación</td>
+  <td>Como desarrollador, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento.</td>
+  <td>
+    <strong>Escenario 1: Procesamiento de evento válido.</strong><br>
+    Dado que se recibe un evento SpaceStateDetected válido,<br>
+    cuando el contexto de ocupación procesa el evento,<br>
+    entonces actualiza el estado del espacio asociado y registra la fecha de actualización.<br><br>
+    <strong>Escenario 2: Evento duplicado.</strong><br>
+    Dado que se recibe nuevamente un evento con un eventId ya procesado,<br>
+    cuando el sistema valida la idempotencia,<br>
+    entonces ignora el evento duplicado sin modificar nuevamente el estado del espacio.<br><br>
+    <strong>Escenario 3: Lectura inconsistente.</strong><br>
+    Dado que se recibe un evento fuera de orden o incompatible con el estado registrado,<br>
+    cuando el sistema procesa el evento,<br>
+    entonces aplica las reglas de ordenamiento y validación definidas antes de actualizar la ocupación.
+  </td>
+  <td>EP02, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS07</strong></td>
+  <td>Implementación del modelo de predicción de ocupación</td>
+  <td>Como desarrollador, quiero implementar el componente de predicción de disponibilidad utilizando datos históricos de ocupación y flujo vehicular, para generar pronósticos de disponibilidad futura de los estacionamientos.</td>
+  <td>
+    <strong>Escenario 1: Generación de predicción.</strong><br>
+    Dado que existen datos históricos suficientes de ocupación,<br>
+    cuando el modelo ejecuta una predicción,<br>
+    entonces genera pronósticos de disponibilidad para los horizontes de 15, 30, 45 y 60 minutos.<br><br>
+    <strong>Escenario 2: Inclusión de contexto temporal.</strong><br>
+    Dado que el modelo procesa información histórica,<br>
+    cuando genera una predicción,<br>
+    entonces considera las variables temporales disponibles, como patrones de ocupación y calendario académico.<br><br>
+    <strong>Escenario 3: Datos insuficientes.</strong><br>
+    Dado que no existe suficiente información histórica para generar una predicción confiable,<br>
+    cuando el sistema intenta ejecutar el modelo,<br>
+    entonces informa que la predicción no está disponible o tiene datos insuficientes, sin generar un resultado no sustentado.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>TS08</strong></td>
+  <td>Implementación del servicio de asesoría de llegada</td>
+  <td>Como desarrollador, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada.</td>
+  <td>
+    <strong>Escenario 1: Cálculo de asesoría.</strong><br>
+    Dado que existe una predicción válida y el dispositivo proporciona un ETA en minutos,<br>
+    cuando el servicio procesa ambos datos,<br>
+    entonces determina la categoría de disponibilidad esperada para el momento estimado de llegada.<br><br>
+    <strong>Escenario 2: Cambio del ETA.</strong><br>
+    Dado que el ETA del usuario cambia,<br>
+    cuando se solicita una nueva asesoría,<br>
+    entonces el sistema recalcula la categoría utilizando el nuevo tiempo estimado de llegada.<br><br>
+    <strong>Escenario 3: Predicción no disponible.</strong><br>
+    Dado que no existe una predicción válida para el momento de llegada,<br>
+    cuando se solicita la asesoría,<br>
+    entonces el sistema informa que no puede generar una asesoría basada en predicción.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>TS09</strong></td>
+  <td>Configuración de actualización en tiempo casi real de disponibilidad</td>
+  <td>Como desarrollador, quiero implementar mecanismos de actualización periódica y comunicación en tiempo casi real, para que la aplicación pueda mostrar información reciente sobre la ocupación de los estacionamientos.</td>
+  <td>
+    <strong>Escenario 1: Actualización periódica.</strong><br>
+    Dado que el usuario consulta un estacionamiento,<br>
+    cuando transcurre el intervalo de actualización configurado,<br>
+    entonces la aplicación solicita el estado más reciente disponible.<br><br>
+    <strong>Escenario 2: Actualización durante la permanencia.</strong><br>
+    Dado que el usuario se encuentra utilizando la aplicación dentro del estacionamiento,<br>
+    cuando se produce un cambio de disponibilidad,<br>
+    entonces el sistema puede actualizar la información mostrada mediante el mecanismo de comunicación configurado.<br><br>
+    <strong>Escenario 3: Información desactualizada.</strong><br>
+    Dado que no se recibe una actualización durante un periodo determinado,<br>
+    cuando la aplicación muestra el estado almacenado,<br>
+    entonces indica la antigüedad de la información para evitar presentarla como completamente actualizada.
+  </td>
+  <td>EP02, EP03</td>
+</tr>
+
+<tr>
+  <td><strong>TS10</strong></td>
+  <td>Implementación del monitoreo de salud de dispositivos IoT</td>
+  <td>Como desarrollador, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación.</td>
+  <td>
+    <strong>Escenario 1: Reporte de salud recibido.</strong><br>
+    Dado que un dispositivo envía un reporte de salud,<br>
+    cuando el sistema procesa el DeviceHealthReported,<br>
+    entonces registra el dispositivo, nivel de batería, señal, última conexión y timestamp.<br><br>
+    <strong>Escenario 2: Dispositivo sin comunicación.</strong><br>
+    Dado que un dispositivo no reporta actividad durante el periodo establecido,<br>
+    cuando el sistema ejecuta la verificación de salud,<br>
+    entonces identifica el dispositivo como potencialmente desconectado.<br><br>
+    <strong>Escenario 3: Recuperación del dispositivo.</strong><br>
+    Dado que un dispositivo previamente identificado con problemas vuelve a reportar información válida,<br>
+    cuando el sistema recibe el nuevo reporte,<br>
+    entonces actualiza su estado y registra la última comunicación disponible.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS11</strong></td>
+  <td>Implementación de procesamiento histórico para analítica de ocupación</td>
+  <td>Como desarrollador, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos.</td>
+  <td>
+    <strong>Escenario 1: Consulta histórica.</strong><br>
+    Dado que existen registros históricos de ocupación,<br>
+    cuando el administrador solicita información de un periodo determinado,<br>
+    entonces el sistema retorna los datos históricos correspondientes al estacionamiento o zona seleccionada.<br><br>
+    <strong>Escenario 2: Identificación de periodos de mayor ocupación.</strong><br>
+    Dado que existen registros históricos suficientes,<br>
+    cuando se ejecuta el procesamiento analítico,<br>
+    entonces identifica los periodos con mayor nivel de ocupación según los datos registrados.<br><br>
+    <strong>Escenario 3: Sin información suficiente.</strong><br>
+    Dado que el periodo consultado no contiene datos suficientes,<br>
+    cuando se solicita el análisis,<br>
+    entonces el sistema informa que no existen datos suficientes para generar el resultado.
+  </td>
+  <td>EP05</td>
+</tr>
+
+<tr>
+  <td><strong>TS12</strong></td>
+  <td>Implementación del sistema de notificaciones y preferencias</td>
+  <td>Como desarrollador, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de QuadRapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos.</td>
+  <td>
+    <strong>Escenario 1: Configuración de preferencias.</strong><br>
+    Dado que un usuario configura sus preferencias de notificación,<br>
+    cuando el sistema procesa la configuración,<br>
+    entonces almacena correctamente las preferencias asociadas al usuario.<br><br>
+    <strong>Escenario 2: Envío de alerta de baja disponibilidad.</strong><br>
+    Dado que se cumple la condición definida para generar una alerta de baja disponibilidad,<br>
+    cuando el servicio de notificaciones procesa el evento,<br>
+    entonces envía la notificación al usuario que tiene habilitado este tipo de alerta.<br><br>
+    <strong>Escenario 3: Notificaciones desactivadas.</strong><br>
+    Dado que un usuario ha desactivado las alertas de baja disponibilidad,<br>
+    cuando se produce el evento correspondiente,<br>
+    entonces el sistema no envía dicha notificación al usuario.
+  </td>
+  <td>EP05</td>
+</tr>
+
+<tr>
+  <td><strong>TS13</strong></td>
+  <td>Implementación de caché y funcionamiento parcial sin conexión</td>
+  <td>Como desarrollador, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad.</td>
+  <td>
+    <strong>Escenario 1: Almacenamiento de configuración.</strong><br>
+    Dado que la aplicación obtiene correctamente el mapa y la configuración de un estacionamiento,<br>
+    cuando recibe una nueva versión de la configuración,<br>
+    entonces almacena localmente la información junto con su versión correspondiente.<br><br>
+    <strong>Escenario 2: Consulta sin conexión.</strong><br>
+    Dado que el dispositivo pierde temporalmente la conexión,<br>
+    cuando el usuario consulta la información previamente almacenada,<br>
+    entonces la aplicación muestra el último estado disponible e indica su antigüedad.<br><br>
+    <strong>Escenario 3: Recuperación de conexión.</strong><br>
+    Dado que la conexión vuelve a estar disponible,<br>
+    cuando la aplicación detecta la conectividad,<br>
+    entonces solicita información actualizada al backend y reemplaza los datos almacenados cuando corresponde.
+  </td>
+  <td>EP02, EP03</td>
+</tr>
+
+  </tbody>
+</table>
+
+
+
 ## 3.3. Impact Mapping
 
 *Pendiente de elaboración.*
