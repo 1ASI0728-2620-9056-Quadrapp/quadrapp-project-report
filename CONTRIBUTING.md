@@ -1,7 +1,5 @@
 # Guía de contribución
 
-El informe se escribe directamente en `README.md`, que es el informe completo. Cada integrante debe usar su propia identidad de Git y registrar su trabajo en una rama propia con su Pull Request hacia `develop`.
-
 ## Organización del informe
 
 - `README.md`: informe completo en un solo archivo, con el orden del enunciado: carátula, registro de versiones, colaboración, contenido, Student Outcome, capítulos I–VII, conclusiones, bibliografía y anexos.
