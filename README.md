@@ -315,15 +315,48 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 2.3.1. User Personas
 
-*Pendiente de elaboración.*
+#### Conductores de la comunidad educativa
+
+![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona1.jfif)
+
+#### Administradores de estacionamientos universitarios
+
+![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona2.jfif)
+
 
 ### 2.3.2. User Task Matrix
 
-*Pendiente de elaboración.*
+| Tarea | Frecuencia | Prioridad | Frustración |
+| ------ | ------ | ------ | ------ |
+| Consultar la predicción de IA sobre disponibilidad de espacios por hora | Diario | Muy Alta | Alta |
+| Visualizar el mapa en tiempo real de los estacionamientos libres del campus | Diario | Muy Alta | Media |
+| Recibir alertas y recomendaciones de horario óptimo de salida | Diario | Alta | Media |
+| Reservar o asegurar un espacio de estacionamiento con anticipación | Ocasional | Media | Alta |
+| Realizar el pago digital de la tarifa de estacionamiento desde la app | Ocasional | Media | Media |
+| Revisar el historial de accesos y consumo de estacionamiento | Semanal | Baja | Baja |
+| Reportar incidencias o problemas de acceso en las tranqueras | Ocasional | Alta | Alta |
+
+#### Administrador de Estacionamientos Universitarios – Carlos Mendoza
+| Tarea | Frecuencia | Prioridad | Frustración |
+| ------ | ------ | ------ | ------ |
+| Monitorear la ocupación actual de las playas de estacionamiento del campus | Diario | Muy Alta | Alta |
+| Analizar reportes y métricas predictivas de demanda generadas por la IA | Semanal | Muy Alta | Alta |
+| Configurar tarifas dinámicas o accesos por tipo de usuario (estudiante/docente) | Semanal | Alta | Media |
+| Gestionar y resolver incidencias reportadas en las tranqueras o sensores IoT | Diario | Alta | Alta |
+| Generar reportes financieros mensuales de recaudación por estacionamiento | Mensual | Muy Alta | Media |
+| Actualizar el estado de mantenimiento de los sensores y cámaras de IA | Ocasional | Media | Media |
+| Identificar cuellos de botella en las horas punta de ingreso al campus | Semanal | Alta | Alta |
 
 ### 2.3.3. Empathy Mapping
 
-*Pendiente de elaboración.*
+#### Conductores de la comunidad educativa
+
+![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping1.png)
+
+#### Administradores de estacionamientos universitarios
+
+![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping2.png)
+
 
 ### 2.3.4. As-is Scenario Mapping
 
