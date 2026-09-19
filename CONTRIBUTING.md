@@ -24,7 +24,7 @@ Al editar un único archivo compartido, **los conflictos son la regla, no la exc
 | `release/X.Y.Z` | Preparación de una entrega | `develop` | `main` y `develop` |
 | `hotfix/X.Y.Z` | Corrección urgente de una versión publicada | `main` | `main` y `develop` |
 
-Las ramas de trabajo se nombran en inglés y por tarea, no por persona: `feature/ch02-interview-analysis`, no `feature/pedro`. Las versiones de entrega usan `X.Y.Z` y tags `vX.Y.Z`. El nombre del hito académico se registra en la descripción de la Release.
+Las ramas de trabajo se nombran en inglés y por tarea, no por persona: `feature/chapter-02-interview-analysis`, no `feature/pedro`. Las versiones de entrega usan `X.Y.Z` y tags `vX.Y.Z`. El nombre del hito académico se registra en la descripción de la Release.
 
 Cada rama parte de `develop` actualizado y se integra apenas la sección esté completa. Una rama que se queda semanas sobre una base vieja acumula conflictos en el README y bloquea al resto.
 
@@ -33,7 +33,7 @@ Cada rama parte de `develop` actualizado y se integra apenas la sección esté c
 ```bash
 git switch develop
 git pull --ff-only origin develop
-git switch -c feature/ch02-interview-analysis
+git switch -c feature/chapter-02-interview-analysis
 ```
 
 Edita en `README.md` las secciones de tu tarea y agrega las imágenes que necesites. Antes de registrar los cambios, revisa tu propio diff:
@@ -46,8 +46,8 @@ Registra tus cambios y publica la rama:
 
 ```bash
 git add README.md assets/capitulo-02/
-git commit -m "docs(ch02): analyze target segment interviews"
-git push -u origin feature/ch02-interview-analysis
+git commit -m "docs(chapter-02): analyze target segment interviews"
+git push -u origin feature/chapter-02-interview-analysis
 ```
 
 Abre un PR hacia `develop`. Explica las secciones modificadas y cómo verificaste los cambios. Otro integrante revisa redacción, contenido, fuentes e imágenes, y confirma que el diff no toque secciones de otros. Integra mediante **merge commit** para conservar los commits individuales. Antes de comenzar otra tarea, actualiza tu `develop`.
@@ -57,14 +57,14 @@ Abre un PR hacia `develop`. Explica las secciones modificadas y cómo verificast
 Formato: `type(scope): description`. Los mensajes de commit deben escribirse completamente en minúsculas y en inglés, incluida la descripción y los nombres propios.
 
 ```text
-docs(ch01): add startup description
-docs(ch02): analyze target segment interviews
+docs(chapter-01): add startup description
+docs(chapter-02): analyze target segment interviews
 docs(outcome): record delivery contributions
 fix(assets): correct lean ux canvas path
 chore(release): prepare release 0.1.0
 ```
 
-Usa `docs` para el informe, `fix` para errores y `chore` para mantenimiento. El alcance identifica el capítulo, sección o componente modificado. Realiza commits por cambios coherentes y verificables.
+Usa `docs` para el informe, `fix` para errores y `chore` para mantenimiento. El alcance identifica el capítulo modificado con el mismo nombre que usan las ramas (`chapter-01`, `chapter-02`, …) o el componente afectado (`assets`, `outcome`, `release`). El mensaje es una sola línea: el detalle va en la descripción del Pull Request, no en el cuerpo del commit.
 
 ## Markdown e imágenes
 
