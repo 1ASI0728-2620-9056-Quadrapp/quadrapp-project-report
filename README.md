@@ -232,7 +232,7 @@ El valor diferencial de Quadrapp no radica únicamente en identificar espacios l
   </thead>
   <tbody>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="assets/capitulo-01/alessandra-becerra.jpeg" alt="Becerra Tejeda, Alessandra Nicole" width="160"></td>
       <td>Becerra Tejeda, Alessandra Nicole</td>
       <td>u202318947</td>
       <td>Ingeniería de Software</td>
