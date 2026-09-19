@@ -225,11 +225,11 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
       <td>Descripción por completar.</td>
     </tr>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="assets/capitulo-01/yo.png" alt="Bejarano Martinez, Alvaro Leandro" width="160"></td>
       <td>Bejarano Martinez, Alvaro Leandro</td>
       <td>Por completar</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Curso la carrera de Ingeniería de Software y me destaco por mi perseverancia, organización y capacidad para trabajar en equipo. Me esfuerzo por mantener un ambiente estructurado dentro del grupo, donde cada miembro se sienta valorado y sus ideas sean escuchadas y respetadas. Mi compromiso es fomentar la colaboración efectiva, asegurando que cada contribución se integre de manera ordenada y alineada con los objetivos comunes del equipo.</td>
     </tr>
     <tr>
       <td>Foto por completar</td>
@@ -253,7 +253,7 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
       <td>Curso la carrera de Ingeniería de Software y tengo experiencia en desarrollo web trabajando con equipos pequeños. Me apasiona el Front End, sobre todo cuando hay espacio para el diseño creativo: interfaces 3D, animaciones, productos que se ven y se sienten distintos. En el equipo puedo aportar en levantamiento de requerimientos, diseño de interfaces, desarrollo web con React y TypeScript, diseño de bases de datos. En el equipo aporto organización y colaboración.</td>
     </tr>
   </tbody>
-</table>
+</table>    
 
 ## 1.2. Solution Profile
 
@@ -281,7 +281,38 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ## 1.3. Segmentos objetivo
 
-*Pendiente de elaboración.*
+**Conductores de la comunidad educativa:**
+La congestión en los campus universitarios y la falta de espacios en horas punta generan estrés, retrasos y pérdida de tiempo. Este segmento necesita de herramientas impulsadas por inteligencia artificial predictiva para saber a qué hora exacta llegar, planificar su salida y evitar perder valiosos minutos de clases o evaluaciones buscando un lugar donde estacionar.
+* **Tamaño del mercado:** Representan el **85%** de nuestro mercado objetivo (SAM), conformando la gran masa de usuarios que consumirán diariamente las predicciones y alertas de la aplicación.
+* **Edad estimada:** 17 a 55 años.
+* **Ubicación:** Zonas urbanas con alta concentración de sedes universitarias y centros de educación superior.
+* **Características demográficas y de comportamiento:**
+  * Incluye a jóvenes estudiantes, docentes y personal que conducen frecuentemente hacia el campus.
+  * Tienen una personalidad **Analítica / Práctica**, buscando optimizar cada minuto de su agenda diaria.
+  * Tienen horarios estrictos debido a cátedras, exámenes o turnos laborales.
+  * Utilizan smartphones y aplicaciones de movilidad (como Waze o Google Maps) de manera constante.
+  * Valoran enormemente la toma de decisiones basada en datos rápidos para evitar el tráfico.
+* **Necesidades principales:**
+  * Conocer la disponibilidad y la probabilidad de encontrar espacios libres antes de salir de casa mediante la IA predictiva.
+  * Recibir recomendaciones inteligentes de horarios de salida para evitar los picos de saturación.
+  * Ahorrar tiempo, combustible y dinero al no dar vueltas innecesarias ni usar cocheras informales.
+  * Llegar puntualmente y sin estrés a sus compromisos académicos.
+
+**Administradores de estacionamientos universitarios:**
+La gestión del aforo vehicular en las universidades suele ser reactiva y caótica en horas punta, generando cuellos de botella en las tranqueras de ingreso. Estos gestores requieren de paneles de control, IA y métricas precisas para anticiparse a la demanda, optimizar la ocupación de sus espacios y mejorar el flujo de entrada al campus.
+* **Tamaño del mercado:** Representan el **15%** de nuestro mercado objetivo (SAM), siendo el segmento B2B clave para la gestión operativa y la monetización de la plataforma.
+* **Edad estimada:** 30 a 60 años.
+* **Ubicación:** Campus universitarios y áreas adyacentes a las universidades.
+* **Características demográficas y de comportamiento:**
+  * Son jefes de logística, operaciones, seguridad del campus o concesionarios de playas de estacionamiento.
+  * Tienen una personalidad **Racional / Estratégica**, enfocada en la eficiencia, los procesos y el control.
+  * Se enfrentan a reclamos constantes por parte de la comunidad educativa debido a la congestión.
+  * Buscan modernizar sus sistemas tradicionales mediante tecnología, automatización y análisis de datos.
+* **Necesidades principales:**
+  * Optimizar la tasa de ocupación de los parqueos y rentabilizar los espacios vacíos.
+  * Reducir las filas y el caos vehicular en las puertas de ingreso durante los cambios de horario.
+  * Obtener reportes predictivos y métricas precisas sobre los patrones de demanda vehicular.
+  * Mejorar la satisfacción general de los estudiantes y docentes al brindar un servicio de acceso ordenado.
 
 ---
 
