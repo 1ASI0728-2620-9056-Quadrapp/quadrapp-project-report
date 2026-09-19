@@ -20,7 +20,7 @@
 
 | Nombres y apellidos | Código de estudiante |
 | --- | --- |
-| Becerra Tejeda, Alessandra Nicole | Por completar |
+| Becerra Tejeda, Alessandra Nicole | u202318947 |
 | Bejarano Martinez, Alvaro Leandro | Por completar |
 | Melgarejo Gomez, Marcia Victoria | Por completar |
 | Nanfuñay Liza, Pedro Jesus | Por completar |
@@ -140,7 +140,7 @@ del ABET – EAC - Student Outcome 3.
       <td>
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
-          AV1: Por completar.
+          AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
@@ -166,7 +166,7 @@ del ABET – EAC - Student Outcome 3.
       <td>
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
-          AV1: Por completar.
+          AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
@@ -218,9 +218,10 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
     <tr>
       <td>Foto por completar</td>
       <td>Becerra Tejeda, Alessandra Nicole</td>
-      <td>Por completar</td>
+      <td>u202318947</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Soy estudiante de 8vo ciclo de Ingeniería de Software, interesada en el desarrollo de soluciones tecnológicas y en seguir aprendiendo. Me considero una persona responsable, adaptable y comprometida, con facilidad para trabajar en equipo, organizar tareas y asumir nuevos retos.
+</td>
     </tr>
     <tr>
       <td>Foto por completar</td>
