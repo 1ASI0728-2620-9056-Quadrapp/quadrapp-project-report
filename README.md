@@ -326,6 +326,8 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 2.3.2. User Task Matrix
 
+#### Conductores de la comunidad educativa
+
 | Tarea | Frecuencia | Prioridad | Frustración |
 | ------ | ------ | ------ | ------ |
 | Consultar la predicción de IA sobre disponibilidad de espacios por hora | Diario | Muy Alta | Alta |
@@ -336,7 +338,8 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 | Revisar el historial de accesos y consumo de estacionamiento | Semanal | Baja | Baja |
 | Reportar incidencias o problemas de acceso en las tranqueras | Ocasional | Alta | Alta |
 
-#### Administrador de Estacionamientos Universitarios – Carlos Mendoza
+#### Administradores de estacionamientos universitarios
+
 | Tarea | Frecuencia | Prioridad | Frustración |
 | ------ | ------ | ------ | ------ |
 | Monitorear la ocupación actual de las playas de estacionamiento del campus | Diario | Muy Alta | Alta |
