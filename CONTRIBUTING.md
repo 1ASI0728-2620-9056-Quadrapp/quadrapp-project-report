@@ -1,6 +1,6 @@
 # Guía de contribución
 
-El informe se escribe directamente en `README.md`, que es el informe completo. Cada integrante debe usar su propia identidad de Git y otro integrante debe revisar su Pull Request.
+El informe se escribe directamente en `README.md`, que es el informe completo. Cada integrante debe usar su propia identidad de Git y registrar su trabajo en una rama propia con su Pull Request hacia `develop`.
 
 ## Organización del informe
 
@@ -50,7 +50,19 @@ git commit -m "docs(chapter-02): analyze target segment interviews"
 git push -u origin feature/chapter-02-interview-analysis
 ```
 
-Abre un PR hacia `develop`. Explica las secciones modificadas y cómo verificaste los cambios. Otro integrante revisa redacción, contenido, fuentes e imágenes, y confirma que el diff no toque secciones de otros. Integra mediante **merge commit** para conservar los commits individuales. Antes de comenzar otra tarea, actualiza tu `develop`.
+Abre un PR hacia `develop` y créalo con el mensaje por default, que toma el título del commit:
+
+```bash
+gh pr create --fill --base develop
+```
+
+El equipo trabaja sin revisión cruzada: cada integrante integra su propio PR apenas termina su sección, sin esperar a nadie. Antes de hacerlo, revisa tu propio diff y confirma que no toca secciones de otros. Integra mediante **merge commit**, con el mensaje por default, para conservar los commits individuales:
+
+```bash
+gh pr merge <número> --merge
+```
+
+Antes de comenzar otra tarea, actualiza tu `develop`.
 
 ## Conventional Commits
 
@@ -86,10 +98,10 @@ Usa formatos que GitHub renderice: `.png`, `.jpg` o `.webp`. Evita `.jfif`. Incl
 2. Crea `release/X.Y.Z` desde `develop`.
 3. Revisa contenido, índice, imágenes, bibliografía y anexos. Verifica la numeración de secciones contra el enunciado y la consistencia de los IDs entre capítulos: Epics, User Stories, Technical Stories, Quality Attribute Scenarios, Constraints y Architectural Drivers.
 4. Actualiza Registro de Versiones, Collaboration Insights y Student Outcome con aportes reales por integrante.
-5. Abre un PR hacia `main` y pide revisión de otro integrante.
+5. Abre un PR hacia `main` y, si hay observaciones del equipo, corrígelas en la misma rama de release antes de integrar.
 6. Tras integrar, crea el tag `vX.Y.Z` y la GitHub Release de la entrega. Integra también la rama de release en `develop`.
 
-Para un hotfix, aplica el mismo criterio de revisión desde `main`, publica una versión de parche y devuelve la corrección a `develop`.
+Para un hotfix, aplica el mismo criterio desde `main`, publica una versión de parche y devuelve la corrección a `develop`.
 
 ## Exportación del PDF
 
