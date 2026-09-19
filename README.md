@@ -415,7 +415,95 @@ La literatura sobre estacionamientos universitarios relaciona la falta de dispon
 
 ### 2.2.1. Diseño de entrevistas
 
-*Pendiente de elaboración.*
+Las entrevistas buscan validar el problema antes de proponer una solución: cuánto tiempo pierde realmente un conductor al buscar estacionamiento en el campus, con qué información cuenta al momento de salir de su casa y cómo el personal encargado del estacionamiento conoce y gestiona la ocupación. Se diseñó un guion por segmento objetivo. Las preguntas priorizan la experiencia actual del entrevistado y los hechos recientes sobre las opiniones generales. Las referencias a la tecnología y los escenarios hipotéticos se utilizan para explorar actitudes y expectativas sin mencionar Quadrapp. Sus respuestas se analizarán como preferencias declaradas y no como evidencia de un comportamiento real.
+
+Cada guion se organiza en cuatro bloques. Las **preguntas de perfil** sitúan al entrevistado en su contexto y recogen sus hábitos, herramientas y disposición ante la tecnología. Las **preguntas principales** exploran el proceso tal como ocurre hoy, pidiendo que el entrevistado narre episodios concretos y recientes en lugar de opiniones generales. Las **preguntas complementarias** cubren situaciones excepcionales y restricciones del entorno. La **pregunta de cierre** proyecta el escenario deseado y abre espacio para lo que el guion no previó.
+
+**Ficha de datos generales del entrevistado**
+
+| Dato | Detalle |
+| --- | --- |
+| Nombres y apellidos | |
+| Edad | |
+| Género | |
+| Distrito de residencia | |
+| Estado civil y composición familiar | |
+| Ocupación y vínculo con la universidad | |
+| Dispositivo principal | Marca y sistema operativo |
+| Navegador de preferencia | |
+| Canales digitales de uso frecuente | |
+| Marcas o referentes que admira | |
+
+#### Segmento 1: Conductores de la comunidad educativa
+
+Este segmento vive el problema en primera persona y de forma recurrente, por lo que el guion prioriza la reconstrucción de su rutina: a qué hora decide salir, qué consulta antes de hacerlo, qué ocurre cuando encuentra el estacionamiento lleno y cuánto tiempo pierde en consecuencia. Las preguntas buscan cuantificar la pérdida de tiempo y detectar las soluciones informales que ya emplea, como coordinar por mensajería con compañeros o adelantar su llegada por precaución.
+
+*Preguntas de perfil*
+
+1. Cuéntanos quién eres, qué haces en la universidad y cuántos días a la semana llegas conduciendo. ¿Con quién vives y quién más usa el vehículo?
+2. ¿Tu horario es fijo o variable? ¿Hay algún día en el que llegar tarde te genera un problema serio?
+3. ¿Qué aplicaciones usas para desplazarte y por qué canales te informas de lo que ocurre en el campus?
+4. ¿Te consideras una persona que planifica su día o que improvisa sobre la marcha? ¿Qué tan dispuesto estás a probar una aplicación nueva?
+
+*Preguntas principales*
+
+5. Descríbenos la última vez que condujiste al campus, desde que saliste de casa hasta que apagaste el motor.
+6. ¿Cómo decides a qué hora salir? ¿Sabes de antemano cómo estará el estacionamiento?
+7. Cuando vas en camino, ¿le consultas a alguien cómo está la situación? ¿Por qué medio?
+8. Cuéntanos la última vez que encontraste el estacionamiento lleno. ¿Qué hiciste, cuánto tiempo perdiste y qué consecuencias tuvo?
+9. Una vez dentro del campus, ¿cómo haces para encontrar un espacio libre?
+10. ¿Has cambiado tus planes por temor a no encontrar espacio? ¿Cuánto tiempo adicional calculas que eso te cuesta por semana?
+11. Descríbenos paso a paso lo que haces hoy para asegurarte un espacio, y con qué frecuencia repites cada paso.
+12. Del 1 al 10, ¿qué tan importante es este problema en tu día? ¿Cuál es tu mayor frustración al respecto?
+
+*Preguntas complementarias*
+
+13. ¿Qué cambia en semanas especiales, como el inicio de ciclo, los exámenes o los eventos masivos?
+14. Si pudieras saber una sola cosa antes de salir de casa, ¿cuál sería? ¿Preferirías que la aplicación te avise sola o consultarla tú?
+
+*Pregunta de cierre*
+
+15. Si supieras con anticipación la probabilidad de encontrar estacionamiento al llegar, ¿qué cambiaría en tu rutina? ¿Hay algo que no te hayamos preguntado y consideres importante?
+
+#### Segmento 2: Administradores de estacionamientos universitarios
+
+Este segmento reúne a quienes supervisan la operación diaria del estacionamiento: jefes de logística y operaciones, supervisores de turno y operadores de puerta. El guion se concentra en cómo conocen la ocupación, cómo reaccionan ante la saturación y qué información necesitan para gestionar el estacionamiento. Para que la entrevista dure entre tres y cinco minutos, se plantean ocho preguntas breves. Las repreguntas entre paréntesis son opcionales y solo se utilizan cuando la respuesta principal no proporciona suficiente información.
+
+**Datos generales y de configuración del estacionamiento**
+
+| Dato | Detalle |
+| --- | --- |
+| Cargo y tiempo en el puesto | |
+| Responsabilidad en la operación | |
+| Campus y nombre del estacionamiento | |
+| Capacidad total | Cantidad de espacios |
+| Zonas | Cantidad y nombres |
+| Horario de funcionamiento | |
+| Accesos vehiculares | Cantidad de entradas y salidas |
+| Control de ingreso | Credencial, lista, barrera u otro mecanismo |
+| Equipamiento y sistemas actuales | Tipo, cantidad y ubicación general de cámaras, sensores, tranqueras, lectores u otros |
+| Personal por turno | Cantidad y funciones |
+| Responsable de aprobar cambios tecnológicos | Área o cargo |
+
+*Preguntas de perfil*
+
+1. ¿Cuál es tu función principal durante un turno habitual?
+
+*Preguntas principales*
+
+2. Cuéntanos la última vez que el estacionamiento se llenó o estuvo cerca de llenarse. ¿Qué hiciste? (¿Cómo lo detectaste? ¿Con quién te coordinaste? ¿Cuál fue el resultado?)
+3. ¿Cómo sabes durante un turno cuántos espacios están disponibles? (¿De dónde obtienes el dato? ¿Cada cuánto se actualiza? ¿Qué tan confiable es?)
+4. ¿Cómo manejan actualmente la información de entradas, salidas y ocupación? (¿Quién la registra? ¿Dónde se almacena? ¿Cómo se preparan los reportes?)
+5. ¿Cuál es el problema que se repite con mayor frecuencia durante la operación? (¿Cuándo ocurrió por última vez? ¿Qué información te faltó para resolverlo?)
+
+*Preguntas complementarias*
+
+6. ¿Qué cambia durante el inicio de ciclo, los exámenes o los eventos masivos? (¿Cómo se preparan? ¿Qué dificultad suele presentarse?)
+7. Cuéntanos la última vez que falló un equipo de control del estacionamiento. ¿Cómo continuaron operando? (¿Quién atendió la falla? ¿Cuánto tiempo duró?)
+
+*Pregunta de cierre*
+
+8. Si pudieras disponer de una información que hoy no tienes, ¿cuál te ayudaría más a gestionar el estacionamiento y por qué?
 
 ### 2.2.2. Registro de entrevistas
 
