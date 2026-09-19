@@ -1569,11 +1569,15 @@ Las decisiones de diseño se tomaron en seis iteraciones, siguiendo los stages d
 
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-*Pendiente de elaboración.*
+Representa el ecosistema general de QuadRapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
+
+<img src="assets/capitulo-04/4.3.1-landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
+
 
 ### 4.3.2. Software Architecture Context Level Diagrams
 
-*Pendiente de elaboración.*
+<img src="assets/capitulo-04/4.3.2-context-level.png" alt="Universidad Peruana de Ciencias Aplicadas">
+
 
 ### 4.3.3. Software Architecture Container Level Diagrams
 
