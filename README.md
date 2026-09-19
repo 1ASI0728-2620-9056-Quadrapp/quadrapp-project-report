@@ -324,31 +324,36 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 ![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona2.jfif)
 
 
-### 2.3.2. User Task Matrix
-
-#### Conductores de la comunidad educativa
+  ### 2.3.2. User Task Matrix
+  
+  #### Conductores de la comunidad educativa
 
 | Tarea | Frecuencia | Prioridad | Frustración |
 | ------ | ------ | ------ | ------ |
-| Consultar la predicción de IA sobre disponibilidad de espacios por hora | Diario | Muy Alta | Alta |
-| Visualizar el mapa en tiempo real de los estacionamientos libres del campus | Diario | Muy Alta | Media |
-| Recibir alertas y recomendaciones de horario óptimo de salida | Diario | Alta | Media |
-| Reservar o asegurar un espacio de estacionamiento con anticipación | Ocasional | Media | Alta |
-| Realizar el pago digital de la tarifa de estacionamiento desde la app | Ocasional | Media | Media |
-| Revisar el historial de accesos y consumo de estacionamiento | Semanal | Baja | Baja |
-| Reportar incidencias o problemas de acceso en las tranqueras | Ocasional | Alta | Alta |
+| Ingresar a la aplicación con la cuenta institucional | Diario | Muy Alta | Alta |
+| Ver qué estacionamientos del campus están disponibles | Diario | Muy Alta | Media |
+| Conocer cuántos espacios libres hay en este momento | Diario | Muy Alta | Alta |
+| Revisar la ocupación por zonas del estacionamiento | Diario | Alta | Media |
+| Consultar cómo estará la disponibilidad en los próximos minutos | Diario | Muy Alta | Alta |
+| Ver de forma simple si el estacionamiento estará saturado al llegar | Diario | Alta | Media |
+| Recibir una recomendación según el tiempo que me falta para llegar | Diario | Muy Alta | Alta |
+| Actualizar la recomendación si cambia mi tiempo de llegada | Diario | Alta | Media |
+| Recibir notificaciones cuando la disponibilidad se ponga complicada | Diario | Alta | Media |
+| Configurar qué tipo de alertas quiero recibir | Ocasional | Media | Baja |
 
 #### Administradores de estacionamientos universitarios
 
 | Tarea | Frecuencia | Prioridad | Frustración |
 | ------ | ------ | ------ | ------ |
-| Monitorear la ocupación actual de las playas de estacionamiento del campus | Diario | Muy Alta | Alta |
-| Analizar reportes y métricas predictivas de demanda generadas por la IA | Semanal | Muy Alta | Alta |
-| Configurar tarifas dinámicas o accesos por tipo de usuario (estudiante/docente) | Semanal | Alta | Media |
-| Gestionar y resolver incidencias reportadas en las tranqueras o sensores IoT | Diario | Alta | Alta |
-| Generar reportes financieros mensuales de recaudación por estacionamiento | Mensual | Muy Alta | Media |
-| Actualizar el estado de mantenimiento de los sensores y cámaras de IA | Ocasional | Media | Media |
-| Identificar cuellos de botella en las horas punta de ingreso al campus | Semanal | Alta | Alta |
+| Dar de alta y configurar los estacionamientos del campus | Ocasional | Alta | Media |
+| Definir las zonas y la cantidad de espacios de cada estacionamiento | Ocasional | Alta | Media |
+| Vincular los sensores físicos con cada espacio de parqueo | Ocasional | Alta | Alta |
+| Configurar las entradas y salidas de vehículos | Ocasional | Media | Media |
+| Verificar que los sensores estén funcionando correctamente | Diario | Muy Alta | Alta |
+| Consultar la ocupación actual de los estacionamientos | Diario | Muy Alta | Alta |
+| Revisar el historial de ocupación de periodos anteriores | Semanal | Alta | Media |
+| Identificar los horarios de mayor demanda | Semanal | Alta | Alta |
+| Detectar y revisar inconsistencias entre los sensores y los accesos | Diario | Alta | Alta |
 
 ### 2.3.3. Empathy Mapping
 
