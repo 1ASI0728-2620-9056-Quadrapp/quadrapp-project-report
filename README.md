@@ -257,7 +257,106 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 1.2.1. Antecedentes y problemática
 
-*Pendiente de elaboración.*
+### Antecedentes
+
+La gestión de los estacionamientos constituye un desafío para los campus universitarios debido a la limitada disponibilidad de espacios y a la variación de la demanda durante la jornada académica. Paudel et al. (2024) señalan que la demanda de estacionamiento en los campus universitarios representa un problema debido al crecimiento de la población universitaria y a las restricciones existentes para ampliar la capacidad de estacionamiento. Asimismo, los autores destacan la necesidad de comprender y predecir el comportamiento de la demanda para aprovechar de manera más eficiente los recursos disponibles.
+
+Esta problemática se relaciona también con el tiempo que los usuarios pueden invertir en la búsqueda de un espacio disponible. Mohandes et al. (2019) identificaron que, en un campus universitario, los usuarios pueden dedicar una cantidad considerable de tiempo a buscar un espacio adecuado. Ante esta situación, los autores plantearon un sistema inteligente que utiliza información actualizada sobre los espacios disponibles para orientar a los usuarios hacia alternativas de estacionamiento.
+
+En este contexto, los sistemas inteligentes de estacionamiento han sido estudiados como una alternativa para mejorar la gestión de estos espacios. Channamallu et al. (2025) señalan que los campus universitarios presentan una combinación de oferta limitada, demanda fluctuante y diferentes necesidades de los usuarios, condiciones que pueden generar congestión, incremento del tiempo de búsqueda e insatisfacción. Su investigación analiza una aplicación de estacionamiento inteligente orientada a mejorar la eficiencia del estacionamiento y la experiencia de los usuarios en un entorno universitario.
+
+Además de conocer la disponibilidad actual, el uso de técnicas de aprendizaje automático permite estimar la demanda y ocupación futura de los estacionamientos. Paudel et al. (2024) desarrollaron modelos de aprendizaje automático para predecir la demanda horaria de estacionamientos en diferentes zonas de un campus universitario utilizando, entre otros factores, información relacionada con los horarios de clases y la utilización de los edificios. Los resultados evidenciaron la viabilidad de utilizar modelos de aprendizaje automático para anticipar patrones de demanda en estacionamientos universitarios.
+
+De manera similar, investigaciones sobre predicción de ocupación en estacionamientos universitarios han evaluado diferentes modelos de aprendizaje automático. Channamallu et al. (2023) analizaron modelos como Random Forest, Decision Tree, Linear Regression y Support Vector Regression para predecir la ocupación de un estacionamiento universitario, encontrando diferencias en su capacidad predictiva. Los autores señalan que una predicción precisa de la ocupación puede contribuir a optimizar la utilización de los espacios, reducir la congestión y mejorar la gestión de los estacionamientos en campus universitarios.
+
+Asimismo, investigaciones recientes continúan incorporando inteligencia artificial y sistemas de monitoreo para mejorar la disponibilidad de información sobre estacionamientos universitarios. Deno et al. (2026) desarrollaron una infraestructura inteligente para campus universitarios que combina detección de vehículos, comunicación IoT y mecanismos de predicción, permitiendo proporcionar información sobre la disponibilidad de espacios a estudiantes, docentes y visitantes.
+
+En conjunto, los antecedentes evidencian que la gestión inteligente de estacionamientos universitarios puede abordarse mediante el monitoreo de la ocupación, el análisis de información histórica y el uso de modelos de aprendizaje automático para anticipar patrones de demanda u ocupación. En este contexto, QuadRapp propone una solución orientada específicamente a los estacionamientos universitarios, mediante una aplicación que permita consultar la disponibilidad de espacios y utilizar técnicas de inteligencia artificial para predecir su disponibilidad en determinados períodos. De esta manera, la información generada por el sistema busca facilitar la planificación del desplazamiento de los usuarios y contribuir a una gestión más eficiente de los espacios de estacionamiento disponibles.
+
+### Problemática (5Ws y 2Hs)
+
+#### What (Qué)
+
+**¿Cuál es el problema?**
+
+La dificultad para conocer y anticipar la disponibilidad de espacios de estacionamiento dentro de los campus universitarios. La oferta limitada y la variación de la demanda durante la jornada académica pueden generar dificultades para encontrar espacios disponibles, incrementando el tiempo de búsqueda y la circulación de vehículos dentro del campus (Paudel et al., 2024; Channamallu et al., 2025).
+
+#### When (Cuándo)
+
+**¿Cuándo se presenta el problema?**
+
+* Durante los horarios de mayor ingreso de estudiantes, docentes y personal administrativo.
+* Al inicio y finalización de las jornadas académicas.
+* Durante los cambios entre bloques de clases.
+* En períodos en los que se concentra una mayor cantidad de vehículos en el campus.
+* Durante actividades universitarias que pueden incrementar temporalmente la demanda de estacionamientos.
+
+#### Who (Quién)
+
+**¿Quiénes están involucrados?**
+
+* Conductores de la comunidad educativa que utilizan los estacionamientos universitarios.
+* Personal encargado de administrar los estacionamientos universitarios.
+
+**¿A quién le sucede el problema?**
+
+A los conductores de la comunidad educativa que necesitan encontrar un espacio disponible dentro del campus y no cuentan con información suficiente sobre la ocupación actual o prevista.
+
+**¿Quién utilizará el producto?**
+
+* Conductores de la comunidad educativa.
+* Administradores de estacionamientos universitarios.
+
+#### Why (Por qué)
+
+**¿Cuál es la causa del problema?**
+
+* Disponibilidad limitada de espacios de estacionamiento frente a una demanda variable.
+* Variación de la demanda según los horarios y actividades académicas.
+* Falta de información anticipada sobre la disponibilidad de espacios.
+* Ausencia de mecanismos que permitan analizar patrones históricos de ocupación.
+* Limitado uso de herramientas de inteligencia artificial para predecir la disponibilidad futura de estacionamientos.
+
+La literatura evidencia que los patrones de demanda de estacionamiento universitario pueden analizarse mediante información histórica y variables relacionadas con las actividades del campus, como los horarios de clases y la utilización de los edificios (Paudel et al., 2024).
+
+#### How (Cómo)
+
+**¿En qué condiciones los usuarios utilizarán nuestro producto?**
+
+* Cuando necesiten desplazarse hacia el campus universitario utilizando un vehículo.
+* Antes de iniciar su jornada académica o laboral.
+* Durante períodos de alta demanda de estacionamientos.
+* Cuando deseen conocer la disponibilidad de espacios antes de llegar al campus.
+* Cuando necesiten planificar su desplazamiento considerando la disponibilidad prevista de estacionamientos.
+
+**¿Cómo funcionará la solución?**
+
+* El sistema recopilará información relacionada con la ocupación y disponibilidad de los estacionamientos.
+* Los datos históricos serán procesados para identificar patrones de ocupación.
+* Se empleará un modelo de inteligencia artificial para realizar predicciones sobre la disponibilidad de espacios.
+* QuadRapp presentará al usuario información sobre la disponibilidad actual y la disponibilidad prevista para determinados horarios.
+* Los usuarios podrán utilizar esta información para planificar su llegada y desplazamiento dentro del campus.
+
+**¿Cómo accederán los usuarios al producto?**
+
+* Mediante una aplicación móvil.
+* A través de una interfaz que permita consultar la disponibilidad de los estacionamientos.
+* Mediante información de disponibilidad prevista generada a partir del modelo de inteligencia artificial.
+
+#### How much (Cuánto)
+
+**¿Cuánto impacta el problema?**
+
+El problema puede manifestarse en:
+
+* Incremento del tiempo destinado a buscar espacios disponibles.
+* Mayor circulación de vehículos dentro de las zonas de estacionamiento.
+* Posible congestión durante los períodos de mayor demanda.
+* Dificultad de los usuarios para planificar anticipadamente su llegada al campus.
+* Menor aprovechamiento de la información histórica disponible para anticipar períodos de mayor o menor demanda.
+
+La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025; Mohandes et al., 2019).
+
 
 ### 1.2.2. Lean UX Process
 
