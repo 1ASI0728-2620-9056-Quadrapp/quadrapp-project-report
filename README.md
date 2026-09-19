@@ -1,5 +1,3 @@
-<!-- Generado con python3 scripts/build_report.py. Editar report/*.md, no README.md. Guía: CONTRIBUTING.md -->
-
 # Informe de Trabajo Final
 
 <div align="center">
