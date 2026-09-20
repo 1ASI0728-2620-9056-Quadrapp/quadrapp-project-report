@@ -22,7 +22,7 @@
 | --- | --- |
 | Becerra Tejeda, Alessandra Nicole | u202318947 |
 | Bejarano Martinez, Alvaro Leandro | Por completar |
-| Melgarejo Gomez, Marcia Victoria | Por completar |
+| Melgarejo Gomez, Marcia Victoria | U20231C505 |
 | Nanfuñay Liza, Pedro Jesus | u202215462 |
 | Sulca Sanchez, Piero Angel | u202423711 |
 
@@ -149,7 +149,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Por completar.
+          AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -175,7 +175,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Por completar.
+          AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -248,14 +248,16 @@ El valor diferencial de Quadrapp no radica únicamente en mostrar los espacios d
       <td>Descripción por completar.</td>
     </tr>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="assets/capitulo-01/FotoMelgarejo.png" alt="Sulca Sanchez, Piero Angel" width="160"></td>
       <td>Melgarejo Gomez, Marcia Victoria</td>
-      <td>Por completar</td>
+      <td>U20231C505</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Actualmente estoy cursando el octavo ciclo de la carrera de Ingeniería de Software en la UPC. Opté por esta carrera debido a mi interés en el mundo de la tecnología y todo lo que este campo puede ofrecer a la sociedad.
+Me caracterizo por ser una persona curiosa, persistente y colaborativa.
+Tengo conocimientos en C++, HTML, CSS, JS, Phyton</td>
     </tr>
     <tr>
-      <td><img src="assets/capitulo-01/pedro-nanfuñay.jpeg" alt="Nanfuñay Liza, Pedro Jesús" width="160"></td>
+      <td>v</td>
       <td>Nanfuñay Liza, Pedro Jesus</td>
       <td>u202215462</td>
       <td>Ingeniería de Software</td>
@@ -1014,39 +1016,33 @@ El proceso seguido por el equipo fue el siguiente:
 
 En esta sección se define el Ubiquitous Language del dominio del proyecto, con el objetivo de establecer un lenguaje común entre todos los miembros del equipo y los stakeholders. Este glosario incluye términos clave del dominio de la gestión de estacionamientos en universidades y centros educativos, evitando ambigüedades y facilitando la comunicación durante el desarrollo de la solución.
 
+<div align="center">
+
 | Term | Definition |
 | --- | --- |
-| Campus (Campus) | Espacio físico de la universidad o centro educativo donde se desarrollan las actividades académicas y donde se ubican los estacionamientos. |
-| Educational Community (Comunidad Educativa) | Conjunto de estudiantes, docentes y personal administrativo que se trasladan regularmente al campus. |
-| Driver (Conductor) | Miembro de la comunidad educativa que llega al campus en un vehículo y utiliza el estacionamiento. |
-| Parking Administrator (Administrador de Estacionamiento) | Persona responsable de supervisar la ocupación, el acceso y la operación diaria de los estacionamientos de la institución. |
+| Parking Administrator (Administrador de Estacionamiento) | Persona responsable de supervisar la ocupación y la operación diaria de los estacionamientos de la institución. |
+| Security Guard (Personal de Vigilancia) | Persona encargada de controlar el acceso al estacionamiento y de verificar la credencial institucional de los conductores. |
+| Institutional Credential (Credencial Institucional) | Documento de identificación emitido por la institución que el conductor debe presentar de forma obligatoria para ingresar al estacionamiento. |
 | Parking Lot (Estacionamiento) | Área destinada al aparcamiento de vehículos dentro o junto al campus, administrada por la institución. |
 | Parking Zone (Zona de Estacionamiento) | Sección delimitada de un estacionamiento (nivel, sector o bloque) que agrupa un conjunto de espacios. |
 | Parking Space (Espacio de Estacionamiento) | Lugar individual y delimitado donde puede estacionarse un vehículo. |
-| Vehicle (Vehículo) | Automóvil u otro medio de transporte motorizado que ingresa al estacionamiento y está asociado a un conductor. |
-| License Plate (Placa) | Identificador único de un vehículo, utilizado para asociarlo con su conductor y validar su acceso. |
-| Authorized Vehicle (Vehículo Autorizado) | Vehículo registrado cuyo conductor tiene permiso para ingresar y utilizar el estacionamiento. |
+| Parking Capacity (Capacidad de Estacionamiento) | Número total de espacios que tiene un estacionamiento o una zona de estacionamiento. |
+| Access Point (Punto de Acceso) | Lugar por donde los vehículos ingresan o salen del estacionamiento y donde se realiza el control de acceso. |
+| Space Status (Estado del Espacio) | Condición de un espacio de estacionamiento en un momento determinado: libre u ocupado. |
 | Occupancy (Ocupación) | Cantidad de espacios de estacionamiento ocupados en un momento determinado. |
+| Occupancy Rate (Porcentaje de Ocupación) | Proporción de espacios ocupados respecto a la capacidad total de un estacionamiento o zona. |
 | Availability (Disponibilidad) | Cantidad de espacios de estacionamiento libres en un momento determinado. |
-| Availability Prediction (Predicción de Disponibilidad) | Estimación de cuántos espacios estarán libres en un momento futuro, basada en información actual e histórica. |
-| Availability Probability (Probabilidad de Disponibilidad) | Nivel de posibilidad, expresado como porcentaje, de que el conductor encuentre un espacio libre al momento de su llegada. No constituye una garantía. |
-| Estimated Time of Arrival (Tiempo Estimado de Llegada) | Momento en que se calcula que el conductor llegará al estacionamiento, según su ubicación y desplazamiento. |
+| Availability Level (Nivel de Disponibilidad) | Categoría (alta, media o baja) que resume qué tan probable es encontrar espacio libre en un estacionamiento o zona. |
 | Historical Occupancy (Ocupación Histórica) | Registro de la ocupación del estacionamiento en fechas y horas pasadas, utilizado para identificar comportamientos recurrentes. |
-| Academic Schedule (Horario Académico) | Calendario de clases y actividades de la institución que influye en los momentos de llegada y salida de los conductores. |
+| Availability Prediction (Predicción de Disponibilidad) | Estimación de la disponibilidad que habrá en un momento futuro, basada en información actual e histórica. |
+| Availability Probability (Probabilidad de Disponibilidad) | Posibilidad, expresada como porcentaje, de que el conductor encuentre un espacio libre al momento de su llegada. Es una estimación, no una garantía. |
+| Estimated Time of Arrival (Tiempo Estimado de Llegada) | Momento en que se calcula que el conductor llegará al estacionamiento, según su ubicación y desplazamiento. |
 | Peak Hours (Horas Pico) | Períodos de mayor demanda de estacionamiento, generalmente al inicio y al término de las clases. |
 | Demand Pattern (Patrón de Demanda) | Comportamiento recurrente en la cantidad de vehículos que buscan estacionar según el día, la hora o el calendario académico. |
 | Congestion (Congestión) | Acumulación de vehículos dentro o alrededor del campus que dificulta la circulación, la búsqueda de espacio o el acceso. |
 | Parking Search Time (Tiempo de Búsqueda de Estacionamiento) | Tiempo que un conductor invierte desde su llegada al campus hasta encontrar un espacio donde estacionar. |
-| Reservation (Reserva) | Asignación anticipada de un espacio de estacionamiento a un conductor para un período determinado. |
-| Entry (Ingreso) | Momento en que un vehículo autorizado accede al estacionamiento. |
-| Exit (Salida) | Momento en que un vehículo abandona el estacionamiento y finaliza su estadía. |
-| Parking Stay (Estadía) | Período comprendido entre el ingreso y la salida de un vehículo del estacionamiento. |
-| Access Control (Control de Acceso) | Proceso mediante el cual se verifica que un vehículo o conductor pueda ingresar o salir del estacionamiento. |
-| Access QR Code (Código QR de Acceso) | Código que el conductor presenta como alternativa de identificación cuando la placa no puede ser reconocida. |
-| Access Exception (Excepción de Acceso) | Situación en la que el reconocimiento de la placa falla o el vehículo no puede validarse, requiriendo un mecanismo alternativo. |
-| Parking Fee (Tarifa de Estacionamiento) | Monto que el conductor debe pagar por el uso del estacionamiento o por una reserva. |
-| Payment (Pago) | Acción mediante la cual el conductor abona la tarifa correspondiente a su estadía o reserva. |
-| Institutional License (Licencia Institucional) | Acuerdo mediante el cual una universidad o centro educativo contrata el uso de la solución para sus estacionamientos. |
+
+</div>
 
 <div style="break-after: page;"></div>
 
@@ -2380,11 +2376,11 @@ En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicad
 
 El propósito del diseño es definir la arquitectura de alto nivel de Quadrapp, una solución que permite a los conductores de la comunidad educativa conocer no solo la disponibilidad actual de un estacionamiento universitario, sino también la probabilidad de encontrar un espacio libre al momento de su llegada. Con esto se busca reducir la incertidumbre, el tiempo de búsqueda y la congestión dentro y alrededor del campus, que son los problemas identificados en el Capítulo I.
 
-Para lograrlo, la arquitectura debe combinar información en tiempo real (sensores IoT y procesamiento Edge) con datos históricos, horarios académicos y tiempos estimados de llegada, para generar predicciones de disponibilidad. Al mismo tiempo, debe ofrecer a los administradores de estacionamientos universitarios un dashboard que centralice la ocupación, las reservas, los movimientos de vehículos, el comportamiento histórico y los períodos de mayor demanda, de modo que puedan pasar de una gestión reactiva a una preventiva.
+Para lograrlo, la arquitectura debe combinar la ocupación en tiempo casi real, captada por sensores IoT y un gateway instalado en el campus, con datos históricos, la velocidad de flujo de entradas y salidas, el calendario académico y los eventos del campus. Con esta información se generan pronósticos de disponibilidad a 15, 30, 45 y 60 minutos. La aplicación móvil del conductor calcula en el dispositivo su tiempo estimado de llegada y envía únicamente los minutos, de modo que la asesoría de llegada se obtiene sin transmitir su ubicación. Al mismo tiempo, la consola web de operación debe ofrecer a los administradores el estado actual del estacionamiento, la saturación prevista, el historial de ocupación y la precisión de las predicciones, para que pasen de una gestión reactiva a una preventiva.
 
-El diseño también debe respetar el contexto del negocio: el estacionamiento es gratuito para la comunidad educativa y el ingreso exige la credencial institucional, por lo que Quadrapp no gestiona cobros ni reemplaza el control de acceso. Su aporte está en la información, la predicción y la gestión.
+El diseño también debe respetar el contexto del negocio. El estacionamiento es gratuito para la comunidad educativa y el ingreso exige la credencial institucional, que verifica el personal de vigilancia. Por eso Quadrapp no gestiona reservas, cobros ni reconocimiento de placas, y no reemplaza el control de acceso. Su aporte está en la información, la predicción y la gestión. Además, la solución debe atender a varias instituciones, con los datos de cada una aislados de las demás.
 
-Las decisiones de esta sección orientan el diseño estratégico con Domain-Driven Design (4.2) y las vistas de arquitectura (4.3). Se priorizan los atributos de calidad que más afectan la confianza del conductor en la predicción: precisión, frescura de los datos, disponibilidad ante fallas de conectividad y desempeño en horas pico.
+Las decisiones de esta sección orientan el diseño estratégico con Domain-Driven Design (4.2) y las vistas de arquitectura (4.3). Se priorizan los atributos de calidad que más afectan la confianza del conductor en la información: precisión de la asesoría, frescura de los datos de ocupación, tolerancia a fallas de conectividad, desempeño en horas pico y confiabilidad de los datos de los sensores.
 
 
 ### 4.1.2. Attribute-Driven Design Inputs
@@ -2394,125 +2390,342 @@ Los inputs del proceso ADD son la funcionalidad primaria con impacto en la arqui
 
 #### 4.1.2.1. Primary Functionality (Primary User Stories)
 
-*Pendiente de elaboración.*
+De las siete épicas y las treinta y seis User Stories del Capítulo III, se seleccionaron las que condicionan decisiones de arquitectura: la autenticación multi-institución (US01), la ocupación en tiempo casi real y su confiabilidad (US05, US07, US08), la predicción y la asesoría de llegada (US09, US13, US36), las alertas (US23), la consola de operación (US29), la precisión de las predicciones (US34) y el calendario académico como insumo del modelo (US35). Se incluyen las épicas EP01 a EP05 y EP07 que las agrupan. La épica EP06 (Landing Page) y las historias de configuración, consulta histórica y suscripción no se repiten aquí porque no introducen decisiones arquitectónicas adicionales a las ya cubiertas.
+
+| Epic / User Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
+| --- | --- | --- | --- | --- |
+| **EP01** | Acceso e identidad | Permitir que estudiantes, docentes y personal administrativo accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura. | No aplica | No aplica |
+| **EP02** | Disponibilidad de estacionamientos | Permitir consultar el estado actual de los estacionamientos universitarios, incluyendo espacios disponibles, ocupados y estados desconocidos por zona. | No aplica | No aplica |
+| **EP03** | Predicción y asesoría de llegada | Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento. | No aplica | No aplica |
+| **EP04** | Gestión e infraestructura de estacionamientos | Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores utilizados para detectar la ocupación. | No aplica | No aplica |
+| **EP05** | Analítica histórica | Permitir que la institución consulte la información histórica de ocupación, los periodos de mayor demanda y la precisión de las predicciones. | No aplica | No aplica |
+| **EP07** | Alertas y notificaciones | Permitir que el conductor se suscriba a las alertas de un estacionamiento y gestione las preferencias con las que desea recibirlas. | No aplica | No aplica |
+| **US01** | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | **Escenario 1: Solicitud del código de verificación.**<br>Dado que el usuario ingresa un correo cuyo dominio pertenece a una universidad registrada,<br>cuando solicita el acceso,<br>entonces el sistema envía un código de un solo uso a ese correo e informa su periodo de vigencia.<br><br>**Escenario 2: Código válido.**<br>Dado que el usuario recibió un código vigente,<br>cuando lo ingresa dentro de su periodo de vigencia,<br>entonces el sistema habilita su sesión con el rol y la universidad que le corresponden.<br><br>**Escenario 3: Código incorrecto o vencido.**<br>Dado que el código ingresado no coincide con el enviado o su vigencia terminó,<br>cuando el usuario intenta continuar,<br>entonces el sistema rechaza el acceso e informa que debe solicitar un nuevo código.<br><br>**Escenario 4: Correo invitado por una institución.**<br>Dado que el correo no pertenece a un dominio habilitado pero cuenta con una invitación vigente o con una cuenta creada previamente,<br>cuando el usuario solicita el acceso,<br>entonces el sistema envía el código y le otorga el rol registrado en su cuenta o invitación.<br><br>**Escenario 5: Correo sin vínculo institucional.**<br>Dado que el correo no pertenece a un dominio habilitado y tampoco tiene invitación ni cuenta previa,<br>cuando el usuario solicita el acceso,<br>entonces el sistema no envía ningún código e informa que el correo no corresponde a una institución habilitada.<br><br>**Escenario 6: Sesión vigente.**<br>Dado que el usuario mantiene una sesión válida,<br>cuando vuelve a utilizar la aplicación,<br>entonces el sistema conserva su acceso sin solicitar un nuevo código. | EP01 |
+| **US05** | Consultar disponibilidad actual | Como usuario, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | **Escenario 1: Espacios disponibles.**<br>Dado que existen datos actualizados de los sensores,<br>cuando el usuario consulta un estacionamiento,<br>entonces el sistema muestra los espacios libres y ocupados.<br><br>**Escenario 2: Espacio ocupado.**<br>Dado que el servicio de ocupación confirma un espacio como ocupado tras una detección estable,<br>cuando se actualiza la información de disponibilidad,<br>entonces el espacio se presenta como ocupado.<br><br>**Escenario 3: Espacio libre.**<br>Dado que el servicio de ocupación confirma un espacio como libre tras el tiempo mínimo sin detección,<br>cuando se actualiza la información,<br>entonces el espacio se presenta como disponible.<br><br>**Escenario 4: Antigüedad del dato.**<br>Dado que cada consulta corresponde a un estado consolidado en un momento determinado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema informa la antigüedad de esa información. | EP02 |
+| **US07** | Actualizar disponibilidad | Como usuario, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | **Escenario 1: Cambio a ocupado.**<br>Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>cuando el evento es procesado,<br>entonces el sistema actualiza el estado del espacio.<br><br>**Escenario 2: Cambio a libre.**<br>Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>cuando el evento es procesado,<br>entonces el sistema refleja el nuevo estado.<br><br>**Escenario 3: Sin cambios de estado.**<br>Dado que los sensores continúan reportando su actividad pero ningún espacio cambia de estado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema conserva el último estado válido e informa la marca de tiempo a la que corresponde. | EP02 |
+| **US08** | Gestionar estado desconocido | Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | **Escenario 1: Sensor sin reportar actividad.**<br>Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>cuando deja de reportar su actividad y se supera ese intervalo,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 2: Sensor con batería crítica.**<br>Dado que un sensor informa periódicamente su nivel de batería,<br>cuando el nivel reportado se encuentra por debajo del umbral configurado,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 3: Espacio desconocido.**<br>Dado que un espacio se encuentra en estado UNKNOWN,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema lo presenta como desconocido y lo excluye del conteo de espacios disponibles.<br><br>**Escenario 4: Recuperación del sensor.**<br>Dado que un sensor reanuda el reporte de su actividad,<br>cuando informa una detección estable durante el tiempo mínimo configurado,<br>entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado. | EP02 |
+| **US09** | Consultar predicción de disponibilidad | Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus. | **Escenario 1: Predicción disponible.**<br>Dado que existen datos históricos suficientes,<br>cuando el usuario consulta una predicción,<br>entonces el sistema muestra la disponibilidad estimada.<br><br>**Escenario 2: Origen del pronóstico.**<br>Dado que cada pronóstico se genera con una versión de modelo y un nivel de confianza,<br>cuando el usuario consulta la disponibilidad estimada,<br>entonces el sistema informa el momento de su generación y su nivel de confianza.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el estacionamiento no acumula historial suficiente,<br>cuando el usuario realiza la consulta,<br>entonces el sistema presenta la estimación de contingencia e informa que su nivel de confianza es bajo. | EP03 |
+| **US13** | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | **Escenario 1: Asesoría para la hora de llegada.**<br>Dado que la aplicación calcula en el dispositivo el tiempo estimado de llegada y envía únicamente los minutos,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema entrega la probabilidad de encontrar espacio a esa hora estimada.<br><br>**Escenario 2: Tiempo de llegada inválido.**<br>Dado que el tiempo estimado calculado es negativo o supera el máximo admitido,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el pronóstico utilizado proviene de la estimación de contingencia,<br>cuando se genera la asesoría,<br>entonces el sistema la entrega e informa que su nivel de confianza es bajo. | EP03 |
+| **US23** | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | **Escenario 1: Alerta programada por saturación prevista.**<br>Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>entonces el sistema le envía la alerta correspondiente.<br><br>**Escenario 2: Aviso inmediato al consultar la asesoría.**<br>Dado que el conductor tiene habilitadas sus notificaciones,<br>cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>**Escenario 3: Notificaciones deshabilitadas.**<br>Dado que el conductor deshabilitó las notificaciones,<br>cuando se prevé la saturación dentro de su franja suscrita,<br>entonces el sistema conserva la suscripción y omite el envío.<br><br>**Escenario 4: Evitar alertas repetitivas.**<br>Dado que ya se envió una alerta para una condición determinada,<br>cuando la misma condición continúa activa,<br>entonces el sistema evita generar alertas repetitivas innecesarias. | EP07 |
+| **US29** | Monitorear la operación del estacionamiento desde la consola | Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | **Escenario 1: Estado actual del estacionamiento.**<br>Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>cuando consulta el estacionamiento a su cargo,<br>entonces el sistema presenta la capacidad total, los espacios libres, los ocupados, los desconocidos y el flujo de entradas y salidas del periodo.<br><br>**Escenario 2: Aviso de saturación prevista.**<br>Dado que el pronóstico indica que el estacionamiento alcanzará su saturación dentro del horizonte consultado,<br>cuando el operador consulta la consola,<br>entonces el sistema informa el momento previsto de saturación.<br><br>**Escenario 3: Información desactualizada.**<br>Dado que el estacionamiento no recibe eventos dentro del tiempo máximo de vigencia,<br>cuando el operador consulta el estado,<br>entonces el sistema informa la antigüedad del último dato consolidado. | EP02, EP03, EP04 |
+| **US34** | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | **Escenario 1: Precisión del periodo.**<br>Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>cuando el administrador consulta un periodo,<br>entonces el sistema presenta el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>**Escenario 2: Evolución por versión del modelo.**<br>Dado que el modelo de predicción se actualiza periódicamente,<br>cuando el administrador compara los periodos disponibles,<br>entonces el sistema distingue los resultados obtenidos con cada versión del modelo.<br><br>**Escenario 3: Periodo sin comparación posible.**<br>Dado que un periodo no cuenta con pronósticos y ocupación observada suficientes,<br>cuando el administrador lo consulta,<br>entonces el sistema informa que ese periodo no permite calcular la precisión. | EP05 |
+| **US35** | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | **Escenario 1: Registro del calendario académico.**<br>Dado que el administrador dispone del calendario del ciclo,<br>cuando registra sus periodos de clases, exámenes y receso,<br>entonces el sistema los incorpora como insumo de las predicciones de su institución.<br><br>**Escenario 2: Registro de un evento especial.**<br>Dado que el campus realizará un evento de alta afluencia,<br>cuando el administrador lo registra con su fecha, su horario y el estacionamiento afectado,<br>entonces el sistema lo considera al generar los pronósticos de esas franjas.<br><br>**Escenario 3: Cancelación de un evento.**<br>Dado que un evento registrado se cancela,<br>cuando el administrador lo retira,<br>entonces el sistema deja de considerarlo y regenera los pronósticos de las franjas afectadas. | EP03, EP04 |
+| **US36** | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa. | **Escenario 1: Estacionamiento lleno con salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y el contador de flujo registra salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa el rango de tiempo estimado para la próxima liberación junto con su nivel de confianza.<br><br>**Escenario 2: Sin salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y no se registran salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa que no es posible estimar el tiempo de espera.<br><br>**Escenario 3: Estacionamiento con espacios libres.**<br>Dado que el estacionamiento presenta espacios libres,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema no presenta la estimación de espera. | EP03 |
+
 
 #### 4.1.2.2. Quality Attribute Scenarios
 
-Se identificaron ocho escenarios de atributos de calidad en primera instancia, a partir de los Business Outcomes, las Features Assumptions y los riesgos del Lean UX (sección 1.2.2). Cubren la precisión de la predicción, la frescura de los datos de ocupación, la disponibilidad ante caídas de conexión, el desempeño en horas pico, la integración con servicios externos, la calidad de los datos de sensores, la seguridad y la capacidad de incorporar nuevas instituciones.
+Se identificaron ocho escenarios de atributos de calidad en primera instancia, a partir de los Business Outcomes y los riesgos del Lean UX (sección 1.2.2) y de los criterios de aceptación de las historias primarias. Cubren la precisión de la asesoría de llegada, la frescura de la ocupación, la tolerancia a la pérdida de conectividad, el desempeño en horas pico, la confiabilidad de los datos de los sensores, la degradación controlada ante fallas de servicios, la seguridad y el aislamiento entre instituciones, y la capacidad de incorporar nuevas universidades.
 
 | ID | Atributo | Fuente | Estímulo | Artefacto | Entorno | Respuesta | Medida |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| QAS-01 | Correctness (precisión de la predicción) | Conductor de la comunidad educativa | Consulta la probabilidad de encontrar espacio para su hora estimada de llegada | Servicio de predicción de disponibilidad | Operación normal, con información histórica suficiente | Calcula la probabilidad combinando ocupación actual, reservas, histórico, horario académico y tiempo estimado de llegada, y la presenta como estimación, no como garantía | Al menos 80 % de aciertos en la categoría de disponibilidad (alta, media o baja) frente a la ocupación real a la hora de llegada, medido semanalmente |
-| QAS-02 | Performance (frescura de los datos) | Sensor IoT de un espacio | Cambia el estado de un espacio (libre u ocupado) | Nodo Edge y servicio de ocupación | Operación normal, con conexión a la nube | El nodo Edge valida el evento, actualiza la ocupación local y la propaga a la nube y a los clientes | Cambio visible en la app y el dashboard en 5 s o menos (percentil 95); procesamiento en Edge en 1 s o menos |
-| QAS-03 | Availability (tolerancia a desconexión) | Red o proveedor de conectividad | Se pierde la conexión entre el nodo Edge y la nube | Nodo Edge | Horario académico, incluyendo hora pico | El nodo Edge sigue procesando y almacenando eventos localmente y los sincroniza al restablecerse la conexión | 100 % de eventos procesados localmente durante la caída; sincronización en 5 min o menos tras la reconexión; pérdida de eventos de 0.1 % o menos |
-| QAS-04 | Performance y Scalability | Conductores de la comunidad educativa | Pico de consultas de disponibilidad al inicio o fin de clases | API de consulta de disponibilidad | Hora pico | Atiende las consultas escalando horizontalmente los servicios de lectura | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 % |
-| QAS-05 | Interoperability y Resilience | Servicio externo de tiempos de viaje | El servicio no responde o excede el tiempo de espera | Servicio de predicción (integración externa) | Operación normal | Detecta la falla, deja de invocar al servicio temporalmente y usa un tiempo de llegada basado en promedios históricos, informando que es aproximado | 100 % de consultas respondidas, sin errores visibles al usuario, en 3 s o menos |
-| QAS-06 | Reliability (calidad de los datos) | Sensor IoT | Falla o deja de enviar señal | Nodo Edge y servicio de monitoreo | Operación normal | Detecta la ausencia de señal, marca el espacio como "sin datos", reduce la confianza de la predicción y alerta al administrador | Detección en 60 s o menos; alerta en 1 min o menos; disponibilidad de datos de ocupación de 95 % o más |
-| QAS-07 | Security | Usuario no autenticado o sin el rol requerido | Intenta acceder al dashboard o a las reservas de otro usuario | API Gateway y servicio de identidad | Operación normal | Rechaza la solicitud y registra el intento en auditoría | 100 % de accesos no autorizados rechazados; registro en 1 s o menos; comunicaciones cifradas con TLS |
-| QAS-08 | Modifiability (multi-institución) | Equipo de Integra Labs | Incorporar una nueva universidad con sus estacionamientos, zonas y sensores | Plataforma de gestión de instituciones | Operación normal con instituciones ya activas | Registra la institución y su infraestructura mediante configuración, aislando sus datos de las demás | Alta en 1 día hábil o menos, sin cambios de código ni interrupción del servicio; aislamiento de datos del 100 % |
-
+| QAS-01 | Correctness (precisión de la asesoría) | Conductor de la comunidad educativa | Solicita la asesoría de llegada enviando su tiempo estimado de llegada en minutos | Servicio de asesoría de llegada y servicio de predicción | Operación normal, en horario académico, con historial suficiente | Selecciona el pronóstico del horizonte correspondiente al tiempo estimado, calcula la probabilidad de encontrar espacio y la categoría (HIGH, LIMITED o LOW) e informa el nivel de confianza. Si el historial es insuficiente, usa la estimación de contingencia e informa confianza baja | Al menos 80 % de aciertos en la categoría de disponibilidad frente a la ocupación observada a la hora de llegada, evaluado semanalmente. El error absoluto medio se reporta en puntos porcentuales |
+| QAS-02 | Performance (frescura de la ocupación) | Sensor de un espacio | El espacio cambia de estado y el cambio se mantiene durante el tiempo mínimo configurado | Gateway IoT, broker MQTT y contexto de ocupación | Operación normal, con conexión a la nube | El gateway publica el evento en el broker. El consumidor lo valida, lo traduce a un evento de dominio, actualiza el estado del espacio y lo propaga al read model y a los clientes suscritos | Cambio visible en la app y en la consola en 5 s o menos (percentil 95) desde la confirmación; publicación del gateway al broker en 1 s o menos |
+| QAS-03 | Availability (tolerancia a pérdida de conectividad) | Red del campus o proveedor de conectividad | Se pierde la conexión entre el gateway y el broker | Gateway IoT | Horario académico, incluyendo hora pico | El gateway sigue recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. El consumidor descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad | 0 % de eventos perdidos; reenvío completo en 5 min o menos tras la reconexión; 100 % de las consultas durante la caída informan la antigüedad del dato |
+| QAS-04 | Performance y Scalability | Conductores de la comunidad educativa | Pico de consultas de disponibilidad y asesoría al inicio o término de clases | BFF de la aplicación móvil y read model de ocupación | Hora pico | El BFF compone en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, y los servicios de lectura escalan horizontalmente | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 % |
+| QAS-05 | Reliability (calidad de los datos de sensores) | Sensor de un espacio | Deja de reportar dentro de su intervalo esperado o informa batería por debajo del umbral | Contexto de ocupación y monitoreo de dispositivos | Operación normal | El espacio pasa a UNKNOWN y se excluye del conteo de disponibles. Se registra la incidencia, el dispositivo queda marcado para mantenimiento y la confianza del pronóstico se reduce. El espacio se recupera tras una detección estable | Transición a UNKNOWN en 1 min o menos tras vencer el intervalo; 100 % de los espacios UNKNOWN excluidos del conteo; disponibilidad de datos de ocupación de 95 % o más |
+| QAS-06 | Resilience (degradación controlada) | Servicio interno (predicción) o proveedor externo (correo, mensajería push) | No responde dentro del tiempo límite | BFF móvil, BFF de consola y servicio de notificaciones | Operación normal | Se abre el circuit breaker del servicio afectado. El BFF responde con los datos disponibles e indica qué información no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación | 100 % de las solicitudes respondidas en 3 s o menos, sin error visible al usuario; 0 impacto en la frescura de QAS-02 |
+| QAS-07 | Security | Usuario sin sesión, con rol insuficiente o de otra institución | Solicita un recurso protegido o excede las solicitudes de código de acceso | API Gateway y servicio de identidad | Operación normal | Rechaza la solicitud sin token (401), con rol o institución que no corresponde (403) o por exceso de solicitudes (429), y registra el intento en auditoría | 100 % de los accesos no autorizados rechazados; registro en 1 s o menos; 100 % de las comunicaciones cifradas con TLS |
+| QAS-08 | Modifiability (multi-institución) | Equipo de Integra Labs | Da de alta una nueva universidad con sus dominios de correo y su primer administrador | Proceso de aprovisionamiento de instituciones | Operación normal con instituciones ya activas | Crea la institución, registra sus dominios y emite la invitación de su primer administrador. La institución configura sus estacionamientos, zonas y sensores sin afectar a las demás | Alta en 1 día hábil o menos, sin cambios de código ni interrupción del servicio; aislamiento de datos del 100 % |
 
 #### 4.1.2.3. Constraints
 
+Las restricciones provienen del enunciado del curso, del modelo de negocio, del marco legal y de decisiones ya fijadas en las historias del Capítulo III. No son negociables y guían el diseño. Se expresan como Technical Stories.
 
+| Technical Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
+| --- | --- | --- | --- | --- |
+| CON-01 | Solución multicomponente integrada | Como Developer, necesito que la solución esté compuesta por una API REST interna, una aplicación móvil nativa para conductores, una consola web de operación para administradores y una Landing Page, integradas entre sí y con una experiencia de usuario consistente. | **Escenario 1: Redirección desde la Landing Page.**<br>Dado que los cuatro productos están desplegados,<br>cuando el visitante activa la llamada a la acción de su segmento,<br>entonces es dirigido al sitio de descarga de la aplicación móvil o al formulario de contacto institucional.<br><br>**Escenario 2: Consistencia entre productos.**<br>Dado que la aplicación móvil y la consola web consumen la misma API,<br>cuando ambas consultan el mismo estacionamiento,<br>entonces presentan la misma información de ocupación. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-02 | Domain-Driven Design | Como Developer, necesito que el sistema se descomponga en Bounded Contexts, cada uno con su propio modelo y su propia persistencia. | **Escenario 1: Un servicio por contexto.**<br>Dado que el sistema se descompone en Bounded Contexts,<br>cuando se define un servicio,<br>entonces pertenece a un solo contexto y es responsable de su modelo y sus datos.<br><br>**Escenario 2: Integración entre contextos.**<br>Dado que un contexto necesita información de otro,<br>cuando la solicita,<br>entonces la obtiene por su interfaz o por eventos de dominio, sin consultar el modelo de escritura del otro contexto. | EP02, EP03, EP04, EP05 |
+| CON-03 | Tecnologías open-source | Como Developer, necesito utilizar tecnologías open-source en los distintos niveles de la solución. | **Escenario 1: Componentes de la solución.**<br>Dado que cada componente requiere una tecnología,<br>cuando el equipo la selecciona,<br>entonces cuenta con licencia open-source y queda documentada en la sección 7.1.<br><br>**Escenario 2: Servicios de terceros.**<br>Dado que el correo y la mensajería push se contratan como servicios gestionados,<br>cuando se integran,<br>entonces quedan aislados detrás de una capa de integración y pueden reemplazarse sin modificar el dominio. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-04 | Despliegue en la nube | Como Developer, necesito desplegar los servicios de servidor en una plataforma cloud de forma reproducible. | **Escenario 1: Despliegue reproducible.**<br>Dado que los servicios se ejecutan en un proveedor cloud,<br>cuando se despliega una nueva versión,<br>entonces el despliegue se realiza desde la configuración versionada en el repositorio.<br><br>**Escenario 2: Gateway en el campus.**<br>Dado que el gateway opera en el campus,<br>cuando se actualiza el backend en la nube,<br>entonces el gateway continúa publicando sin cambios de configuración. | EP02, EP04 |
+| CON-05 | Ingesta IoT mediante gateway y MQTT | Como Developer, necesito que los sensores no se expongan a Internet y que sus lecturas lleguen al backend mediante un gateway que publica en un broker MQTT. | **Escenario 1: Publicación con confirmación.**<br>Dado que los sensores reportan al gateway,<br>cuando el gateway publica una lectura en el tópico del estacionamiento con QoS 1,<br>entonces el broker confirma la recepción y el mensaje queda disponible para el consumidor de ocupación.<br><br>**Escenario 2: Pérdida de conectividad.**<br>Dado que el gateway continúa recibiendo lecturas,<br>cuando pierde la conexión con el broker,<br>entonces las almacena en su búfer local y las reenvía al restablecerse la conexión. | EP02, EP04 |
+| CON-06 | Servicios externos de terceros | Como Developer, necesito integrar un servicio de correo para los códigos de acceso y un proveedor de mensajería push para las alertas, sin que su falla afecte el núcleo del producto. | **Escenario 1: Capa de integración.**<br>Dado que el sistema consume un proveedor externo,<br>cuando envía un correo o una notificación,<br>entonces lo hace a través de una capa de integración que aísla el modelo del proveedor del dominio.<br><br>**Escenario 2: Falla del proveedor.**<br>Dado que un proveedor externo no responde,<br>cuando el usuario consulta la disponibilidad o la predicción,<br>entonces esas funciones continúan operando sin degradación. | EP01, EP07 |
+| CON-07 | Privacidad de la ubicación y protección de datos personales | Como Developer, necesito que la ubicación del conductor no salga de su dispositivo y que los datos personales se traten conforme a la Ley N.° 29733, Ley de Protección de Datos Personales del Perú. | **Escenario 1: Solo minutos.**<br>Dado que la aplicación calcula el tiempo estimado de llegada en el dispositivo,<br>cuando solicita una asesoría,<br>entonces envía únicamente el tiempo estimado en minutos.<br><br>**Escenario 2: Solicitud con coordenadas.**<br>Dado que el servicio solo admite minutos,<br>cuando la solicitud incluye coordenadas geográficas,<br>entonces el sistema la rechaza con 400.<br><br>**Escenario 3: Datos mínimos y cifrados.**<br>Dado que el sistema recolecta datos personales,<br>cuando los almacena o transmite,<br>entonces recolecta solo los necesarios y los transmite cifrados. | EP01, EP03, EP07 |
+| CON-08 | Aislamiento de datos por institución | Como Developer, necesito que cada institución acceda únicamente a sus propios datos y que el alta de instituciones no sea pública. | **Escenario 1: Recurso de otra institución.**<br>Dado que toda sesión lleva la institución a la que pertenece,<br>cuando el usuario consulta un recurso de otra institución,<br>entonces la respuesta es 403 y no se devuelve información.<br><br>**Escenario 2: Alta restringida.**<br>Dado que no existe un registro público de instituciones,<br>cuando se intenta dar de alta una institución con un token de usuario,<br>entonces la respuesta es 403 y no se crea ninguna institución. | EP01, EP02, EP03, EP04, EP05 |
+| CON-09 | Autenticación sin contraseña | Como Developer, necesito que el acceso se realice mediante un código de un solo uso enviado al correo institucional o invitado, con sesiones basadas en tokens. | **Escenario 1: Sesión con claims.**<br>Dado que el usuario tiene un correo habilitado o una invitación vigente,<br>cuando ingresa un código válido,<br>entonces recibe un token de sesión con sus claims de usuario, institución y rol.<br><br>**Escenario 2: Límite de solicitudes.**<br>Dado que el mismo correo superó las solicitudes permitidas en la ventana configurada,<br>cuando solicita un nuevo código,<br>entonces la respuesta es 429 y no se emite el código. | EP01 |
+| CON-10 | Sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya reservas, cobros y reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de vigilancia. | **Escenario 1: Alcance funcional.**<br>Dado que el estacionamiento es gratuito y el ingreso exige la credencial institucional,<br>cuando se define el alcance de la solución,<br>entonces no incluye reservas, cobros, pagos ni reconocimiento de placas.<br><br>**Escenario 2: Conteo de flujo.**<br>Dado que el personal de vigilancia controla el acceso,<br>cuando un vehículo ingresa o sale,<br>entonces Quadrapp solo cuenta el flujo mediante sensores direccionales y no identifica vehículos ni conductores. | EP02, EP03, EP04 |
+| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que las aplicaciones cumplan criterios de accesibilidad y entreguen sus textos en español e inglés. | **Escenario 1: Idioma.**<br>Dado que la solicitud declara su idioma preferido entre es_419 y en_US,<br>cuando se consulta un recurso,<br>entonces la respuesta entrega los textos y formatos de fecha en ese idioma.<br><br>**Escenario 2: Accesibilidad.**<br>Dado que la interfaz expone etiquetas accesibles y un contraste mínimo de 4.5:1,<br>cuando se ejecuta la validación automatizada,<br>entonces no se reportan incumplimientos de nivel AA. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 
 
 ### 4.1.3. Architectural Drivers Backlog
 
-*Pendiente de elaboración.*
+El Architectural Drivers Backlog se construyó de forma iterativa a partir del Quality Attribute Workshop del equipo. Primero se revisaron las historias primarias (4.1.2.1) para extraer los Functional Drivers con mayor impacto en la arquitectura. Luego se incorporaron los escenarios de atributos de calidad (4.1.2.2) como Quality Attribute Drivers y las restricciones (4.1.2.3) como Constraint Drivers. Finalmente, cada driver se valoró según su importancia para los stakeholders y su impacto en la complejidad técnica de la arquitectura. Los drivers de alta importancia y alto impacto aparecen primero.
+
+| Driver ID | Título de Driver | Descripción | Importancia para Stakeholders | Impacto en Architecture Technical Complexity |
+| --- | --- | --- | --- | --- |
+| FD-02 | Disponibilidad en tiempo casi real (US05, US07) | Consolidar los eventos de los sensores en el estado de cada espacio y distribuirlo a la app y a la consola con su marca de tiempo. | High | High |
+| FD-04 | Predicción de disponibilidad (US09) | Generar pronósticos a 15, 30, 45 y 60 minutos con versión de modelo, nivel de confianza y estimación de contingencia. | High | High |
+| FD-05 | Asesoría de llegada según el tiempo estimado (US13) | Combinar el pronóstico con el tiempo estimado de llegada, calculado en el dispositivo, para entregar probabilidad y categoría HIGH, LIMITED o LOW. | High | High |
+| QAD-01 | Precisión de la asesoría (QAS-01) | Lograr al menos 80 % de aciertos en la categoría de disponibilidad. | High | High |
+| QAD-02 | Frescura de la ocupación (QAS-02) | Reflejar los cambios confirmados en la app y la consola en 5 s o menos. | High | High |
+| QAD-03 | Tolerancia a pérdida de conectividad (QAS-03) | Reenviar sin pérdida las lecturas acumuladas en el gateway al reconectarse. | High | High |
+| CON-05 | Ingesta IoT mediante gateway y MQTT | Sensores no expuestos a Internet, publicación con QoS 1 y búfer local en el gateway. | High | High |
+| CON-01 | Solución multicomponente integrada | API REST, app móvil nativa, consola web y Landing Page integradas. | High | High |
+| QAD-04 | Desempeño y escalabilidad en hora pico (QAS-04) | Atender hasta 500 consultas concurrentes en 2 s o menos. | High | Medium |
+| QAD-05 | Confiabilidad de los datos de sensores (QAS-05) | Detectar sensores sin señal o con batería crítica y mantener 95 % o más de disponibilidad de datos. | High | Medium |
+| QAD-06 | Degradación controlada ante fallas (QAS-06) | Responder con los datos disponibles cuando un servicio no responde. | High | Medium |
+| QAD-07 | Seguridad (QAS-07) | Rechazar el 100 % de los accesos no autorizados y registrarlos en auditoría. | High | Medium |
+| FD-01 | Autenticación por código de un solo uso y roles (US01) | Acceso con correo institucional o invitado, con rol e institución en la sesión. | High | Medium |
+| FD-03 | Gestión del estado desconocido (US08) | Marcar como UNKNOWN los espacios sin información confiable y excluirlos del conteo de disponibles. | High | Medium |
+| FD-06 | Consola de operación (US29) | Componer capacidad, ocupación, flujo y saturación prevista en una sola respuesta para el operador. | High | Medium |
+| CON-07 | Privacidad de la ubicación y protección de datos | La ubicación no sale del dispositivo; cumplimiento de la Ley N.° 29733. | High | Medium |
+| CON-08 | Aislamiento de datos por institución | Acceso restringido por institución y alta de instituciones no pública. | High | Medium |
+| CON-09 | Autenticación sin contraseña | Código de un solo uso, tokens de sesión y límite de solicitudes. | High | Medium |
+| CON-10 | Sin reservas, cobros ni control de acceso | Alcance acotado a información, predicción y gestión; el flujo se cuenta sin identificar vehículos. | High | Low |
+| CON-02 | Domain-Driven Design | Descomposición en Bounded Contexts con persistencia propia. | Medium | High |
+| QAD-08 | Soporte multi-institución (QAS-08) | Incorporar universidades por configuración, con datos aislados. | Medium | High |
+| FD-07 | Tiempo hasta la próxima disponibilidad (US36) | Estimar el rango de liberación de un espacio con el flujo de salidas y el pronóstico vigente. | Medium | High |
+| FD-08 | Alertas por saturación prevista (US23) | Enviar alertas por franja horaria evitando repeticiones. | Medium | Medium |
+| FD-09 | Precisión de las predicciones (US34) | Comparar pronósticos y ocupación observada por versión de modelo. | Medium | Medium |
+| FD-10 | Calendario académico y eventos (US35) | Incorporar calendario y eventos como insumo del pronóstico. | Medium | Medium |
+| CON-04 | Despliegue en la nube | Servicios de servidor desplegados de forma reproducible en un proveedor cloud. | Medium | Medium |
+| CON-06 | Servicios externos de terceros | Correo y mensajería push aislados tras una capa de integración. | Medium | Medium |
+| CON-03 | Tecnologías open-source | Uso de tecnologías open-source en los distintos niveles. | Medium | Low |
+| CON-11 | Accesibilidad e internacionalización | Textos en es_419 y en_US y cumplimiento de nivel AA. | Medium | Low |
+
 
 ### 4.1.4. Architectural Design Decisions
 
-Las decisiones de diseño se tomaron en seis iteraciones, siguiendo los stages del Quality Attribute Workshop. En cada iteración se seleccionaron los drivers de mayor prioridad, se identificaron patrones y tácticas candidatas, y se evaluaron sus ventajas y desventajas frente a los escenarios de calidad y las restricciones. Cuando hubo más de tres candidatos, se consideraron los tres más relevantes. Los criterios de decisión fueron el cumplimiento de las medidas de respuesta, la alineación con DDD, el uso de tecnologías open-source y la viabilidad de implementación por el equipo.
+Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages del Quality Attribute Workshop. En cada iteración se seleccionaron los drivers de mayor prioridad, se identificaron patrones y tácticas candidatas, y se evaluaron sus ventajas y desventajas frente a los escenarios de calidad y las restricciones. Cuando hubo más de tres candidatos, se consideraron los tres más relevantes. Los criterios de decisión fueron el cumplimiento de las medidas de respuesta, la alineación con DDD, el uso de tecnologías open-source, la protección de los datos personales y la viabilidad de implementación por el equipo.
 
 #### Candidate Pattern Evaluation Matrix
 
-**Iteración 1: Estilo arquitectónico** (Drivers: TS-01, TS-02, QAD-04)
+**Iteración 1: Estilo arquitectónico** (Drivers: CON-01, CON-02, QAD-04, QAD-08, FD-06)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| Monolito modular | Simple de desplegar y depurar; menor costo operativo. | Escala como una sola unidad; acopla la predicción con las consultas; dificulta aislar contextos. |
-| **Microservicios por Bounded Context con API Gateway** | Escala de forma independiente lectura y predicción; se alinea con los Bounded Contexts; permite tecnologías diversas. | Mayor complejidad operativa; consistencia eventual; requiere observabilidad. |
-| Serverless (FaaS) | Escalado automático y pago por uso. | Los arranques en frío afectan la latencia; poco adecuado para conexiones persistentes de dispositivos; dependencia del proveedor. |
+| Monolito modular | Simple de desplegar y depurar; menor costo operativo. | Escala como una sola unidad; acopla la predicción con las consultas; debilita el aislamiento de contextos y de persistencia. |
+| **Microservicios por Bounded Context con API Gateway y un BFF por cliente (móvil y consola)** | Escala de forma independiente lectura y predicción; se alinea con los contextos y su persistencia propia; los BFF componen la respuesta de cada cliente en una sola carga. | Mayor complejidad operativa; consistencia eventual; requiere observabilidad. |
+| Serverless (FaaS) | Escalado automático y pago por uso. | Los arranques en frío afectan la latencia; poco adecuado para consumidores de mensajería persistentes; dependencia del proveedor. |
 
-**Decisión:** microservicios por Bounded Context, expuestos mediante un API Gateway.
+**Decisión:** microservicios por Bounded Context (candidatos: identidad y acceso, configuración, ocupación, predicción, analítica y notificaciones), expuestos mediante un API Gateway con un BFF para la aplicación móvil y otro para la consola de operación.
 
-**Iteración 2: Ingesta de ocupación y resiliencia** (Drivers: FD-05, QAD-02, QAD-03, QAD-06, TS-06)
-
-| Pattern | Pro | Con |
-| --- | --- | --- |
-| **Edge computing con Store-and-Forward (mensajería ligera local y cola persistente)** | Procesa localmente con baja latencia; sigue operando sin conexión; sincroniza sin pérdidas al reconectar. | Sincronización más compleja (orden y duplicados); requiere mantener el nodo Edge. |
-| Ingesta directa a la nube (cloud-centric) | Arquitectura más simple; un único punto de procesamiento. | Depende de la conexión; mayor latencia; se pierden datos ante caídas. |
-| Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; tráfico innecesario; no cumple los 5 s. |
-
-**Decisión:** Edge computing con Store-and-Forward y monitoreo de latidos (heartbeat) de sensores para detectar fallas.
-
-**Iteración 3: Consulta y distribución de datos** (Drivers: FD-01, QAD-02, QAD-04)
+**Iteración 2: Ingesta IoT y resiliencia de conectividad** (Drivers: CON-05, FD-02, QAD-02, QAD-03)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **CQRS con read model en caché, alimentado por eventos, y actualización push a clientes** | Consultas rápidas y escalables; datos frescos al recibir eventos. | Consistencia eventual; más componentes que mantener. |
+| **Gateway en el campus con MQTT (QoS 1), búfer local y sesión persistente (Store-and-Forward)** | Los sensores no se exponen a Internet; no se pierden lecturas ante caídas; desacopla productores y consumidores. | Hay que operar el gateway y el broker; los duplicados y el desorden exigen idempotencia en el consumidor. |
+| Sensores publican por HTTPS directamente a la nube | Arquitectura más simple. | Expone los dispositivos; se pierden lecturas sin conexión; mayor consumo de batería por sensor. |
+| Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; requiere acceso entrante a la red del campus; no cumple los 5 s. |
+
+**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
+
+**Iteración 3: Procesamiento de eventos de ocupación** (Drivers: FD-02, FD-03, FD-07, QAD-03, QAD-05)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Consumidor idempotente con identificador de evento, marca de tiempo por espacio, tiempo mínimo de detección y reconciliación con el conteo de accesos** | Tolera duplicados y desorden; evita cambios de estado por lecturas espurias; representa explícitamente el estado UNKNOWN; mantiene coherente el flujo y la ocupación. | Requiere conservar los identificadores aplicados y calibrar los tiempos mínimos. |
+| Aplicar cada mensaje tal como llega (último mensaje prevalece) | Muy simple. | Los duplicados y los mensajes fuera de orden corrompen el estado del espacio. |
+| Entrega exactly-once con transacciones distribuidas | Consistencia fuerte. | Alto costo y complejidad; mayor latencia; innecesario para este dominio. |
+
+**Decisión:** procesamiento idempotente con tiempo mínimo de detección, estado UNKNOWN por silencio del sensor o batería crítica, y reconciliación periódica en la que la detección por espacio prevalece sobre el conteo de accesos.
+
+**Iteración 4: Consulta y distribución de la ocupación** (Drivers: FD-02, QAD-02, QAD-04, QAD-03)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **CQRS con read model en caché alimentado por eventos, suscripción en tiempo real y caché local en la app (layout versionado)** | Lecturas rápidas y escalables; cambios distribuidos al ocurrir; la app muestra el último estado con su marca de tiempo si no hay conexión. | Consistencia eventual; más componentes que mantener. |
 | Consulta directa a la base de datos transaccional | Simple; siempre consistente. | La carga de lectura en hora pico degrada el desempeño. |
 | Materialización batch periódica | Bajo costo de cómputo. | Datos desactualizados; no cumple la frescura de QAS-02. |
 
-**Decisión:** CQRS con read model en caché alimentado por eventos, más notificaciones push para app y dashboard.
+**Decisión:** CQRS con read model en caché alimentado por eventos de dominio, suscripción autenticada a los cambios de cada estacionamiento y almacenamiento local en la app del layout con su versión.
 
-**Iteración 4: Predicción de disponibilidad** (Drivers: FD-02, QAD-01)
-
-| Pattern | Pro | Con |
-| --- | --- | --- |
-| **Servicio de predicción desacoplado con modelo de ML supervisado** | Aprovecha múltiples variables (hora, día, horario académico, reservas, tiempo de llegada); se puede reentrenar. | Requiere datos históricos suficientes; riesgo de arranque en frío. |
-| Heurística por promedios históricos por franja horaria | Simple y explicable; funciona con pocos datos. | Menos preciso ante cambios de demanda. |
-| Series temporales clásicas | Buen ajuste a patrones estacionales. | Incorpora con dificultad variables externas como reservas o tiempo de llegada. |
-
-**Decisión:** servicio de predicción desacoplado con modelo de ML, con la heurística por promedios históricos como contingencia mientras no haya datos suficientes. El modelo se reentrena periódicamente con datos nuevos.
-
-**Iteración 5: Integración externa y seguridad** (Drivers: QAD-05, QAD-07, TS-04, TS-07)
-
-*Integración con el servicio externo (QAD-05):*
+**Iteración 5a: Predicción de disponibilidad** (Drivers: FD-04, FD-07, FD-09, FD-10, QAD-01)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **Circuit Breaker con fallback y Anti-Corruption Layer** | Evita cascadas de fallas; permite responder con un valor aproximado; aísla el modelo externo del dominio. | Requiere configurar umbrales y mantener el fallback. |
+| **Servicio de predicción desacoplado con modelo de ML supervisado, horizontes de 15, 30, 45 y 60 minutos y método de respaldo** | Aprovecha historial, velocidad de flujo, calendario académico y eventos; se reentrena y se versiona; el respaldo cubre el arranque en frío. | Requiere historial suficiente; hay que registrar versión y confianza de cada pronóstico. |
+| Heurística por promedios históricos por franja horaria | Simple y explicable; funciona con pocos datos. | Menos precisa ante eventos y cambios de demanda. |
+| Series temporales clásicas | Buen ajuste a patrones estacionales. | Incorpora con dificultad variables externas como eventos y flujo. |
+
+**Decisión:** servicio de predicción desacoplado con modelo de ML, con la heurística por promedios históricos como método de respaldo cuando el historial es insuficiente. Cada pronóstico registra su versión de modelo y nivel de confianza, lo que permite medir la precisión por versión.
+
+**Iteración 5b: Cálculo del tiempo estimado de llegada** (Drivers: FD-05, CON-07, QAD-01)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Cálculo en el dispositivo; el servidor recibe solo los minutos** | La ubicación no sale del dispositivo; el backend no depende de un servicio de mapas ni de su cuota. | La precisión depende del dispositivo; el servidor debe validar el rango recibido. |
+| Cálculo en el servidor con coordenadas y un servicio de mapas externo | Control central del cálculo. | Transmite la ubicación personal (Ley N.° 29733); agrega costo y dependencia externa. |
+| Sin tiempo estimado (el usuario elige un horizonte fijo) | Más simple. | Se pierde la probabilidad a la hora real de llegada, que es la propuesta de valor. |
+
+**Decisión:** el tiempo estimado se calcula en el dispositivo y se envía solo en minutos. El servidor rechaza valores negativos, mayores al máximo admitido y solicitudes con coordenadas.
+
+**Iteración 6: Resiliencia e integración con terceros** (Drivers: QAD-06, CON-06, FD-06, FD-08)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Timeouts, Circuit Breaker y respuesta parcial en los BFF, más una capa anticorrupción hacia los proveedores externos** | Aísla la falla; el usuario recibe los datos disponibles; el dominio no depende del modelo del proveedor. | Requiere configurar umbrales y mostrar qué información no está disponible. |
 | Reintentos con backoff | Fácil de implementar. | Aumenta la latencia durante la falla; no garantiza respuesta. |
-| Llamada directa sin protección | Menor esfuerzo inicial. | Una falla externa se propaga al usuario. |
+| Llamadas síncronas sin protección | Menor esfuerzo inicial. | La falla de un servicio se propaga al usuario. |
 
-*Autenticación y autorización (QAD-07):*
+**Decisión:** timeouts y circuit breaker en los BFF con respuesta parcial que indica qué información no pudo obtenerse, y capa anticorrupción para el servicio de correo y el proveedor de mensajería push. Los tokens de dispositivo rechazados se marcan como inválidos y no se reintentan.
 
-| Pattern | Pro | Con |
-| --- | --- | --- |
-| **Autenticación con tokens (OAuth 2.0 y JWT) y control por roles (RBAC) en el API Gateway** | Estándar; sin estado; centraliza la seguridad; separa roles de conductor y administrador. | Requiere gestión de expiración y renovación de tokens. |
-| Sesiones de servidor con cookies | Simple para web. | Menos adecuado para app móvil y para escalar horizontalmente. |
-| API keys estáticas | Muy simples. | Débiles; no identifican al usuario ni sus roles. |
-
-**Decisión:** circuit breaker con fallback y Anti-Corruption Layer para el servicio externo; OAuth 2.0 con JWT y RBAC en el API Gateway; cifrado TLS en todas las comunicaciones.
-
-**Iteración 6: Soporte multi-institución** (Drivers: QAD-08, TS-02)
+**Iteración 7: Identidad y seguridad** (Drivers: FD-01, QAD-07, CON-07, CON-08, CON-09)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **Multi-tenancy lógico (esquema compartido con identificador de institución)** | Alta de instituciones por configuración; menor costo de infraestructura. | Exige controles estrictos de aislamiento de datos. |
-| Instancia dedicada por institución | Aislamiento fuerte. | Alto costo operativo; no cumple el alta en 1 día hábil. |
+| **Código de un solo uso por correo, tokens JWT con claims de usuario, institución y rol, y RBAC con validación de institución en el API Gateway** | Sin contraseñas que custodiar; sin estado; separa roles de conductor y operador; el claim de institución habilita el aislamiento. | Depende de la entrega del correo; requiere gestionar la renovación y la vigencia de los tokens. |
+| Federación (OIDC o SAML) con el proveedor de identidad de cada universidad | Reutiliza las credenciales institucionales. | Requiere una integración por institución; no es compatible con un alta en 1 día hábil. |
+| Usuario y contraseña propios con sesiones de servidor | Familiar para el usuario. | Obliga a custodiar contraseñas; menos adecuado para app móvil y escalado horizontal. |
+
+**Decisión:** código de un solo uso enviado al correo institucional o invitado, tokens de acceso y de refresco, RBAC y validación de institución en el API Gateway, límite de solicitudes de código y cifrado TLS en todas las comunicaciones.
+
+**Iteración 8: Soporte multi-institución** (Drivers: QAD-08, CON-08)
+
+| Pattern | Pro | Con |
+| --- | --- | --- |
+| **Multi-tenancy lógico con la institución como identificador en cada dato y en el token, con aprovisionamiento restringido a credenciales de plataforma** | Alta por configuración; menor costo de infraestructura. | Exige controles estrictos y pruebas de aislamiento. |
 | Base de datos por institución | Buen aislamiento con infraestructura compartida. | Más complejidad de administración y migraciones. |
+| Instancia dedicada por institución | Aislamiento fuerte. | Alto costo operativo; no cumple el alta en 1 día hábil. |
 
-**Decisión:** multi-tenancy lógico con identificador de institución en cada dato, con pruebas de aislamiento.
+**Decisión:** multi-tenancy lógico con pruebas de aislamiento, y alta de instituciones mediante un proceso de aprovisionamiento restringido.
 
 **Resumen de decisiones adoptadas**
 
 | ID | Decisión | Drivers atendidos |
 | --- | --- | --- |
-| DD-01 | Microservicios por Bounded Context con API Gateway | TS-01, TS-02, QAD-04 |
-| DD-02 | Edge computing con Store-and-Forward y monitoreo de latidos | FD-05, QAD-02, QAD-03, QAD-06, TS-06 |
-| DD-03 | CQRS con read model en caché, eventos y notificaciones push | FD-01, QAD-02, QAD-04 |
-| DD-04 | Servicio de predicción con ML y contingencia heurística | FD-02, QAD-01 |
-| DD-05 | Circuit Breaker con fallback y Anti-Corruption Layer para el servicio externo | QAD-05, TS-04 |
-| DD-06 | OAuth 2.0 con JWT, RBAC en el API Gateway y TLS | QAD-07, TS-07 |
-| DD-07 | Multi-tenancy lógico por institución | QAD-08 |
+| DD-01 | Microservicios por Bounded Context con API Gateway y BFF por cliente | CON-01, CON-02, QAD-04, FD-06 |
+| DD-02 | Gateway en el campus con MQTT QoS 1 y Store-and-Forward | CON-05, FD-02, QAD-02, QAD-03 |
+| DD-03 | Procesamiento idempotente con tiempo mínimo de detección, estado UNKNOWN y reconciliación | FD-02, FD-03, FD-07, QAD-03, QAD-05 |
+| DD-04 | CQRS con read model en caché, suscripción en tiempo real y caché local en la app | FD-02, QAD-02, QAD-04 |
+| DD-05 | Servicio de predicción con ML, horizontes de 15 a 60 minutos y método de respaldo | FD-04, FD-07, FD-09, FD-10, QAD-01 |
+| DD-06 | Tiempo estimado de llegada calculado en el dispositivo y enviado en minutos | FD-05, CON-07, QAD-01 |
+| DD-07 | Circuit Breaker, respuesta parcial y capa anticorrupción para proveedores externos | QAD-06, CON-06, FD-08 |
+| DD-08 | Código de un solo uso, JWT, RBAC y validación de institución en el API Gateway | FD-01, QAD-07, CON-08, CON-09 |
+| DD-09 | Multi-tenancy lógico con aprovisionamiento restringido | QAD-08, CON-08 |
 
 
 ### 4.1.5. Quality Attribute Scenario Refinements
 
-*Pendiente de elaboración.*
+Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: recibir la ocupación mediante un gateway con MQTT y búfer local (DD-02), procesar los eventos de forma idempotente y marcar como desconocidos los espacios sin información confiable (DD-03), separar la lectura de la escritura para sostener las horas pico (DD-04), calcular el tiempo de llegada en el dispositivo para proteger la ubicación del conductor (DD-06) y aislar las fallas con circuit breakers y respuestas parciales (DD-07). A continuación se presentan, en orden de prioridad, los ocho escenarios refinados.
+
+**Scenario Refinement for Scenario 1**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-01: Precisión de la asesoría de llegada |
+| Business Goals | Alcanzar al menos 80 % de precisión en las estimaciones de disponibilidad futura y lograr que los conductores confíen en ellas para decidir hacia dónde dirigirse. |
+| Relevant Quality Attributes | Correctness |
+| Stimulus | Un conductor solicita la asesoría de llegada enviando su tiempo estimado en minutos. |
+| Scenario Components: Stimulus Source | Conductor de la comunidad educativa (app móvil). |
+| Scenario Components: Environment | Operación normal, en horario académico, con historial suficiente. |
+| Scenario Components: Artifact (if Known) | Servicio de asesoría de llegada y servicio de predicción. |
+| Scenario Components: Response | El servicio selecciona el pronóstico del horizonte correspondiente al tiempo estimado y devuelve la probabilidad de encontrar espacio, su categoría (HIGH, LIMITED o LOW) y el nivel de confianza. Si el historial es insuficiente, usa la estimación de contingencia e informa confianza baja. |
+| Scenario Components: Response Measure | Al menos 80 % de aciertos en la categoría de disponibilidad frente a la ocupación observada a la hora de llegada, evaluado semanalmente. El error absoluto medio se reporta en puntos porcentuales por versión de modelo. |
+| Questions | ¿Cuántas semanas de historial se requieren para alcanzar el 80 %? ¿Con qué umbrales de probabilidad se definen HIGH, LIMITED y LOW? ¿Cuál es el tiempo máximo de llegada admitido? |
+| Issues | Arranque en frío sin historial. Eventos atípicos (feriados, exámenes) con pocos datos. La precisión del tiempo estimado depende del cálculo en el dispositivo. |
+
+**Scenario Refinement for Scenario 2**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-02: Frescura de la ocupación |
+| Business Goals | Mantener información confiable y actualizada de la ocupación, con disponibilidad de datos superior al 95 %. |
+| Relevant Quality Attributes | Performance |
+| Stimulus | Un espacio cambia de estado y el cambio se mantiene durante el tiempo mínimo configurado. |
+| Scenario Components: Stimulus Source | Sensor instalado en el espacio. |
+| Scenario Components: Environment | Operación normal, con conexión a la nube. |
+| Scenario Components: Artifact (if Known) | Gateway IoT, broker MQTT y contexto de ocupación. |
+| Scenario Components: Response | El gateway publica el evento en el broker. El consumidor lo valida, lo traduce a un evento de dominio, actualiza el estado del espacio, y el read model lo propaga a los clientes suscritos. |
+| Scenario Components: Response Measure | Cambio visible en la app y en la consola en 5 s o menos (percentil 95) desde la confirmación del cambio; publicación del gateway al broker en 1 s o menos. |
+| Questions | ¿Qué tipo de sensor y protocolo de radio se usará entre sensores y gateway? ¿Cuántos sensores atiende cada gateway? ¿Cuál es el tiempo mínimo de detección? |
+| Issues | Falsos positivos y negativos del sensor. Latencia de la red del campus. El tiempo mínimo de detección suma retardo antes de que el cambio se confirme. |
+
+**Scenario Refinement for Scenario 3**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-03: Tolerancia a pérdida de conectividad |
+| Business Goals | Mantener el monitoreo del estacionamiento aunque existan interrupciones de conexión y evitar la pérdida de información histórica que alimenta la predicción. |
+| Relevant Quality Attributes | Availability, Reliability |
+| Stimulus | Se pierde la conexión entre el gateway y el broker. |
+| Scenario Components: Stimulus Source | Red del campus o proveedor de conectividad. |
+| Scenario Components: Environment | Horario académico, incluyendo hora pico. |
+| Scenario Components: Artifact (if Known) | Gateway IoT. |
+| Scenario Components: Response | El gateway continúa recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. El consumidor descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad. |
+| Scenario Components: Response Measure | 0 % de eventos perdidos; reenvío completo en 5 min o menos tras la reconexión; 100 % de las consultas durante la caída informan la antigüedad del dato. |
+| Questions | ¿Cuántas horas de autonomía debe soportar el gateway? ¿Qué capacidad de almacenamiento local se necesita? |
+| Issues | Orden y duplicación de eventos al reenviar. Recuperación del gateway tras un reinicio inesperado. |
+
+**Scenario Refinement for Scenario 4**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-04: Desempeño y escalabilidad en hora pico |
+| Business Goals | Lograr que al menos 60 % de los conductores activos consulte la predicción antes de ingresar al campus en períodos de alta demanda. |
+| Relevant Quality Attributes | Performance, Scalability |
+| Stimulus | Pico de consultas de disponibilidad y asesoría al inicio o término de clases. |
+| Scenario Components: Stimulus Source | Conductores de la comunidad educativa. |
+| Scenario Components: Environment | Hora pico de operación. |
+| Scenario Components: Artifact (if Known) | BFF de la aplicación móvil y read model de ocupación. |
+| Scenario Components: Response | El BFF compone en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, sin consultar el modelo de escritura, y los servicios de lectura escalan horizontalmente. |
+| Scenario Components: Response Measure | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 %. |
+| Questions | ¿Cuántos conductores activos tendrá el campus piloto? El valor de 500 es un supuesto por validar. |
+| Issues | Los picos coinciden con el inicio de clases. Costo de infraestructura para escalar en hora pico. |
+
+**Scenario Refinement for Scenario 5**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-05: Confiabilidad de los datos de sensores |
+| Business Goals | Mantener una tasa de disponibilidad de datos de ocupación superior al 95 % y evitar que un dato no confiable se interprete como disponibilidad real. |
+| Relevant Quality Attributes | Reliability |
+| Stimulus | Un sensor deja de reportar dentro de su intervalo esperado o informa una batería por debajo del umbral. |
+| Scenario Components: Stimulus Source | Sensor de un espacio. |
+| Scenario Components: Environment | Operación normal. |
+| Scenario Components: Artifact (if Known) | Contexto de ocupación y monitoreo de dispositivos. |
+| Scenario Components: Response | El espacio pasa a UNKNOWN y se excluye del conteo de disponibles. Se registra la incidencia, el dispositivo queda marcado para mantenimiento y la confianza del pronóstico se reduce. Cuando el sensor reanuda su reporte y mantiene una detección estable, el espacio vuelve al estado confirmado. |
+| Scenario Components: Response Measure | Transición a UNKNOWN en 1 min o menos tras vencer el intervalo; 100 % de los espacios UNKNOWN excluidos del conteo de disponibles; disponibilidad de datos de ocupación de 95 % o más. |
+| Questions | ¿Cuál es el intervalo de reporte esperado de cada sensor? ¿Qué umbral de batería activa el mantenimiento? |
+| Issues | Una zona con muchos espacios UNKNOWN reduce la utilidad de la predicción. Sensores que reportan lecturas erróneas pero con señal. |
+
+**Scenario Refinement for Scenario 6**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-06: Degradación controlada ante fallas de servicios |
+| Business Goals | Mantener la información disponible para el conductor y el operador aunque falle un servicio interno o de terceros, sin afectar su confianza. |
+| Relevant Quality Attributes | Resilience, Interoperability |
+| Stimulus | El servicio de predicción, el servicio de correo o el proveedor de mensajería push no responden dentro del tiempo límite. |
+| Scenario Components: Stimulus Source | Servicio interno o proveedor externo. |
+| Scenario Components: Environment | Operación normal. |
+| Scenario Components: Artifact (if Known) | BFF móvil, BFF de consola y servicio de notificaciones. |
+| Scenario Components: Response | Se abre el circuit breaker del servicio afectado. El BFF responde con los datos disponibles e indica cuál no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación, y los tokens de dispositivo rechazados se marcan como inválidos. |
+| Scenario Components: Response Measure | 100 % de las solicitudes respondidas en 3 s o menos, sin error visible al usuario; 0 impacto en la frescura definida en QAS-02. |
+| Questions | ¿Qué proveedores de correo y de mensajería se usarán, y cuáles son sus cuotas y costos? ¿Qué umbrales abren el circuit breaker? |
+| Issues | Dependencia de terceros para entregar el código de acceso. Retraso en las alertas cuando el proveedor de mensajería falla. |
+
+**Scenario Refinement for Scenario 7**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-07: Seguridad y aislamiento entre instituciones |
+| Business Goals | Proteger los datos personales de la comunidad educativa conforme a la Ley N.° 29733 y ganar la confianza de las instituciones para el piloto. |
+| Relevant Quality Attributes | Security |
+| Stimulus | Un usuario sin sesión, con un rol que no corresponde o de otra institución solicita un recurso protegido, o un mismo correo excede las solicitudes de código permitidas. |
+| Scenario Components: Stimulus Source | Usuario no autenticado, usuario con rol insuficiente o usuario de otra institución. |
+| Scenario Components: Environment | Operación normal. |
+| Scenario Components: Artifact (if Known) | API Gateway y servicio de identidad. |
+| Scenario Components: Response | Rechaza la solicitud sin token (401), con rol o institución que no corresponde (403) o por exceso de solicitudes (429), y registra el intento en auditoría. |
+| Scenario Components: Response Measure | 100 % de los accesos no autorizados rechazados; registro en 1 s o menos; 100 % de las comunicaciones cifradas con TLS. |
+| Questions | ¿Cuál es la vigencia del código de un solo uso y de los tokens? ¿Cuántos intentos se permiten por ventana de tiempo? |
+| Issues | Dispositivos compartidos, donde debe evitarse que la sesión anterior quede expuesta. Dependencia de la entrega del correo para iniciar sesión. |
+
+**Scenario Refinement for Scenario 8**
+
+| Campo | Detalle |
+| --- | --- |
+| Scenario(s) | QAS-08: Alta de nuevas instituciones |
+| Business Goals | Lograr que al menos una institución implemente un piloto de Quadrapp durante el primer año y facilitar la incorporación de nuevas universidades mediante licenciamiento institucional. |
+| Relevant Quality Attributes | Modifiability |
+| Stimulus | Se da de alta una nueva universidad con sus dominios de correo y su primer administrador. |
+| Scenario Components: Stimulus Source | Equipo de Integra Labs. |
+| Scenario Components: Environment | Operación normal con instituciones ya activas. |
+| Scenario Components: Artifact (if Known) | Proceso de aprovisionamiento de instituciones. |
+| Scenario Components: Response | Se crea la institución, se registran sus dominios y se emite la invitación de su primer administrador. La institución configura después sus estacionamientos, zonas y sensores sin afectar a las demás. |
+| Scenario Components: Response Measure | Alta en 1 día hábil o menos, sin cambios de código ni interrupción del servicio; aislamiento de datos del 100 %. |
+| Questions | ¿Qué datos mínimos se requieren de la institución para el alta? |
+| Issues | Un dominio de correo ya usado por otra institución genera conflicto. Los controles de aislamiento deben probarse en cada versión. |
 
 ## 4.2. Strategic-Level Domain-Driven Design
 
