@@ -157,7 +157,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
         </p>
       </td>
       <td>Por completar.</td>
@@ -183,7 +183,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
         </p>
       </td>
       <td>Por completar.</td>
@@ -2887,95 +2887,15 @@ Con el objetivo de comprender la comunicación entre los diferentes Bounded Cont
 
 ### 4.2.5. Context Mapping
 
-En esta sección se desarrollan distintas alternativas de Context Mapping para representar las relaciones entre los bounded contexts definidos para Quadrapp. El objetivo es evaluar cómo deben comunicarse entre sí, qué nivel de dependencia es adecuado y qué patrones de relación permiten mantener una arquitectura modular y alineada con las responsabilidades de cada contexto.
+El Context Mapping presenta las relaciones estructurales y los contratos de integración entre los bounded contexts de Quadrapp. El mapa permite reconocer qué contexto proporciona cada dato, cómo se protege el lenguaje del dominio y qué integraciones utilizan contratos publicados.
 
-Para este análisis se consideran los bounded contexts Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, junto con patrones de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel y Anti-Corruption Layer.
+Parking Configuration expone los datos maestros del estacionamiento mediante Open Host Service. Parking Sensing entrega los eventos técnicos a Occupancy mediante una relación Customer/Supplier y una Anti-Corruption Layer que los transforma en conceptos del negocio. Occupancy publica los eventos y el estado actual que Prediction & Advisory utiliza para construir su propio feature store y generar estimaciones.
 
-**Opción 1 – Contextos independientes con relaciones directas:**
-Se mantienen los siete bounded contexts completamente separados y se establecen relaciones directas entre aquellos que necesitan intercambiar información. La mayor parte de las dependencias utilizan el patrón Customer/Supplier, donde un contexto proporciona información que otro requiere para ejecutar sus responsabilidades.
+Analytics adopta los eventos de Occupancy mediante Conformist y consume `ForecastGenerated` desde Prediction & Advisory para comparar las estimaciones con la ocupación observada. Prediction & Advisory publica los eventos destinados a Notifications mediante Published Language. IAM ofrece autenticación y autorización como un servicio transversal, mientras que las integraciones con el proveedor de mapas y el servicio de correo se aíslan mediante Anti-Corruption Layers.
 
-Parking Configuration proporciona la estructura del estacionamiento a Parking Sensing y Occupancy. Luego, Parking Sensing transmite los eventos obtenidos de sensores a Occupancy, que determina la disponibilidad actual de los espacios.
+![Context Mapping de Quadrapp](./assets/capitulo-04/ContextMapping.png)
 
-A partir de dicha información, Occupancy proporciona el estado actual a Prediction & Advisory y registra los eventos correspondientes en Analytics. Analytics procesa la información histórica y entrega patrones de demanda a Prediction & Advisory. Finalmente, las recomendaciones y alertas generadas por este último contexto son enviadas a Notifications.
-
-Por otro lado, IAM funciona como una capacidad transversal de identidad y autorización, por lo que los contextos que requieren información del usuario adoptan su modelo mediante una relación Conformist.
-
-Ventajas:
-- Mantiene responsabilidades claramente separadas.
-- Facilita la comprensión de las dependencias.
-- Permite que cada bounded context evolucione de forma independiente.
-- Evita compartir directamente modelos internos.
-
-Desventajas:
-- Existe una mayor cantidad de relaciones entre contextos.
-- Los cambios en contratos de integración pueden afectar a sus consumidores.
-- Puede generarse lógica repetida para transformar información entre modelos.
-
-![ContextMapping_Option1](./assets/capitulo-04/ContextMapping_Option1.png)
-
-**Opción 2 – Uso de Shared Kernel entre contextos relacionados:**
-Se mantiene los siete bounded contexts, pero propone compartir ciertos conceptos entre aquellos que trabajan con información estrechamente relacionada. 
-
-En este caso, Parking Sensing y Occupancy compartirían un Shared Kernel asociado a la representación de eventos y espacios del estacionamiento. De manera similar, Occupancy y Analytics compartirían conceptos relacionados con los eventos de ocupación y su representación histórica.
-
-El resto de relaciones mantendría principalmente el patrón Customer/Supplier. Parking Configuration continuaría proporcionando la estructura del estacionamiento, mientras que Occupancy y Analytics suministrarían información actual e histórica respectivamente a Prediction & Advisory. Este último enviaría los resultados relevantes a Notifications.
-IAM continuaría operando como contexto genérico y los demás contextos se adaptarían a su modelo mediante relaciones Conformist.
-
-Ventajas:
-- Reduce la duplicación de conceptos entre contextos relacionados.
-- Disminuye la necesidad de transformar información.
-- Simplifica algunas comunicaciones internas.
-- Puede facilitar la implementación inicial.
-
-Desventajas:
-- Incrementa el acoplamiento entre bounded contexts.
-- Los cambios en un modelo compartido pueden afectar a varios contextos.
-- Reduce la independencia de evolución de los módulos.
-- Puede difuminar los límites del dominio si se comparte demasiada información.
-Aunque esta alternativa simplifica ciertas integraciones, el uso excesivo de Shared Kernel puede hacer que los bounded contexts pierdan parte de la autonomía que se busca mediante Domain-Driven Design.
-
-![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option2.png)
-
-**Opción 3 – Contextos independientes con protección de modelos:**
-Se mantiene los bounded contexts independientes, pero introduce mecanismos para proteger los modelos internos cuando existen diferencias importantes entre ellos.
-
-La principal decisión es utilizar una Anti-Corruption Layer entre Parking Sensing y Occupancy. Parking Sensing trabaja con elementos técnicos como sensores, telemetría, señales y eventos de dispositivos, mientras que Occupancy trabaja con conceptos del negocio como ocupación, disponibilidad y estado de los espacios.
-
-La Anti-Corruption Layer se encarga de transformar los eventos técnicos provenientes del sensado en información comprensible para el dominio de Occupancy. De esta manera, Occupancy no necesita conocer los detalles de implementación de los sensores y puede evolucionar independientemente de la tecnología utilizada para capturar los datos.
-Parking Configuration mantiene relaciones Customer/Supplier con Parking Sensing, Occupancy y Analytics, proporcionando información sobre campus, estacionamientos, zonas y espacios.
-
-Entre Occupancy y Analytics se propone un Shared Kernel limitado, debido a que ambos contextos necesitan una representación consistente de determinados datos históricos de ocupación. Su alcance debe mantenerse reducido para evitar generar una dependencia excesiva.
-
-Occupancy proporciona información actual de disponibilidad a Prediction & Advisory, mientras que Analytics aporta patrones históricos y tendencias de demanda. De esta manera, Prediction & Advisory puede combinar información actual e histórica para generar las predicciones de disponibilidad y recomendaciones al conductor.
-
-Posteriormente, Prediction & Advisory se comunica con Notifications mediante una relación Customer/Supplier para solicitar el envío de alertas o recomendaciones relevantes.
-Finalmente, IAM se mantiene como contexto genérico. Los contextos que requieren identidad, autenticación o autorización utilizan su modelo mediante una relación Conformist, evitando replicar responsabilidades relacionadas con seguridad.
-
-Ventajas:
-- Mantiene una clara separación de responsabilidades.
-- Protege el modelo de Occupancy de detalles técnicos del IoT.
-- Permite modificar sensores o mecanismos de captura sin afectar directamente al dominio.
-- Mantiene Prediction & Advisory independiente de la infraestructura de sensado.
-- Facilita la escalabilidad y evolución de cada contexto.
-
-Desventajas:
-- Requiere implementar una capa adicional de traducción.
-- Aumenta ligeramente la complejidad de integración.
-- El Shared Kernel entre Occupancy y Analytics requiere coordinación entre ambos contextos.
-- Implica un mayor esfuerzo inicial de diseño.
-
-![ContextMapping_Option3](./assets/capitulo-04/ContextMapping_Option3.png)
-
-**Elección:**
-Hemos seleccionado la opción 3 debido a que proporciona el mejor equilibrio entre separación de responsabilidades, independencia de los bounded contexts y control de las dependencias.
-
-La relación mediante Anti-Corruption Layer entre Parking Sensing y Occupancy es especialmente importante, ya que evita que conceptos técnicos como telemetría, sensores o dispositivos Edge formen parte directamente del modelo de ocupación. Esto permite que la tecnología de sensado pueda evolucionar sin alterar las reglas de negocio asociadas a la disponibilidad de los estacionamientos.
-
-Asimismo, el uso limitado de Shared Kernel entre Occupancy y Analytics permite mantener consistencia sobre los datos históricos de ocupación que ambos contextos necesitan, sin compartir modelos innecesarios con el resto de la solución.
-
-Por otro lado, Prediction & Advisory se mantiene como el Core Domain de Quadrapp, ya que concentra el principal diferencial de la solución: estimar la probabilidad de encontrar un espacio disponible al momento de llegada y generar recomendaciones para el conductor a partir de información actual e histórica.
-
-En conjunto, esta alternativa permite que cada bounded context mantenga un propósito específico y pueda evolucionar de manera independiente, mientras las relaciones entre ellos permanecen claramente definidas y controladas.
+*Figura: Context Mapping de Quadrapp. Los recuadros continuos representan bounded contexts y los punteados, servicios externos; las etiquetas en amarillo indican el patrón de integración y las líneas discontinuas, las relaciones asíncronas basadas en eventos.*
 
 ## 4.3. Software Architecture
 
@@ -3003,9 +2923,21 @@ Representa el ecosistema general de Quadrapp, identificando los actores y sistem
 
 # Conclusiones
 
-## Conclusiones y recomendaciones
+## Avance de conclusiones
 
-*Pendiente de elaboración.*
+1. El trabajo realizado respalda el problema planteado para los conductores de la comunidad educativa. Las tres entrevistas registradas muestran que los participantes no conocen la disponibilidad antes de llegar, recurren a la intuición o a consultas por WhatsApp y han experimentado retrasos asociados con el tráfico, las colas o la búsqueda de un espacio. Estos resultados sustentan la necesidad de ofrecer información oportuna antes y durante el desplazamiento. Sin embargo, todavía no demuestran que la predicción reduzca el tiempo de búsqueda, ya que esta hipótesis requiere la implementación y evaluación de la solución.
+
+2. El avance del segmento de administradores también evidencia una gestión principalmente reactiva. La entrevista disponible señala que la ocupación se estima mediante la experiencia, reportes de las tranqueras y revisiones de cámaras, mientras que los registros se consolidan manualmente al terminar el turno. Este resultado respalda la utilidad potencial de una consola que reúna la ocupación actual, la saturación prevista y el análisis histórico. Debido a que solo se cuenta con una entrevista de este segmento, el hallazgo todavía no puede generalizarse a otras instituciones.
+
+3. Las evidencias obtenidas respaldan parcialmente los supuestos de Lean UX relacionados con la incertidumbre, la necesidad de anticipación y el valor de conocer la disponibilidad esperada al momento de llegada. Los criterios de éxito definidos, como reducir en 20 % el tiempo de búsqueda, alcanzar 80 % de precisión, lograr que 60 % de los conductores consulte la predicción y mantener más de 95 % de disponibilidad de datos, permanecen como metas por validar. Tampoco se ha comprobado todavía la adopción regular del dashboard ni la disposición de una institución para implementar un piloto.
+
+4. La especificación funcional traduce las necesidades identificadas en capacidades para ambos segmentos. La aplicación móvil prioriza la consulta de ocupación, la predicción y la asesoría de llegada, mientras que la consola web se orienta a la configuración, el monitoreo y el análisis de la operación. El Product Backlog organiza estas capacidades junto con el trabajo técnico necesario y proporciona una base para planificar la construcción incremental del producto.
+
+5. El diseño estratégico establece una arquitectura coherente con los riesgos principales del proyecto. Attribute-Driven Design permitió priorizar la precisión, la frescura de los datos, la tolerancia a fallas, el desempeño, la seguridad y el aislamiento entre instituciones. Domain-Driven Design separó las responsabilidades en siete bounded contexts y definió contratos de integración que evitan que los detalles de los sensores, la analítica y los proveedores externos se incorporen indebidamente al núcleo predictivo.
+
+6. El alcance definido concentra el valor de Quadrapp en informar, predecir y apoyar la gestión del estacionamiento. La solución no administra reservas, cobros ni el control físico de acceso. Además, el tiempo estimado de llegada se calcula en el dispositivo y el servidor recibe únicamente los minutos, lo que reduce el tratamiento de datos de ubicación y mantiene la propuesta alineada con el principio de recopilar solo la información necesaria.
+
+En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar y con una base funcional y arquitectónica para continuar su desarrollo. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
 
 ## Video About-the-Team
 
