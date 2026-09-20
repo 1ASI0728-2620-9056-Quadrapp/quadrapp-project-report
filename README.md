@@ -2923,9 +2923,21 @@ Representa el ecosistema general de Quadrapp, identificando los actores y sistem
 
 # Conclusiones
 
-## Conclusiones y recomendaciones
+## Avance de conclusiones
 
-*Pendiente de elaboración.*
+1. El trabajo realizado respalda el problema planteado para los conductores de la comunidad educativa. Las tres entrevistas registradas muestran que los participantes no conocen la disponibilidad antes de llegar, recurren a la intuición o a consultas por WhatsApp y han experimentado retrasos asociados con el tráfico, las colas o la búsqueda de un espacio. Estos resultados sustentan la necesidad de ofrecer información oportuna antes y durante el desplazamiento. Sin embargo, todavía no demuestran que la predicción reduzca el tiempo de búsqueda, ya que esta hipótesis requiere la implementación y evaluación de la solución.
+
+2. El avance del segmento de administradores también evidencia una gestión principalmente reactiva. La entrevista disponible señala que la ocupación se estima mediante la experiencia, reportes de las tranqueras y revisiones de cámaras, mientras que los registros se consolidan manualmente al terminar el turno. Este resultado respalda la utilidad potencial de una consola que reúna la ocupación actual, la saturación prevista y el análisis histórico. Debido a que solo se cuenta con una entrevista de este segmento, el hallazgo todavía no puede generalizarse a otras instituciones.
+
+3. Las evidencias obtenidas respaldan parcialmente los supuestos de Lean UX relacionados con la incertidumbre, la necesidad de anticipación y el valor de conocer la disponibilidad esperada al momento de llegada. Los criterios de éxito definidos, como reducir en 20 % el tiempo de búsqueda, alcanzar 80 % de precisión, lograr que 60 % de los conductores consulte la predicción y mantener más de 95 % de disponibilidad de datos, permanecen como metas por validar. Tampoco se ha comprobado todavía la adopción regular del dashboard ni la disposición de una institución para implementar un piloto.
+
+4. La especificación funcional traduce las necesidades identificadas en capacidades para ambos segmentos. La aplicación móvil prioriza la consulta de ocupación, la predicción y la asesoría de llegada, mientras que la consola web se orienta a la configuración, el monitoreo y el análisis de la operación. El Product Backlog organiza estas capacidades junto con el trabajo técnico necesario y proporciona una base para planificar la construcción incremental del producto.
+
+5. El diseño estratégico establece una arquitectura coherente con los riesgos principales del proyecto. Attribute-Driven Design permitió priorizar la precisión, la frescura de los datos, la tolerancia a fallas, el desempeño, la seguridad y el aislamiento entre instituciones. Domain-Driven Design separó las responsabilidades en siete bounded contexts y definió contratos de integración que evitan que los detalles de los sensores, la analítica y los proveedores externos se incorporen indebidamente al núcleo predictivo.
+
+6. El alcance definido concentra el valor de Quadrapp en informar, predecir y apoyar la gestión del estacionamiento. La solución no administra reservas, cobros ni el control físico de acceso. Además, el tiempo estimado de llegada se calcula en el dispositivo y el servidor recibe únicamente los minutos, lo que reduce el tratamiento de datos de ubicación y mantiene la propuesta alineada con el principio de recopilar solo la información necesaria.
+
+En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar y con una base funcional y arquitectónica para continuar su desarrollo. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
 
 ## Video About-the-Team
 
