@@ -292,243 +292,238 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 ### 2.1.1. Análisis competitivo
 
 <table>
-<tr>
+  <tr>
     <th colspan="6">Competitive Analysis Landscape</th>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th colspan="2">¿Por qué llevar a cabo este análisis?</th>
     <td colspan="4">
-        Identificar cómo Quadrapp puede diferenciarse de las soluciones actuales de estacionamiento mediante la predicción de disponibilidad futura y su especialización en comunidades educativas, considerando las tecnologías, servicios y modelos de negocio utilizados por competidores locales e internacionales.
+      Identificar cómo Quadrapp puede diferenciarse de las soluciones actuales de estacionamiento mediante la predicción de disponibilidad futura y su especialización en comunidades educativas, considerando las tecnologías, servicios y modelos de negocio utilizados por competidores locales e internacionales.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th></th>
     <th></th>
     <th>
-        Quadrapp<br>
-        <img src="assets/capitulo-02/Quadrapp.png" alt="Quadrapp" width="100">
+      Quadrapp<br>
+      <img src="assets/capitulo-02/Quadrapp.png" alt="Quadrapp" width="100">
     </th>
     <th>
-        Apparka<br>
-        <img src="assets/capitulo-02/Apparka.jpg" alt="Apparka" width="100">
+      Apparka<br>
+      <img src="assets/capitulo-02/Apparka.jpg" alt="Apparka" width="100">
     </th>
     <th>
-        ParkHelp<br>
-        <img src="assets/capitulo-02/Parkhelp.png" alt="ParkHelp" width="100">
+      ParkHelp<br>
+      <img src="assets/capitulo-02/Parkhelp.png" alt="ParkHelp" width="100">
     </th>
     <th>
-        ParkMobile<br>
-        <img src="assets/capitulo-02/Parkmobile.png" alt="ParkMobile" width="100">
+      ParkMobile<br>
+      <img src="assets/capitulo-02/Parkmobile.png" alt="ParkMobile" width="100">
     </th>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th rowspan="2">Perfil</th>
     <th>Overview</th>
     <td>
-        Plataforma inteligente orientada a estacionamientos universitarios que combina IoT, datos históricos y tiempos estimados de llegada para predecir la probabilidad de encontrar un espacio cuando el conductor llegue al campus.
+      Plataforma inteligente orientada a estacionamientos universitarios que combina sensado IoT, información de ocupación, datos históricos y tiempo estimado de llegada para predecir la probabilidad de encontrar un espacio y brindar recomendaciones al conductor antes de llegar al campus.
     </td>
     <td>
-        Plataforma peruana de estacionamientos y movilidad que permite localizar estacionamientos, consultar disponibilidad, realizar pagos y utilizar mecanismos automatizados de acceso vehicular.
+      Plataforma peruana de estacionamientos y movilidad que permite localizar estacionamientos, consultar disponibilidad y utilizar diferentes servicios digitales asociados a su operación.
     </td>
     <td>
-        Solución tecnológica para la gestión y guiado inteligente de estacionamientos basada en sensores, cámaras, reconocimiento de placas y herramientas de monitoreo y análisis.
+      Solución tecnológica orientada a la gestión y guiado inteligente de estacionamientos mediante sensores, cámaras, herramientas de monitoreo y análisis de ocupación.
     </td>
     <td>
-        Plataforma digital que permite localizar, pagar y reservar estacionamientos, incluyendo soluciones destinadas a universidades y campus educativos.
+      Plataforma digital de estacionamientos que ofrece servicios para conductores, operadores y universidades, facilitando la localización y gestión de espacios de estacionamiento.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Ventaja competitiva<br>¿Qué valor ofrece a los clientes?</th>
     <td>
-        Predice la disponibilidad futura según la hora estimada de llegada, combinando ocupación IoT actual, reservas, información histórica y horarios académicos. También automatiza accesos mediante reconocimiento de placas y QR como mecanismo alternativo.
+      Predice la disponibilidad futura según el tiempo estimado de llegada, combinando información de ocupación IoT en tiempo real, datos históricos, patrones de demanda y horarios académicos. Además, genera recomendaciones que ayudan al conductor a decidir hacia qué estacionamiento dirigirse.
     </td>
     <td>
-        Integra búsqueda de estacionamientos, pagos, control de acceso, lectura de placas, QR y sistemas de guiado mediante sensores, con presencia establecida en el mercado peruano.
+      Cuenta con presencia en el mercado peruano y experiencia en la digitalización y gestión tecnológica de estacionamientos.
     </td>
     <td>
-        Integra diferentes tecnologías de hardware y software para detectar ocupación, guiar conductores, reconocer vehículos y analizar el comportamiento de los estacionamientos.
+      Integra distintas tecnologías de hardware y software para detectar la ocupación de espacios, guiar conductores y analizar el comportamiento de los estacionamientos.
     </td>
     <td>
-        Centraliza búsqueda, reservas y pagos de estacionamiento mediante una plataforma digital que puede adaptarse a estudiantes, trabajadores y visitantes de universidades.
+      Cuenta con experiencia en soluciones digitales de estacionamiento y dispone de propuestas orientadas a universidades y otros entornos de alta movilidad.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th rowspan="2">Perfil de Marketing</th>
     <th>Mercado objetivo</th>
     <td>
-        Universidades y centros educativos con estacionamientos propios. Sus usuarios finales son estudiantes, docentes y personal administrativo que se desplazan en vehículo.
+      Universidades y centros educativos con estacionamientos propios. Sus usuarios finales son estudiantes, docentes y personal administrativo que se desplazan en vehículo hacia el campus.
     </td>
     <td>
-        Conductores urbanos y organizaciones que requieren servicios o infraestructura tecnológica para estacionamientos en Perú.
+      Conductores urbanos y organizaciones que requieren soluciones tecnológicas para la gestión de estacionamientos en Perú.
     </td>
     <td>
-        Universidades, centros educativos, operadores y organizaciones que requieren sistemas inteligentes para administrar estacionamientos.
+      Universidades, centros educativos, operadores de estacionamientos y organizaciones que buscan mejorar el monitoreo y aprovechamiento de sus espacios.
     </td>
     <td>
-        Universidades, ciudades, operadores de estacionamientos, estudiantes, trabajadores y visitantes.
+      Universidades, ciudades, operadores de estacionamientos, estudiantes, trabajadores y visitantes.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Estrategias de Marketing</th>
     <td>
-        Alianzas B2B con universidades, implementación de pilotos dentro de campus y demostraciones dirigidas a las áreas responsables de infraestructura, seguridad y movilidad.
+      Alianzas B2B con universidades, implementación de pilotos dentro de campus y demostraciones dirigidas a las áreas responsables de infraestructura, movilidad y gestión de estacionamientos.
     </td>
     <td>
-        Promoción de su aplicación para conductores, servicios para abonados y soluciones empresariales dirigidas a organizaciones.
+      Promoción de su plataforma para conductores y organizaciones, junto con soluciones empresariales relacionadas con la gestión de estacionamientos.
     </td>
     <td>
-        Estrategia principalmente B2B, ofreciendo soluciones especializadas según las necesidades de cada instalación.
+      Estrategia principalmente B2B, ofreciendo soluciones tecnológicas adaptadas a las necesidades y características de cada instalación.
     </td>
     <td>
-        Acuerdos con universidades y operadores para incorporar servicios de pago, reservas y gestión digital en los estacionamientos.
+      Acuerdos con universidades, ciudades y operadores para incorporar sus soluciones digitales dentro de distintos entornos de estacionamiento.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th rowspan="3">Perfil de Producto</th>
     <th>Productos &amp; Servicios</th>
     <td>
-        Predicción de disponibilidad futura, disponibilidad en tiempo real, reservas, pagos, sensores IoT, Edge Computing, reconocimiento de placas, acceso mediante QR, aplicación móvil y dashboard web.
+      Predicción de disponibilidad futura, monitoreo de ocupación en tiempo real mediante IoT, análisis histórico de demanda, recomendaciones de estacionamiento, notificaciones, aplicación móvil para conductores y dashboard web para administradores.
     </td>
     <td>
-        Búsqueda y disponibilidad de estacionamientos, pagos digitales, reservas, gestión de abonados, reconocimiento de placas, QR, control de acceso y sistemas de guiado.
+      Localización de estacionamientos, consulta de disponibilidad y herramientas digitales orientadas a conductores y operadores.
     </td>
     <td>
-        Sensores, cámaras, reconocimiento de placas, sistemas de guiado, dashboards, estadísticas y monitoreo de ocupación.
+      Sensores de estacionamiento, sistemas de detección de ocupación, guiado inteligente, dashboards, estadísticas y herramientas de monitoreo y análisis.
     </td>
     <td>
-        Localización de estacionamientos, pagos mediante aplicación móvil, reservas y herramientas de administración para universidades y otros operadores.
+      Localización de estacionamientos, herramientas digitales para conductores y soluciones de administración destinadas a operadores y universidades.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Precios &amp; Costos</th>
     <td>
-        Modelo propuesto de suscripción o licenciamiento institucional para universidades, complementado con los costos de infraestructura IoT, cámaras y dispositivos Edge.
+      Modelo propuesto de suscripción o licenciamiento institucional para universidades, considerando los costos asociados a infraestructura IoT, almacenamiento, procesamiento de datos y funcionamiento de la plataforma.
     </td>
     <td>
-        Los conductores pagan las tarifas correspondientes al estacionamiento utilizado. También ofrece planes para abonados y soluciones empresariales.
+      Los costos dependen de los servicios y soluciones tecnológicas contratadas por cada organización o estacionamiento.
     </td>
     <td>
-        Los costos dependen de las características, hardware y servicios requeridos para cada instalación y se determinan mediante cotización comercial.
+      Los costos dependen del hardware, cantidad de espacios, infraestructura y servicios requeridos para cada instalación, por lo que se determinan según cada proyecto.
     </td>
     <td>
-        Las tarifas dependen del estacionamiento y del operador, pudiendo aplicarse cargos adicionales por determinados servicios o transacciones.
+      El modelo comercial depende de las características del servicio implementado y de los acuerdos establecidos con cada operador o institución.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Canales de distribución<br>(Web y/o Móvil)</th>
     <td>
-        Aplicación móvil para conductores y aplicación web con dashboard para administradores.
+      Aplicación móvil para conductores y aplicación web con dashboard para administradores.
     </td>
     <td>
-        Aplicación móvil y plataforma web.
+      Aplicación móvil y plataforma web.
     </td>
     <td>
-        Plataforma web, infraestructura física e integraciones con otros sistemas.
+      Plataforma web, infraestructura física e integraciones con sistemas instalados en los estacionamientos.
     </td>
     <td>
-        Aplicación móvil y servicios web integrados con operadores y universidades.
+      Aplicación móvil y servicios web integrados con operadores y universidades.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th rowspan="5">Análisis SWOT</th>
     <td colspan="5">
-        Se identifican las fortalezas, debilidades, oportunidades y amenazas de Quadrapp y de sus principales competidores. Las fortalezas deben permitir aprovechar las oportunidades y contribuir al desarrollo de una ventaja competitiva sostenible.
+      Se identifican las fortalezas, debilidades, oportunidades y amenazas de Quadrapp y de sus principales competidores, considerando especialmente las capacidades relacionadas con monitoreo, disponibilidad, analítica y gestión inteligente de estacionamientos.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Fortalezas</th>
     <td>
-        Especialización en estacionamientos universitarios, predicción de disponibilidad futura, combinación de IoT, datos históricos y contexto académico, automatización de accesos y procesamiento Edge.
+      Especialización en estacionamientos universitarios, predicción de disponibilidad futura, integración de información IoT en tiempo real, análisis histórico, consideración del contexto académico y generación de recomendaciones para los conductores.
     </td>
     <td>
-        Presencia consolidada en Perú, experiencia operativa e integración de pagos, sensores, reconocimiento de placas, QR y control de acceso.
+      Presencia consolidada en Perú, experiencia operativa y conocimiento del mercado local de estacionamientos.
     </td>
     <td>
-        Amplia variedad de tecnologías para estacionamientos, experiencia en soluciones universitarias e integración de sensores, cámaras y analítica.
+      Amplia variedad de tecnologías para estacionamientos, experiencia en soluciones universitarias e integración de sensores, monitoreo y analítica.
     </td>
     <td>
-        Experiencia en estacionamientos universitarios y plataforma consolidada para búsqueda, pagos, reservas y administración.
+      Experiencia en soluciones para estacionamientos universitarios y presencia en distintos tipos de organizaciones y operadores.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Debilidades</th>
     <td>
-        Producto nuevo que requiere datos históricos suficientes para mejorar sus predicciones. La instalación de sensores, cámaras y dispositivos Edge implica inversión y complejidad inicial.
+      Producto nuevo que requiere suficiente información histórica para mejorar sus predicciones. La instalación y mantenimiento de sensores IoT implica una inversión inicial y la calidad de las estimaciones depende de la confiabilidad de los datos recolectados.
     </td>
     <td>
-        Se concentra principalmente en disponibilidad actual, pagos, reservas y automatización, sin especialización en predicción futura según el tiempo estimado de llegada.
+      Su propuesta se encuentra principalmente orientada a la operación y disponibilidad actual del estacionamiento, sin especialización en predicción futura según el tiempo estimado de llegada al campus.
     </td>
     <td>
-        Requiere una infraestructura física considerable y su propuesta está más orientada al guiado y administración que a una predicción personalizada según el tiempo de llegada.
+      Su propuesta depende considerablemente de infraestructura tecnológica instalada y se orienta principalmente al monitoreo y guiado, más que a una predicción personalizada según el momento de llegada del conductor.
     </td>
     <td>
-        Su propuesta se enfoca principalmente en pagos, reservas y administración y no en predicción futura basada en el tiempo estimado de llegada.
+      Su propuesta es amplia y está orientada a diferentes mercados, por lo que puede tener menor especialización en patrones académicos y comportamiento específico de comunidades universitarias.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Oportunidades</th>
     <td>
-        Creciente digitalización de campus, aprovechamiento de datos históricos y académicos para mejorar predicciones y posibilidad de expansión futura hacia hospitales, centros empresariales y otros espacios de movilidad recurrente.
+      Creciente digitalización de campus, aprovechamiento de datos históricos y académicos para mejorar las predicciones y posibilidad de expansión futura hacia otros espacios con patrones recurrentes de movilidad.
     </td>
     <td>
-        Expandir su infraestructura y experiencia hacia universidades y otros sectores con necesidades específicas de movilidad.
+      Expandir su experiencia e infraestructura hacia universidades y otros sectores con necesidades específicas de movilidad.
     </td>
     <td>
-        Incorporar capacidades predictivas utilizando la información generada por sus sensores y cámaras.
+      Incorporar capacidades predictivas avanzadas utilizando la información generada por sus sensores y sistemas de monitoreo.
     </td>
     <td>
-        Aprovechar sus datos de movilidad para ofrecer herramientas avanzadas de análisis y planificación de capacidad a universidades.
+      Aprovechar los datos generados por sus usuarios para incorporar herramientas avanzadas de análisis y planificación de capacidad.
     </td>
-</tr>
-
-<tr>
+  </tr>
+  <tr>
     <th>Amenazas</th>
     <td>
-        Competidores establecidos podrían incorporar funciones predictivas; resistencia institucional frente al costo de infraestructura; insuficiencia de datos históricos o baja precisión inicial de las estimaciones.
+      Competidores establecidos podrían incorporar funcionalidades predictivas; las instituciones podrían mostrar resistencia frente al costo de infraestructura; la falta de datos históricos o una baja precisión inicial podría afectar la confianza en las estimaciones.
     </td>
     <td>
-        Aparición de soluciones especializadas que utilicen predicción y análisis contextual como diferenciadores.
+      Aparición de soluciones especializadas que utilicen predicción, información histórica y análisis contextual como factores diferenciadores.
     </td>
     <td>
-        Aparición de soluciones con menor dependencia de infraestructura física y menores costos de implementación.
+      Aparición de soluciones con menor dependencia de infraestructura física o modelos de implementación más económicos.
     </td>
     <td>
-        Competidores especializados en sectores concretos pueden ofrecer experiencias más adaptadas a cada institución educativa.
+      Competidores especializados en sectores específicos pueden ofrecer experiencias más adaptadas a las necesidades particulares de cada institución.
     </td>
-</tr>
-
+  </tr>
 </table>
 
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
-Frente a Apparka, Quadrapp no buscará competir únicamente mediante funciones como búsqueda de estacionamientos, pagos, reservas o reconocimiento de placas. La estrategia será diferenciarse mediante la predicción de disponibilidad futura, orientada específicamente a conductores que se desplazan hacia campus universitarios.
+A partir del análisis competitivo realizado, se identificaron oportunidades para posicionar Quadrapp sin competir directamente mediante características que ya se encuentran presentes en otras soluciones de estacionamiento. La estrategia principal será concentrarse en la predicción de disponibilidad futura y el análisis del comportamiento de los estacionamientos universitarios, aprovechando información propia del contexto académico.
 
-Frente a ParkHelp, se buscará complementar el uso de sensores, cámaras y sistemas de monitoreo con una capa predictiva que transforme los datos obtenidos del estacionamiento en información útil para anticipar la disponibilidad al momento de llegada del conductor.
+**Frente a Apparka:**
+Quadrapp no buscará diferenciarse únicamente mediante la visualización de estacionamientos disponibles o la gestión tradicional de espacios. La estrategia será enfocarse en la predicción de disponibilidad futura, permitiendo que los conductores conozcan la probabilidad de encontrar un espacio al momento estimado de llegada al campus.
+Para ello, Quadrapp combinará información actual de ocupación con datos históricos, patrones de demanda y horarios académicos, ofreciendo una experiencia especializada en comunidades educativas.
 
-Frente a ParkMobile, Quadrapp priorizará una experiencia adaptada al contexto universitario, incorporando información propia de la comunidad educativa, como horarios académicos, patrones históricos de ocupación y períodos recurrentes de alta demanda.
+**Frente a ParkHelp:**
+Frente a ParkHelp, Quadrapp buscará complementar el monitoreo mediante sensores IoT con una capa de analítica histórica y predicción que transforme los datos de ocupación en información útil para los conductores.
+La diferenciación no estará únicamente en detectar qué espacios están disponibles, sino en utilizar esa información para anticipar cómo podría evolucionar la ocupación en los siguientes minutos y generar recomendaciones según el momento estimado de llegada.
+
+**Frente a ParkMobile:**
+Frente a ParkMobile, Quadrapp priorizará una experiencia especializada en el contexto universitario. La solución utilizará información relacionada con horarios académicos, horas pico, comportamiento histórico y patrones recurrentes de demanda para generar estimaciones adaptadas a cada campus.
+Este enfoque permitirá que tanto conductores como administradores obtengan información relacionada específicamente con el comportamiento de su comunidad educativa.
 
 **Tácticas principales:**
-- Implementar pilotos en universidades antes de realizar despliegues de mayor escala.
-- Recopilar datos históricos desde las primeras etapas para mejorar progresivamente las predicciones.
-- Medir de forma continua la precisión de la predicción y compararla con la disponibilidad real.
-- Mantener reconocimiento de placas como mecanismo principal de acceso y QR como alternativa.
-- Utilizar Edge Computing para mantener parte de la operación ante interrupciones de conectividad.
-- Mostrar a los administradores métricas de ocupación, demanda y comportamiento histórico mediante un dashboard.
-- Establecer alianzas directas con universidades para facilitar la adopción de la solución.
-- Utilizar los resultados de los pilotos como evidencia del impacto de Quadrapp en tiempos de búsqueda, flujo vehicular y utilización de los espacios.
+- Implementar pilotos controlados en universidades antes de realizar despliegues de mayor escala.
+- Recopilar información histórica desde las primeras etapas para mejorar progresivamente la capacidad de identificar patrones de demanda.
+- Medir continuamente la precisión de las predicciones y compararlas con la disponibilidad realmente observada.
+- Validar periódicamente la información generada por los sensores IoT comparándola con la ocupación real de los espacios.
+- Analizar la relación entre fecha, hora, horarios académicos, horas pico y ocupación histórica para mejorar los modelos de predicción.
+- Mostrar a los administradores mediante un dashboard información relacionada con ocupación actual, comportamiento histórico, períodos de mayor demanda y predicciones.
+- Utilizar notificaciones únicamente cuando existan cambios relevantes que puedan modificar la decisión del conductor, evitando generar alertas innecesarias.
+- Establecer alianzas directas con universidades para obtener datos, ejecutar pilotos y validar la solución en situaciones reales.
+- Utilizar los resultados de los pilotos como evidencia de la reducción del tiempo de búsqueda y de la utilidad de las predicciones.
+- Mejorar progresivamente los modelos de predicción conforme se disponga de una mayor cantidad de datos históricos por campus.
 
 ## 2.2. Entrevistas
 
