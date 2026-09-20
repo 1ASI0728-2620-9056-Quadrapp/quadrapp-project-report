@@ -434,7 +434,95 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 ### 4.2.5. Context Mapping
 
-*Pendiente de elaboración.*
+En esta sección se desarrollan distintas alternativas de Context Mapping para representar las relaciones entre los bounded contexts definidos para Quadrapp. El objetivo es evaluar cómo deben comunicarse entre sí, qué nivel de dependencia es adecuado y qué patrones de relación permiten mantener una arquitectura modular y alineada con las responsabilidades de cada contexto.
+
+Para este análisis se consideran los bounded contexts Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, junto con patrones de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel y Anti-Corruption Layer.
+
+**Opción 1 – Contextos independientes con relaciones directas:**
+Se mantienen los siete bounded contexts completamente separados y se establecen relaciones directas entre aquellos que necesitan intercambiar información. La mayor parte de las dependencias utilizan el patrón Customer/Supplier, donde un contexto proporciona información que otro requiere para ejecutar sus responsabilidades.
+
+Parking Configuration proporciona la estructura del estacionamiento a Parking Sensing y Occupancy. Luego, Parking Sensing transmite los eventos obtenidos de sensores a Occupancy, que determina la disponibilidad actual de los espacios.
+
+A partir de dicha información, Occupancy proporciona el estado actual a Prediction & Advisory y registra los eventos correspondientes en Analytics. Analytics procesa la información histórica y entrega patrones de demanda a Prediction & Advisory. Finalmente, las recomendaciones y alertas generadas por este último contexto son enviadas a Notifications.
+
+Por otro lado, IAM funciona como una capacidad transversal de identidad y autorización, por lo que los contextos que requieren información del usuario adoptan su modelo mediante una relación Conformist.
+
+Ventajas:
+- Mantiene responsabilidades claramente separadas.
+- Facilita la comprensión de las dependencias.
+- Permite que cada bounded context evolucione de forma independiente.
+- Evita compartir directamente modelos internos.
+
+Desventajas:
+- Existe una mayor cantidad de relaciones entre contextos.
+- Los cambios en contratos de integración pueden afectar a sus consumidores.
+- Puede generarse lógica repetida para transformar información entre modelos.
+
+![ContextMapping_Option1](./assets/capitulo-04/ContextMapping_Option1.png)
+
+**Opción 2 – Uso de Shared Kernel entre contextos relacionados:**
+Se mantiene los siete bounded contexts, pero propone compartir ciertos conceptos entre aquellos que trabajan con información estrechamente relacionada. 
+
+En este caso, Parking Sensing y Occupancy compartirían un Shared Kernel asociado a la representación de eventos y espacios del estacionamiento. De manera similar, Occupancy y Analytics compartirían conceptos relacionados con los eventos de ocupación y su representación histórica.
+
+El resto de relaciones mantendría principalmente el patrón Customer/Supplier. Parking Configuration continuaría proporcionando la estructura del estacionamiento, mientras que Occupancy y Analytics suministrarían información actual e histórica respectivamente a Prediction & Advisory. Este último enviaría los resultados relevantes a Notifications.
+IAM continuaría operando como contexto genérico y los demás contextos se adaptarían a su modelo mediante relaciones Conformist.
+
+Ventajas:
+- Reduce la duplicación de conceptos entre contextos relacionados.
+- Disminuye la necesidad de transformar información.
+- Simplifica algunas comunicaciones internas.
+- Puede facilitar la implementación inicial.
+
+Desventajas:
+- Incrementa el acoplamiento entre bounded contexts.
+- Los cambios en un modelo compartido pueden afectar a varios contextos.
+- Reduce la independencia de evolución de los módulos.
+- Puede difuminar los límites del dominio si se comparte demasiada información.
+Aunque esta alternativa simplifica ciertas integraciones, el uso excesivo de Shared Kernel puede hacer que los bounded contexts pierdan parte de la autonomía que se busca mediante Domain-Driven Design.
+
+![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option2.png)
+
+**Opción 3 – Contextos independientes con protección de modelos:**
+Se mantiene los bounded contexts independientes, pero introduce mecanismos para proteger los modelos internos cuando existen diferencias importantes entre ellos.
+
+La principal decisión es utilizar una Anti-Corruption Layer entre Parking Sensing y Occupancy. Parking Sensing trabaja con elementos técnicos como sensores, telemetría, señales y eventos de dispositivos, mientras que Occupancy trabaja con conceptos del negocio como ocupación, disponibilidad y estado de los espacios.
+
+La Anti-Corruption Layer se encarga de transformar los eventos técnicos provenientes del sensado en información comprensible para el dominio de Occupancy. De esta manera, Occupancy no necesita conocer los detalles de implementación de los sensores y puede evolucionar independientemente de la tecnología utilizada para capturar los datos.
+Parking Configuration mantiene relaciones Customer/Supplier con Parking Sensing, Occupancy y Analytics, proporcionando información sobre campus, estacionamientos, zonas y espacios.
+
+Entre Occupancy y Analytics se propone un Shared Kernel limitado, debido a que ambos contextos necesitan una representación consistente de determinados datos históricos de ocupación. Su alcance debe mantenerse reducido para evitar generar una dependencia excesiva.
+
+Occupancy proporciona información actual de disponibilidad a Prediction & Advisory, mientras que Analytics aporta patrones históricos y tendencias de demanda. De esta manera, Prediction & Advisory puede combinar información actual e histórica para generar las predicciones de disponibilidad y recomendaciones al conductor.
+
+Posteriormente, Prediction & Advisory se comunica con Notifications mediante una relación Customer/Supplier para solicitar el envío de alertas o recomendaciones relevantes.
+Finalmente, IAM se mantiene como contexto genérico. Los contextos que requieren identidad, autenticación o autorización utilizan su modelo mediante una relación Conformist, evitando replicar responsabilidades relacionadas con seguridad.
+
+Ventajas:
+- Mantiene una clara separación de responsabilidades.
+- Protege el modelo de Occupancy de detalles técnicos del IoT.
+- Permite modificar sensores o mecanismos de captura sin afectar directamente al dominio.
+- Mantiene Prediction & Advisory independiente de la infraestructura de sensado.
+- Facilita la escalabilidad y evolución de cada contexto.
+
+Desventajas:
+- Requiere implementar una capa adicional de traducción.
+- Aumenta ligeramente la complejidad de integración.
+- El Shared Kernel entre Occupancy y Analytics requiere coordinación entre ambos contextos.
+- Implica un mayor esfuerzo inicial de diseño.
+
+![ContextMapping_Option3](./assets/capitulo-04/ContextMapping_Option3.png)
+
+**Elección:**
+Hemos seleccionado la opción 3 debido a que proporciona el mejor equilibrio entre separación de responsabilidades, independencia de los bounded contexts y control de las dependencias.
+
+La relación mediante Anti-Corruption Layer entre Parking Sensing y Occupancy es especialmente importante, ya que evita que conceptos técnicos como telemetría, sensores o dispositivos Edge formen parte directamente del modelo de ocupación. Esto permite que la tecnología de sensado pueda evolucionar sin alterar las reglas de negocio asociadas a la disponibilidad de los estacionamientos.
+
+Asimismo, el uso limitado de Shared Kernel entre Occupancy y Analytics permite mantener consistencia sobre los datos históricos de ocupación que ambos contextos necesitan, sin compartir modelos innecesarios con el resto de la solución.
+
+Por otro lado, Prediction & Advisory se mantiene como el Core Domain de Quadrapp, ya que concentra el principal diferencial de la solución: estimar la probabilidad de encontrar un espacio disponible al momento de llegada y generar recomendaciones para el conductor a partir de información actual e histórica.
+
+En conjunto, esta alternativa permite que cada bounded context mantenga un propósito específico y pueda evolucionar de manera independiente, mientras las relaciones entre ellos permanecen claramente definidas y controladas.
 
 ## 4.3. Software Architecture
 
