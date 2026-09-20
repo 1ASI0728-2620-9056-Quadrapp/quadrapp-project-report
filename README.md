@@ -269,7 +269,7 @@ El valor diferencial de Quadrapp no radica únicamente en mostrar los espacios d
       <td>Curso la carrera de Ingeniería de Software y tengo experiencia en desarrollo web trabajando con equipos pequeños. Me apasiona el Front End, sobre todo cuando hay espacio para el diseño creativo: interfaces 3D, animaciones, productos que se ven y se sienten distintos. En el equipo puedo aportar en levantamiento de requerimientos, diseño de interfaces, desarrollo web con React y TypeScript, diseño de bases de datos. En el equipo aporto organización y colaboración.</td>
     </tr>
   </tbody>
-</table>    
+</table>
 
 ## 1.2. Solution Profile
 
@@ -525,8 +525,10 @@ La congestión en los campus universitarios y la falta de espacios en horas punt
   * Llegar puntualmente y sin estrés a sus compromisos académicos.
 
 **Administradores de estacionamientos universitarios:**
+Comprende a los jefes de logística y operaciones del campus, supervisores de turno y operadores de puerta: quienes monitorean el aforo, coordinan el flujo vehicular en los accesos y elaboran los reportes de ocupación. No incluye a la alta dirección de la universidad, que actúa como cliente del modelo B2B y aparece en el Lean UX Canvas.
+
 La gestión del aforo vehicular en las universidades suele ser reactiva y caótica en horas punta, generando cuellos de botella en las tranqueras de ingreso. Estos gestores requieren de paneles de control, IA y métricas precisas para anticiparse a la demanda, optimizar la ocupación de sus espacios y mejorar el flujo de entrada al campus.
-* **Tamaño del mercado:** Representan el **15%** de nuestro mercado objetivo (SAM), siendo el segmento B2B clave para la gestión operativa y la monetización de la plataforma.
+* **Tamaño del mercado:** Representan el **15%** de nuestro mercado objetivo (SAM), siendo el segmento B2B clave para la gestión operativa y la adopción institucional de la plataforma.
 * **Edad estimada:** 30 a 60 años.
 * **Ubicación:** Campus universitarios y áreas adyacentes a las universidades.
 * **Características demográficas y de comportamiento:**
@@ -535,7 +537,7 @@ La gestión del aforo vehicular en las universidades suele ser reactiva y caóti
   * Se enfrentan a reclamos constantes por parte de la comunidad educativa debido a la congestión.
   * Buscan modernizar sus sistemas tradicionales mediante tecnología, automatización y análisis de datos.
 * **Necesidades principales:**
-  * Optimizar la tasa de ocupación de los parqueos y rentabilizar los espacios vacíos.
+  * Optimizar la tasa de ocupación de los estacionamientos y aprovechar mejor los espacios disponibles.
   * Reducir las filas y el caos vehicular en las puertas de ingreso durante los cambios de horario.
   * Obtener reportes predictivos y métricas precisas sobre los patrones de demanda vehicular.
   * Mejorar la satisfacción general de los estudiantes y docentes al brindar un servicio de acceso ordenado.
