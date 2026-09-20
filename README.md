@@ -533,16 +533,25 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 
 ### 2.2.3. Análisis de entrevistas
 
-### Segmento objetivo de conductores de la comunidad educativa
+Esta sección analiza, para cada segmento objetivo, las características objetivas y subjetivas identificadas en las entrevistas que sustentan la construcción de los arquetipos. El análisis se apoya en los registros de la sección anterior y se actualizará con el sustento porcentual correspondiente a medida que se completen las entrevistas de cada segmento.
 
-La entrevista permitió identificar las principales dificultades que enfrentan los conductores de la comunidad educativa al buscar estacionamiento en la universidad:
+#### Segmento 1: Conductores de la comunidad educativa
 
-* **Falta de información anticipada:** la entrevistada no puede conocer con precisión la disponibilidad de estacionamientos antes de salir de casa.
-* **Información limitada de las aplicaciones actuales:** utiliza Waze y Google Maps para conocer el tráfico, pero estas herramientas no le permiten conocer la disponibilidad de espacios dentro del estacionamiento universitario.
-* **Tiempo perdido:** cuando el estacionamiento está lleno, puede invertir entre 10 y 15 minutos buscando un espacio, llegando incluso tarde a clases.
-* **Tiempo adicional semanal:** debido a la incertidumbre, estima que invierte entre 30 y 60 minutos adicionales por semana.
-* **Dependencia de información informal**
+*Pendiente de elaboración: se completará al registrar las entrevistas restantes del segmento.*
 
+#### Segmento 2: Administradores de estacionamientos universitarios
+
+**Hallazgos principales**
+
+* **Alcance de la operación:** la persona entrevistada supervisa el flujo vehicular del campus, coordina al personal de las tranqueras y resuelve los cuellos de botella durante las horas punta. Su trabajo se concentra principalmente en los periodos de mayor ingreso vehicular.
+* **Conocimiento de la ocupación:** la disponibilidad se estima mediante la experiencia y los reportes básicos de las tranqueras, considerados poco confiables porque se actualizan con lentitud. Para confirmar la ocupación del estacionamiento también se revisan las cámaras de seguridad.
+* **Gestión de la información:** el personal de seguridad registra manualmente los ingresos y los reportes diarios se consolidan en una hoja de cálculo al terminar el turno.
+* **Obstáculos diarios:** las filas en las tranqueras durante el cambio de hora de la mañana constituyen el problema recurrente debido a la falta de información en tiempo real sobre las zonas que tienen espacios libres. Durante el inicio del ciclo, los periodos de exámenes y los eventos masivos, el flujo aumenta alrededor de un 50 % y se asigna más personal sin contar con datos históricos que respalden esa decisión. Una falla en la lectora de una tranquera obligó al equipo a operar el acceso manualmente hasta que se restableció el sistema.
+* **Expectativas sobre la solución:** la persona entrevistada espera una plataforma analítica que prediga la demanda y anticipe cuántos vehículos llegarán por hora para organizar los accesos sin depender de suposiciones.
+
+**Conclusión preliminar**
+
+Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para la conductora, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
 
 ## 2.3. Needfinding
 
