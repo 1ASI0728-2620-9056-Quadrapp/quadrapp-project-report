@@ -2518,15 +2518,23 @@ Las decisiones de diseño se tomaron en seis iteraciones, siguiendo los stages d
 
 ### 4.2.1. EventStorming
 
-*Pendiente de elaboración.*
+El Event Storming permitió identificar de manera colaborativa los principales eventos de dominio, comandos, políticas y actores involucrados en el sistema QuadRapp. A través de esta técnica se visualizó el flujo completo del negocio, desde la autenticación de usuarios hasta la gestión de ocupación, predicciones y notificaciones.
+
+![Event Storming – Quadrapp](./assets/capitulo-04/eventstorming.png)
 
 ### 4.2.2. Candidate Context Discovery
 
-*Pendiente de elaboración.*
+A partir del análisis realizado en el Event Storming, se agruparon los conceptos relacionados y se identificaron los Bounded Contexts candidatos del sistema. Estos contextos representan límites claros de responsabilidad dentro del dominio de QuadRapp y facilitan la definición de una arquitectura modular y mantenible.
+
+![Candidate Context Discovery – Parte 1](./assets/capitulo-04/4parte1.jpg)
+
+![Candidate Context Discovery – Parte 2](./assets/capitulo-04/4parte2.jpg)
 
 ### 4.2.3. Domain Message Flows Modeling
 
-*Pendiente de elaboración.*
+Con el objetivo de comprender la comunicación entre los diferentes Bounded Contexts, se modeló el flujo de mensajes del escenario principal del sistema: cuando un conductor solicita una asesoría de llegada. Este modelado permite visualizar cómo interactúan los contextos de Occupancy, Prediction & Advisory y Notifications para brindar una respuesta al usuario.
+
+![Domain Message Flows Modeling – Conductor solicita asesoría de llegada](./assets/capitulo-04/domainmessage.png)
 
 ### 4.2.4. Bounded Context Canvases
 
