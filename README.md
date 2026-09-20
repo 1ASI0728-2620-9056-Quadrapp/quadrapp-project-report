@@ -2377,25 +2377,19 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.3. Impact Mapping
 
-El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos. Para mantener la legibilidad, el resultado se divide en tres mapas que cubren la experiencia del conductor, la adopción institucional y la operación del estacionamiento.
+El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos. El resultado se organiza en dos mapas, uno para cada User Persona correspondiente a los segmentos objetivo del proyecto.
 
 ### Conductores de la comunidad educativa
 
-Este mapa se centra en reducir en un 20 % el tiempo promedio de búsqueda. También incorpora como métricas que al menos el 60 % de los conductores activos consulte la predicción antes de llegar y que las estimaciones alcancen una precisión mínima del 80 %.
+Este mapa se centra en reducir en un 20 % el tiempo promedio de búsqueda. También incorpora como métricas que al menos el 60 % de los conductores activos consulte la predicción antes de llegar y que las estimaciones alcancen una precisión mínima del 80 %. Los impactos muestran los comportamientos que Andrea Santos debe adoptar y cada entregable se relaciona con la descripción completa de una User Story prioritaria.
 
 ![Impact Mapping de conductores de la comunidad educativa](./assets/capitulo-03/impact-mapping-conductores.png)
 
-### Piloto institucional
+### Administradores de estacionamientos universitarios
 
-Este mapa muestra cómo el responsable de logística y operaciones contribuye a que una institución implemente un piloto durante el primer año. Los impactos abarcan la comprensión del valor operativo, la habilitación del equipo responsable y la configuración de la infraestructura del estacionamiento.
+Este mapa integra los Business Outcomes relacionados con la implementación de un piloto durante el primer año, la disponibilidad de datos superior al 95 % y el uso del dashboard en cada turno. Los impactos muestran cómo Carlos Mendoza contribuye a la adopción, la configuración del estacionamiento, la supervisión operativa y el análisis de la demanda.
 
-![Impact Mapping del piloto institucional](./assets/capitulo-03/impact-mapping-piloto-institucional.png)
-
-### Operación del estacionamiento
-
-Este mapa vincula la disponibilidad de datos superior al 95 % y el uso regular del dashboard con la supervisión de la ocupación, la detección de fallas y el análisis de los periodos de mayor demanda.
-
-![Impact Mapping de la operación del estacionamiento](./assets/capitulo-03/impact-mapping-operacion.png)
+![Impact Mapping de administradores de estacionamientos universitarios](./assets/capitulo-03/impact-mapping-administradores.png)
 
 ## 3.4. Product Backlog
 
