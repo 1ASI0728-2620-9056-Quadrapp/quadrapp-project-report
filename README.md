@@ -905,6 +905,18 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Captura | <img src="assets/capitulo-02/Entrevista2_GonzaloAliaga.png" alt="Captura de la entrevista a Wilder Gonzalo Aliaga Urbina" width="500"/> |
 | Resumen | Estudiante de Ingeniería de Software que utiliza su auto propio para movilizarse a su campus 3 veces a la semana. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que trata de salir con antelación para evitar situaciones de tráfico y estrés. En una ocasión, durante su trayecto al campus, tuvo muchas complicaciones debido a una situación de tráfico y cola de espera en el estacionamiento de su campus, lo que lo llevó a perder mucho tiempo, llegando tarde a su clase. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
 
+**Entrevista 3**
+
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Gabriel Fernando Gordon Salas |
+| Edad | 21 años |
+| Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
+| Enlace de la grabación | [Ver entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
+| Duración | 05:17 |
+| Captura | <img src="assets/capitulo-02/Entrevista3_GabrielGordon.png" alt="Captura de la entrevista a Gabriel" width="500"/> |
+| Resumen | Estudiante de Ingeniería de Software que llega al campus en el auto de su familia 4 días a la semana, de lunes a jueves. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Antes de salir no cuenta con información sobre el estacionamiento, por lo que lo intuye según el día y la época del ciclo, y a veces consulta al grupo de WhatsApp, cuyas respuestas pueden quedar desactualizadas al llegar. Tras la cola de ingreso y la validación de su credencial, suele tardar unos 10 minutos en encontrar espacio. En una semana de exámenes buscó durante unos 20 minutos, terminó en un estacionamiento particular externo y llegó 15 minutos tarde a su evaluación. Estima perder unas 2 horas semanales entre salir antes y dar vueltas, y califica la importancia del problema con un 8 sobre 10. Considera importante conocer la probabilidad de encontrar espacio a su hora de llegada, idealmente por zona o piso, aunque solo confiaría en la predicción si es precisa. |
+
 #### Segmento 2: Administradores de estacionamientos universitarios
 
 **Entrevista 1**
@@ -925,7 +937,46 @@ Esta sección analiza, para cada segmento objetivo, las características objetiv
 
 #### Segmento 1: Conductores de la comunidad educativa
 
-*Pendiente de elaboración: se completará al registrar las entrevistas restantes del segmento.*
+Esta sección analiza, para cada segmento objetivo, las características objetivas y subjetivas identificadas en las entrevistas que sustentan la construcción de los arquetipos. El análisis se apoya en los registros de la sección anterior. Los porcentajes se calculan sobre el número de entrevistas del segmento y deben leerse como indicativos, dado que cada entrevista representa el 33 % de la muestra.
+
+#### Segmento 1: Conductores de la comunidad educativa
+
+Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus en auto.
+
+**Características objetivas**
+
+| Característica | Hallazgo | Sustento |
+| --- | --- | --- |
+| Medio de transporte | Llegan al campus en auto, propio o familiar, entre 3 y 5 días a la semana. | 3 de 3 (100 %) |
+| Apps de movilidad | Usan Waze, Google Maps o ambas para planificar la ruta y evitar el tráfico. | 3 de 3 (100 %) |
+| Canales de información | WhatsApp es el canal principal; el correo institucional es secundario. | WhatsApp: 3 de 3 (100 %). Correo: 2 de 3 (67 %) |
+| Información previa del estacionamiento | No cuentan con información sobre la disponibilidad antes de llegar; la intuyen por el horario o la actividad del campus. | 3 de 3 (100 %) |
+| Estrategias actuales | Salir con más anticipación y consultar a compañeros por WhatsApp. | Salir antes: 2 de 3 (67 %). Consultar a compañeros: 2 de 3 (67 %) |
+| Colas en el acceso | Encuentran cola de vehículos en la entrada antes de buscar espacio. | 2 de 3 (67 %) |
+| Consecuencia | Llegaron tarde a clase o a una evaluación por el tráfico, la cola o la búsqueda de espacio. | 3 de 3 (100 %) |
+| Tiempo perdido | Entre 30 y 60 minutos adicionales por semana en un caso y unas 2 horas semanales en otro. El tercero no lo cuantificó. | 2 de 3 (67 %) lo cuantificaron |
+
+**Características subjetivas**
+
+| Característica | Hallazgo | Sustento |
+| --- | --- | --- |
+| Incertidumbre | La principal molestia es no saber si encontrarán espacio al llegar. | 3 de 3 (100 %) |
+| Estrés y frustración | Sienten estrés por dar vueltas o quedar atrapados en la cola mientras se acerca la hora de clase. Uno calificó la importancia del problema con 8 sobre 10. | Estrés o frustración explícitos: 2 de 3 (67 %) |
+| Necesidad de anticipación | Quieren conocer con antelación la probabilidad de encontrar espacio para planificar mejor su salida. | 3 de 3 (100 %) |
+| Momento de interés | Desean saber la disponibilidad a la hora en que llegarán, no solo la del momento actual. | 1 de 3 (33 %) lo planteó de forma explícita |
+| Confianza condicionada | Dejarían de usar una predicción que falle un par de veces, por lo que esperan que sea acertada. | 1 de 3 (33 %) |
+| Forma de consulta | Prefieren consultar la información cuando les convenga, con un aviso opcional cuando el estacionamiento esté por llenarse. | 1 de 3 (33 %) |
+| Apertura a nuevas apps | Están dispuestos a probar apps nuevas si son fáciles de usar y les ahorran tiempo. | 1 de 3 (33 %) |
+| Seguridad | Se sienten menos tranquilos al dejar el auto en la calle o en un estacionamiento externo que dentro de la universidad. | 1 de 3 (33 %) |
+
+**Hallazgos principales**
+
+1. **La incertidumbre es el problema central.** Los tres entrevistados deciden a ciegas: no tienen datos y se apoyan en la intuición, en la experiencia y en mensajes de WhatsApp que pueden quedar desactualizados en pocos minutos.
+2. **El costo real es tiempo y puntualidad.** Los tres llegaron tarde en alguna ocasión y, en los casos que lo estimaron, pierden entre 30 minutos y 2 horas por semana entre salir antes y dar vueltas.
+3. **Las épocas críticas son predecibles.** Las semanas de exámenes, el inicio de ciclo y los eventos del campus saturan el estacionamiento, lo que respalda el uso del calendario académico y los eventos como insumo de la predicción.
+4. **Las soluciones actuales son informales.** Salir antes y preguntar por WhatsApp reducen el riesgo, pero no lo eliminan ni dan información confiable.
+5. **La confianza depende de la precisión.** Un entrevistado indicó que abandonaría la herramienta si falla con frecuencia, por lo que la predicción debe presentarse como estimación con su nivel de confianza.
+
 
 #### Segmento 2: Administradores de estacionamientos universitarios
 
