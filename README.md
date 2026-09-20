@@ -177,7 +177,10 @@ del ABET – EAC - Student Outcome 3.
           AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
         </p>
       </td>
-      <td>Por completar.</td>
+      <td>
+        <strong>AV1:</strong><br>
+        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.
+      </td>
     </tr>
     <tr>
       <td>Comunica en forma escrita ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerarquicos, en el marco del desarrollo de un proyecto en ingeniería.</td>
@@ -203,7 +206,10 @@ del ABET – EAC - Student Outcome 3.
           AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
         </p>
       </td>
-      <td>Por completar.</td>
+      <td>
+        <strong>AV1:</strong><br>
+        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.
+      </td>
     </tr>
   </tbody>
 </table>
@@ -2938,11 +2944,15 @@ Representa el ecosistema general de Quadrapp, identificando los actores y sistem
 
 ### 4.3.3. Software Architecture Container Level Diagrams
 
-*Pendiente de elaboración.*
+Descompone Quadrapp en los contenedores que lo conforman y muestra cómo se comunican entre sí. Los clientes son la Landing Page, la aplicación móvil y la consola de operación, que acceden al sistema a través de un único punto de entrada. Cada bounded context se despliega como un servicio con su propia persistencia, según lo establecido en el constraint de Domain-Driven Design, y la caché de lectura sostiene el read model de disponibilidad. Los nodos de sensado publican sus lecturas en el broker de la red local y un consumidor las valida y traduce al lenguaje del dominio antes de que lleguen al servicio de ocupación.
+
+<img src="assets/capitulo-04/4.3.3-container-level.png" alt="Diagrama de contenedores de Quadrapp">
 
 ### 4.3.4. Software Architecture Deployment Diagrams
 
-*Pendiente de elaboración.*
+Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker permanecen en la red local del campus, sin exposición a Internet, y solo el consumidor de eventos establece la comunicación con la nube. Los servicios de dominio, el punto de entrada y el almacenamiento gestionado se despliegan en el proveedor cloud, mientras que la Landing Page se publica como sitio estático. La aplicación móvil resuelve el tiempo estimado de llegada contra el proveedor de mapas desde el propio dispositivo, de modo que la ubicación del conductor no llega a los servicios de Quadrapp.
+
+<img src="assets/capitulo-04/4.3.4-deployment.png" alt="Diagrama de despliegue de Quadrapp">
 
 ---
 
