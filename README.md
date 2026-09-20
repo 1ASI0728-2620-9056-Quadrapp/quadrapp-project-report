@@ -157,7 +157,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
         </p>
       </td>
       <td>Por completar.</td>
@@ -183,7 +183,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
         </p>
       </td>
       <td>Por completar.</td>
