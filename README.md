@@ -910,15 +910,56 @@ Las entrevistas registradas identifican como problema común la falta de informa
 
 ### 2.3.1. User Personas
 
-*Pendiente de elaboración.*
+#### Conductores de la comunidad educativa
+
+![User Persona – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona1.jpg)
+
+#### Administradores de estacionamientos universitarios
+
+![User Persona – Administradores de estacionamientos universitarios](./assets/capitulo-02/userpersona2.jpg)
+
 
 ### 2.3.2. User Task Matrix
+  
+#### Conductores de la comunidad educativa
 
-*Pendiente de elaboración.*
+| Tarea | Frecuencia | Prioridad | Frustración |
+| ------ | ------ | ------ | ------ |
+| Ingresar a la aplicación con la cuenta institucional | Diario | Muy Alta | Alta |
+| Ver qué estacionamientos del campus están disponibles | Diario | Muy Alta | Media |
+| Conocer cuántos espacios libres hay en este momento | Diario | Muy Alta | Alta |
+| Revisar la ocupación por zonas del estacionamiento | Diario | Alta | Media |
+| Consultar cómo estará la disponibilidad en los próximos minutos | Diario | Muy Alta | Alta |
+| Ver de forma simple si el estacionamiento estará saturado al llegar | Diario | Alta | Media |
+| Recibir una recomendación según el tiempo que me falta para llegar | Diario | Muy Alta | Alta |
+| Actualizar la recomendación si cambia mi tiempo de llegada | Diario | Alta | Media |
+| Recibir notificaciones cuando la disponibilidad se ponga complicada | Diario | Alta | Media |
+| Configurar qué tipo de alertas quiero recibir | Ocasional | Media | Baja |
+
+#### Administradores de estacionamientos universitarios
+
+| Tarea | Frecuencia | Prioridad | Frustración |
+| ------ | ------ | ------ | ------ |
+| Dar de alta y configurar los estacionamientos del campus | Ocasional | Alta | Media |
+| Definir las zonas y la cantidad de espacios de cada estacionamiento | Ocasional | Alta | Media |
+| Vincular los sensores físicos con cada espacio de parqueo | Ocasional | Alta | Alta |
+| Configurar las entradas y salidas de vehículos | Ocasional | Media | Media |
+| Verificar que los sensores estén funcionando correctamente | Diario | Muy Alta | Alta |
+| Consultar la ocupación actual de los estacionamientos | Diario | Muy Alta | Alta |
+| Revisar el historial de ocupación de periodos anteriores | Semanal | Alta | Media |
+| Identificar los horarios de mayor demanda | Semanal | Alta | Alta |
+| Detectar y revisar inconsistencias entre los sensores y los accesos | Diario | Alta | Alta |
 
 ### 2.3.3. Empathy Mapping
 
-*Pendiente de elaboración.*
+#### Conductores de la comunidad educativa
+
+![Empathy Map – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping1.png)
+
+#### Administradores de estacionamientos universitarios
+
+![Empathy Map – Administradores de estacionamientos universitarios](./assets/capitulo-02/EmpathyMapping2.png)
+
 
 ### 2.3.4. As-is Scenario Mapping
 
