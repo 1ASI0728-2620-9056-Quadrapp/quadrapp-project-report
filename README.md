@@ -62,9 +62,11 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Nanfuñay Liza, Pedro Jesus | Lean UX Process, análisis competitivo con sus estrategias y tácticas, Bounded Context Canvases y Context Mapping. |
 | Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, configuración del repositorio y guía de contribución. |
 
-**Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 27 Pull Requests integrados a `develop` y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. Las capturas de los analíticos de colaboración y de commits se presentan a continuación.
+**Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 29 Pull Requests integrados y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. El analítico de contribuciones de GitHub confirma la participación de todo el equipo en la elaboración del informe.
 
-*Pendiente: capturas de los analíticos de Contributors y Commits del repositorio.*
+![Analítico de contribuciones del repositorio del informe](assets/capitulo-07/collaboration-contributors.png)
+
+*Figura: analítico de Contributors del repositorio al cierre del primer hito. Registra 33 commits de Sulca Sanchez, 13 de Nanfuñay Liza, 11 de Becerra Tejeda, 9 de Bejarano Martinez y 4 de Melgarejo Gomez, lo que corresponde con los aportes descritos en el Registro de Versiones del Informe.*
 
 # Contenido
 
@@ -403,7 +405,7 @@ Hemos observado que los conductores que se trasladan a universidades y centros e
 
 Por otro lado, las universidades y administradores de estacionamientos necesitan gestionar de manera eficiente la ocupación, el ingreso y la salida de vehículos, así como aprovechar la información generada diariamente para comprender los patrones de movilidad de su comunidad. Los sistemas tradicionales suelen concentrarse en mostrar la disponibilidad actual o controlar el acceso, pero no aprovechan suficientemente los datos históricos y operativos para anticipar cómo cambiará la ocupación en los siguientes minutos.
 
-Esta situación evidencia una brecha entre conocer cuántos espacios están disponibles actualmente y poder estimar qué probabilidad existe de encontrar uno al momento de llegar. Factores como el tiempo estimado de llegada, vehículos que se aproximan al campus, reservas existentes, registros históricos de ocupación, fecha, hora y horarios académicos pueden aportar información relevante para reducir esta incertidumbre.
+Esta situación evidencia una brecha entre conocer cuántos espacios están disponibles actualmente y poder estimar qué probabilidad existe de encontrar uno al momento de llegar. Factores como el tiempo estimado de llegada, los registros históricos de ocupación, la fecha, la hora y los horarios académicos pueden aportar información relevante para reducir esta incertidumbre.
 
 Frente a esta problemática, Quadrapp busca atender inicialmente a conductores de la comunidad educativa y administradores de estacionamientos universitarios, mediante una plataforma que combine información en tiempo real con datos históricos y académicos para estimar la disponibilidad futura. De esta manera, se busca ayudar a los conductores a tomar mejores decisiones antes de llegar al campus y proporcionar a los administradores información útil para comprender y gestionar la demanda de sus estacionamientos.
 
@@ -527,8 +529,8 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
 ## 1.3. Segmentos objetivo
 
 **Conductores de la comunidad educativa:**
-La congestión en los campus universitarios y la falta de espacios en horas punta generan estrés, retrasos y pérdida de tiempo. Este segmento necesita de herramientas impulsadas por inteligencia artificial predictiva para saber a qué hora exacta llegar, planificar su salida y evitar perder valiosos minutos de clases o evaluaciones buscando un lugar donde estacionar.
-* **Tamaño del mercado:** Representan el **85%** de nuestro mercado objetivo (SAM), conformando la gran masa de usuarios que consumirán diariamente las predicciones y alertas de la aplicación.
+La falta de espacios en horas punta puede incrementar el tiempo de búsqueda, producir retrasos y afectar la experiencia de los conductores en el campus (Channamallu et al., 2025, y Mohandes et al., 2019). Este segmento necesita información predictiva para planificar su salida y estimar la probabilidad de encontrar un espacio al llegar.
+* **Relevancia para la solución:** Es el segmento de usuarios finales que consulta la disponibilidad, las predicciones y las recomendaciones desde la aplicación móvil.
 * **Edad estimada:** 17 a 55 años.
 * **Ubicación:** Zonas urbanas con alta concentración de sedes universitarias y centros de educación superior.
 * **Características demográficas y de comportamiento:**
@@ -546,8 +548,8 @@ La congestión en los campus universitarios y la falta de espacios en horas punt
 **Administradores de estacionamientos universitarios:**
 Comprende a los jefes de logística y operaciones del campus, supervisores de turno y operadores de puerta: quienes monitorean el aforo, coordinan el flujo vehicular en los accesos y elaboran los reportes de ocupación. No incluye a la alta dirección de la universidad, que actúa como cliente del modelo B2B y aparece en el Lean UX Canvas.
 
-La gestión del aforo vehicular en las universidades suele ser reactiva y caótica en horas punta, generando cuellos de botella en las tranqueras de ingreso. Estos gestores requieren de paneles de control, IA y métricas precisas para anticiparse a la demanda, optimizar la ocupación de sus espacios y mejorar el flujo de entrada al campus.
-* **Tamaño del mercado:** Representan el **15%** de nuestro mercado objetivo (SAM), siendo el segmento B2B clave para la gestión operativa y la adopción institucional de la plataforma.
+Ante la variación del aforo y la demanda durante la jornada académica, estos gestores requieren paneles de control y métricas que les permitan supervisar la ocupación, identificar horas de mayor demanda y apoyar la gestión del estacionamiento.
+* **Relevancia para la solución:** Es el segmento operativo que utiliza la consola web y aporta la perspectiva institucional necesaria para adoptar y gestionar la plataforma.
 * **Edad estimada:** 30 a 60 años.
 * **Ubicación:** Campus universitarios y áreas adyacentes a las universidades.
 * **Características demográficas y de comportamiento:**
@@ -774,6 +776,8 @@ La gestión del aforo vehicular en las universidades suele ser reactiva y caóti
     </td>
   </tr>
 </table>
+
+La descripción de las capacidades de Apparka, ParkHelp y ParkMobile se elaboró a partir de la información publicada en sus sitios oficiales (Apparka, s. f., ParkHelp, s. f., y ParkMobile, s. f.). Las fortalezas, debilidades, oportunidades y amenazas corresponden al análisis del equipo con base en dichas capacidades y en el alcance propuesto para Quadrapp.
 
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
@@ -2555,7 +2559,7 @@ Las cuatro primeras corresponden a la composición y el despliegue de la soluci�
 | CON-08 | Aislamiento de datos entre instituciones | Como Developer, necesito que cada institución acceda únicamente a sus propios estacionamientos y usuarios, para sostener el modelo multi-institución sin mezclar información entre clientes. | **Escenario 1: Consulta dentro de la institución.**<br>Dado que el token de sesión identifica la institución del usuario,<br>cuando se consulta un recurso de esa institución,<br>entonces la respuesta incluye únicamente información que le pertenece.<br><br>**Escenario 2: Consulta fuera de la institución.**<br>Dado que el recurso solicitado pertenece a otra institución,<br>cuando se envía la solicitud,<br>entonces la respuesta es 403 y el intento queda registrado. | EP01, EP04 |
 | CON-09 | Autenticación sin contraseña | Como Developer, necesito que el acceso se realice mediante un código de un solo uso enviado al correo institucional o invitado, con sesiones basadas en tokens. | **Escenario 1: Sesión con claims.**<br>Dado que el usuario tiene un correo habilitado o una invitación vigente,<br>cuando ingresa un código válido,<br>entonces recibe un token de sesión con sus claims de usuario, institución y rol.<br><br>**Escenario 2: Límite de solicitudes.**<br>Dado que el mismo correo superó las solicitudes permitidas en la ventana configurada,<br>cuando solicita un nuevo código,<br>entonces la respuesta es 429 y no se emite el código. | EP01 |
 | CON-10 | Alcance sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya las reservas, los cobros y el reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de la institución. | **Escenario 1: Operación de las barreras.**<br>Dado que la solución no gestiona el ingreso físico de los vehículos,<br>cuando un vehículo accede al estacionamiento,<br>entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>**Escenario 2: Ausencia de transacciones.**<br>Dado que el producto no administra pagos ni reservas de espacios,<br>cuando se consulta cualquiera de sus servicios,<br>entonces no se expone ninguna operación de cobro ni de reserva. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (W3C, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
+| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (World Wide Web Consortium, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
 | CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. OpenAPI proporciona una descripción independiente del lenguaje para las interfaces HTTP (OpenAPI Initiative, 2024). | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Angular o Vue, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Angular o Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Angular Material, PrimeNG, PrimeVue o Vuetify, según el framework elegido. | EP02, EP06 |
 | CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS desde una sola base de código (Flutter, s. f.). | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
@@ -2970,6 +2974,8 @@ En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera p
 
 Adzic, G. (2012). *Impact mapping: Making a big impact with software products and projects*. Provoking Thoughts. https://www.impactmapping.org/book.html
 
+Apparka. (s. f.). *App Apparka*. Recuperado el 19 de septiembre de 2026 de https://apparka.pe/app-apparka/
+
 Bass, L., Clements, P., y Kazman, R. (2021). *Software architecture in practice* (4.ª ed.). Addison-Wesley Professional. https://www.pearson.com/en-us/subject-catalog/p/software-architecture-in-practice/P200000000111/9780137468218
 
 Brown, S. (s. f.). *The C4 model for visualising software architecture*. Recuperado el 19 de septiembre de 2026 de https://c4model.com/
@@ -2995,6 +3001,10 @@ Mohandes, M., Deriche, M., Abuelma'Atti, M. T., y Tasadduq, N. (2019). Preferenc
 OASIS. (2019). *MQTT version 5.0*. https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html
 
 OpenAPI Initiative. (2024). *OpenAPI Specification v3.1.1*. https://spec.openapis.org/oas/v3.1.1.html
+
+ParkHelp. (s. f.). *Parking guidance for universities & education*. Recuperado el 19 de septiembre de 2026 de https://www.parkhelp.com/parking-solutions/universities-education/
+
+ParkMobile. (s. f.). *Smarter parking for students, staff, and visitors*. Recuperado el 19 de septiembre de 2026 de https://parkmobile.io/parking-providers/parkmobile-for/college-campuses
 
 Paudel, S., Vechione, M., y Gurbuz, O. (2024). Predicting university campus parking demand using machine learning models. *Transportation Research Record, 2678*(6), 14-26. https://doi.org/10.1177/03611981231193417
 
