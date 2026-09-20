@@ -208,7 +208,7 @@ Para desarrollar y operar Quadrapp, establecemos alianzas con instituciones educ
 
 **Innovación y Tecnología**
 
-El valor diferencial de Quadrapp no radica únicamente en identificar espacios libres, sino en anticipar su disponibilidad. Los sensores instalados en cada espacio y en los accesos transmiten información mediante un gateway MQTT. A partir de estos datos, un modelo predictivo estima la ocupación para los siguientes 15, 30, 45 y 60 minutos, considerando también el comportamiento histórico, el calendario académico y los eventos del campus. La predicción se combina con el tiempo estimado de llegada del usuario para comunicarle la probabilidad de encontrar un espacio y ofrecerle una recomendación comprensible. Además, la solución prescinde de cámaras y del reconocimiento de placas: el tiempo de llegada se calcula en el dispositivo y el servidor recibe únicamente la cantidad estimada de minutos, no la ubicación del conductor.
+El valor diferencial de Quadrapp no radica únicamente en mostrar los espacios disponibles, sino en anticipar cómo evolucionará la ocupación del estacionamiento. La infraestructura de sensado instalada en los espacios y accesos proporciona información actualizada que se combina con los registros históricos, el calendario académico y los eventos del campus. A partir de estos datos, el sistema estima la ocupación para los siguientes 15, 30, 45 y 60 minutos. La aplicación relaciona estas predicciones con el tiempo estimado de llegada calculado en el dispositivo del conductor para informar la probabilidad de encontrar un espacio y ofrecer una recomendación oportuna. Respecto al trayecto del usuario, el servidor recibe únicamente el tiempo estimado en minutos y no su ubicación precisa. Este enfoque protege la privacidad y permite adaptar la tecnología de sensado a las características de cada campus.
 
 **Visión**
 
@@ -1606,6 +1606,27 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 </tr>
 
 <tr>
+  <td><strong>US36</strong></td>
+  <td>Estimar el tiempo hasta la próxima disponibilidad</td>
+  <td>Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa.</td>
+  <td>
+    <strong>Escenario 1: Estacionamiento lleno con salidas registradas.</strong><br>
+    Dado que el estacionamiento no presenta espacios libres y el contador de flujo registra salidas dentro de la ventana configurada,<br>
+    cuando el conductor consulta su disponibilidad,<br>
+    entonces el sistema informa el rango de tiempo estimado para la próxima liberación junto con su nivel de confianza.<br><br>
+    <strong>Escenario 2: Sin salidas registradas.</strong><br>
+    Dado que el estacionamiento no presenta espacios libres y no se registran salidas dentro de la ventana configurada,<br>
+    cuando el conductor consulta su disponibilidad,<br>
+    entonces el sistema informa que no es posible estimar el tiempo de espera.<br><br>
+    <strong>Escenario 3: Estacionamiento con espacios libres.</strong><br>
+    Dado que el estacionamiento presenta espacios libres,<br>
+    cuando el conductor consulta su disponibilidad,<br>
+    entonces el sistema no presenta la estimación de espera.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
   <td><strong>TS01</strong></td>
   <td>Configuración de autenticación y gestión de sesiones</td>
   <td>Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente.</td>
@@ -1767,7 +1788,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 3: Datos históricos insuficientes.</strong><br>
     Dado que el estacionamiento no acumula historial suficiente,<br>
     cuando se solicita su pronóstico,<br>
-    entonces la respuesta es 200 con el resultado del método de respaldo y un nivel de confianza bajo.
+    entonces la respuesta es 200 con el resultado del método de respaldo y un nivel de confianza bajo.<br><br>
+    <strong>Escenario 4: Tiempo hasta la próxima liberación.</strong><br>
+    Dado que el estacionamiento se encuentra sin espacios libres,<br>
+    cuando se envía GET /api/v1/forecasts/{lotId}/next-availability,<br>
+    entonces la respuesta es 200 con el rango de minutos estimado y su nivel de confianza, calculados a partir de la velocidad de salidas y del pronóstico vigente; si no existen salidas registradas en la ventana configurada, la respuesta indica que la estimación no está disponible.
   </td>
   <td>EP03</td>
 </tr>
@@ -1993,13 +2018,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.4. Product Backlog
 
-El Product Backlog presenta en una única lista ordenada las User Stories y las Technical Stories identificadas para Quadrapp. Cada elemento conserva el identificador, el título y la descripción definidos en la sección 3.2 e incorpora una estimación en Story Points. El orden representa su prioridad relativa según el valor que aporta al negocio y puede ajustarse durante el refinamiento cuando se obtiene nueva información sobre el producto.
+El Product Backlog reúne las User Stories y las Technical Stories de Quadrapp en una sola lista ordenada según su aporte al valor del negocio. Las primeras posiciones corresponden a la presentación de la propuesta de valor y a las capacidades principales del producto, como la consulta de disponibilidad y la predicción con asesoría de llegada.
 
-Las historias de la Landing Page ocupan las primeras posiciones porque deben considerarse desde el primer sprint. A continuación se priorizan la consulta de disponibilidad y la predicción con asesoría de llegada, ya que conforman la propuesta de valor principal de Quadrapp. Después se encuentran las historias relacionadas con la configuración de los estacionamientos y la operación institucional. Las capacidades de acceso e identidad aparecen como elementos habilitadores de la solución, mientras que la analítica histórica y las notificaciones complementan el valor entregado a los dos segmentos objetivo.
+Las Technical Stories representan el trabajo necesario para implementar y sostener las funcionalidades. Algunas apoyan una capacidad específica y otras son transversales porque respaldan varias épicas o aplicaciones. Todas se incluyen en el mismo backlog y se ordenan según el valor que permiten entregar.
 
-Las Technical Stories hacen visible el trabajo técnico necesario para implementar y sostener las funcionalidades del producto. Algunas habilitan una capacidad específica, como el procesamiento de eventos de ocupación o el servicio de asesoría de llegada. Otras tienen alcance transversal porque respaldan varias épicas o aplicaciones, como la persistencia y el aislamiento de datos, los puntos de entrada para las aplicaciones y la accesibilidad e internacionalización. Todas forman parte del mismo Product Backlog y se ordenan según el valor que permiten entregar, sin crear un backlog técnico separado.
-
-La estimación representa el tamaño relativo del trabajo y utiliza la escala de Fibonacci acotada a 1, 2, 3, 5 y 8 puntos. El backlog suma **222 Story Points** distribuidos en **52 elementos**.
+La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El backlog suma **227 Story Points** distribuidos en **53 elementos**.
 
 | # Orden | User Story Id | Título | Descripción | Story Points |
 | --- | --- | --- | --- | --- |
@@ -2023,42 +2046,41 @@ La estimación representa el tamaño relativo del trabajo y utiliza la escala de
 | 18 | US13 | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | 8 |
 | 19 | US14 | Actualizar asesoría según ETA | Como conductor de la comunidad educativa, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista. | 5 |
 | 20 | US15 | Mostrar categoría de disponibilidad esperada | Como conductor de la comunidad educativa, quiero visualizar una categoría simple de disponibilidad esperada para interpretar rápidamente las condiciones del estacionamiento al momento de mi llegada. | 2 |
-| 21 | TS07 | Implementación del modelo de predicción de ocupación | Como Developer, quiero implementar el componente de predicción de disponibilidad utilizando el histórico de ocupación, la velocidad de flujo, el calendario académico y los eventos del campus, para generar pronósticos de disponibilidad futura de los estacionamientos. | 8 |
-| 22 | TS08 | Implementación del servicio de asesoría de llegada | Como Developer, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada. | 5 |
-| 23 | US16 | Registrar estacionamiento universitario | Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por Quadrapp. | 3 |
-| 24 | US17 | Configurar zonas y espacios | Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en Quadrapp. | 5 |
-| 25 | US18 | Asociar sensor a espacio | Como administrador de estacionamientos, quiero asociar cada sensor físico con su espacio correspondiente para identificar correctamente la ocupación. | 3 |
-| 26 | US19 | Configurar accesos vehiculares | Como administrador de estacionamientos, quiero configurar los accesos de entrada y salida para registrar los movimientos de vehículos dentro del estacionamiento. | 3 |
-| 27 | US32 | Registrar y dar de baja dispositivos | Como administrador de estacionamientos, quiero registrar, reemplazar y dar de baja los sensores y gateways de mi institución para mantener actualizado el inventario que alimenta la ocupación. | 3 |
-| 28 | US20 | Monitorear salud de sensores | Como administrador de estacionamientos, quiero conocer el estado de los sensores para identificar dispositivos que presentan problemas de comunicación o funcionamiento. | 3 |
-| 29 | TS10 | Implementación del monitoreo de salud de dispositivos IoT | Como Developer, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación. | 5 |
-| 30 | TS14 | Reconciliación del conteo de accesos con la detección por espacio | Como Developer, quiero reconciliar periódicamente el conteo de entradas y salidas con los estados reportados por los sensores de espacio, para mantener coherente la ocupación del estacionamiento y la velocidad de flujo. | 5 |
-| 31 | US35 | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | 3 |
-| 32 | US29 | Monitorear la operación del estacionamiento desde la consola | Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | 5 |
-| 33 | TS17 | Composición de la consola de operación | Como Developer, quiero disponer de un punto de entrada propio para la consola de operación, para componer en una sola respuesta la información que el personal del estacionamiento necesita durante su turno. | 5 |
-| 34 | US01 | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | 5 |
-| 35 | US02 | Cerrar sesión | Como usuario, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo. | 1 |
-| 36 | US03 | Gestionar sesión expirada | Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp. | 2 |
-| 37 | TS01 | Configuración de autenticación y gestión de sesiones | Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente. | 5 |
-| 38 | TS02 | Configuración del API Gateway y BFF para la aplicación móvil | Como Developer, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de Quadrapp y facilitar la composición de información proveniente de diferentes contextos. | 8 |
-| 39 | TS03 | Configuración de persistencia y aislamiento de datos por contexto | Como Developer, quiero configurar la persistencia de datos de los principales contextos de Quadrapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades. | 8 |
-| 40 | US30 | Gestionar los dominios de correo habilitados | Como administrador de estacionamientos, quiero gestionar los dominios de correo institucional habilitados para mi universidad para controlar quién puede registrarse en Quadrapp. | 3 |
-| 41 | US31 | Invitar administradores y operadores | Como administrador de estacionamientos, quiero invitar a otros administradores y a los operadores de mi institución para que accedan a la consola con el rol que les corresponde. | 3 |
-| 42 | TS15 | Aprovisionamiento de una institución | Como Developer, quiero disponer de un proceso de aprovisionamiento restringido para dar de alta una institución con sus dominios de correo y su primer administrador, para habilitar el servicio durante el onboarding sin exponer un registro público. | 5 |
-| 43 | US21 | Consultar historial de ocupación | Como administrador de estacionamientos, quiero consultar el historial de ocupación para analizar el comportamiento de los estacionamientos universitarios. | 5 |
-| 44 | US22 | Identificar horas de mayor ocupación | Como administrador de estacionamientos, quiero identificar los periodos con mayor ocupación para conocer los horarios de mayor demanda. | 3 |
-| 45 | US34 | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | 5 |
-| 46 | TS11 | Implementación de procesamiento histórico para analítica de ocupación | Como Developer, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos. | 8 |
-| 47 | US33 | Suscribirse a alertas por franja horaria | Como conductor de la comunidad educativa, quiero suscribirme a las alertas de un estacionamiento en las franjas horarias en las que suelo llegar para enterarme con anticipación cuando la disponibilidad prevista sea baja. | 3 |
-| 48 | US23 | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | 5 |
-| 49 | US24 | Gestionar preferencias de notificaciones | Como conductor de la comunidad educativa, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir. | 2 |
-| 50 | TS12 | Implementación del sistema de notificaciones y preferencias | Como Developer, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de Quadrapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos. | 5 |
-| 51 | TS13 | Implementación de caché y funcionamiento parcial sin conexión | Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad. | 5 |
-| 52 | TS16 | Accesibilidad e internacionalización de las aplicaciones | Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | 5 |
+| 21 | US36 | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa. | 5 |
+| 22 | TS07 | Implementación del modelo de predicción de ocupación | Como Developer, quiero implementar el componente de predicción de disponibilidad utilizando el histórico de ocupación, la velocidad de flujo, el calendario académico y los eventos del campus, para generar pronósticos de disponibilidad futura de los estacionamientos. | 8 |
+| 23 | TS08 | Implementación del servicio de asesoría de llegada | Como Developer, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada. | 5 |
+| 24 | US16 | Registrar estacionamiento universitario | Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por Quadrapp. | 3 |
+| 25 | US17 | Configurar zonas y espacios | Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en Quadrapp. | 5 |
+| 26 | US18 | Asociar sensor a espacio | Como administrador de estacionamientos, quiero asociar cada sensor físico con su espacio correspondiente para identificar correctamente la ocupación. | 3 |
+| 27 | US19 | Configurar accesos vehiculares | Como administrador de estacionamientos, quiero configurar los accesos de entrada y salida para registrar los movimientos de vehículos dentro del estacionamiento. | 3 |
+| 28 | US32 | Registrar y dar de baja dispositivos | Como administrador de estacionamientos, quiero registrar, reemplazar y dar de baja los sensores y gateways de mi institución para mantener actualizado el inventario que alimenta la ocupación. | 3 |
+| 29 | US20 | Monitorear salud de sensores | Como administrador de estacionamientos, quiero conocer el estado de los sensores para identificar dispositivos que presentan problemas de comunicación o funcionamiento. | 3 |
+| 30 | TS10 | Implementación del monitoreo de salud de dispositivos IoT | Como Developer, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación. | 5 |
+| 31 | TS14 | Reconciliación del conteo de accesos con la detección por espacio | Como Developer, quiero reconciliar periódicamente el conteo de entradas y salidas con los estados reportados por los sensores de espacio, para mantener coherente la ocupación del estacionamiento y la velocidad de flujo. | 5 |
+| 32 | US35 | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | 3 |
+| 33 | US29 | Monitorear la operación del estacionamiento desde la consola | Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | 5 |
+| 34 | TS17 | Composición de la consola de operación | Como Developer, quiero disponer de un punto de entrada propio para la consola de operación, para componer en una sola respuesta la información que el personal del estacionamiento necesita durante su turno. | 5 |
+| 35 | US01 | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | 5 |
+| 36 | US02 | Cerrar sesión | Como usuario, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo. | 1 |
+| 37 | US03 | Gestionar sesión expirada | Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp. | 2 |
+| 38 | TS01 | Configuración de autenticación y gestión de sesiones | Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente. | 5 |
+| 39 | TS02 | Configuración del API Gateway y BFF para la aplicación móvil | Como Developer, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de Quadrapp y facilitar la composición de información proveniente de diferentes contextos. | 8 |
+| 40 | TS03 | Configuración de persistencia y aislamiento de datos por contexto | Como Developer, quiero configurar la persistencia de datos de los principales contextos de Quadrapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades. | 8 |
+| 41 | US30 | Gestionar los dominios de correo habilitados | Como administrador de estacionamientos, quiero gestionar los dominios de correo institucional habilitados para mi universidad para controlar quién puede registrarse en Quadrapp. | 3 |
+| 42 | US31 | Invitar administradores y operadores | Como administrador de estacionamientos, quiero invitar a otros administradores y a los operadores de mi institución para que accedan a la consola con el rol que les corresponde. | 3 |
+| 43 | TS15 | Aprovisionamiento de una institución | Como Developer, quiero disponer de un proceso de aprovisionamiento restringido para dar de alta una institución con sus dominios de correo y su primer administrador, para habilitar el servicio durante el onboarding sin exponer un registro público. | 5 |
+| 44 | US21 | Consultar historial de ocupación | Como administrador de estacionamientos, quiero consultar el historial de ocupación para analizar el comportamiento de los estacionamientos universitarios. | 5 |
+| 45 | US22 | Identificar horas de mayor ocupación | Como administrador de estacionamientos, quiero identificar los periodos con mayor ocupación para conocer los horarios de mayor demanda. | 3 |
+| 46 | US34 | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | 5 |
+| 47 | TS11 | Implementación de procesamiento histórico para analítica de ocupación | Como Developer, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos. | 8 |
+| 48 | US33 | Suscribirse a alertas por franja horaria | Como conductor de la comunidad educativa, quiero suscribirme a las alertas de un estacionamiento en las franjas horarias en las que suelo llegar para enterarme con anticipación cuando la disponibilidad prevista sea baja. | 3 |
+| 49 | US23 | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | 5 |
+| 50 | US24 | Gestionar preferencias de notificaciones | Como conductor de la comunidad educativa, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir. | 2 |
+| 51 | TS12 | Implementación del sistema de notificaciones y preferencias | Como Developer, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de Quadrapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos. | 5 |
+| 52 | TS13 | Implementación de caché y funcionamiento parcial sin conexión | Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad. | 5 |
+| 53 | TS16 | Accesibilidad e internacionalización de las aplicaciones | Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | 5 |
 
-El backlog se gestiona además en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T), donde cada tarjeta conserva el identificador de la historia, su posición en el orden de atención y su estimación en Story Points.
-
-La lista **Product Backlog** concentra los 52 elementos ordenados por valor de negocio, y las listas **Sprint 1**, **En progreso** y **Hecho** registran el avance durante la ejecución. Cada tarjeta muestra al frente su estimación en Story Points.
+El backlog también se encuentra en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T). En esta etapa, el tablero documenta los 53 elementos del Product Backlog ordenados por valor de negocio. Cada tarjeta incluye el identificador de la historia y su estimación en Story Points.
 
 *Pendiente: captura del tablero.*
 
