@@ -21,7 +21,7 @@
 | Nombres y apellidos | Código de estudiante |
 | --- | --- |
 | Becerra Tejeda, Alessandra Nicole | u202318947 |
-| Bejarano Martinez, Alvaro Leandro | Por completar |
+| Bejarano Martinez, Alvaro Leandro | U202311640 |
 | Melgarejo Gomez, Marcia Victoria | U20231C505 |
 | Nanfuñay Liza, Pedro Jesus | u202215462 |
 | Sulca Sanchez, Piero Angel | u202423711 |
@@ -32,24 +32,39 @@
 
 | Versión | Fecha | Autor | Descripción de modificación |
 | --- | --- | --- | --- |
-| 1.0 | 2026-09-15 | Integra Labs | Estructura inicial del informe para AV1. |
-| 1.1 | 2026-09-19 | Integra Labs  | Se añadieron los capítulos I, II, III y IV |
-
----
+| 1.0 | 2026-09-15 | Sulca Sanchez, Piero Angel | Estructura inicial del informe para el primer hito, con la carátula, el registro de versiones, el contenido y las plantillas de los capítulos. |
+| 1.1 | 2026-09-16 | Nanfuñay Liza, Pedro Jesus | Incorporación del Lean UX Process (problem statements, assumptions, hypothesis statements y canvas) y del análisis competitivo con sus estrategias y tácticas. |
+| 1.2 | 2026-09-19 | Melgarejo Gomez, Marcia Victoria | Incorporación del As-is y el To-be Scenario Mapping, el Ubiquitous Language y el Design Purpose del diseño estratégico. |
+| 1.3 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de las User Stories, las Epics, las Technical Stories y el análisis de antecedentes con 5W y 2H. |
+| 1.4 | 2026-09-19 | Bejarano Martinez, Alvaro Leandro | Incorporación de los segmentos objetivo, los User Personas, la User Task Matrix, el Empathy Mapping y el EventStorming con el descubrimiento de contextos candidatos. |
+| 1.5 | 2026-09-19 | Sulca Sanchez, Piero Angel | Unificación del informe en un único archivo `README.md`, eliminación del generador y actualización de la guía de contribución con el flujo de trabajo del equipo. |
+| 1.6 | 2026-09-19 | Sulca Sanchez, Piero Angel | Incorporación de la descripción de la startup, del diseño de entrevistas y del registro y análisis de las entrevistas realizadas. |
+| 1.7 | 2026-09-19 | Sulca Sanchez, Piero Angel | Reescritura de las User Stories en un único cuadro con las historias de la Landing Page y los criterios de request y response en las Technical Stories, e incorporación del Product Backlog priorizado por valor de negocio. |
+| 1.8 | 2026-09-19 | Nanfuñay Liza, Pedro Jesus | Incorporación de los Bounded Context Canvases y del Context Mapping, y corrección del alcance en el análisis competitivo y en el Lean UX. |
+| 1.9 | 2026-09-19 | Melgarejo Gomez, Marcia Victoria | Reescritura de los Quality Attribute Scenarios y elaboración de la funcionalidad primaria, el Architectural Drivers Backlog y las decisiones de diseño. |
+| 1.10 | 2026-09-19 | Sulca Sanchez, Piero Angel | Consolidación de los Constraints como Technical Stories, incorporación del Impact Mapping y ajuste del Architectural Drivers Backlog con la totalidad de las restricciones. |
+| 1.11 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de los diagramas de arquitectura de software a nivel de contexto y de paisaje del sistema. |
+| 1.12 | 2026-09-19 | Equipo Integra Labs | Consolidación del Student Outcome, el avance de conclusiones y el registro de colaboración para la entrega del primer hito. |
 
 # Project Report Collaboration Insights
 
-Repositorio del informe: [quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report).
+El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report), alojado en la organización de GitHub del equipo.
 
-El equipo elaborará el informe colaborativamente con GitFlow y Conventional Commits. Cada integrante registrará sus aportes con su propia cuenta y otro integrante revisará sus cambios antes de integrarlos en `develop`.
+**Organización del trabajo en el primer hito.** El equipo distribuyó las secciones del informe por integrante y acordó un flujo de trabajo común, documentado en la guía de contribución del repositorio: cada integrante trabaja en una rama `feature/` nombrada por la tarea, registra sus cambios con Conventional Commits en inglés y abre un Pull Request hacia `develop`, que se integra mediante merge commit para conservar la autoría de cada aporte. El informe se mantiene en un único archivo `README.md`, lo que exige que cada integrante intervenga solamente en las secciones que le corresponden y actualice su rama antes de integrar.
 
-Las evidencias de colaboración se actualizarán en cada entrega y serán coherentes con el Registro de Versiones del Informe.
+**Aportes por integrante en esta entrega.**
 
-| Entrega | Actividades y aportes de los integrantes | Evidencias de colaboración y commits |
-| --- | --- | --- |
-| AV1 | Por completar | Por completar |
+| Integrante | Secciones elaboradas |
+| --- | --- |
+| Becerra Tejeda, Alessandra Nicole | Antecedentes y problemática con 5W y 2H, User Stories, Epics y Technical Stories, y los diagramas de arquitectura a nivel de paisaje del sistema y de contexto. |
+| Bejarano Martinez, Alvaro Leandro | Segmentos objetivo, User Personas, User Task Matrix, Empathy Mapping, EventStorming, Candidate Context Discovery y Domain Message Flows Modeling. |
+| Melgarejo Gomez, Marcia Victoria | As-is y To-be Scenario Mapping, Ubiquitous Language, Design Purpose, Quality Attribute Scenarios, funcionalidad primaria, Architectural Drivers Backlog y decisiones de diseño. |
+| Nanfuñay Liza, Pedro Jesus | Lean UX Process, análisis competitivo con sus estrategias y tácticas, Bounded Context Canvases y Context Mapping. |
+| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, configuración del repositorio y guía de contribución. |
 
----
+**Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 27 Pull Requests integrados a `develop` y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. Las capturas de los analíticos de colaboración y de commits se presentan a continuación.
+
+*Pendiente: capturas de los analíticos de Contributors y Commits del repositorio.*
 
 # Contenido
 
@@ -299,7 +314,7 @@ En conjunto, los antecedentes evidencian que la gestión inteligente de estacion
 
 **¿Cuál es el problema?**
 
-La dificultad para conocer y anticipar la disponibilidad de espacios de estacionamiento dentro de los campus universitarios. La oferta limitada y la variación de la demanda durante la jornada académica pueden generar dificultades para encontrar espacios disponibles, incrementando el tiempo de búsqueda y la circulación de vehículos dentro del campus (Paudel et al., 2024; Channamallu et al., 2025).
+La dificultad para conocer y anticipar la disponibilidad de espacios de estacionamiento dentro de los campus universitarios. La oferta limitada y la variación de la demanda durante la jornada académica pueden generar dificultades para encontrar espacios disponibles, incrementando el tiempo de búsqueda y la circulación de vehículos dentro del campus (Paudel et al., 2024, y Channamallu et al., 2025).
 
 #### When (Cuándo)
 
@@ -375,10 +390,12 @@ El problema puede manifestarse en:
 * Dificultad de los usuarios para planificar anticipadamente su llegada al campus.
 * Menor aprovechamiento de la información histórica disponible para anticipar períodos de mayor o menor demanda.
 
-La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025; Mohandes et al., 2019).
+La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025, y Mohandes et al., 2019).
 
 
 ### 1.2.2. Lean UX Process
+
+El proceso Lean UX organiza los supuestos del equipo como hipótesis que deben contrastarse mediante resultados observables y aprendizaje continuo (Gothelf y Seiden, 2021). A partir de este enfoque se definen los Problem Statements, los supuestos, las hipótesis y el canvas de Quadrapp.
 
 #### 1.2.2.1. Lean UX Problem Statements
 
@@ -2373,7 +2390,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.3. Impact Mapping
 
-El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos. El resultado se organiza en dos mapas, uno para cada User Persona correspondiente a los segmentos objetivo del proyecto.
+El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos (Adzic, 2012). El resultado se organiza en dos mapas, uno para cada User Persona correspondiente a los segmentos objetivo del proyecto.
 
 ### Conductores de la comunidad educativa
 
@@ -2461,7 +2478,7 @@ El backlog también se encuentra en un tablero público de Trello, disponible en
 
 ## 4.1. Strategic-Level Attribute-Driven Design
 
-En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicado a Quadrapp. Se define el propósito del diseño, los inputs del proceso (funcionalidad primaria, escenarios de atributos de calidad y restricciones), el backlog de Architectural Drivers, las decisiones de diseño con su evaluación de patrones y los escenarios de atributos de calidad refinados.
+En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicado a Quadrapp. Se define el propósito del diseño, los inputs del proceso, el backlog de Architectural Drivers, las decisiones de diseño con su evaluación de patrones y los escenarios de atributos de calidad refinados. Este enfoque permite relacionar las decisiones arquitectónicas con los atributos de calidad y las restricciones que condicionan la solución (Bass et al., 2021).
 
 
 ### 4.1.1. Design Purpose
@@ -2534,14 +2551,14 @@ Las cuatro primeras corresponden a la composición y el despliegue de la soluci�
 | CON-04 | Despliegue en la nube | Como Developer, necesito desplegar los servicios de servidor en una plataforma cloud de forma reproducible. | **Escenario 1: Despliegue reproducible.**<br>Dado que los servicios se ejecutan en un proveedor cloud,<br>cuando se despliega una nueva versión,<br>entonces el despliegue se realiza desde la configuración versionada en el repositorio.<br><br>**Escenario 2: Continuidad del sensado.**<br>Dado que los nodos de sensado operan en la red del campus,<br>cuando se actualiza el backend en la nube,<br>entonces la ingesta continúa sin cambios de configuración en el campus. | EP02, EP04 |
 | CON-05 | Ingesta IoT sin exponer los sensores a Internet | Como Developer, necesito que los dispositivos de sensado permanezcan en la red local del campus y que sus lecturas lleguen al backend únicamente a través del componente de ingesta, para reducir su superficie de exposición. | **Escenario 1: Acceso desde fuera de la red del campus.**<br>Dado que los sensores operan en la red local de la institución,<br>cuando se intenta alcanzarlos desde una red externa,<br>entonces no resultan accesibles y no aceptan ninguna instrucción.<br><br>**Escenario 2: Salida de los eventos hacia el backend.**<br>Dado que la comunicación con el backend se concentra en un único componente de la red de sensado,<br>cuando un sensor genera una lectura,<br>entonces alcanza el backend a través de ese componente y nunca mediante una conexión directa del sensor. | EP02, EP04 |
 | CON-06 | Servicios externos de terceros | Como Developer, necesito integrar un servicio de correo para los códigos de acceso y un proveedor de mensajería push para las alertas, sin que su falla afecte el núcleo del producto. | **Escenario 1: Capa de integración.**<br>Dado que el sistema consume un proveedor externo,<br>cuando envía un correo o una notificación,<br>entonces lo hace a través de una capa de integración que aísla el modelo del proveedor del dominio.<br><br>**Escenario 2: Falla del proveedor.**<br>Dado que un proveedor externo no responde,<br>cuando el usuario consulta la disponibilidad o la predicción,<br>entonces esas funciones continúan operando sin degradación. | EP01, EP07 |
-| CON-07 | Privacidad de la ubicación y protección de datos personales | Como Developer, necesito que el tiempo estimado de llegada se calcule en la aplicación y que al servidor solo viajen los minutos, para no tratar la ubicación del conductor en los servicios de Quadrapp. Como Developer, necesito tratar únicamente los datos personales necesarios para la finalidad declarada de cada funcionalidad, para cumplir la Ley N.º 29733 y su Reglamento, aprobado por el Decreto Supremo N.º 016-2024-JUS y vigente desde el 31 de marzo de 2025. | **Escenario 1: Solicitud válida.**<br>Dado que la aplicación calcula el tiempo estimado con el proveedor de mapas en el propio dispositivo,<br>cuando envía la solicitud de asesoría de llegada,<br>entonces el cuerpo incluye únicamente el tiempo expresado en minutos.<br><br>**Escenario 2: Solicitud con coordenadas.**<br>Dado que el servicio no admite datos de ubicación,<br>cuando una solicitud incluye coordenadas geográficas,<br>entonces la respuesta es 400 y la solicitud no se procesa.<br><br>**Escenario 1: Minimización en el alta de una cuenta.**<br>Dado que el registro persigue verificar la pertenencia institucional del usuario,<br>cuando se crea una cuenta,<br>entonces se tratan solo el correo institucional, el nombre visible, el rol y la institución, y no se almacenan documento de identidad, código de estudiante ni placa vehicular.<br><br>**Escenario 2: Datos asociados a otras finalidades.**<br>Dado que las notificaciones requieren un token de dispositivo y las preferencias del usuario,<br>cuando se registran esos datos,<br>entonces se conservan únicamente mientras la suscripción permanece activa y se eliminan al darse de baja.<br><br>**Escenario 3: Información y registro de la aceptación.**<br>Dado que los términos y condiciones y la política de privacidad describen las finalidades del tratamiento,<br>cuando el usuario completa su registro,<br>entonces el sistema le presenta ambos documentos y registra su aceptación junto con la fecha y la versión vigente. | EP01, EP03, EP07 |
+| CON-07 | Privacidad de la ubicación y protección de datos personales | Como Developer, necesito que el tiempo estimado de llegada se calcule en la aplicación y que al servidor solo viajen los minutos, para no tratar la ubicación del conductor en los servicios de Quadrapp. Como Developer, necesito tratar únicamente los datos personales necesarios para la finalidad declarada de cada funcionalidad, para cumplir la Ley N.º 29733 (Congreso de la República del Perú, 2011) y su Reglamento, aprobado por el Decreto Supremo N.º 016-2024-JUS (Ministerio de Justicia y Derechos Humanos, 2024) y vigente desde el 31 de marzo de 2025. | **Escenario 1: Solicitud válida.**<br>Dado que la aplicación calcula el tiempo estimado con el proveedor de mapas en el propio dispositivo,<br>cuando envía la solicitud de asesoría de llegada,<br>entonces el cuerpo incluye únicamente el tiempo expresado en minutos.<br><br>**Escenario 2: Solicitud con coordenadas.**<br>Dado que el servicio no admite datos de ubicación,<br>cuando una solicitud incluye coordenadas geográficas,<br>entonces la respuesta es 400 y la solicitud no se procesa.<br><br>**Escenario 1: Minimización en el alta de una cuenta.**<br>Dado que el registro persigue verificar la pertenencia institucional del usuario,<br>cuando se crea una cuenta,<br>entonces se tratan solo el correo institucional, el nombre visible, el rol y la institución, y no se almacenan documento de identidad, código de estudiante ni placa vehicular.<br><br>**Escenario 2: Datos asociados a otras finalidades.**<br>Dado que las notificaciones requieren un token de dispositivo y las preferencias del usuario,<br>cuando se registran esos datos,<br>entonces se conservan únicamente mientras la suscripción permanece activa y se eliminan al darse de baja.<br><br>**Escenario 3: Información y registro de la aceptación.**<br>Dado que los términos y condiciones y la política de privacidad describen las finalidades del tratamiento,<br>cuando el usuario completa su registro,<br>entonces el sistema le presenta ambos documentos y registra su aceptación junto con la fecha y la versión vigente. | EP01, EP03, EP07 |
 | CON-08 | Aislamiento de datos entre instituciones | Como Developer, necesito que cada institución acceda únicamente a sus propios estacionamientos y usuarios, para sostener el modelo multi-institución sin mezclar información entre clientes. | **Escenario 1: Consulta dentro de la institución.**<br>Dado que el token de sesión identifica la institución del usuario,<br>cuando se consulta un recurso de esa institución,<br>entonces la respuesta incluye únicamente información que le pertenece.<br><br>**Escenario 2: Consulta fuera de la institución.**<br>Dado que el recurso solicitado pertenece a otra institución,<br>cuando se envía la solicitud,<br>entonces la respuesta es 403 y el intento queda registrado. | EP01, EP04 |
 | CON-09 | Autenticación sin contraseña | Como Developer, necesito que el acceso se realice mediante un código de un solo uso enviado al correo institucional o invitado, con sesiones basadas en tokens. | **Escenario 1: Sesión con claims.**<br>Dado que el usuario tiene un correo habilitado o una invitación vigente,<br>cuando ingresa un código válido,<br>entonces recibe un token de sesión con sus claims de usuario, institución y rol.<br><br>**Escenario 2: Límite de solicitudes.**<br>Dado que el mismo correo superó las solicitudes permitidas en la ventana configurada,<br>cuando solicita un nuevo código,<br>entonces la respuesta es 429 y no se emite el código. | EP01 |
 | CON-10 | Alcance sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya las reservas, los cobros y el reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de la institución. | **Escenario 1: Operación de las barreras.**<br>Dado que la solución no gestiona el ingreso físico de los vehículos,<br>cuando un vehículo accede al estacionamiento,<br>entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>**Escenario 2: Ausencia de transacciones.**<br>Dado que el producto no administra pagos ni reservas de espacios,<br>cuando se consulta cualquiera de sus servicios,<br>entonces no se expone ninguna operación de cobro ni de reserva. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
-| CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (W3C, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
+| CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. OpenAPI proporciona una descripción independiente del lenguaje para las interfaces HTTP (OpenAPI Initiative, 2024). | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Angular o Vue, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Angular o Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Angular Material, PrimeNG, PrimeVue o Vuetify, según el framework elegido. | EP02, EP06 |
-| CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS sin utilizar tecnologías híbridas. | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS desde una sola base de código (Flutter, s. f.). | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-15 | Software del nodo de sensado | Como Developer, necesito desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas hacia el broker de la red local. | **Escenario 1: Tecnología del nodo.**<br>Dado que los nodos se construyen sobre microcontroladores ESP32,<br>cuando se implementa su software,<br>entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>**Escenario 2: Alcance del software embebido.**<br>Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>cuando el nodo detecta un cambio en su sensor,<br>entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>**Escenario 3: Conservación ante desconexión.**<br>Dado que la red local puede presentar interrupciones,<br>cuando el nodo no logra publicar una lectura,<br>entonces la conserva y la reenvía al restablecerse la conexión. | EP02, EP04 |
 | CON-16 | Detección por sensores sin identificación del vehículo | Como Developer, necesito que la detección de ocupación se realice con sensores de cochera y de paso, sin videovigilancia ni identificación de vehículos, manteniendo el contexto de sensado independiente de la tecnología empleada. | **Escenario 1: Fuentes de detección admitidas.**<br>Dado que el alcance actual contempla sensores registrados en el inventario de dispositivos,<br>cuando se procesa un evento de detección,<br>entonces proviene de un dispositivo registrado y su traducción al lenguaje del dominio ocurre en la capa anticorrupción, de modo que otra tecnología pueda incorporarse sin alterar el modelo de ocupación.<br><br>**Escenario 2: Ausencia de identificación del vehículo.**<br>Dado que los eventos informan presencia y dirección, no identidad,<br>cuando se procesa un evento de ocupación,<br>entonces no se almacena ningún dato que permita identificar al vehículo ni a su conductor. | EP02, EP04 |
 | CON-17 | Acceso restringido a la comunidad de cada institución | Como Developer, necesito restringir el registro a los dominios de correo habilitados por cada institución y reservar la creación de administradores a la invitación, para sostener el modelo B2B y la pertenencia institucional. | **Escenario 1: Dominio no habilitado.**<br>Dado que el dominio del correo no pertenece a ninguna institución registrada y no existe una invitación vigente ni una cuenta autorizada previamente,<br>cuando se solicita el acceso,<br>entonces el sistema no emite ningún código de verificación.<br><br>**Escenario 2: Creación de administradores.**<br>Dado que el rol de administrador no admite autorregistro,<br>cuando se intenta crear una cuenta con ese rol fuera del flujo de invitación o del alta inicial de la institución,<br>entonces la solicitud es rechazada.<br><br>**Escenario 3: Alta de instituciones.**<br>Dado que el alta de una institución no se expone públicamente,<br>cuando se envía la solicitud sin credenciales de plataforma,<br>entonces la respuesta es 403. | EP01, EP04 |
@@ -2614,7 +2631,7 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 | Sensores publican por HTTPS directamente a la nube | Arquitectura más simple. | Expone los dispositivos; se pierden lecturas sin conexión; mayor consumo de batería por sensor. |
 | Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; requiere acceso entrante a la red del campus; no cumple los 5 s. |
 
-**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
+**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, nivel que establece una entrega de al menos una vez (OASIS, 2019), con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
 
 **Iteración 3: Procesamiento de eventos de ocupación** (Drivers: FD-02, FD-03, FD-07, QAD-03, QAD-05)
 
@@ -2835,6 +2852,8 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 
 ## 4.2. Strategic-Level Domain-Driven Design
 
+El diseño estratégico utiliza los principios de Domain-Driven Design para delimitar modelos, responsabilidades y relaciones según el lenguaje y las capacidades del dominio (Evans, 2004).
+
 ### 4.2.1. EventStorming
 
 El Event Storming permitió identificar de manera colaborativa los principales eventos de dominio, comandos, políticas y actores involucrados en el sistema QuadRapp. A través de esta técnica se visualizó el flujo completo del negocio, desde la autenticación de usuarios hasta la gestión de ocupación, predicciones y notificaciones.
@@ -2899,6 +2918,8 @@ Analytics adopta los eventos de Occupancy mediante Conformist y consume `Forecas
 
 ## 4.3. Software Architecture
 
+Las vistas arquitectónicas siguen el modelo C4, que organiza la representación del sistema mediante niveles de abstracción y diagramas complementarios de paisaje y despliegue (Brown, s. f.).
+
 ### 4.3.1. Software Architecture System Landscape Diagram
 
 Representa el ecosistema general de Quadrapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
@@ -2947,7 +2968,37 @@ En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera p
 
 # Bibliografía
 
-*Pendiente de elaboración.*
+Adzic, G. (2012). *Impact mapping: Making a big impact with software products and projects*. Provoking Thoughts. https://www.impactmapping.org/book.html
+
+Bass, L., Clements, P., y Kazman, R. (2021). *Software architecture in practice* (4.ª ed.). Addison-Wesley Professional. https://www.pearson.com/en-us/subject-catalog/p/software-architecture-in-practice/P200000000111/9780137468218
+
+Brown, S. (s. f.). *The C4 model for visualising software architecture*. Recuperado el 19 de septiembre de 2026 de https://c4model.com/
+
+Channamallu, S. S., Kermanshachi, S., Rosenberger, J. M., Pamidimukkala, A., y Hladik, G. (2025). Determinants of user satisfaction in smart parking applications. *Transport Economics and Management, 3*, 214-221. https://doi.org/10.1016/j.team.2025.05.001
+
+Channamallu, S. S., Padavala, V. K., Kermanshachi, S., Rosenberger, J. M., y Pamidimukkala, A. (2023). Examining parking occupancy prediction models: A comparative analysis. *Transportation Research Procedia, 73*, 281-288. https://doi.org/10.1016/j.trpro.2023.11.919
+
+Congreso de la República del Perú. (2011). *Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/congreso-de-la-republica/normas-legales/243470
+
+Deno, J. S. J., Sree, S. K., Maheswari, S., y Sasikumar, P. (2026). Smart mobility infrastructure: Improving campus parking efficiency in real time. *Scientific Reports, 16*, 15186. https://doi.org/10.1038/s41598-026-46053-4
+
+Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of software*. Addison-Wesley Professional. https://www.informit.com/store/domain-driven-design-tackling-complexity-in-the-heart-9780321125217
+
+Flutter. (s. f.). *Build for and integrate with multiple platforms*. Recuperado el 19 de septiembre de 2026 de https://docs.flutter.dev/platform-integration
+
+Gothelf, J., y Seiden, J. (2021). *Lean UX* (3.ª ed.). O'Reilly Media. https://www.oreilly.com/library/view/lean-ux-3rd/9781098116293/
+
+Ministerio de Justicia y Derechos Humanos. (2024). *Decreto Supremo N.º 016-2024-JUS, Reglamento de la Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/smv/normas-legales/6426760-016-2024-jus
+
+Mohandes, M., Deriche, M., Abuelma'Atti, M. T., y Tasadduq, N. (2019). Preference-based smart parking system in a university campus. *IET Intelligent Transport Systems, 13*(2), 376-384. https://doi.org/10.1049/iet-its.2018.5207
+
+OASIS. (2019). *MQTT version 5.0*. https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html
+
+OpenAPI Initiative. (2024). *OpenAPI Specification v3.1.1*. https://spec.openapis.org/oas/v3.1.1.html
+
+Paudel, S., Vechione, M., y Gurbuz, O. (2024). Predicting university campus parking demand using machine learning models. *Transportation Research Record, 2678*(6), 14-26. https://doi.org/10.1177/03611981231193417
+
+World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 2.2*. https://www.w3.org/TR/WCAG22/
 
 ---
 
