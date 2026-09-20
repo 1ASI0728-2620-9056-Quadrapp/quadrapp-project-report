@@ -876,7 +876,7 @@ Este segmento reúne a quienes supervisan la operación diaria del estacionamien
 
 ### 2.2.2. Registro de entrevistas
 
-Cada entrevista se registró en video y se documenta con los datos del entrevistado, el enlace a la grabación, su duración y una captura del video, una captura del video y un resumen descriptivo de sus respuestas. Los resúmenes incorporan tanto las características objetivas como las subjetivas que más adelante sustentan los User Personas y los Empathy Maps.
+Cada entrevista se registró en video y se documenta con los datos del entrevistado, el enlace a la grabación, su duración, una captura del video y un resumen descriptivo de sus respuestas. Los resúmenes incorporan tanto las características objetivas como las subjetivas que más adelante sustentan los User Personas y los Empathy Maps.
 
 #### Segmento 1: Conductores de la comunidad educativa
 
@@ -937,10 +937,6 @@ Esta sección analiza, para cada segmento objetivo, las características objetiv
 
 #### Segmento 1: Conductores de la comunidad educativa
 
-Esta sección analiza, para cada segmento objetivo, las características objetivas y subjetivas identificadas en las entrevistas que sustentan la construcción de los arquetipos. El análisis se apoya en los registros de la sección anterior. Los porcentajes se calculan sobre el número de entrevistas del segmento y deben leerse como indicativos, dado que cada entrevista representa el 33 % de la muestra.
-
-#### Segmento 1: Conductores de la comunidad educativa
-
 Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus en auto.
 
 **Características objetivas**
@@ -973,7 +969,7 @@ Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus 
 
 1. **La incertidumbre es el problema central.** Los tres entrevistados deciden a ciegas: no tienen datos y se apoyan en la intuición, en la experiencia y en mensajes de WhatsApp que pueden quedar desactualizados en pocos minutos.
 2. **El costo real es tiempo y puntualidad.** Los tres llegaron tarde en alguna ocasión y, en los casos que lo estimaron, pierden entre 30 minutos y 2 horas por semana entre salir antes y dar vueltas.
-3. **Las épocas críticas son predecibles.** Las semanas de exámenes, el inicio de ciclo y los eventos del campus saturan el estacionamiento, lo que respalda el uso del calendario académico y los eventos como insumo de la predicción.
+3. **Las épocas críticas aparecen como un factor relevante.** Un entrevistado señaló que las semanas de exámenes, el inicio de ciclo y los eventos del campus incrementan la dificultad para encontrar estacionamiento. Este hallazgo, identificado en 1 de 3 entrevistas (33 %), constituye un indicio para evaluar el calendario académico y los eventos como insumos de la predicción.
 4. **Las soluciones actuales son informales.** Salir antes y preguntar por WhatsApp reducen el riesgo, pero no lo eliminan ni dan información confiable.
 5. **La confianza depende de la precisión.** Un entrevistado indicó que abandonaría la herramienta si falla con frecuencia, por lo que la predicción debe presentarse como estimación con su nivel de confianza.
 
@@ -990,7 +986,7 @@ Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus 
 
 **Conclusión preliminar**
 
-Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para la conductora, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
+Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para los conductores, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
 
 ## 2.3. Needfinding
 
