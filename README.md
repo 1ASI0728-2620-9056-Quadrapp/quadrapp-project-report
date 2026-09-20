@@ -145,7 +145,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Por completar.
+          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
@@ -153,7 +153,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Por completar.
+          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
@@ -171,7 +171,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Por completar.
+          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
@@ -179,7 +179,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Por completar.
+          AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
