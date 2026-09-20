@@ -288,7 +288,7 @@ De manera similar, investigaciones sobre predicción de ocupación en estacionam
 
 Asimismo, investigaciones recientes continúan incorporando inteligencia artificial y sistemas de monitoreo para mejorar la disponibilidad de información sobre estacionamientos universitarios. Deno et al. (2026) desarrollaron una infraestructura inteligente para campus universitarios que combina detección de vehículos, comunicación IoT y mecanismos de predicción, permitiendo proporcionar información sobre la disponibilidad de espacios a estudiantes, docentes y visitantes.
 
-En conjunto, los antecedentes evidencian que la gestión inteligente de estacionamientos universitarios puede abordarse mediante el monitoreo de la ocupación, el análisis de información histórica y el uso de modelos de aprendizaje automático para anticipar patrones de demanda u ocupación. En este contexto, QuadRapp propone una solución orientada específicamente a los estacionamientos universitarios, mediante una aplicación que permita consultar la disponibilidad de espacios y utilizar técnicas de inteligencia artificial para predecir su disponibilidad en determinados períodos. De esta manera, la información generada por el sistema busca facilitar la planificación del desplazamiento de los usuarios y contribuir a una gestión más eficiente de los espacios de estacionamiento disponibles.
+En conjunto, los antecedentes evidencian que la gestión inteligente de estacionamientos universitarios puede abordarse mediante el monitoreo de la ocupación, el análisis de información histórica y el uso de modelos de aprendizaje automático para anticipar patrones de demanda u ocupación. En este contexto, Quadrapp propone una solución orientada específicamente a los estacionamientos universitarios, mediante una aplicación que permita consultar la disponibilidad de espacios y utilizar técnicas de inteligencia artificial para predecir su disponibilidad en determinados períodos. De esta manera, la información generada por el sistema busca facilitar la planificación del desplazamiento de los usuarios y contribuir a una gestión más eficiente de los espacios de estacionamiento disponibles.
 
 ### Problemática (5Ws y 2Hs)
 
@@ -351,7 +351,7 @@ La literatura evidencia que los patrones de demanda de estacionamiento universit
 * El sistema recopilará información relacionada con la ocupación y disponibilidad de los estacionamientos.
 * Los datos históricos serán procesados para identificar patrones de ocupación.
 * Se empleará un modelo de inteligencia artificial para realizar predicciones sobre la disponibilidad de espacios.
-* QuadRapp presentará al usuario información sobre la disponibilidad actual y la disponibilidad prevista para determinados horarios.
+* Quadrapp presentará al usuario información sobre la disponibilidad actual y la disponibilidad prevista para determinados horarios.
 * Los usuarios podrán utilizar esta información para planificar su llegada y desplazamiento dentro del campus.
 
 **¿Cómo accederán los usuarios al producto?**
@@ -419,7 +419,11 @@ Las entrevistas buscan validar el problema antes de proponer una solución: cuá
 
 Cada guion se organiza en cuatro bloques. Las **preguntas de perfil** sitúan al entrevistado en su contexto y recogen sus hábitos, herramientas y disposición ante la tecnología. Las **preguntas principales** exploran el proceso tal como ocurre hoy, pidiendo que el entrevistado narre episodios concretos y recientes en lugar de opiniones generales. Las **preguntas complementarias** cubren situaciones excepcionales y restricciones del entorno. La **pregunta de cierre** proyecta el escenario deseado y abre espacio para lo que el guion no previó.
 
-**Ficha de datos generales del entrevistado**
+#### Segmento 1: Conductores de la comunidad educativa
+
+Este segmento vive el problema en primera persona y de forma recurrente, por lo que el guion prioriza la reconstrucción de su rutina: a qué hora decide salir, qué consulta antes de hacerlo, qué ocurre cuando encuentra el estacionamiento lleno y cuánto tiempo pierde en consecuencia. Las preguntas buscan cuantificar la pérdida de tiempo y detectar las soluciones informales que ya emplea, como coordinar por mensajería con compañeros o adelantar su llegada por precaución.
+
+**Datos generales del entrevistado**
 
 | Dato | Detalle |
 | --- | --- |
@@ -428,15 +432,11 @@ Cada guion se organiza en cuatro bloques. Las **preguntas de perfil** sitúan al
 | Género | |
 | Distrito de residencia | |
 | Estado civil y composición familiar | |
-| Ocupación y vínculo con la universidad | |
+| Ocupación y vínculo con la universidad | Carrera o área |
 | Dispositivo principal | Marca y sistema operativo |
 | Navegador de preferencia | |
 | Canales digitales de uso frecuente | |
 | Marcas o referentes que admira | |
-
-#### Segmento 1: Conductores de la comunidad educativa
-
-Este segmento vive el problema en primera persona y de forma recurrente, por lo que el guion prioriza la reconstrucción de su rutina: a qué hora decide salir, qué consulta antes de hacerlo, qué ocurre cuando encuentra el estacionamiento lleno y cuánto tiempo pierde en consecuencia. Las preguntas buscan cuantificar la pérdida de tiempo y detectar las soluciones informales que ya emplea, como coordinar por mensajería con compañeros o adelantar su llegada por precaución.
 
 *Preguntas de perfil*
 
@@ -469,21 +469,15 @@ Este segmento vive el problema en primera persona y de forma recurrente, por lo 
 
 Este segmento reúne a quienes supervisan la operación diaria del estacionamiento: jefes de logística y operaciones, supervisores de turno y operadores de puerta. El guion se concentra en cómo conocen la ocupación, cómo reaccionan ante la saturación y qué información necesitan para gestionar el estacionamiento. Para que la entrevista dure entre tres y cinco minutos, se plantean ocho preguntas breves. Las repreguntas entre paréntesis son opcionales y solo se utilizan cuando la respuesta principal no proporciona suficiente información.
 
-**Datos generales y de configuración del estacionamiento**
+
+**Datos generales del entrevistado**
 
 | Dato | Detalle |
 | --- | --- |
+| Nombres y apellidos | |
+| Edad | |
+| Distrito de residencia | |
 | Cargo y tiempo en el puesto | |
-| Responsabilidad en la operación | |
-| Campus y nombre del estacionamiento | |
-| Capacidad total | Cantidad de espacios |
-| Zonas | Cantidad y nombres |
-| Horario de funcionamiento | |
-| Accesos vehiculares | Cantidad de entradas y salidas |
-| Control de ingreso | Credencial, lista, barrera u otro mecanismo |
-| Equipamiento y sistemas actuales | Tipo, cantidad y ubicación general de cámaras, sensores, tranqueras, lectores u otros |
-| Personal por turno | Cantidad y funciones |
-| Responsable de aprobar cambios tecnológicos | Área o cargo |
 
 *Preguntas de perfil*
 
@@ -642,38 +636,97 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 ## 3.2. User Stories
 
-**Epics:**
+Los requisitos de Quadrapp se expresan como Epics, User Stories y Technical Stories en un único cuadro, con una fila por cada elemento. Las siete épicas agrupan las capacidades del producto: el acceso a la aplicación, la consulta de disponibilidad, la predicción y asesoría de llegada, la gestión de la infraestructura de estacionamientos, la analítica histórica, el sitio web estático de presentación y las alertas.
 
-| Epic ID | Título                                        | Descripción                                                                                                                                                                            | User Stories Asociadas                   |
-| ------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| EP01    | Acceso e identidad                            | Permitir que estudiantes, docentes y administradores accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura.                                    | US01, US02, US03                         |
-| EP02    | Disponibilidad de estacionamientos            | Permitir consultar el estado actual de los estacionamientos universitarios, incluyendo espacios disponibles, ocupados y estados desconocidos por zona.                                 | US04, US05, US06, US07, US08             |
-| EP03    | Predicción y asesoría de llegada              | Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento.                                    | US09, US10, US11, US12, US13, US14, US15 |
-| EP04    | Gestión e infraestructura de estacionamientos | Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores IoT utilizados para detectar la ocupación. | US16, US17, US18, US19, US20, US21       |
-| EP05    | Analítica y notificaciones                    | Permitir consultar información histórica de ocupación y periodos de mayor demanda, así como gestionar alertas y preferencias de notificación para los usuarios.                        | US22, US23, US24, US25                   |
+Las User Stories dirigidas a la comunidad universitaria y al personal que administra el estacionamiento describen funcionalidades observables por el usuario. Las dirigidas al visitante de la Landing Page cubren el sitio público, con llamadas a la acción diferenciadas por segmento objetivo. Las Technical Stories, redactadas con el rol de Developer, corresponden a los componentes sin interacción directa con el usuario final, como las APIs internas y la ingesta de eventos de los sensores. Sus criterios de aceptación describen solicitudes, respuestas o eventos observables según el tipo de interacción. Todos los criterios siguen la estructura Gherkin en tiempo presente y tercera persona, sin referencias a detalles de interfaz.
 
+<table> <thead> <tr> <th>Epic / User Story ID</th> <th>Título</th> <th>Descripción</th> <th>Criterios de Aceptación</th> <th>Relacionado con (Epic ID)</th> </tr> </thead> <tbody>
 
-**User Stories:**
+<tr>
+  <td><strong>EP01</strong></td>
+  <td>Acceso e identidad</td>
+  <td>Permitir que estudiantes, docentes y personal administrativo accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
 
-<table> <thead> <tr> <th>Epic / US ID</th> <th>Título</th> <th>Descripción</th> <th>Criterios de Aceptación (Escenarios)</th> <th>Relacionado</th> </tr> </thead> <tbody>
+<tr>
+  <td><strong>EP02</strong></td>
+  <td>Disponibilidad de estacionamientos</td>
+  <td>Permitir consultar el estado actual de los estacionamientos universitarios, incluyendo espacios disponibles, ocupados y estados desconocidos por zona.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
+
+<tr>
+  <td><strong>EP03</strong></td>
+  <td>Predicción y asesoría de llegada</td>
+  <td>Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
+
+<tr>
+  <td><strong>EP04</strong></td>
+  <td>Gestión e infraestructura de estacionamientos</td>
+  <td>Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores utilizados para detectar la ocupación.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
+
+<tr>
+  <td><strong>EP05</strong></td>
+  <td>Analítica histórica</td>
+  <td>Permitir que la institución consulte la información histórica de ocupación, los periodos de mayor demanda y la precisión de las predicciones.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
+
+<tr>
+  <td><strong>EP06</strong></td>
+  <td>Presentación del producto en la Landing Page</td>
+  <td>Permitir que un visitante conozca la propuesta de valor de Quadrapp, encuentre la información correspondiente a su segmento y acceda a la aplicación o al canal de contacto institucional desde el sitio web estático.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
+
+<tr>
+  <td><strong>EP07</strong></td>
+  <td>Alertas y notificaciones</td>
+  <td>Permitir que el conductor se suscriba a las alertas de un estacionamiento y gestione las preferencias con las que desea recibirlas.</td>
+  <td>No aplica</td>
+  <td>No aplica</td>
+</tr>
 
 <tr>
   <td><strong>US01</strong></td>
-  <td>Inicio de sesión institucional</td>
-  <td>Como estudiante, docente o personal administrativo, quiero iniciar sesión con mi cuenta institucional para acceder a las funcionalidades de QuadRapp según mi rol.</td>
+  <td>Iniciar sesión con un correo autorizado</td>
+  <td>Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde.</td>
   <td>
-    <strong>Escenario 1: Inicio de sesión exitoso.</strong><br>
-    Dado que el usuario posee una cuenta institucional válida,<br>
-    cuando ingresa a QuadRapp e inicia sesión,<br>
-    entonces el sistema permite su acceso a la aplicación.<br><br>
-    <strong>Escenario 2: Credenciales inválidas.</strong><br>
-    Dado que el usuario proporciona credenciales incorrectas,<br>
-    cuando intenta iniciar sesión,<br>
-    entonces el sistema muestra un mensaje indicando que las credenciales no son válidas.<br><br>
-    <strong>Escenario 3: Sesión activa.</strong><br>
-    Dado que el usuario ya tiene una sesión válida,<br>
-    cuando vuelve a abrir la aplicación,<br>
-    entonces el sistema mantiene su acceso sin solicitar nuevamente sus credenciales.
+    <strong>Escenario 1: Solicitud del código de verificación.</strong><br>
+    Dado que el usuario ingresa un correo cuyo dominio pertenece a una universidad registrada,<br>
+    cuando solicita el acceso,<br>
+    entonces el sistema envía un código de un solo uso a ese correo e informa su periodo de vigencia.<br><br>
+    <strong>Escenario 2: Código válido.</strong><br>
+    Dado que el usuario recibió un código vigente,<br>
+    cuando lo ingresa dentro de su periodo de vigencia,<br>
+    entonces el sistema habilita su sesión con el rol y la universidad que le corresponden.<br><br>
+    <strong>Escenario 3: Código incorrecto o vencido.</strong><br>
+    Dado que el código ingresado no coincide con el enviado o su vigencia terminó,<br>
+    cuando el usuario intenta continuar,<br>
+    entonces el sistema rechaza el acceso e informa que debe solicitar un nuevo código.<br><br>
+    <strong>Escenario 4: Correo invitado por una institución.</strong><br>
+    Dado que el correo no pertenece a un dominio habilitado pero cuenta con una invitación vigente o con una cuenta creada previamente,<br>
+    cuando el usuario solicita el acceso,<br>
+    entonces el sistema envía el código y le otorga el rol registrado en su cuenta o invitación.<br><br>
+    <strong>Escenario 5: Correo sin vínculo institucional.</strong><br>
+    Dado que el correo no pertenece a un dominio habilitado y tampoco tiene invitación ni cuenta previa,<br>
+    cuando el usuario solicita el acceso,<br>
+    entonces el sistema no envía ningún código e informa que el correo no corresponde a una institución habilitada.<br><br>
+    <strong>Escenario 6: Sesión vigente.</strong><br>
+    Dado que el usuario mantiene una sesión válida,<br>
+    cuando vuelve a utilizar la aplicación,<br>
+    entonces el sistema conserva su acceso sin solicitar un nuevo código.
   </td>
   <td>EP01</td>
 </tr>
@@ -685,16 +738,16 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
   <td>
     <strong>Escenario 1: Cierre exitoso.</strong><br>
     Dado que el usuario tiene una sesión activa,<br>
-    cuando selecciona la opción "Cerrar sesión",<br>
-    entonces el sistema finaliza su sesión.<br><br>
+    cuando solicita el cierre de sesión,<br>
+    entonces el sistema finaliza su sesión y revoca el token asociado.<br><br>
     <strong>Escenario 2: Acceso posterior al cierre.</strong><br>
     Dado que el usuario cerró su sesión,<br>
     cuando intenta acceder a una funcionalidad protegida,<br>
     entonces el sistema solicita nuevamente la autenticación.<br><br>
-    <strong>Escenario 3: Confirmación.</strong><br>
-    Dado que el usuario selecciona "Cerrar sesión",<br>
-    cuando confirma la acción,<br>
-    entonces el sistema lo redirige a la pantalla de inicio de sesión.
+    <strong>Escenario 3: Cierre en un dispositivo compartido.</strong><br>
+    Dado que el usuario cerró su sesión en el dispositivo,<br>
+    cuando otra persona utiliza ese mismo dispositivo,<br>
+    entonces el sistema no expone la información asociada a la cuenta anterior.
   </td>
   <td>EP01</td>
 </tr>
@@ -702,7 +755,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US03</strong></td>
   <td>Gestionar sesión expirada</td>
-  <td>Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a QuadRapp.</td>
+  <td>Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp.</td>
   <td>
     <strong>Escenario 1: Sesión expirada.</strong><br>
     Dado que la sesión del usuario ha expirado,<br>
@@ -715,7 +768,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     <strong>Escenario 3: Nueva autenticación.</strong><br>
     Dado que la sesión anterior expiró,<br>
     cuando el usuario se autentica nuevamente de forma correcta,<br>
-    entonces puede continuar utilizando QuadRapp.
+    entonces puede continuar utilizando Quadrapp.
   </td>
   <td>EP01</td>
 </tr>
@@ -729,10 +782,10 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     Dado que existen estacionamientos configurados,<br>
     cuando el usuario ingresa a la sección de estacionamientos,<br>
     entonces el sistema muestra los estacionamientos disponibles.<br><br>
-    <strong>Escenario 2: Estacionamiento fuera de servicio.</strong><br>
-    Dado que un estacionamiento se encuentra fuera de servicio,<br>
+    <strong>Escenario 2: Estacionamiento sin datos vigentes.</strong><br>
+    Dado que un estacionamiento no tiene una distribución publicada ni datos de ocupación vigentes,<br>
     cuando el usuario consulta los estacionamientos,<br>
-    entonces el sistema indica que dicho estacionamiento no se encuentra disponible.<br><br>
+    entonces el sistema lo presenta sin información de disponibilidad e indica que sus datos no están vigentes.<br><br>
     <strong>Escenario 3: Sin estacionamientos configurados.</strong><br>
     Dado que no existen estacionamientos registrados,<br>
     cuando el usuario accede a la sección,<br>
@@ -751,13 +804,17 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     cuando el usuario consulta un estacionamiento,<br>
     entonces el sistema muestra los espacios libres y ocupados.<br><br>
     <strong>Escenario 2: Espacio ocupado.</strong><br>
-    Dado que un sensor determina que un espacio está ocupado,<br>
+    Dado que el servicio de ocupación confirma un espacio como ocupado tras una detección estable,<br>
     cuando se actualiza la información de disponibilidad,<br>
-    entonces el espacio se muestra como ocupado.<br><br>
+    entonces el espacio se presenta como ocupado.<br><br>
     <strong>Escenario 3: Espacio libre.</strong><br>
-    Dado que un sensor determina que un espacio está libre,<br>
+    Dado que el servicio de ocupación confirma un espacio como libre tras el tiempo mínimo sin detección,<br>
     cuando se actualiza la información,<br>
-    entonces el espacio se muestra como disponible.
+    entonces el espacio se presenta como disponible.<br><br>
+    <strong>Escenario 4: Antigüedad del dato.</strong><br>
+    Dado que cada consulta corresponde a un estado consolidado en un momento determinado,<br>
+    cuando el usuario consulta la disponibilidad,<br>
+    entonces el sistema informa la antigüedad de esa información.
   </td>
   <td>EP02</td>
 </tr>
@@ -775,10 +832,10 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     Dado que una zona contiene espacios libres y ocupados,<br>
     cuando el usuario consulta la zona,<br>
     entonces el sistema muestra su disponibilidad correspondiente.<br><br>
-    <strong>Escenario 3: Zona sin información.</strong><br>
-    Dado que una zona no posee información actualizada,<br>
+    <strong>Escenario 3: Zona con espacios desconocidos.</strong><br>
+    Dado que una zona contiene espacios en estado UNKNOWN,<br>
     cuando el usuario consulta su estado,<br>
-    entonces el sistema indica que la información no está disponible.
+    entonces el sistema informa la cantidad de espacios libres y ocupados, y excluye del conteo los espacios desconocidos indicando su número.
   </td>
   <td>EP02</td>
 </tr>
@@ -796,10 +853,10 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>
     cuando el evento es procesado,<br>
     entonces el sistema refleja el nuevo estado.<br><br>
-    <strong>Escenario 3: Sin nuevos eventos.</strong><br>
-    Dado que no existen nuevos eventos de los sensores,<br>
+    <strong>Escenario 3: Sin cambios de estado.</strong><br>
+    Dado que los sensores continúan reportando su actividad pero ningún espacio cambia de estado,<br>
     cuando el usuario consulta la disponibilidad,<br>
-    entonces el sistema conserva el último estado válido registrado.
+    entonces el sistema conserva el último estado válido e informa la marca de tiempo a la que corresponde.
   </td>
   <td>EP02</td>
 </tr>
@@ -809,18 +866,22 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
   <td>Gestionar estado desconocido</td>
   <td>Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real.</td>
   <td>
-    <strong>Escenario 1: Sensor sin comunicación.</strong><br>
-    Dado que un sensor deja de enviar información durante el periodo configurado,<br>
-    cuando se supera el tiempo establecido,<br>
-    entonces el espacio pasa al estado <strong>UNKNOWN</strong>.<br><br>
-    <strong>Escenario 2: Espacio desconocido.</strong><br>
+    <strong>Escenario 1: Sensor sin reportar actividad.</strong><br>
+    Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>
+    cuando deja de reportar su actividad y se supera ese intervalo,<br>
+    entonces el espacio pasa al estado <strong>UNKNOWN</strong> y no se contabiliza como disponible.<br><br>
+    <strong>Escenario 2: Sensor con batería crítica.</strong><br>
+    Dado que un sensor informa periódicamente su nivel de batería,<br>
+    cuando el nivel reportado se encuentra por debajo del umbral configurado,<br>
+    entonces el espacio pasa al estado <strong>UNKNOWN</strong> y no se contabiliza como disponible.<br><br>
+    <strong>Escenario 3: Espacio desconocido.</strong><br>
     Dado que un espacio se encuentra en estado UNKNOWN,<br>
     cuando el usuario consulta la disponibilidad,<br>
-    entonces el sistema no lo muestra como libre ni ocupado con certeza.<br><br>
-    <strong>Escenario 3: Recuperación del sensor.</strong><br>
-    Dado que un sensor vuelve a enviar información válida,<br>
-    cuando el sistema recibe el nuevo evento,<br>
-    entonces actualiza nuevamente el estado del espacio.
+    entonces el sistema lo presenta como desconocido y lo excluye del conteo de espacios disponibles.<br><br>
+    <strong>Escenario 4: Recuperación del sensor.</strong><br>
+    Dado que un sensor reanuda el reporte de su actividad,<br>
+    cuando informa una detección estable durante el tiempo mínimo configurado,<br>
+    entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado.
   </td>
   <td>EP02</td>
 </tr>
@@ -828,20 +889,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US09</strong></td>
   <td>Consultar predicción de disponibilidad</td>
-  <td>Como usuario, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus.</td>
+  <td>Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus.</td>
   <td>
     <strong>Escenario 1: Predicción disponible.</strong><br>
     Dado que existen datos históricos suficientes,<br>
     cuando el usuario consulta una predicción,<br>
     entonces el sistema muestra la disponibilidad estimada.<br><br>
-    <strong>Escenario 2: Identificación del horizonte.</strong><br>
-    Dado que existe una predicción disponible,<br>
-    cuando el usuario la consulta,<br>
-    entonces el sistema indica el periodo futuro al que corresponde.<br><br>
-    <strong>Escenario 3: Predicción no disponible.</strong><br>
-    Dado que no existe una predicción disponible,<br>
+    <strong>Escenario 2: Origen del pronóstico.</strong><br>
+    Dado que cada pronóstico se genera con una versión de modelo y un nivel de confianza,<br>
+    cuando el usuario consulta la disponibilidad estimada,<br>
+    entonces el sistema informa el momento de su generación y su nivel de confianza.<br><br>
+    <strong>Escenario 3: Historial limitado.</strong><br>
+    Dado que el estacionamiento no acumula historial suficiente,<br>
     cuando el usuario realiza la consulta,<br>
-    entonces el sistema muestra un mensaje informativo.
+    entonces el sistema presenta la estimación de contingencia e informa que su nivel de confianza es bajo.
   </td>
   <td>EP03</td>
 </tr>
@@ -849,7 +910,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US10</strong></td>
   <td>Consultar diferentes horizontes de predicción</td>
-  <td>Como usuario, quiero consultar predicciones a 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad antes de mi llegada.</td>
+  <td>Como conductor de la comunidad educativa, quiero consultar predicciones a 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad antes de mi llegada.</td>
   <td>
     <strong>Escenario 1: Todos los horizontes disponibles.</strong><br>
     Dado que existen predicciones válidas,<br>
@@ -869,42 +930,42 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 
 <tr>
   <td><strong>US11</strong></td>
-  <td>Visualizar nivel de saturación</td>
-  <td>Como usuario, quiero visualizar el nivel de saturación esperado del estacionamiento para comprender rápidamente su disponibilidad futura.</td>
+  <td>Visualizar la ocupación esperada</td>
+  <td>Como conductor de la comunidad educativa, quiero visualizar la ocupación esperada del estacionamiento en el horizonte consultado para comprender cómo evolucionará su disponibilidad.</td>
   <td>
-    <strong>Escenario 1: Baja saturación.</strong><br>
-    Dado que la predicción indica una ocupación baja,<br>
-    cuando el sistema genera el resultado,<br>
-    entonces muestra la categoría <strong>LOW</strong>.<br><br>
-    <strong>Escenario 2: Saturación limitada.</strong><br>
-    Dado que la predicción indica una ocupación cercana al límite,<br>
-    cuando el sistema genera el resultado,<br>
-    entonces muestra la categoría <strong>LIMITED</strong>.<br><br>
-    <strong>Escenario 3: Alta saturación.</strong><br>
-    Dado que la predicción indica una ocupación alta,<br>
-    cuando el sistema genera el resultado,<br>
-    entonces muestra la categoría <strong>HIGH</strong>.
+    <strong>Escenario 1: Ocupación esperada disponible.</strong><br>
+    Dado que existe un pronóstico vigente para el estacionamiento,<br>
+    cuando el usuario consulta el horizonte seleccionado,<br>
+    entonces el sistema presenta la ocupación esperada expresada en porcentaje.<br><br>
+    <strong>Escenario 2: Saturación prevista.</strong><br>
+    Dado que la ocupación esperada supera el umbral de saturación definido para el estacionamiento,<br>
+    cuando el usuario consulta el pronóstico,<br>
+    entonces el sistema indica el momento previsto de saturación junto con el porcentaje estimado.<br><br>
+    <strong>Escenario 3: Confianza del pronóstico.</strong><br>
+    Dado que cada pronóstico se genera con un nivel de confianza asociado,<br>
+    cuando el sistema presenta la ocupación esperada,<br>
+    entonces informa el nivel de confianza correspondiente sin traducirlo a una categoría de llegada.
   </td>
   <td>EP03</td>
 </tr>
 
 <tr>
   <td><strong>US12</strong></td>
-  <td>Gestionar predicciones con datos insuficientes</td>
-  <td>Como usuario, quiero recibir información clara cuando no existan suficientes datos para generar una predicción confiable.</td>
+  <td>Identificar predicciones con confianza baja</td>
+  <td>Como conductor de la comunidad educativa, quiero distinguir cuándo una predicción se basa en información limitada para decidir cuánto peso darle al resultado.</td>
   <td>
     <strong>Escenario 1: Datos históricos insuficientes.</strong><br>
-    Dado que el sistema no posee suficientes datos históricos,<br>
-    cuando el usuario solicita una predicción,<br>
-    entonces el sistema informa que la predicción no está disponible.<br><br>
+    Dado que el estacionamiento no cuenta con suficiente historial de ocupación,<br>
+    cuando el usuario consulta la predicción,<br>
+    entonces el sistema presenta la estimación de contingencia e indica que su nivel de confianza es bajo.<br><br>
     <strong>Escenario 2: Datos inconsistentes.</strong><br>
-    Dado que los datos históricos presentan inconsistencias,<br>
-    cuando el sistema intenta generar una predicción,<br>
-    entonces evita mostrar una predicción no confiable.<br><br>
-    <strong>Escenario 3: Datos suficientes.</strong><br>
-    Dado que posteriormente existen suficientes datos válidos,<br>
-    cuando se ejecuta nuevamente la predicción,<br>
-    entonces el sistema puede generar el resultado.
+    Dado que el historial disponible presenta inconsistencias,<br>
+    cuando el sistema genera la predicción,<br>
+    entonces reduce el nivel de confianza informado y mantiene la advertencia al usuario.<br><br>
+    <strong>Escenario 3: Historial suficiente.</strong><br>
+    Dado que el estacionamiento acumula historial suficiente,<br>
+    cuando se genera una nueva predicción,<br>
+    entonces el sistema emplea el modelo principal e informa su nivel de confianza sin advertencia.
   </td>
   <td>EP03</td>
 </tr>
@@ -912,20 +973,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US13</strong></td>
   <td>Obtener asesoría de llegada</td>
-  <td>Como usuario, quiero recibir una asesoría basada en la disponibilidad prevista y mi tiempo estimado de llegada para conocer las condiciones esperadas al llegar.</td>
+  <td>Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar.</td>
   <td>
-    <strong>Escenario 1: ETA válido.</strong><br>
-    Dado que el usuario proporciona un tiempo estimado de llegada válido,<br>
-    cuando solicita la asesoría,<br>
-    entonces el sistema consulta la predicción correspondiente.<br><br>
-    <strong>Escenario 2: Predicción disponible.</strong><br>
-    Dado que existe una predicción para el momento estimado de llegada,<br>
+    <strong>Escenario 1: Asesoría para la hora de llegada.</strong><br>
+    Dado que la aplicación calcula en el dispositivo el tiempo estimado de llegada y envía únicamente los minutos,<br>
+    cuando el conductor solicita la asesoría,<br>
+    entonces el sistema entrega la probabilidad de encontrar espacio a esa hora estimada.<br><br>
+    <strong>Escenario 2: Tiempo de llegada inválido.</strong><br>
+    Dado que el tiempo estimado calculado es negativo o supera el máximo admitido,<br>
+    cuando el conductor solicita la asesoría,<br>
+    entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>
+    <strong>Escenario 3: Historial limitado.</strong><br>
+    Dado que el pronóstico utilizado proviene de la estimación de contingencia,<br>
     cuando se genera la asesoría,<br>
-    entonces el sistema muestra la categoría de disponibilidad esperada.<br><br>
-    <strong>Escenario 3: Sin información suficiente.</strong><br>
-    Dado que no existe información suficiente para generar la asesoría,<br>
-    cuando el usuario realiza la consulta,<br>
-    entonces el sistema informa que no está disponible.
+    entonces el sistema la entrega e informa que su nivel de confianza es bajo.
   </td>
   <td>EP03</td>
 </tr>
@@ -933,20 +994,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US14</strong></td>
   <td>Actualizar asesoría según ETA</td>
-  <td>Como usuario, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista.</td>
+  <td>Como conductor de la comunidad educativa, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista.</td>
   <td>
-    <strong>Escenario 1: Cambio de ETA.</strong><br>
-    Dado que cambia el tiempo estimado de llegada,<br>
-    cuando el usuario solicita una actualización,<br>
-    entonces el sistema recalcula la asesoría.<br><br>
+    <strong>Escenario 1: Cambio del tiempo estimado.</strong><br>
+    Dado que la aplicación recalcula periódicamente el tiempo estimado de llegada mientras el conductor se dirige al campus,<br>
+    cuando ese tiempo varía respecto del último informado,<br>
+    entonces el sistema recalcula la asesoría sin que el conductor deba solicitarla.<br><br>
     <strong>Escenario 2: Nuevo horizonte.</strong><br>
     Dado que el nuevo ETA corresponde a otro horizonte de predicción,<br>
     cuando se actualiza la asesoría,<br>
     entonces el sistema utiliza la predicción correspondiente.<br><br>
-    <strong>Escenario 3: Nuevo ETA sin predicción.</strong><br>
-    Dado que no existe una predicción para el nuevo ETA,<br>
-    cuando el usuario solicita la actualización,<br>
-    entonces el sistema informa que no existe información disponible.
+    <strong>Escenario 3: Nuevo horizonte con historial limitado.</strong><br>
+    Dado que el nuevo tiempo estimado corresponde a un horizonte cuyo pronóstico proviene de la estimación de contingencia,<br>
+    cuando el sistema recalcula la asesoría,<br>
+    entonces el sistema entrega la asesoría recalculada e informa que su nivel de confianza es bajo.
   </td>
   <td>EP03</td>
 </tr>
@@ -954,20 +1015,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US15</strong></td>
   <td>Mostrar categoría de disponibilidad esperada</td>
-  <td>Como usuario, quiero visualizar una categoría simple de disponibilidad esperada para interpretar rápidamente las condiciones del estacionamiento al momento de mi llegada.</td>
+  <td>Como conductor de la comunidad educativa, quiero visualizar una categoría simple de disponibilidad esperada para interpretar rápidamente las condiciones del estacionamiento al momento de mi llegada.</td>
   <td>
-    <strong>Escenario 1: Disponibilidad favorable.</strong><br>
-    Dado que la disponibilidad esperada es favorable,<br>
+    <strong>Escenario 1: Alta probabilidad de encontrar espacio.</strong><br>
+    Dado que la probabilidad de encontrar espacio al llegar es alta,<br>
     cuando se genera la asesoría,<br>
-    entonces el sistema muestra la categoría <strong>LOW</strong>.<br><br>
-    <strong>Escenario 2: Disponibilidad limitada.</strong><br>
-    Dado que la disponibilidad esperada es limitada,<br>
+    entonces el sistema muestra la categoría <strong>HIGH</strong>.<br><br>
+    <strong>Escenario 2: Probabilidad limitada.</strong><br>
+    Dado que la probabilidad de encontrar espacio al llegar es intermedia,<br>
     cuando se genera la asesoría,<br>
     entonces el sistema muestra la categoría <strong>LIMITED</strong>.<br><br>
-    <strong>Escenario 3: Alta ocupación esperada.</strong><br>
-    Dado que la disponibilidad esperada es desfavorable,<br>
+    <strong>Escenario 3: Baja probabilidad de encontrar espacio.</strong><br>
+    Dado que la probabilidad de encontrar espacio al llegar es baja,<br>
     cuando se genera la asesoría,<br>
-    entonces el sistema muestra la categoría <strong>HIGH</strong>.
+    entonces el sistema muestra la categoría <strong>LOW</strong>.
   </td>
   <td>EP03</td>
 </tr>
@@ -975,7 +1036,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US16</strong></td>
   <td>Registrar estacionamiento universitario</td>
-  <td>Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por QuadRapp.</td>
+  <td>Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por Quadrapp.</td>
   <td>
     <strong>Escenario 1: Registro exitoso.</strong><br>
     Dado que el administrador proporciona los datos obligatorios,<br>
@@ -986,9 +1047,9 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     cuando el administrador intenta registrar el estacionamiento,<br>
     entonces el sistema solicita completar la información requerida.<br><br>
     <strong>Escenario 3: Registro duplicado.</strong><br>
-    Dado que el estacionamiento ya existe,<br>
-    cuando el administrador intenta registrarlo nuevamente,<br>
-    entonces el sistema impide la duplicación.
+    Dado que la institución ya tiene un estacionamiento registrado con el mismo nombre,<br>
+    cuando el administrador intenta registrar otro con ese nombre,<br>
+    entonces el sistema impide la duplicación dentro de esa institución.
   </td>
   <td>EP04</td>
 </tr>
@@ -996,20 +1057,24 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>US17</strong></td>
   <td>Configurar zonas y espacios</td>
-  <td>Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en QuadRapp.</td>
+  <td>Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en Quadrapp.</td>
   <td>
     <strong>Escenario 1: Crear zona.</strong><br>
-    Dado que el administrador selecciona un estacionamiento,<br>
-    cuando crea una nueva zona,<br>
-    entonces la zona queda asociada al estacionamiento correspondiente.<br><br>
+    Dado un estacionamiento registrado en la institución,<br>
+    cuando el administrador crea una nueva zona,<br>
+    entonces la zona queda asociada a ese estacionamiento.<br><br>
     <strong>Escenario 2: Registrar espacio.</strong><br>
     Dado que existe una zona configurada,<br>
     cuando el administrador registra un espacio,<br>
     entonces el espacio queda asociado a dicha zona.<br><br>
     <strong>Escenario 3: Espacio duplicado.</strong><br>
-    Dado que un espacio ya existe dentro de una zona,<br>
+    Dado que un espacio con la misma etiqueta ya existe dentro de la zona,<br>
     cuando el administrador intenta registrarlo nuevamente,<br>
-    entonces el sistema impide la duplicación.
+    entonces el sistema impide la duplicación.<br><br>
+    <strong>Escenario 4: Publicación de la distribución.</strong><br>
+    Dado que el administrador terminó de configurar las zonas y los espacios,<br>
+    cuando publica la distribución del estacionamiento,<br>
+    entonces el sistema incrementa su versión y la deja disponible para las aplicaciones.
   </td>
   <td>EP04</td>
 </tr>
@@ -1030,7 +1095,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     <strong>Escenario 3: Desactivación.</strong><br>
     Dado que un sensor deja de estar operativo,<br>
     cuando el administrador lo desactiva,<br>
-    entonces el sistema conserva su relación histórica con el espacio.
+    entonces el sistema conserva su relación histórica y el espacio asociado pasa al estado UNKNOWN hasta contar con un sensor operativo.
   </td>
   <td>EP04</td>
 </tr>
@@ -1044,14 +1109,14 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     Dado que el administrador configura un nuevo acceso,<br>
     cuando proporciona sus datos,<br>
     entonces el acceso queda asociado al estacionamiento correspondiente.<br><br>
-    <strong>Escenario 2: Acceso de entrada.</strong><br>
-    Dado que un acceso está configurado como entrada,<br>
-    cuando recibe un evento de movimiento vehicular,<br>
-    entonces el sistema registra el evento como ingreso.<br><br>
-    <strong>Escenario 3: Acceso de salida.</strong><br>
-    Dado que un acceso está configurado como salida,<br>
-    cuando recibe un evento de movimiento vehicular,<br>
-    entonces el sistema registra el evento como salida.
+    <strong>Escenario 2: Sensores del acceso.</strong><br>
+    Dado que el conteo de entradas y salidas requiere conocer la dirección del movimiento,<br>
+    cuando el administrador asocia al acceso sus sensores de paso,<br>
+    entonces el sistema solo habilita el acceso si sus sensores permiten distinguir la dirección.<br><br>
+    <strong>Escenario 3: Acceso sin dirección.</strong><br>
+    Dado que un acceso cuenta únicamente con sensores que no distinguen la dirección,<br>
+    cuando el administrador intenta habilitarlo para el conteo de flujo,<br>
+    entonces el sistema lo rechaza e informa que ese acceso no puede alimentar la velocidad de flujo.
   </td>
   <td>EP04</td>
 </tr>
@@ -1069,37 +1134,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     Dado que un sensor deja de enviar información durante el tiempo establecido,<br>
     cuando se supera dicho periodo,<br>
     entonces el sistema identifica el dispositivo como no disponible.<br><br>
-    <strong>Escenario 3: Recuperación.</strong><br>
-    Dado que un sensor vuelve a comunicarse,<br>
-    cuando el sistema recibe un nuevo reporte,<br>
-    entonces actualiza nuevamente su estado.
+    <strong>Escenario 3: Recuperación del dispositivo.</strong><br>
+    Dado que un sensor reanuda el reporte de su actividad con un nivel de batería válido,<br>
+    cuando el sistema recibe ese reporte,<br>
+    entonces lo registra nuevamente como operativo.<br><br>
+    <strong>Escenario 4: Estado del espacio tras la recuperación.</strong><br>
+    Dado que el sensor recuperado tiene un espacio asociado en estado UNKNOWN,<br>
+    cuando informa una detección estable durante el tiempo mínimo configurado,<br>
+    entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado.
   </td>
   <td>EP04</td>
 </tr>
 
 <tr>
   <td><strong>US21</strong></td>
-  <td>Reconciliar eventos de entrada y salida</td>
-  <td>Como sistema de ocupación, quiero contrastar los eventos de entrada y salida con los estados reportados por los sensores de espacios para detectar inconsistencias.</td>
-  <td>
-    <strong>Escenario 1: Registro de entrada.</strong><br>
-    Dado que un acceso registra el ingreso de un vehículo,<br>
-    cuando el evento es procesado,<br>
-    entonces el sistema incorpora el movimiento al contexto de ocupación.<br><br>
-    <strong>Escenario 2: Inconsistencia detectada.</strong><br>
-    Dado que los eventos de entrada y salida presentan diferencias respecto a los estados de los espacios,<br>
-    cuando el sistema realiza la validación,<br>
-    entonces identifica la inconsistencia.<br><br>
-    <strong>Escenario 3: Resolución.</strong><br>
-    Dado que posteriormente se reciben nuevos eventos válidos,<br>
-    cuando el sistema puede resolver la inconsistencia,<br>
-    entonces actualiza el estado de ocupación correspondiente.
-  </td>
-  <td>EP04</td>
-</tr>
-
-<tr>
-  <td><strong>US22</strong></td>
   <td>Consultar historial de ocupación</td>
   <td>Como administrador de estacionamientos, quiero consultar el historial de ocupación para analizar el comportamiento de los estacionamientos universitarios.</td>
   <td>
@@ -1120,7 +1168,7 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 </tr>
 
 <tr>
-  <td><strong>US23</strong></td>
+  <td><strong>US22</strong></td>
   <td>Identificar horas de mayor ocupación</td>
   <td>Como administrador de estacionamientos, quiero identificar los periodos con mayor ocupación para conocer los horarios de mayor demanda.</td>
   <td>
@@ -1141,30 +1189,34 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 </tr>
 
 <tr>
-  <td><strong>US24</strong></td>
+  <td><strong>US23</strong></td>
   <td>Recibir alertas de baja disponibilidad</td>
-  <td>Como usuario, quiero recibir una alerta cuando la disponibilidad prevista del estacionamiento sea limitada o alta para anticipar posibles dificultades al estacionar.</td>
+  <td>Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar.</td>
   <td>
-    <strong>Escenario 1: Alerta generada.</strong><br>
-    Dado que el usuario tiene habilitadas las notificaciones,<br>
-    cuando la disponibilidad prevista alcanza el nivel configurado,<br>
-    entonces el sistema genera una alerta.<br><br>
-    <strong>Escenario 2: Notificaciones deshabilitadas.</strong><br>
-    Dado que el usuario deshabilitó las notificaciones,<br>
-    cuando se alcanza una condición de baja disponibilidad,<br>
-    entonces el sistema no envía una notificación push.<br><br>
-    <strong>Escenario 3: Evitar alertas repetitivas.</strong><br>
+    <strong>Escenario 1: Alerta programada por saturación prevista.</strong><br>
+    Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>
+    cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>
+    entonces el sistema le envía la alerta correspondiente.<br><br>
+    <strong>Escenario 2: Aviso inmediato al consultar la asesoría.</strong><br>
+    Dado que el conductor tiene habilitadas sus notificaciones,<br>
+    cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>
+    entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>
+    <strong>Escenario 3: Notificaciones deshabilitadas.</strong><br>
+    Dado que el conductor deshabilitó las notificaciones,<br>
+    cuando se prevé la saturación dentro de su franja suscrita,<br>
+    entonces el sistema conserva la suscripción y omite el envío.<br><br>
+    <strong>Escenario 4: Evitar alertas repetitivas.</strong><br>
     Dado que ya se envió una alerta para una condición determinada,<br>
     cuando la misma condición continúa activa,<br>
     entonces el sistema evita generar alertas repetitivas innecesarias.
   </td>
-  <td>EP05</td>
+  <td>EP07</td>
 </tr>
 
 <tr>
-  <td><strong>US25</strong></td>
+  <td><strong>US24</strong></td>
   <td>Gestionar preferencias de notificaciones</td>
-  <td>Como usuario, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir.</td>
+  <td>Como conductor de la comunidad educativa, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir.</td>
   <td>
     <strong>Escenario 1: Activar notificaciones.</strong><br>
     Dado que el usuario accede a sus preferencias,<br>
@@ -1179,42 +1231,252 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
     cuando guarda la configuración,<br>
     entonces los nuevos valores se aplican a las siguientes notificaciones.
   </td>
+  <td>EP07</td>
+</tr>
+<tr>
+  <td><strong>US25</strong></td>
+  <td>Conocer la propuesta de valor en la Landing Page</td>
+  <td>Como visitante, quiero conocer qué resuelve Quadrapp desde su sitio web, para evaluar si la solución responde a la necesidad de mi institución o la mía.</td>
+  <td>
+    <strong>Escenario 1: Presentación de la propuesta de valor.</strong><br>
+    Dado que el visitante accede a la Landing Page,<br>
+    cuando revisa la sección principal,<br>
+    entonces encuentra el problema que atiende Quadrapp y el beneficio que ofrece a la comunidad universitaria.<br><br>
+    <strong>Escenario 2: Acceso a las secciones informativas.</strong><br>
+    Dado que el visitante se encuentra en la Landing Page,<br>
+    cuando navega por las secciones de funcionalidades, quiénes somos y contacto,<br>
+    entonces accede al contenido correspondiente a cada sección sin abandonar el sitio.
+  </td>
+  <td>EP06</td>
+</tr>
+
+<tr>
+  <td><strong>US26</strong></td>
+  <td>Acceder a la aplicación como visitante del segmento conductores</td>
+  <td>Como visitante del segmento de conductores de la comunidad educativa, quiero entender cómo la aplicación me ayuda a saber si encontraré espacio, para decidir si la instalo en mi dispositivo.</td>
+  <td>
+    <strong>Escenario 1: Contenido dirigido al conductor.</strong><br>
+    Dado que el visitante revisa la sección dirigida a conductores,<br>
+    cuando consulta su contenido,<br>
+    entonces encuentra descrita la consulta de disponibilidad y la asesoría de llegada según su tiempo estimado de viaje.<br><br>
+    <strong>Escenario 2: Llamada a la acción hacia la aplicación móvil.</strong><br>
+    Dado que el visitante decide utilizar la aplicación,<br>
+    cuando activa la llamada a la acción de esa sección,<br>
+    entonces es dirigido al sitio de descarga de la aplicación móvil.
+  </td>
+  <td>EP06</td>
+</tr>
+
+<tr>
+  <td><strong>US27</strong></td>
+  <td>Conocer la propuesta institucional como visitante del segmento administradores</td>
+  <td>Como visitante del segmento de administradores de estacionamientos universitarios, quiero conocer qué información entrega la consola de operación, para evaluar la adopción de Quadrapp en mi institución.</td>
+  <td>
+    <strong>Escenario 1: Contenido dirigido a la institución.</strong><br>
+    Dado que el visitante revisa la sección dirigida a instituciones,<br>
+    cuando consulta su contenido,<br>
+    entonces encuentra descritos el monitoreo de ocupación, los reportes históricos y las alertas de saturación.<br><br>
+    <strong>Escenario 2: Llamada a la acción hacia el contacto institucional.</strong><br>
+    Dado que el visitante desea evaluar la solución para su universidad,<br>
+    cuando activa la llamada a la acción de esa sección,<br>
+    entonces es dirigido al formulario de contacto institucional y recibe la confirmación de su envío.
+  </td>
+  <td>EP06</td>
+</tr>
+
+<tr>
+  <td><strong>US28</strong></td>
+  <td>Consultar los términos y la política de privacidad</td>
+  <td>Como visitante, quiero consultar los términos y condiciones y la política de privacidad desde la Landing Page, para conocer qué datos personales trata Quadrapp antes de registrarme.</td>
+  <td>
+    <strong>Escenario 1: Acceso a los documentos legales.</strong><br>
+    Dado que el visitante se encuentra en cualquier sección de la Landing Page,<br>
+    cuando solicita los términos y condiciones o la política de privacidad,<br>
+    entonces accede al documento de términos y condiciones o a la política de privacidad.<br><br>
+    <strong>Escenario 2: Información sobre el tratamiento de datos.</strong><br>
+    Dado que el visitante consulta la política de privacidad,<br>
+    cuando revisa su contenido,<br>
+    entonces encuentra qué datos personales se recolectan y con qué finalidad se utilizan.
+  </td>
+  <td>EP06</td>
+</tr>
+
+<tr>
+  <td><strong>US29</strong></td>
+  <td>Monitorear la operación del estacionamiento desde la consola</td>
+  <td>Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos.</td>
+  <td>
+    <strong>Escenario 1: Estado actual del estacionamiento.</strong><br>
+    Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>
+    cuando consulta el estacionamiento a su cargo,<br>
+    entonces el sistema presenta la capacidad total, los espacios libres, los ocupados, los desconocidos y el flujo de entradas y salidas del periodo.<br><br>
+    <strong>Escenario 2: Aviso de saturación prevista.</strong><br>
+    Dado que el pronóstico indica que el estacionamiento alcanzará su saturación dentro del horizonte consultado,<br>
+    cuando el operador consulta la consola,<br>
+    entonces el sistema informa el momento previsto de saturación.<br><br>
+    <strong>Escenario 3: Información desactualizada.</strong><br>
+    Dado que el estacionamiento no recibe eventos dentro del tiempo máximo de vigencia,<br>
+    cuando el operador consulta el estado,<br>
+    entonces el sistema informa la antigüedad del último dato consolidado.
+  </td>
+  <td>EP02, EP03, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US30</strong></td>
+  <td>Gestionar los dominios de correo habilitados</td>
+  <td>Como administrador de estacionamientos, quiero gestionar los dominios de correo institucional habilitados para mi universidad para controlar quién puede registrarse en Quadrapp.</td>
+  <td>
+    <strong>Escenario 1: Agregar un dominio.</strong><br>
+    Dado que el administrador pertenece a una institución registrada,<br>
+    cuando agrega un dominio de correo institucional,<br>
+    entonces el sistema lo habilita para el registro de nuevos usuarios de esa institución.<br><br>
+    <strong>Escenario 2: Retirar un dominio.</strong><br>
+    Dado que un dominio deja de pertenecer a la institución,<br>
+    cuando el administrador lo retira,<br>
+    entonces el sistema impide nuevos registros con ese dominio y conserva las cuentas ya verificadas.<br><br>
+    <strong>Escenario 3: Dominio en uso por otra institución.</strong><br>
+    Dado que el dominio ya está habilitado para otra institución,<br>
+    cuando el administrador intenta agregarlo,<br>
+    entonces el sistema rechaza la solicitud e informa el conflicto.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>US31</strong></td>
+  <td>Invitar administradores y operadores</td>
+  <td>Como administrador de estacionamientos, quiero invitar a otros administradores y a los operadores de mi institución para que accedan a la consola con el rol que les corresponde.</td>
+  <td>
+    <strong>Escenario 1: Invitación enviada.</strong><br>
+    Dado que el administrador indica el correo y el rol de la persona invitada,<br>
+    cuando envía la invitación,<br>
+    entonces el sistema registra la invitación con su vigencia y envía el enlace de acceso a ese correo.<br><br>
+    <strong>Escenario 2: Invitación aceptada.</strong><br>
+    Dado que la persona invitada recibe una invitación vigente,<br>
+    cuando completa su verificación,<br>
+    entonces el sistema crea su cuenta con el rol indicado y la asocia a la institución que la invitó.<br><br>
+    <strong>Escenario 3: Invitación vencida.</strong><br>
+    Dado que la invitación superó su periodo de vigencia,<br>
+    cuando la persona invitada intenta utilizarla,<br>
+    entonces el sistema rechaza el acceso e informa que debe solicitar una nueva invitación.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>US32</strong></td>
+  <td>Registrar y dar de baja dispositivos</td>
+  <td>Como administrador de estacionamientos, quiero registrar, reemplazar y dar de baja los sensores y gateways de mi institución para mantener actualizado el inventario que alimenta la ocupación.</td>
+  <td>
+    <strong>Escenario 1: Registro de un dispositivo.</strong><br>
+    Dado que el administrador indica el tipo de dispositivo y su intervalo de reporte esperado,<br>
+    cuando lo registra en el estacionamiento,<br>
+    entonces el sistema lo incorpora al registro de dispositivos y habilita la recepción de sus eventos.<br><br>
+    <strong>Escenario 2: Reemplazo de un dispositivo.</strong><br>
+    Dado que un dispositivo averiado se reemplaza por otro,<br>
+    cuando el administrador registra el reemplazo,<br>
+    entonces el sistema traslada la asociación al nuevo dispositivo sin alterar la identidad del espacio.<br><br>
+    <strong>Escenario 3: Baja de un dispositivo.</strong><br>
+    Dado que un dispositivo deja de utilizarse,<br>
+    cuando el administrador lo da de baja,<br>
+    entonces el sistema deja de aceptar sus eventos y el espacio asociado queda sin sensor operativo.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>US33</strong></td>
+  <td>Suscribirse a alertas por franja horaria</td>
+  <td>Como conductor de la comunidad educativa, quiero suscribirme a las alertas de un estacionamiento en las franjas horarias en las que suelo llegar para enterarme con anticipación cuando la disponibilidad prevista sea baja.</td>
+  <td>
+    <strong>Escenario 1: Suscripción registrada.</strong><br>
+    Dado que el conductor selecciona un estacionamiento y una franja horaria,<br>
+    cuando confirma su suscripción,<br>
+    entonces el sistema la registra y considera esa franja para el envío de alertas.<br><br>
+    <strong>Escenario 2: Dispositivo habilitado para recibir alertas.</strong><br>
+    Dado que el conductor utiliza la aplicación en un dispositivo,<br>
+    cuando habilita las notificaciones en ese dispositivo,<br>
+    entonces el sistema registra ese dispositivo como destino de sus alertas.<br><br>
+    <strong>Escenario 3: Baja de la suscripción.</strong><br>
+    Dado que el conductor mantiene una suscripción vigente,<br>
+    cuando la desactiva,<br>
+    entonces el sistema deja de enviarle alertas para esa franja y conserva sus demás suscripciones.
+  </td>
+  <td>EP07</td>
+</tr>
+
+<tr>
+  <td><strong>US34</strong></td>
+  <td>Consultar la precisión de las predicciones</td>
+  <td>Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación.</td>
+  <td>
+    <strong>Escenario 1: Precisión del periodo.</strong><br>
+    Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>
+    cuando el administrador consulta un periodo,<br>
+    entonces el sistema presenta el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>
+    <strong>Escenario 2: Evolución por versión del modelo.</strong><br>
+    Dado que el modelo de predicción se actualiza periódicamente,<br>
+    cuando el administrador compara los periodos disponibles,<br>
+    entonces el sistema distingue los resultados obtenidos con cada versión del modelo.<br><br>
+    <strong>Escenario 3: Periodo sin comparación posible.</strong><br>
+    Dado que un periodo no cuenta con pronósticos y ocupación observada suficientes,<br>
+    cuando el administrador lo consulta,<br>
+    entonces el sistema informa que ese periodo no permite calcular la precisión.
+  </td>
   <td>EP05</td>
 </tr>
-</tbody> </table>
 
-
-**Technical Stories:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Epic / User Story ID</th>
-      <th>Título</th>
-      <th>Descripción</th>
-      <th>Criterios de Aceptación</th>
-      <th>Relacionado con (Epic ID)</th>
-    </tr>
-  </thead>
-  <tbody>
+<tr>
+  <td><strong>US35</strong></td>
+  <td>Registrar el calendario académico y los eventos del campus</td>
+  <td>Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda.</td>
+  <td>
+    <strong>Escenario 1: Registro del calendario académico.</strong><br>
+    Dado que el administrador dispone del calendario del ciclo,<br>
+    cuando registra sus periodos de clases, exámenes y receso,<br>
+    entonces el sistema los incorpora como insumo de las predicciones de su institución.<br><br>
+    <strong>Escenario 2: Registro de un evento especial.</strong><br>
+    Dado que el campus realizará un evento de alta afluencia,<br>
+    cuando el administrador lo registra con su fecha, su horario y el estacionamiento afectado,<br>
+    entonces el sistema lo considera al generar los pronósticos de esas franjas.<br><br>
+    <strong>Escenario 3: Cancelación de un evento.</strong><br>
+    Dado que un evento registrado se cancela,<br>
+    cuando el administrador lo retira,<br>
+    entonces el sistema deja de considerarlo y regenera los pronósticos de las franjas afectadas.
+  </td>
+  <td>EP03, EP04</td>
+</tr>
 
 <tr>
   <td><strong>TS01</strong></td>
   <td>Configuración de autenticación y gestión de sesiones</td>
-  <td>Como desarrollador, quiero configurar el mecanismo de autenticación y gestión de sesiones de QuadRapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente.</td>
+  <td>Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente.</td>
   <td>
-    <strong>Escenario 1: Autenticación exitosa.</strong><br>
-    Dado que un usuario proporciona credenciales válidas,<br>
-    cuando el proveedor de identidad valida las credenciales,<br>
-    entonces el sistema permite el acceso a QuadRapp y establece una sesión válida.<br><br>
-    <strong>Escenario 2: Credenciales no válidas.</strong><br>
-    Dado que un usuario proporciona credenciales incorrectas,<br>
-    cuando el proveedor de identidad procesa la autenticación,<br>
-    entonces el acceso es rechazado y no se crea una sesión válida.<br><br>
-    <strong>Escenario 3: Sesión expirada.</strong><br>
-    Dado que la sesión del usuario ha expirado,<br>
-    cuando intenta acceder a una funcionalidad protegida,<br>
-    entonces el sistema solicita una nueva autenticación sin permitir el acceso a los recursos protegidos.
+    <strong>Escenario 1: Solicitud del código.</strong><br>
+    Dado que el correo pertenece a un dominio habilitado, corresponde a una cuenta existente o cuenta con una invitación vigente,<br>
+    cuando se envía POST /api/v1/auth/otp con ese correo,<br>
+    entonces la respuesta es 202, se registra el código con su vigencia y su hash, y se solicita su envío al servicio de correo.<br><br>
+    <strong>Escenario 2: Solicitudes excesivas.</strong><br>
+    Dado que el mismo correo superó el número de solicitudes permitidas en la ventana configurada,<br>
+    cuando se envía POST /api/v1/auth/otp,<br>
+    entonces la respuesta es 429 y no se emite un nuevo código.<br><br>
+    <strong>Escenario 3: Autenticación exitosa.</strong><br>
+    Dado que el usuario cuenta con un código de un solo uso vigente,<br>
+    cuando se envía POST /api/v1/auth/login con un correo autorizado y su código de un solo uso válido,<br>
+    entonces la respuesta es 200 con el token de sesión y sus claims de usuario, tenant y rol.<br><br>
+    <strong>Escenario 4: Código inválido.</strong><br>
+    Dado que el código enviado al usuario expiró, no coincide con el registrado o agotó sus intentos,<br>
+    cuando se envía POST /api/v1/auth/login con un código incorrecto o expirado,<br>
+    entonces la respuesta es 401 y no se emite ningún token.<br><br>
+    <strong>Escenario 5: Renovación de sesión.</strong><br>
+    Dado que el cliente conserva el token de refresco emitido al iniciar la sesión,<br>
+    cuando se envía POST /api/v1/auth/refresh con un token de refresco vigente,<br>
+    entonces la respuesta es 200 con un nuevo token de acceso.<br><br>
+    <strong>Escenario 6: Token de refresco vencido.</strong><br>
+    Dado que el token de refresco superó su periodo de vigencia,<br>
+    cuando se envía POST /api/v1/auth/refresh con ese token,<br>
+    entonces la respuesta es 401 y no se emite un nuevo token de acceso.
   </td>
   <td>EP01</td>
 </tr>
@@ -1222,20 +1484,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS02</strong></td>
   <td>Configuración del API Gateway y BFF para la aplicación móvil</td>
-  <td>Como desarrollador, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de QuadRapp y facilitar la composición de información proveniente de diferentes contextos.</td>
+  <td>Como Developer, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de Quadrapp y facilitar la composición de información proveniente de diferentes contextos.</td>
   <td>
-    <strong>Escenario 1: Enrutamiento de solicitudes.</strong><br>
-    Dado que la aplicación móvil envía una solicitud válida,<br>
-    cuando el gateway identifica el recurso solicitado,<br>
-    entonces enruta la solicitud al servicio correspondiente.<br><br>
-    <strong>Escenario 2: Composición de información.</strong><br>
-    Dado que la aplicación solicita información de un estacionamiento,<br>
-    cuando el BFF procesa la solicitud,<br>
-    entonces puede combinar la configuración del estacionamiento, el estado actual y la asesoría disponible en una respuesta para la aplicación móvil.<br><br>
-    <strong>Escenario 3: Servicio no disponible.</strong><br>
-    Dado que uno de los servicios solicitados no está disponible,<br>
-    cuando el gateway procesa la solicitud,<br>
-    entonces retorna una respuesta controlada sin exponer errores internos de los servicios.
+    <strong>Escenario 1: Composición de la vista principal.</strong><br>
+    Dado que el cliente móvil cuenta con un token de sesión vigente,<br>
+    cuando se envía GET /api/v1/mobile/home con un token válido, el identificador del estacionamiento y el tiempo estimado de llegada expresado en minutos,<br>
+    entonces la respuesta es 200 con el layout, la ocupación actual y la asesoría de llegada correspondiente a ese tiempo estimado, en una sola carga.<br><br>
+    <strong>Escenario 2: Solicitud sin autenticación.</strong><br>
+    Dado que la solicitud proviene de un cliente sin sesión válida,<br>
+    cuando se envía una solicitud al gateway sin token o con un token inválido,<br>
+    entonces la respuesta es 401 y la petición no alcanza a los servicios internos.<br><br>
+    <strong>Escenario 3: Servicio interno no disponible.</strong><br>
+    Dado que uno de los servicios internos supera su tiempo límite de respuesta,<br>
+    cuando uno de los servicios que compone la respuesta no responde dentro del tiempo límite,<br>
+    entonces la respuesta es 200 con los datos disponibles e indica qué información no pudo obtenerse.
   </td>
   <td>EP01, EP02, EP03</td>
 </tr>
@@ -1243,83 +1505,91 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS03</strong></td>
   <td>Configuración de persistencia y aislamiento de datos por contexto</td>
-  <td>Como desarrollador, quiero configurar la persistencia de datos de los principales contextos de QuadRapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades.</td>
+  <td>Como Developer, quiero configurar la persistencia de datos de los principales contextos de Quadrapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades.</td>
   <td>
-    <strong>Escenario 1: Persistencia de configuración.</strong><br>
-    Dado que un administrador registra la configuración de un estacionamiento,<br>
-    cuando el servicio procesa la información,<br>
-    entonces los datos del estacionamiento, zonas y espacios se almacenan correctamente.<br><br>
-    <strong>Escenario 2: Persistencia de ocupación.</strong><br>
-    Dado que se recibe un evento válido de cambio de estado de un espacio,<br>
-    cuando el contexto de ocupación procesa el evento,<br>
-    entonces actualiza el estado correspondiente y registra la información necesaria para su trazabilidad.<br><br>
-    <strong>Escenario 3: Separación de responsabilidades.</strong><br>
-    Dado que un contexto necesita consultar información de otro contexto,<br>
-    cuando se realiza la integración,<br>
-    entonces utiliza sus interfaces o eventos definidos sin acceder directamente a la persistencia interna del otro contexto.
+    <strong>Escenario 1: Escritura en el contexto correspondiente.</strong><br>
+    Dado que el administrador cuenta con permisos sobre su institución,<br>
+    cuando se envía POST /api/v1/parking-lots con datos válidos de configuración,<br>
+    entonces la respuesta es 201 y el registro se almacena únicamente en la base de datos del contexto de configuración.<br><br>
+    <strong>Escenario 2: Lectura del estado de ocupación.</strong><br>
+    Dado que el estacionamiento mantiene datos de ocupación vigentes,<br>
+    cuando se envía GET /api/v1/parking-lots/{lotId}/occupancy,<br>
+    entonces la respuesta es 200 con los datos provenientes del contexto de ocupación, sin consultar el modelo de escritura de otro contexto.<br><br>
+    <strong>Escenario 3: Aislamiento por tenant.</strong><br>
+    Dado que el token presentado pertenece a una institución distinta,<br>
+    cuando se envía una consulta con un token cuyo tenant no corresponde al recurso solicitado,<br>
+    entonces la respuesta es 403 y no se devuelve información del recurso.
   </td>
-  <td>EP02, EP03, EP04, EP05</td>
+  <td>EP01, EP02, EP03, EP04, EP05</td>
 </tr>
 
 <tr>
   <td><strong>TS04</strong></td>
-  <td>Implementación de ingesta de eventos IoT mediante gateway</td>
-  <td>Como desarrollador, quiero implementar la recepción de eventos provenientes de los sensores mediante un gateway IoT, para integrar las lecturas de los dispositivos físicos con los servicios de QuadRapp sin exponer directamente los sensores a Internet.</td>
+  <td>Consumo y validación de los eventos publicados por el gateway</td>
+  <td>Como Developer, quiero consumir y validar los mensajes que el gateway publica en el broker, para traducir las lecturas de los dispositivos físicos al lenguaje del dominio sin exponer los sensores a Internet.</td>
   <td>
-    <strong>Escenario 1: Recepción de evento de espacio.</strong><br>
-    Dado que un sensor detecta un cambio de estado en un espacio,<br>
-    cuando el gateway recibe y publica el evento,<br>
-    entonces el sistema registra un evento SpaceStateDetected con sensorId, estado, lectura, timestamp y eventId.<br><br>
-    <strong>Escenario 2: Recepción de evento de entrada o salida.</strong><br>
-    Dado que un sensor de acceso detecta el movimiento de un vehículo,<br>
-    cuando el gateway procesa el evento,<br>
-    entonces publica un evento VehicleMovementDetected indicando el acceso, dirección, timestamp y eventId.<br><br>
-    <strong>Escenario 3: Pérdida temporal de conectividad.</strong><br>
-    Dado que el gateway pierde temporalmente la conexión con el backend,<br>
-    cuando continúa recibiendo eventos de los sensores,<br>
-    entonces almacena temporalmente los eventos y los publica cuando se restablece la conectividad.
+    <strong>Escenario 1: Mensaje válido consumido.</strong><br>
+    Dado que el consumidor mantiene una suscripción activa al tópico del estacionamiento,<br>
+    cuando el consumidor recibe del broker un mensaje con identificador de sensor, estado, marca de tiempo e identificador de evento,<br>
+    entonces confirma su recepción al broker, obtiene de Configuración el espacio asociado a ese sensor y traduce el mensaje a un evento de dominio del contexto de ocupación.<br><br>
+    <strong>Escenario 2: Mensaje con formato inválido.</strong><br>
+    Dado que el consumidor recibe un mensaje del tópico suscrito,<br>
+    cuando ese mensaje carece de los campos requeridos o presenta un tipo de dato incorrecto,<br>
+    entonces el consumidor lo descarta, lo registra en la cola de mensajes rechazados y no genera un evento de dominio.<br><br>
+    <strong>Escenario 3: Dispositivo no registrado.</strong><br>
+    Dado que el registro de dispositivos mantiene los sensores habilitados del estacionamiento,<br>
+    cuando el mensaje proviene de un identificador de sensor que no figura en ese registro,<br>
+    entonces el consumidor lo descarta y registra la incidencia, sin modificar el estado de ningún espacio.<br><br>
+    <strong>Escenario 4: Sensor sin espacio asociado.</strong><br>
+    Dado que un sensor figura en el registro de dispositivos pero no tiene un espacio asignado,<br>
+    cuando se recibe uno de sus mensajes,<br>
+    entonces el consumidor no genera un evento de dominio y registra la incidencia de mapeo pendiente.
   </td>
-  <td>EP04</td>
+  <td>EP02, EP04</td>
 </tr>
 
 <tr>
   <td><strong>TS05</strong></td>
   <td>Configuración de comunicación MQTT para eventos IoT</td>
-  <td>Como desarrollador, quiero configurar MQTT para la comunicación entre el gateway y los servicios de QuadRapp, para transmitir eventos IoT de manera confiable y desacoplada.</td>
+  <td>Como Developer, quiero configurar MQTT para la comunicación entre el gateway y los servicios de Quadrapp, para transmitir eventos IoT de manera confiable y desacoplada.</td>
   <td>
-    <strong>Escenario 1: Publicación de evento.</strong><br>
-    Dado que el gateway recibe un evento válido de un dispositivo,<br>
-    cuando publica el evento mediante MQTT,<br>
-    entonces el mensaje llega al tópico correspondiente utilizando QoS 1.<br><br>
-    <strong>Escenario 2: Reintento de entrega.</strong><br>
-    Dado que un mensaje no puede ser confirmado inicialmente,<br>
-    cuando MQTT procesa la entrega,<br>
-    entonces realiza el mecanismo de retransmisión correspondiente para alcanzar la entrega al consumidor.<br><br>
-    <strong>Escenario 3: Evento inválido.</strong><br>
-    Dado que llega un mensaje que no cumple con el esquema definido,<br>
-    cuando el consumidor valida el mensaje,<br>
-    entonces rechaza el evento y evita actualizar el estado de ocupación con información inválida.
+    <strong>Escenario 1: Publicación con confirmación de entrega.</strong><br>
+    Dado que el gateway cuenta con credenciales válidas en el broker,<br>
+    cuando el gateway publica un mensaje en el tópico del estacionamiento con QoS 1,<br>
+    entonces el broker confirma la recepción y el mensaje queda disponible para el consumidor de ocupación.<br><br>
+    <strong>Escenario 2: Pérdida de conectividad.</strong><br>
+    Dado que el gateway continúa recibiendo lecturas de los sensores,<br>
+    cuando pierde la conexión con el broker,<br>
+    entonces almacena los mensajes en su búfer local y los reenvía al restablecerse la conexión, sin pérdida de eventos.<br><br>
+    <strong>Escenario 3: Suscripción de un consumidor.</strong><br>
+    Dado que el consumidor mantiene una sesión persistente en el broker,<br>
+    cuando un servicio se suscribe al tópico con credenciales válidas,<br>
+    entonces recibe también los mensajes publicados mientras estuvo desconectado, sin pérdida de eventos.
   </td>
-  <td>EP04</td>
+  <td>EP02, EP04</td>
 </tr>
 
 <tr>
   <td><strong>TS06</strong></td>
   <td>Implementación de procesamiento e idempotencia de eventos de ocupación</td>
-  <td>Como desarrollador, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento.</td>
+  <td>Como Developer, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento.</td>
   <td>
-    <strong>Escenario 1: Procesamiento de evento válido.</strong><br>
-    Dado que se recibe un evento SpaceStateDetected válido,<br>
-    cuando el contexto de ocupación procesa el evento,<br>
-    entonces actualiza el estado del espacio asociado y registra la fecha de actualización.<br><br>
-    <strong>Escenario 2: Evento duplicado.</strong><br>
-    Dado que se recibe nuevamente un evento con un eventId ya procesado,<br>
-    cuando el sistema valida la idempotencia,<br>
-    entonces ignora el evento duplicado sin modificar nuevamente el estado del espacio.<br><br>
-    <strong>Escenario 3: Lectura inconsistente.</strong><br>
-    Dado que se recibe un evento fuera de orden o incompatible con el estado registrado,<br>
-    cuando el sistema procesa el evento,<br>
-    entonces aplica las reglas de ordenamiento y validación definidas antes de actualizar la ocupación.
+    <strong>Escenario 1: Evento duplicado.</strong><br>
+    Dado que el contexto de ocupación conserva los identificadores de los eventos aplicados,<br>
+    cuando se procesa un evento cuyo identificador ya fue aplicado al mismo espacio,<br>
+    entonces el evento se descarta y el estado del espacio no cambia.<br><br>
+    <strong>Escenario 2: Evento fuera de orden.</strong><br>
+    Dado que el espacio conserva la marca de tiempo del último evento aplicado,<br>
+    cuando se procesa un evento cuya marca de tiempo es anterior a esa referencia,<br>
+    entonces el evento se descarta y se conserva el estado más reciente.<br><br>
+    <strong>Escenario 3: Cambio a ocupado.</strong><br>
+    Dado que el espacio se encuentra libre y comienza a detectar un vehículo,<br>
+    cuando la detección se mantiene durante el tiempo mínimo configurado,<br>
+    entonces su estado cambia a ocupado y se emite el evento de dominio correspondiente.<br><br>
+    <strong>Escenario 4: Cambio a libre.</strong><br>
+    Dado que el espacio se encuentra ocupado y deja de detectar el vehículo,<br>
+    cuando transcurre el tiempo mínimo configurado sin detección,<br>
+    entonces su estado cambia a libre y se emite el evento de dominio correspondiente.
   </td>
   <td>EP02, EP04</td>
 </tr>
@@ -1327,20 +1597,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS07</strong></td>
   <td>Implementación del modelo de predicción de ocupación</td>
-  <td>Como desarrollador, quiero implementar el componente de predicción de disponibilidad utilizando datos históricos de ocupación y flujo vehicular, para generar pronósticos de disponibilidad futura de los estacionamientos.</td>
+  <td>Como Developer, quiero implementar el componente de predicción de disponibilidad utilizando el histórico de ocupación, la velocidad de flujo, el calendario académico y los eventos del campus, para generar pronósticos de disponibilidad futura de los estacionamientos.</td>
   <td>
-    <strong>Escenario 1: Generación de predicción.</strong><br>
-    Dado que existen datos históricos suficientes de ocupación,<br>
-    cuando el modelo ejecuta una predicción,<br>
-    entonces genera pronósticos de disponibilidad para los horizontes de 15, 30, 45 y 60 minutos.<br><br>
-    <strong>Escenario 2: Inclusión de contexto temporal.</strong><br>
-    Dado que el modelo procesa información histórica,<br>
-    cuando genera una predicción,<br>
-    entonces considera las variables temporales disponibles, como patrones de ocupación y calendario académico.<br><br>
-    <strong>Escenario 3: Datos insuficientes.</strong><br>
-    Dado que no existe suficiente información histórica para generar una predicción confiable,<br>
-    cuando el sistema intenta ejecutar el modelo,<br>
-    entonces informa que la predicción no está disponible o tiene datos insuficientes, sin generar un resultado no sustentado.
+    <strong>Escenario 1: Pronóstico disponible.</strong><br>
+    Dado que el estacionamiento cuenta con un pronóstico vigente,<br>
+    cuando se envía GET /api/v1/forecasts?lotId={lotId}&horizon=30,<br>
+    entonces la respuesta es 200 con la ocupación esperada en porcentaje, el nivel de confianza y la versión del modelo utilizada.<br><br>
+    <strong>Escenario 2: Horizonte no soportado.</strong><br>
+    Dado que los horizontes admitidos son 15, 30, 45 y 60 minutos,<br>
+    cuando se solicita un horizonte distinto de esos valores,<br>
+    entonces la respuesta es 400 e indica los horizontes disponibles.<br><br>
+    <strong>Escenario 3: Datos históricos insuficientes.</strong><br>
+    Dado que el estacionamiento no acumula historial suficiente,<br>
+    cuando se solicita su pronóstico,<br>
+    entonces la respuesta es 200 con el resultado del método de respaldo y un nivel de confianza bajo.
   </td>
   <td>EP03</td>
 </tr>
@@ -1348,20 +1618,20 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS08</strong></td>
   <td>Implementación del servicio de asesoría de llegada</td>
-  <td>Como desarrollador, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada.</td>
+  <td>Como Developer, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada.</td>
   <td>
-    <strong>Escenario 1: Cálculo de asesoría.</strong><br>
-    Dado que existe una predicción válida y el dispositivo proporciona un ETA en minutos,<br>
-    cuando el servicio procesa ambos datos,<br>
-    entonces determina la categoría de disponibilidad esperada para el momento estimado de llegada.<br><br>
-    <strong>Escenario 2: Cambio del ETA.</strong><br>
-    Dado que el ETA del usuario cambia,<br>
-    cuando se solicita una nueva asesoría,<br>
-    entonces el sistema recalcula la categoría utilizando el nuevo tiempo estimado de llegada.<br><br>
-    <strong>Escenario 3: Predicción no disponible.</strong><br>
-    Dado que no existe una predicción válida para el momento de llegada,<br>
-    cuando se solicita la asesoría,<br>
-    entonces el sistema informa que no puede generar una asesoría basada en predicción.
+    <strong>Escenario 1: Asesoría de llegada generada.</strong><br>
+    Dado que existe un pronóstico vigente para el estacionamiento,<br>
+    cuando se envía POST /api/v1/arrival-advices con el identificador del estacionamiento y el tiempo estimado de llegada en minutos,<br>
+    entonces la respuesta es 200 con la probabilidad de encontrar espacio y su categoría.<br><br>
+    <strong>Escenario 2: Tiempo de llegada inválido.</strong><br>
+    Dado que el cliente calcula el tiempo estimado de llegada en el dispositivo,<br>
+    cuando el tiempo estimado enviado es negativo o supera el máximo admitido,<br>
+    entonces la respuesta es 400 y no se genera la asesoría.<br><br>
+    <strong>Escenario 3: Solicitud con ubicación.</strong><br>
+    Dado que el servicio solo admite el tiempo estimado expresado en minutos,<br>
+    cuando la solicitud incluye además coordenadas geográficas,<br>
+    entonces la respuesta es 400, dado que el servicio solo admite el tiempo estimado expresado en minutos.
   </td>
   <td>EP03</td>
 </tr>
@@ -1369,62 +1639,62 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS09</strong></td>
   <td>Configuración de actualización en tiempo casi real de disponibilidad</td>
-  <td>Como desarrollador, quiero implementar mecanismos de actualización periódica y comunicación en tiempo casi real, para que la aplicación pueda mostrar información reciente sobre la ocupación de los estacionamientos.</td>
+  <td>Como Developer, quiero implementar mecanismos de actualización periódica y comunicación en tiempo casi real, para que la aplicación pueda mostrar información reciente sobre la ocupación de los estacionamientos.</td>
   <td>
-    <strong>Escenario 1: Actualización periódica.</strong><br>
-    Dado que el usuario consulta un estacionamiento,<br>
-    cuando transcurre el intervalo de actualización configurado,<br>
-    entonces la aplicación solicita el estado más reciente disponible.<br><br>
-    <strong>Escenario 2: Actualización durante la permanencia.</strong><br>
-    Dado que el usuario se encuentra utilizando la aplicación dentro del estacionamiento,<br>
-    cuando se produce un cambio de disponibilidad,<br>
-    entonces el sistema puede actualizar la información mostrada mediante el mecanismo de comunicación configurado.<br><br>
-    <strong>Escenario 3: Información desactualizada.</strong><br>
-    Dado que no se recibe una actualización durante un periodo determinado,<br>
-    cuando la aplicación muestra el estado almacenado,<br>
-    entonces indica la antigüedad de la información para evitar presentarla como completamente actualizada.
+    <strong>Escenario 1: Consulta del estado actual.</strong><br>
+    Dado que el estacionamiento cuenta con un estado consolidado,<br>
+    cuando se envía GET /api/v1/parking-lots/{lotId}/occupancy,<br>
+    entonces la respuesta es 200 e incluye la marca de tiempo del último dato consolidado.<br><br>
+    <strong>Escenario 2: Suscripción a cambios.</strong><br>
+    Dado que el cliente se encuentra autenticado y el estacionamiento está disponible para consulta,<br>
+    cuando un cliente autenticado abre una suscripción al canal de eventos del estacionamiento,<br>
+    entonces recibe una notificación por cada cambio de estado de un espacio de ese estacionamiento.<br><br>
+    <strong>Escenario 3: Dato desactualizado.</strong><br>
+    Dado que el estacionamiento no recibe eventos desde hace varios minutos,<br>
+    cuando el último dato consolidado supera el tiempo máximo de vigencia,<br>
+    entonces la respuesta es 200 e indica que la información se encuentra desactualizada.
   </td>
-  <td>EP02, EP03</td>
+  <td>EP02</td>
 </tr>
 
 <tr>
   <td><strong>TS10</strong></td>
   <td>Implementación del monitoreo de salud de dispositivos IoT</td>
-  <td>Como desarrollador, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación.</td>
+  <td>Como Developer, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación.</td>
   <td>
-    <strong>Escenario 1: Reporte de salud recibido.</strong><br>
-    Dado que un dispositivo envía un reporte de salud,<br>
-    cuando el sistema procesa el DeviceHealthReported,<br>
-    entonces registra el dispositivo, nivel de batería, señal, última conexión y timestamp.<br><br>
+    <strong>Escenario 1: Reporte de estado de dispositivos.</strong><br>
+    Dado que el estacionamiento cuenta con dispositivos registrados,<br>
+    cuando se envía GET /api/v1/devices/health con el identificador del estacionamiento,<br>
+    entonces la respuesta es 200 con el estado, el nivel de batería y la última comunicación de cada dispositivo.<br><br>
     <strong>Escenario 2: Dispositivo sin comunicación.</strong><br>
-    Dado que un dispositivo no reporta actividad durante el periodo establecido,<br>
-    cuando el sistema ejecuta la verificación de salud,<br>
-    entonces identifica el dispositivo como potencialmente desconectado.<br><br>
-    <strong>Escenario 3: Recuperación del dispositivo.</strong><br>
-    Dado que un dispositivo previamente identificado con problemas vuelve a reportar información válida,<br>
-    cuando el sistema recibe el nuevo reporte,<br>
-    entonces actualiza su estado y registra la última comunicación disponible.
+    Dado que cada dispositivo tiene configurado su intervalo de reporte esperado,<br>
+    cuando un sensor no reporta dentro de ese intervalo,<br>
+    entonces el espacio asociado pasa a estado desconocido y se registra la incidencia del dispositivo.<br><br>
+    <strong>Escenario 3: Batería crítica.</strong><br>
+    Dado que el dispositivo informa periódicamente su nivel de batería,<br>
+    cuando un dispositivo reporta un nivel de batería por debajo del umbral configurado,<br>
+    entonces el dispositivo queda marcado para mantenimiento y el espacio asociado pasa al estado desconocido.
   </td>
-  <td>EP04</td>
+  <td>EP02, EP04</td>
 </tr>
 
 <tr>
   <td><strong>TS11</strong></td>
   <td>Implementación de procesamiento histórico para analítica de ocupación</td>
-  <td>Como desarrollador, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos.</td>
+  <td>Como Developer, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos.</td>
   <td>
-    <strong>Escenario 1: Consulta histórica.</strong><br>
-    Dado que existen registros históricos de ocupación,<br>
-    cuando el administrador solicita información de un periodo determinado,<br>
-    entonces el sistema retorna los datos históricos correspondientes al estacionamiento o zona seleccionada.<br><br>
-    <strong>Escenario 2: Identificación de periodos de mayor ocupación.</strong><br>
-    Dado que existen registros históricos suficientes,<br>
-    cuando se ejecuta el procesamiento analítico,<br>
-    entonces identifica los periodos con mayor nivel de ocupación según los datos registrados.<br><br>
-    <strong>Escenario 3: Sin información suficiente.</strong><br>
-    Dado que el periodo consultado no contiene datos suficientes,<br>
-    cuando se solicita el análisis,<br>
-    entonces el sistema informa que no existen datos suficientes para generar el resultado.
+    <strong>Escenario 1: Consulta de ocupación histórica.</strong><br>
+    Dado que el contexto de analítica mantiene sus proyecciones actualizadas,<br>
+    cuando se envía GET /api/v1/analytics/occupancy con el identificador del estacionamiento y un rango de fechas válido,<br>
+    entonces la respuesta es 200 con la ocupación agregada por hora y por día.<br><br>
+    <strong>Escenario 2: Rango de fechas inválido.</strong><br>
+    Dado que la consulta exige un rango de fechas válido,<br>
+    cuando la fecha de inicio es posterior a la fecha de fin,<br>
+    entonces la respuesta es 400 con el detalle del error.<br><br>
+    <strong>Escenario 3: Comparación entre pronóstico y ocupación real.</strong><br>
+    Dado que se conservan los pronósticos generados y la ocupación observada,<br>
+    cuando se solicita el reporte de precisión del modelo para un periodo,<br>
+    entonces la respuesta es 200 con el error absoluto medio expresado en puntos porcentuales, el porcentaje de pronósticos dentro del margen configurado y la versión del modelo utilizada.
   </td>
   <td>EP05</td>
 </tr>
@@ -1432,43 +1702,127 @@ Al igual que en el As-is, se mantiene que el estacionamiento es gratuito para la
 <tr>
   <td><strong>TS12</strong></td>
   <td>Implementación del sistema de notificaciones y preferencias</td>
-  <td>Como desarrollador, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de QuadRapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos.</td>
+  <td>Como Developer, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de Quadrapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos.</td>
   <td>
-    <strong>Escenario 1: Configuración de preferencias.</strong><br>
-    Dado que un usuario configura sus preferencias de notificación,<br>
-    cuando el sistema procesa la configuración,<br>
-    entonces almacena correctamente las preferencias asociadas al usuario.<br><br>
-    <strong>Escenario 2: Envío de alerta de baja disponibilidad.</strong><br>
-    Dado que se cumple la condición definida para generar una alerta de baja disponibilidad,<br>
-    cuando el servicio de notificaciones procesa el evento,<br>
-    entonces envía la notificación al usuario que tiene habilitado este tipo de alerta.<br><br>
-    <strong>Escenario 3: Notificaciones desactivadas.</strong><br>
-    Dado que un usuario ha desactivado las alertas de baja disponibilidad,<br>
-    cuando se produce el evento correspondiente,<br>
-    entonces el sistema no envía dicha notificación al usuario.
+    <strong>Escenario 1: Registro de una suscripción.</strong><br>
+    Dado que el usuario cuenta con una sesión vigente,<br>
+    cuando se envía POST /api/v1/notification-subscriptions con el estacionamiento y la franja horaria de interés,<br>
+    entonces la respuesta es 201 con la suscripción creada.<br><br>
+    <strong>Escenario 2: Actualización de preferencias.</strong><br>
+    Dado que el usuario tiene preferencias de notificación registradas,<br>
+    cuando se envía PUT /api/v1/notification-preferences con valores válidos,<br>
+    entonces la respuesta es 200 y las nuevas preferencias se aplican a los envíos posteriores.<br><br>
+    <strong>Escenario 3: Token de dispositivo inválido.</strong><br>
+    Dado que el dispositivo tiene un token de notificación registrado,<br>
+    cuando el envío de una notificación es rechazado por el proveedor de mensajería,<br>
+    entonces el token se marca como inválido y no se reintenta el envío a ese dispositivo.
   </td>
-  <td>EP05</td>
+  <td>EP07</td>
 </tr>
 
 <tr>
   <td><strong>TS13</strong></td>
   <td>Implementación de caché y funcionamiento parcial sin conexión</td>
-  <td>Como desarrollador, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad.</td>
+  <td>Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad.</td>
   <td>
-    <strong>Escenario 1: Almacenamiento de configuración.</strong><br>
-    Dado que la aplicación obtiene correctamente el mapa y la configuración de un estacionamiento,<br>
-    cuando recibe una nueva versión de la configuración,<br>
-    entonces almacena localmente la información junto con su versión correspondiente.<br><br>
-    <strong>Escenario 2: Consulta sin conexión.</strong><br>
-    Dado que el dispositivo pierde temporalmente la conexión,<br>
-    cuando el usuario consulta la información previamente almacenada,<br>
-    entonces la aplicación muestra el último estado disponible e indica su antigüedad.<br><br>
-    <strong>Escenario 3: Recuperación de conexión.</strong><br>
-    Dado que la conexión vuelve a estar disponible,<br>
-    cuando la aplicación detecta la conectividad,<br>
-    entonces solicita información actualizada al backend y reemplaza los datos almacenados cuando corresponde.
+    <strong>Escenario 1: Layout sin cambios.</strong><br>
+    Dado que el dispositivo almacena una versión del layout del estacionamiento,<br>
+    cuando se envía GET /api/v1/parking-lots/{lotId}/layout indicando la versión almacenada en el dispositivo,<br>
+    entonces la respuesta es 304 y la aplicación conserva la copia local.<br><br>
+    <strong>Escenario 2: Layout actualizado.</strong><br>
+    Dado que el administrador publicó una nueva distribución del estacionamiento,<br>
+    cuando la versión publicada es posterior a la almacenada en el dispositivo,<br>
+    entonces la respuesta es 200 con el nuevo layout y su versión.<br><br>
+    <strong>Escenario 3: Consulta sin conexión.</strong><br>
+    Dado que el dispositivo conserva el último estado consultado,<br>
+    cuando el dispositivo no cuenta con conexión a internet,<br>
+    entonces la aplicación muestra el último estado almacenado junto con su marca de tiempo.
   </td>
-  <td>EP02, EP03</td>
+  <td>EP02, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS14</strong></td>
+  <td>Reconciliación del conteo de accesos con la detección por espacio</td>
+  <td>Como Developer, quiero reconciliar periódicamente el conteo de entradas y salidas con los estados reportados por los sensores de espacio, para mantener coherente la ocupación del estacionamiento y la velocidad de flujo.</td>
+  <td>
+    <strong>Escenario 1: Registro del movimiento vehicular.</strong><br>
+    Dado que el acceso cuenta con un sensor direccional,<br>
+    cuando el consumidor recibe un evento de paso con su dirección de entrada o salida,<br>
+    entonces el contador de flujo del estacionamiento se actualiza y se emite el evento de dominio correspondiente.<br><br>
+    <strong>Escenario 2: Divergencia entre fuentes.</strong><br>
+    Dado que ambas fuentes reportan la ocupación del mismo estacionamiento,<br>
+    cuando la ocupación derivada del conteo de accesos difiere de la obtenida por detección de espacios más allá del margen tolerado,<br>
+    entonces se registra la divergencia y la detección por espacio prevalece como estado del estacionamiento.<br><br>
+    <strong>Escenario 3: Resincronización periódica.</strong><br>
+    Dado que existe un proceso de reconciliación programado,<br>
+    cuando se ejecuta el proceso de reconciliación programado,<br>
+    entonces la ocupación acumulada derivada del conteo se ajusta al valor obtenido por detección de espacios, la velocidad de flujo conserva como fuente los sensores de paso y el proceso informa la diferencia corregida.
+  </td>
+  <td>EP02</td>
+</tr>
+
+<tr>
+  <td><strong>TS15</strong></td>
+  <td>Aprovisionamiento de una institución</td>
+  <td>Como Developer, quiero disponer de un proceso de aprovisionamiento restringido para dar de alta una institución con sus dominios de correo y su primer administrador, para habilitar el servicio durante el onboarding sin exponer un registro público.</td>
+  <td>
+    <strong>Escenario 1: Alta de la institución.</strong><br>
+    Dado que la solicitud se autentica con credenciales de plataforma,<br>
+    cuando se envía POST /api/v1/tenants con el nombre de la institución y sus dominios de correo,<br>
+    entonces la respuesta es 201 con la institución creada y la invitación emitida para su primer administrador.<br><br>
+    <strong>Escenario 2: Solicitud sin credenciales de plataforma.</strong><br>
+    Dado que la solicitud se autentica con un token de usuario,<br>
+    cuando se envía POST /api/v1/tenants,<br>
+    entonces la respuesta es 403 y no se crea ninguna institución.<br><br>
+    <strong>Escenario 3: Dominio ya utilizado.</strong><br>
+    Dado que un dominio de correo ya pertenece a otra institución,<br>
+    cuando se envía la solicitud de alta con ese dominio,<br>
+    entonces la respuesta es 409 e informa el conflicto.
+  </td>
+  <td>EP01, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>TS16</strong></td>
+  <td>Accesibilidad e internacionalización de las aplicaciones</td>
+  <td>Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas.</td>
+  <td>
+    <strong>Escenario 1: Idioma de la respuesta.</strong><br>
+    Dado que la solicitud declara su idioma preferido entre es_419 y en_US,<br>
+    cuando se consulta cualquier recurso de la API,<br>
+    entonces la respuesta entrega los textos y los formatos de fecha en ese idioma.<br><br>
+    <strong>Escenario 2: Idioma no soportado.</strong><br>
+    Dado que la solicitud declara un idioma distinto de los admitidos,<br>
+    cuando se consulta un recurso,<br>
+    entonces la respuesta utiliza el idioma por defecto del producto.<br><br>
+    <strong>Escenario 3: Criterios de accesibilidad.</strong><br>
+    Dado que la interfaz expone los elementos con sus etiquetas accesibles y una relación de contraste mínima de 4.5:1,<br>
+    cuando se ejecuta la validación automatizada de accesibilidad,<br>
+    entonces el resultado no reporta incumplimientos de nivel AA.
+  </td>
+  <td>EP01, EP02, EP03, EP04, EP05, EP06, EP07</td>
+</tr>
+
+<tr>
+  <td><strong>TS17</strong></td>
+  <td>Composición de la consola de operación</td>
+  <td>Como Developer, quiero disponer de un punto de entrada propio para la consola de operación, para componer en una sola respuesta la información que el personal del estacionamiento necesita durante su turno.</td>
+  <td>
+    <strong>Escenario 1: Composición del estado de operación.</strong><br>
+    Dado que la solicitud presenta un token con rol de operación,<br>
+    cuando se envía GET /api/v1/console/overview con el identificador del estacionamiento,<br>
+    entonces la respuesta es 200 con la capacidad, los espacios libres, ocupados y desconocidos, el flujo del periodo y la saturación prevista.<br><br>
+    <strong>Escenario 2: Rol sin acceso a la consola.</strong><br>
+    Dado que la solicitud presenta un token con rol de conductor,<br>
+    cuando se envía GET /api/v1/console/overview,<br>
+    entonces la respuesta es 403 y no se entrega información de operación.<br><br>
+    <strong>Escenario 3: Servicio de predicción no disponible.</strong><br>
+    Dado que el servicio de predicción no responde dentro del tiempo límite,<br>
+    cuando se compone la respuesta de la consola,<br>
+    entonces la respuesta es 200 con el estado actual e indica que la saturación prevista no está disponible.
+  </td>
+  <td>EP02, EP03, EP04</td>
 </tr>
 
   </tbody>
@@ -1657,7 +2011,7 @@ Las decisiones de diseño se tomaron en seis iteraciones, siguiendo los stages d
 
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-Representa el ecosistema general de QuadRapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
+Representa el ecosistema general de Quadrapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
 
 <img src="assets/capitulo-04/4.3.1-landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
 
