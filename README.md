@@ -324,9 +324,9 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 ![User Persona – Administradores de estacionamientos universitarios](./assets/capitulo-02/userpersona2.jpg)
 
 
-  ### 2.3.2. User Task Matrix
+### 2.3.2. User Task Matrix
   
-  #### Conductores de la comunidad educativa
+#### Conductores de la comunidad educativa
 
 | Tarea | Frecuencia | Prioridad | Frustración |
 | ------ | ------ | ------ | ------ |
