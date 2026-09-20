@@ -3030,4 +3030,4 @@ World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 
 
 | Entrega | Enlace al video |
 | --- | --- |
-| AV1 | Por completar |
+| Primer Hito | [https://youtu.be/4N4Y5rLdgGs](https://youtu.be/4N4Y5rLdgGs) |
