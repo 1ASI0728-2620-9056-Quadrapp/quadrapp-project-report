@@ -317,11 +317,11 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 #### Conductores de la comunidad educativa
 
-![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona1.jfif)
+![User Persona – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona1.jpg)
 
 #### Administradores de estacionamientos universitarios
 
-![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/userpersona2.jfif)
+![User Persona – Administradores de estacionamientos universitarios](./assets/capitulo-02/userpersona2.jpg)
 
 
   ### 2.3.2. User Task Matrix
@@ -359,11 +359,11 @@ Integra Labs es nuestra startup de desarrollo de soluciones digitales. Su produc
 
 #### Conductores de la comunidad educativa
 
-![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping1.png)
+![Empathy Map – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping1.png)
 
 #### Administradores de estacionamientos universitarios
 
-![As-is Scenario Mapping – Conductores de la comunidad educativa](./assets/capitulo-02/EmpathyMapping2.png)
+![Empathy Map – Administradores de estacionamientos universitarios](./assets/capitulo-02/EmpathyMapping2.png)
 
 
 ### 2.3.4. As-is Scenario Mapping
