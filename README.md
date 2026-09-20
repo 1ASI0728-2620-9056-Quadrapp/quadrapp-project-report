@@ -23,7 +23,7 @@
 | Becerra Tejeda, Alessandra Nicole | u202318947 |
 | Bejarano Martinez, Alvaro Leandro | Por completar |
 | Melgarejo Gomez, Marcia Victoria | Por completar |
-| Nanfuñay Liza, Pedro Jesus | Por completar |
+| Nanfuñay Liza, Pedro Jesus | u202215462 |
 | Sulca Sanchez, Piero Angel | u202423711 |
 
 ---
@@ -32,7 +32,8 @@
 
 | Versión | Fecha | Autor | Descripción de modificación |
 | --- | --- | --- | --- |
-| 1.0 | 2026-09-15 | Sulca Sanchez, Piero Angel | Estructura inicial del informe para AV1. |
+| 1.0 | 2026-09-15 | Integra Labs | Estructura inicial del informe para AV1. |
+| 1.1 | 2026-09-19 | Integra Labs  | Se añadieron los capítulos I, II, III y IV |
 
 ---
 
@@ -254,11 +255,11 @@ El valor diferencial de Quadrapp no radica únicamente en identificar espacios l
       <td>Descripción por completar.</td>
     </tr>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="assets/capitulo-01/pedro-nanfuñay.jpeg" alt="Nanfuñay Liza, Pedro Jesús" width="160"></td>
       <td>Nanfuñay Liza, Pedro Jesus</td>
-      <td>Por completar</td>
+      <td>u202215462</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Mi nombre es Pedro Jesús Nanfuñay Liza, tengo 21 años y actualmente estudio la carrera de Ingeniería de Software. Me considero una persona creativa, responsable, perseverante y siempre dispuesto a trabajar en equipo. Espero aportar de manera positiva al equipo y cumplir con los objetivos establecidos en el proyecto.</td>
     </tr>
     <tr>
       <td><img src="assets/capitulo-01/piero-sulca.jpg" alt="Sulca Sanchez, Piero Angel" width="160"></td>
