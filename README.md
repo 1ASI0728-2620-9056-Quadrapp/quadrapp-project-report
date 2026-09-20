@@ -856,6 +856,19 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Captura | <img src="assets/capitulo-02/entrevistamariafernanda1.png" alt="Captura de la entrevista a María Fernanda Tejeda Mena" width="500"/> |
 | Resumen | Estudiante de Derecho que utiliza un auto familiar para asistir a la universidad de lunes a viernes. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que consulta ocasionalmente a sus compañeros o calcula la disponibilidad según el horario y la actividad del campus. En una ocasión tuvo que buscar estacionamiento durante 10 a 15 minutos y llegó tarde a clases. Además, estima que invierte entre 30 y 60 minutos adicionales por semana debido a la incertidumbre sobre encontrar un espacio. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
 
+
+**Entrevista 2**
+
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Wilder Gonzalo Aliaga Urbina |
+| Edad | 21 años |
+| Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQALFlPRSrnUR48PtAjDQ1f-AaB7rRMljFlq5JK61XENGM0?e=FsLoaG&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQALFlPRSrnUR48PtAjDQ1f-AaB7rRMljFlq5JK61XENGM0?e=FsLoaG&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
+| Duración | 8 minutos y 4 segundos |
+| Captura | <img src="assets/capitulo-02/Entrevista2_GonzaloAliaga.png" alt="Captura de la entrevista a Wilder Gonzalo Aliaga Urbina" width="500"/> |
+| Resumen | Estudiante de Ingeniería de Software que utiliza su auto propio para movilizarse a su campus 3 veces a la semana. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que trata de salir con antelación para evitar situaciones de tráfico y estrés. En una ocasión, durante su trayecto al campus, tuvo muchas complicaciones debido a una situación de tráfico y cola de espera en el estacionamiento de su campus, lo que lo llevó a perder mucho tiempo, llegando tarde a su clase. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
+
 #### Segmento 2: Administradores de estacionamientos universitarios
 
 **Entrevista 1**
