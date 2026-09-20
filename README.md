@@ -2453,7 +2453,7 @@ La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El
 
 El backlog también se encuentra en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T). En esta etapa, el tablero documenta los 53 elementos del Product Backlog ordenados por valor de negocio. Cada tarjeta incluye el identificador de la historia y su estimación en Story Points.
 
-*Pendiente: captura del tablero.*
+![Product Backlog de Quadrapp en Trello](assets/capitulo-03/product-backlog-trello.png)
 
 ---
 
