@@ -2330,7 +2330,25 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.3. Impact Mapping
 
-*Pendiente de elaboración.*
+El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos. Para mantener la legibilidad, el resultado se divide en tres mapas que cubren la experiencia del conductor, la adopción institucional y la operación del estacionamiento.
+
+### Conductores de la comunidad educativa
+
+Este mapa se centra en reducir en un 20 % el tiempo promedio de búsqueda. También incorpora como métricas que al menos el 60 % de los conductores activos consulte la predicción antes de llegar y que las estimaciones alcancen una precisión mínima del 80 %.
+
+![Impact Mapping de conductores de la comunidad educativa](./assets/capitulo-03/impact-mapping-conductores.png)
+
+### Piloto institucional
+
+Este mapa muestra cómo el responsable de logística y operaciones contribuye a que una institución implemente un piloto durante el primer año. Los impactos abarcan la comprensión del valor operativo, la habilitación del equipo responsable y la configuración de la infraestructura del estacionamiento.
+
+![Impact Mapping del piloto institucional](./assets/capitulo-03/impact-mapping-piloto-institucional.png)
+
+### Operación del estacionamiento
+
+Este mapa vincula la disponibilidad de datos superior al 95 % y el uso regular del dashboard con la supervisión de la ocupación, la detección de fallas y el análisis de los periodos de mayor demanda.
+
+![Impact Mapping de la operación del estacionamiento](./assets/capitulo-03/impact-mapping-operacion.png)
 
 ## 3.4. Product Backlog
 
@@ -2447,7 +2465,255 @@ Se identificaron ocho escenarios de atributos de calidad en primera instancia, a
 
 #### 4.1.2.3. Constraints
 
+Los constraints son características no negociables impuestas por el contexto normativo, por las decisiones tomadas por el equipo sobre el alcance del producto y por las tecnologías establecidas para el proyecto. A diferencia de los atributos de calidad, no admiten grados de cumplimiento: se satisfacen o no se satisfacen, y condicionan las decisiones arquitectónicas desde el inicio. Se presentan como Technical Stories con sus criterios de aceptación, de modo que puedan verificarse durante la implementación.
 
+Los primeros cinco constraints provienen del modelo de dominio y de las decisiones de privacidad del equipo. Los siguientes seis corresponden a las tecnologías y a los requisitos de internacionalización, accesibilidad y transparencia establecidos para el proyecto. Los dos últimos delimitan el alcance del producto y el aislamiento entre instituciones.
+
+<table> <thead> <tr> <th>Technical Story ID</th> <th>Título</th> <th>Descripción</th> <th>Criterios de Aceptación</th> <th>Relacionado con (Epic ID)</th> </tr> </thead> <tbody>
+
+<tr>
+  <td><strong>CON01</strong></td>
+  <td>Detección por sensores sin identificación del vehículo</td>
+  <td>Como Developer, quiero que la detección de ocupación del alcance actual se realice con sensores de cochera y de paso, sin videovigilancia ni identificación de vehículos, manteniendo el contexto de sensado independiente de la tecnología empleada.</td>
+  <td>
+    <strong>Escenario 1: Fuentes de detección admitidas.</strong><br>
+    Dado que el alcance actual contempla sensores de cochera y de paso registrados en el inventario de dispositivos,<br>
+    cuando se procesa un evento de detección,<br>
+    entonces este proviene de un dispositivo registrado y la traducción al lenguaje del dominio se realiza en la capa anticorrupción, de modo que una tecnología distinta pueda incorporarse sin alterar el modelo de ocupación.<br><br>
+    <strong>Escenario 2: Ausencia de identificación del vehículo.</strong><br>
+    Dado que los eventos de sensado informan presencia y dirección, no identidad,<br>
+    cuando se procesa un evento de ocupación,<br>
+    entonces el sistema no almacena ningún dato que permita identificar al vehículo ni a su conductor.
+  </td>
+  <td>EP02, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>CON02</strong></td>
+  <td>Cálculo del tiempo de llegada en el dispositivo</td>
+  <td>Como Developer, quiero que el tiempo estimado de llegada se calcule en la aplicación y que al servidor solo viajen los minutos, para no tratar la ubicación del conductor en los servicios de Quadrapp.</td>
+  <td>
+    <strong>Escenario 1: Solicitud válida.</strong><br>
+    Dado que la aplicación calcula el tiempo estimado con el proveedor de mapas en el propio dispositivo,<br>
+    cuando envía la solicitud de asesoría de llegada,<br>
+    entonces el cuerpo incluye únicamente el tiempo expresado en minutos.<br><br>
+    <strong>Escenario 2: Solicitud con coordenadas.</strong><br>
+    Dado que el servicio no admite datos de ubicación,<br>
+    cuando una solicitud incluye coordenadas geográficas,<br>
+    entonces la respuesta es 400 y la solicitud no se procesa.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
+  <td><strong>CON03</strong></td>
+  <td>Tratamiento de datos personales mínimos</td>
+  <td>Como Developer, quiero tratar únicamente los datos personales necesarios para la finalidad declarada de cada funcionalidad, para cumplir la Ley N.º 29733 de Protección de Datos Personales y su Reglamento, aprobado por el Decreto Supremo N.º 016-2024-JUS y vigente desde el 31 de marzo de 2025.</td>
+  <td>
+    <strong>Escenario 1: Minimización en el alta de una cuenta.</strong><br>
+    Dado que el registro persigue verificar la pertenencia institucional del usuario,<br>
+    cuando se crea una cuenta,<br>
+    entonces se tratan solo el correo institucional, el nombre visible, el rol y la institución, y no se almacenan documento de identidad, código de estudiante ni placa vehicular.<br><br>
+    <strong>Escenario 2: Datos asociados a otras finalidades.</strong><br>
+    Dado que las notificaciones requieren un token de dispositivo y las preferencias del usuario,<br>
+    cuando se registran esos datos,<br>
+    entonces se conservan únicamente mientras la suscripción permanece activa y se eliminan al darse de baja.<br><br>
+    <strong>Escenario 3: Información y registro de la aceptación.</strong><br>
+    Dado que los términos y condiciones y la política de privacidad describen las finalidades del tratamiento,<br>
+    cuando el usuario completa su registro,<br>
+    entonces el sistema le presenta ambos documentos y registra su aceptación junto con la fecha y la versión vigente.
+  </td>
+  <td>EP01</td>
+</tr>
+
+<tr>
+  <td><strong>CON04</strong></td>
+  <td>Acceso restringido a la comunidad de cada institución</td>
+  <td>Como Developer, quiero restringir el registro a los dominios de correo habilitados por cada institución y reservar la creación de administradores a la invitación, para sostener el modelo B2B y la pertenencia institucional.</td>
+  <td>
+    <strong>Escenario 1: Dominio no habilitado.</strong><br>
+    Dado que el dominio del correo no pertenece a ninguna institución registrada y no existe una invitación vigente ni una cuenta autorizada previamente,<br>
+    cuando se solicita el acceso,<br>
+    entonces el sistema no emite ningún código de verificación.<br><br>
+    <strong>Escenario 2: Creación de administradores.</strong><br>
+    Dado que el rol de administrador no admite autorregistro,<br>
+    cuando se intenta crear una cuenta con ese rol fuera del flujo de invitación o del alta inicial de la institución,<br>
+    entonces la solicitud es rechazada.<br><br>
+    <strong>Escenario 3: Alta de instituciones.</strong><br>
+    Dado que el alta de una institución no se expone públicamente,<br>
+    cuando se envía la solicitud sin credenciales de plataforma,<br>
+    entonces la respuesta es 403.
+  </td>
+  <td>EP01, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>CON05</strong></td>
+  <td>Sensores no accesibles desde Internet</td>
+  <td>Como Developer, quiero que los dispositivos de sensado permanezcan en la red local del campus y no sean alcanzables desde Internet, para reducir su superficie de exposición.</td>
+  <td>
+    <strong>Escenario 1: Acceso desde fuera de la red del campus.</strong><br>
+    Dado que los sensores operan en la red local de la institución,<br>
+    cuando se intenta alcanzarlos desde una red externa,<br>
+    entonces no resultan accesibles y no aceptan ninguna instrucción.<br><br>
+    <strong>Escenario 2: Salida de los eventos hacia el backend.</strong><br>
+    Dado que la comunicación con el backend se concentra en un único componente de la red de sensado,<br>
+    cuando un sensor genera una lectura,<br>
+    entonces esta alcanza el backend a través de ese componente y nunca mediante una conexión directa del sensor.
+  </td>
+  <td>EP04</td>
+</tr>
+
+<tr>
+  <td><strong>CON06</strong></td>
+  <td>Servicios web con el stack definido por el curso</td>
+  <td>Como Developer, quiero desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto.</td>
+  <td>
+    <strong>Escenario 1: Estilo de los servicios.</strong><br>
+    Dado que los servicios se exponen bajo el estilo RESTful,<br>
+    cuando se incorpora un nuevo recurso,<br>
+    entonces este se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>
+    <strong>Escenario 2: Documentación de los endpoints.</strong><br>
+    Dado que la documentación se mantiene junto al código,<br>
+    cuando se publica una versión del servicio,<br>
+    entonces su especificación OpenAPI queda disponible y actualizada.
+  </td>
+  <td>EP01, EP02, EP03, EP04, EP05, EP06, EP07</td>
+</tr>
+
+<tr>
+  <td><strong>CON07</strong></td>
+  <td>Tecnologías para la Landing Page y la consola web</td>
+  <td>Como Developer, quiero construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Angular o Vue bajo Material Design, para emplear las tecnologías definidas para cada producto web.</td>
+  <td>
+    <strong>Escenario 1: Tecnología de la Landing Page.</strong><br>
+    Dado que la Landing Page es un sitio estático,<br>
+    cuando se publica su contenido,<br>
+    entonces este se implementa con HTML5, CSS3 y JavaScript.<br><br>
+    <strong>Escenario 2: Biblioteca de componentes.</strong><br>
+    Dado que la consola de operación utiliza Angular o Vue,<br>
+    cuando se incorpora un componente de interfaz,<br>
+    entonces este proviene de Angular Material, PrimeNG, PrimeVue o Vuetify, según el framework elegido.
+  </td>
+  <td>EP02, EP06</td>
+</tr>
+
+<tr>
+  <td><strong>CON08</strong></td>
+  <td>Aplicación móvil multiplataforma con Flutter</td>
+  <td>Como Developer, quiero desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS sin utilizar tecnologías híbridas.</td>
+  <td>
+    <strong>Escenario 1: Tecnología de la aplicación.</strong><br>
+    Dado que el equipo adoptó una estrategia multiplataforma,<br>
+    cuando se desarrolla la aplicación móvil,<br>
+    entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas.
+  </td>
+  <td>EP01, EP02, EP03, EP04, EP05, EP06, EP07</td>
+</tr>
+
+<tr>
+  <td><strong>CON09</strong></td>
+  <td>Internacionalización en inglés y español</td>
+  <td>Como Developer, quiero que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto, para cumplir los requisitos de internacionalización del proyecto.</td>
+  <td>
+    <strong>Escenario 1: Idioma solicitado.</strong><br>
+    Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>
+    cuando la solicitud declara uno de esos idiomas,<br>
+    entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>
+    <strong>Escenario 2: Idioma por defecto.</strong><br>
+    Dado que la solicitud no declara un idioma preferido,<br>
+    cuando se genera la respuesta,<br>
+    entonces los mensajes y la documentación se presentan en inglés.
+  </td>
+  <td>EP01, EP02, EP03, EP04, EP05, EP06, EP07</td>
+</tr>
+
+<tr>
+  <td><strong>CON10</strong></td>
+  <td>Accesibilidad en las experiencias web</td>
+  <td>Como Developer, quiero incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas.</td>
+  <td>
+    <strong>Escenario 1: Atributos de accesibilidad.</strong><br>
+    Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>
+    cuando se publica una vista,<br>
+    entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>
+    <strong>Escenario 2: Validación del nivel de conformidad.</strong><br>
+    Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>
+    cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>
+    entonces no se reportan incumplimientos de ese nivel.
+  </td>
+  <td>EP02, EP06</td>
+</tr>
+
+<tr>
+  <td><strong>CON11</strong></td>
+  <td>Términos y condiciones accesibles desde el pie de página</td>
+  <td>Como Developer, quiero enlazar los términos y condiciones del servicio desde el pie de página de la Landing Page y de las aplicaciones, para que el usuario conozca las condiciones antes de registrarse.</td>
+  <td>
+    <strong>Escenario 1: Disponibilidad del documento.</strong><br>
+    Dado que los términos y condiciones se encuentran publicados,<br>
+    cuando el usuario consulta el pie de página de cualquiera de los productos,<br>
+    entonces accede al documento vigente.
+  </td>
+  <td>EP06</td>
+</tr>
+
+<tr>
+  <td><strong>CON12</strong></td>
+  <td>Alcance sin control de acceso vehicular ni cobros</td>
+  <td>Como Developer, quiero mantener fuera del alcance el control de acceso vehicular y la gestión de cobros o reservas, para conservar el foco del producto en la disponibilidad y la predicción.</td>
+  <td>
+    <strong>Escenario 1: Operación de las barreras.</strong><br>
+    Dado que la solución no gestiona el ingreso físico de los vehículos,<br>
+    cuando un vehículo accede al estacionamiento,<br>
+    entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>
+    <strong>Escenario 2: Ausencia de transacciones.</strong><br>
+    Dado que el producto no administra pagos ni reservas de espacios,<br>
+    cuando se consulta cualquiera de sus servicios,<br>
+    entonces no se expone ninguna operación de cobro ni de reserva.
+  </td>
+  <td>EP01, EP02, EP03, EP04, EP05, EP06, EP07</td>
+</tr>
+
+<tr>
+  <td><strong>CON13</strong></td>
+  <td>Aislamiento de datos entre instituciones</td>
+  <td>Como Developer, quiero que cada institución acceda únicamente a sus propios estacionamientos y usuarios, para sostener el modelo multi-institución sin mezclar información entre clientes.</td>
+  <td>
+    <strong>Escenario 1: Consulta dentro de la institución.</strong><br>
+    Dado que el token de sesión identifica la institución del usuario,<br>
+    cuando se consulta un recurso de esa institución,<br>
+    entonces la respuesta incluye únicamente información que le pertenece.<br><br>
+    <strong>Escenario 2: Consulta fuera de la institución.</strong><br>
+    Dado que el recurso solicitado pertenece a otra institución,<br>
+    cuando se envía la solicitud,<br>
+    entonces la respuesta es 403 y el intento queda registrado.
+  </td>
+  <td>EP01, EP04</td>
+</tr>
+
+<tr>
+  <td><strong>CON14</strong></td>
+  <td>Software del nodo de sensado</td>
+  <td>Como Developer, quiero desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas de los sensores hacia el broker de la red local sin exponer los dispositivos a Internet.</td>
+  <td>
+    <strong>Escenario 1: Tecnología del nodo.</strong><br>
+    Dado que los nodos de sensado se construyen sobre microcontroladores ESP32,<br>
+    cuando se implementa su software,<br>
+    entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>
+    <strong>Escenario 2: Alcance del software embebido.</strong><br>
+    Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>
+    cuando el nodo detecta un cambio en su sensor,<br>
+    entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>
+    <strong>Escenario 3: Conservación ante desconexión.</strong><br>
+    Dado que la red local puede presentar interrupciones,<br>
+    cuando el nodo no logra publicar una lectura,<br>
+    entonces la conserva y la reenvía al restablecerse la conexión.
+  </td>
+  <td>EP02, EP04</td>
+</tr>
+
+</tbody> </table>
 
 
 ### 4.1.3. Architectural Drivers Backlog
