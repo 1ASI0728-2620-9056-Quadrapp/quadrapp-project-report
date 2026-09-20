@@ -1993,9 +1993,13 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.4. Product Backlog
 
-El Product Backlog reúne las User Stories y las Technical Stories con su estimación en Story Points y su orden de atención. El orden lo determina el valor para el negocio y no la dependencia técnica: encabezan el backlog las historias del sitio web estático, requeridas desde el primer sprint, seguidas por la consulta de disponibilidad y por la predicción con asesoría de llegada, que constituyen la propuesta diferencial del producto. Las historias de configuración e infraestructura se ubican a continuación porque sostienen esas capacidades, y las de acceso e identidad se atienden después, dado que por sí solas no entregan valor al usuario. Cierran el backlog la analítica histórica, las alertas y las capacidades transversales.
+El Product Backlog presenta en una única lista ordenada las User Stories y las Technical Stories identificadas para Quadrapp. Cada elemento conserva el identificador, el título y la descripción definidos en la sección 3.2 e incorpora una estimación en Story Points. El orden representa su prioridad relativa según el valor que aporta al negocio y puede ajustarse durante el refinamiento cuando se obtiene nueva información sobre el producto.
 
-La estimación emplea la escala de Fibonacci acotada a 1, 2, 3, 5 y 8 puntos. El backlog suma **222 Story Points** distribuidos en **52 elementos**.
+Las historias de la Landing Page ocupan las primeras posiciones porque deben considerarse desde el primer sprint. A continuación se priorizan la consulta de disponibilidad y la predicción con asesoría de llegada, ya que conforman la propuesta de valor principal de Quadrapp. Después se encuentran las historias relacionadas con la configuración de los estacionamientos y la operación institucional. Las capacidades de acceso e identidad aparecen como elementos habilitadores de la solución, mientras que la analítica histórica y las notificaciones complementan el valor entregado a los dos segmentos objetivo.
+
+Las Technical Stories hacen visible el trabajo técnico necesario para implementar y sostener las funcionalidades del producto. Algunas habilitan una capacidad específica, como el procesamiento de eventos de ocupación o el servicio de asesoría de llegada. Otras tienen alcance transversal porque respaldan varias épicas o aplicaciones, como la persistencia y el aislamiento de datos, los puntos de entrada para las aplicaciones y la accesibilidad e internacionalización. Todas forman parte del mismo Product Backlog y se ordenan según el valor que permiten entregar, sin crear un backlog técnico separado.
+
+La estimación representa el tamaño relativo del trabajo y utiliza la escala de Fibonacci acotada a 1, 2, 3, 5 y 8 puntos. El backlog suma **222 Story Points** distribuidos en **52 elementos**.
 
 | # Orden | User Story Id | Título | Descripción | Story Points |
 | --- | --- | --- | --- | --- |
@@ -2052,7 +2056,11 @@ La estimación emplea la escala de Fibonacci acotada a 1, 2, 3, 5 y 8 puntos. El
 | 51 | TS13 | Implementación de caché y funcionamiento parcial sin conexión | Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad. | 5 |
 | 52 | TS16 | Accesibilidad e internacionalización de las aplicaciones | Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | 5 |
 
-*Pendiente: captura y URL pública del tablero en la herramienta de gestión.*
+El backlog se gestiona además en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T), donde cada tarjeta conserva el identificador de la historia, su posición en el orden de atención y su estimación en Story Points.
+
+La lista **Product Backlog** concentra los 52 elementos ordenados por valor de negocio, y las listas **Sprint 1**, **En progreso** y **Hecho** registran el avance durante la ejecución. Cada tarjeta muestra al frente su estimación en Story Points.
+
+*Pendiente: captura del tablero.*
 
 ---
 
