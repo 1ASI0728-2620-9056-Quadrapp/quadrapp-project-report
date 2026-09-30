@@ -2958,6 +2958,58 @@ Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker p
 
 ---
 
+# Capítulo V: Tactical-Level Software Design
+
+## 5.1. Bounded Context: IAM
+
+## 5.2. Bounded Context: Parking Configuration
+
+## 5.3. Bounded Context: Parking Sensing
+
+## 5.4. Bounded Context: Occupancy
+
+## 5.5. Bounded Context: Prediction & Advisory
+
+## 5.6. Bounded Context: Analytics
+
+## 5.7. Bounded Context: Notifications
+
+---
+
+# Capítulo VI: Solution UX Design
+
+## 6.1. Style Guidelines
+
+### 6.1.1. General Style Guidelines
+
+### 6.1.2. Web, Mobile & Devices Style Guidelines
+
+## 6.2. Information Architecture
+
+### 6.2.1. Organization Systems
+
+### 6.2.2. Labeling Systems
+
+### 6.2.3. Searching Systems
+
+### 6.2.4. SEO Tags and Meta Tags
+
+### 6.2.5. Navigation Systems
+
+## 6.3. Landing Page UI Design
+
+### 6.3.1. Landing Page Wireframe
+
+### 6.3.2. Landing Page Mock-up
+
+## 6.4. Applications UX/UI Design
+
+### 6.4.1. Applications Wireframes
+
+### 6.4.2. Applications Wireflow Diagrams
+
+---
+
 # Conclusiones
 
 ## Avance de conclusiones
