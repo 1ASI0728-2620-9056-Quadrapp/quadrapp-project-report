@@ -2972,6 +2972,1161 @@ Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker p
 
 ## 5.6. Bounded Context: Analytics
 
+El Bounded Context Analytics es responsable de procesar y mantener la información histórica necesaria para analizar el comportamiento de la ocupación de los estacionamientos universitarios en Quadrapp.
+
+Su principal propósito es proporcionar a los administradores información que permita comprender cómo ha variado la ocupación a lo largo del tiempo, identificar los periodos de mayor demanda y evaluar la precisión de las predicciones generadas por el sistema.
+
+Este Bounded Context soporta principalmente:
+
+- US21 — Consultar historial de ocupación.
+- US22 — Identificar horas de mayor ocupación.
+- US34 — Consultar la precisión de las predicciones.
+- TS11 — Implementación de procesamiento histórico para analítica de ocupación.
+
+Analytics no determina el estado actual de un espacio ni procesa directamente las señales provenientes de los sensores. Estas responsabilidades pertenecen a Occupancy & Parking Sensing. Tampoco genera los pronósticos de disponibilidad, responsabilidad que pertenece a Prediction & Advisory.
+
+Las principales responsabilidades del Bounded Context Analytics son:
+
+- Mantener la información histórica de ocupación.
+- Asociar los registros históricos con el estacionamiento y la zona correspondientes.
+- Permitir consultas de ocupación dentro de un periodo determinado.
+- Permitir filtrar el historial por zona.
+- Proporcionar información agregada por hora y por día.
+- Identificar los periodos de mayor ocupación.
+- Permitir comparar niveles de ocupación entre diferentes días y horarios.
+- Mantener la información necesaria de los pronósticos generados para evaluar posteriormente su precisión.
+- Comparar los pronósticos con la ocupación realmente observada.
+- Calcular el error absoluto medio de las predicciones.
+- Calcular el porcentaje de pronósticos que se encuentran dentro del margen configurado.
+- Diferenciar los resultados obtenidos por versión del modelo de predicción.
+- Informar cuando no existe información histórica suficiente para realizar un análisis.
+- Mantener separados sus datos de los modelos internos pertenecientes a Occupancy y Prediction & Advisory.
+
+
+**Class Dictionary:**
+
+La siguiente tabla resume las clases e interfaces principales requeridas por Analytics.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|------------------ |-------|---------|-----------------|-----------------|
+| `HistoricalOccupancy` | Domain | Representa la información histórica de ocupación observada para un estacionamiento o zona durante un periodo. | `historicalOccupancyId`, `institutionId`, `parkingLotId`, `zoneId`, `periodStart`, `periodEnd`, `occupancyRate`, `entryCount`, `exitCount` | `belongsToPeriod()`, `belongsToZone()` |
+| `OccupancyRate` | Domain | Value Object que representa el porcentaje de ocupación observado. | `value` | `value()`, `isValid()` |
+| `PeakHour` | Domain | Value Object que representa un periodo identificado como uno de los momentos de mayor ocupación. | `periodStart`, `periodEnd`, `occupancyRate` | — |
+| `DemandPattern` | Domain | Value Object que representa un comportamiento recurrente identificado a partir de información histórica. | `period`, `occupancyRate` | — |
+| `PredictionAccuracy` | Domain | Value Object que representa las métricas obtenidas al comparar predicciones con ocupación observada. | `meanAbsoluteError`, `withinMarginPercentage`, `modelVersion` | — |
+| `HistoricalOccupancyRepository` | Domain | Abstracción para almacenar y consultar información histórica de ocupación. | — | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
+| `AnalyticsDomainService` | Domain | Ejecuta operaciones que requieren analizar múltiples registros históricos o comparar ocupación observada y pronósticos. | — | `identifyPeakHours()`, `identifyDemandPatterns()`, `calculatePredictionAccuracy()` |
+| `GetHistoricalOccupancyQuery` | Application | Representa una solicitud para consultar información histórica. | `institutionId`, `parkingLotId`, `zoneId`, `startDate`, `endDate` | — |
+| `GetHistoricalOccupancyQueryHandler` | Application | Coordina la consulta del historial de ocupación. | Dependencies | `handle()` |
+| `GetPeakHoursQuery` | Application | Representa una solicitud para identificar los periodos de mayor ocupación. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPeakHoursQueryHandler` | Application | Obtiene los registros históricos y coordina la identificación de horas pico. | Dependencies | `handle()` |
+| `GetPredictionAccuracyQuery` | Application | Representa una solicitud para evaluar la precisión de las predicciones en un periodo. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPredictionAccuracyQueryHandler` | Application | Coordina la comparación entre predicciones y ocupación observada. | Dependencies | `handle()` |
+| `OccupancyEventHandler` | Application | Procesa la información recibida desde Occupancy para actualizar las proyecciones históricas. | Dependencies | `handle()` |
+| `ForecastGeneratedEventHandler` | Application | Procesa los pronósticos recibidos desde Prediction & Advisory para permitir posteriormente su evaluación. | Dependencies | `handle()` |
+| `AnalyticsQueryController` | Interface | Expone las consultas disponibles para la consola administrativa. | Query Handler dependencies | `getHistoricalOccupancy()` |
+| `OccupancyEventConsumer` | Interface | Recibe los eventos provenientes de Occupancy. | Handler dependency | `consume()` |
+| `ForecastGeneratedEventConsumer` | Interface | Recibe los eventos `ForecastGenerated` provenientes de Prediction & Advisory. | Handler dependency | `consume()` |
+| `HistoricalOccupancyRepositoryAdapter` | Infrastructure | Implementa la persistencia del historial de ocupación. | Persistence dependency | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
+| `ForecastHistoryRepositoryAdapter` | Infrastructure | Mantiene la información de los pronósticos requerida para evaluar su precisión. | Persistence dependency | `save()`, `findByPeriod()` |
+| `OccupancyIntegrationAdapter` | Infrastructure | Encapsula el mecanismo técnico utilizado para recibir información desde Occupancy. | Integration dependency | `receive()` |
+| `PredictionIntegrationAdapter` | Infrastructure | Encapsula la integración utilizada para recibir `ForecastGenerated`. | Integration dependency | `receive()` |
+
+Los identificadores `institutionId`, `parkingLotId` y `zoneId` representan referencias externas. Analytics no administra el ciclo de vida de instituciones, estacionamientos o zonas.
+
+### 5.6.1. Domain Layer
+
+La Domain Layer contiene los conceptos, reglas y abstracciones de negocio que permiten representar y analizar la información histórica de ocupación dentro de Quadrapp. Esta capa no depende de HTTP, bases de datos, mecanismos de mensajería ni frameworks de aplicación.
+
+El principal Aggregate Root es `HistoricalOccupancy`. Además, el dominio mantiene una representación propia de los pronósticos recibidos desde Prediction & Advisory, denominada `ForecastSnapshot`, únicamente con la información necesaria para evaluar posteriormente su precisión.
+
+`HistoricalOccupancy` representa la ocupación observada de un estacionamiento o zona durante un periodo determinado. Esta información permite consultar el comportamiento histórico, comparar diferentes periodos e identificar los momentos de mayor ocupación.
+
+`ForecastSnapshot` representa una instantánea de un pronóstico previamente generado por Prediction & Advisory. Analytics no genera ni modifica dicho pronóstico; únicamente conserva los valores necesarios para contrastarlo posteriormente con la ocupación observada. Esta separación es coherente con el Context Mapping, donde Analytics consume `ForecastGenerated` para evaluar las estimaciones.
+
+Los identificadores `institutionId`, `parkingLotIdv` y `zoneId` actúan únicamente como referencias externas hacia conceptos administrados por otros Bounded Contexts. Analytics no administra instituciones, estacionamientos, zonas, espacios ni sensores.
+
+
+#### HistoricalOccupancy:
+
+**Categoría:** Aggregate Root.
+
+**Propósito:** Representar la información histórica de ocupación observada para un estacionamiento o una zona durante un periodo determinado.
+
+**Atributos:**
+- historicalOccupancyId: UUID — Identificador único del registro histórico.
+- institutionId: UUID — Referencia externa a la institución propietaria de la información.
+- parkingLotId: UUID — Referencia externa al estacionamiento al que corresponde el registro.
+- zoneId: UUID? — Referencia externa a una zona cuando la información ha sido desagregada por zona.
+- periodStart: Instant — Momento inicial del periodo representado.
+- periodEnd: Instant — Momento final del periodo representado.
+- occupancyRate: OccupancyRate — Porcentaje de ocupación observado durante el periodo.
+- entryCount: Integer — Cantidad de ingresos registrada durante el periodo.
+- exitCount: Integer — Cantidad de salidas registrada durante el periodo.
+
+**Operaciones:**
+- belongsToPeriod(startDate, endDate) — Determina si el registro se encuentra dentro del periodo solicitado.
+- belongsToZone(zoneId) — Indica si el registro corresponde a la zona especificada.
+- hasValidPeriod() — Comprueba que el inicio del periodo no sea posterior al final.
+- hasFlowData() — Indica si el registro dispone de información de entradas o salidas.
+
+institutionId, parkingLotId y zoneId no convierten a Institution, Parking Lot o Parking Zone en elementos pertenecientes al agregado. Sus ciclos de vida son administrados fuera de Analytics.
+
+
+#### OccupancyRate
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar el porcentaje de ocupación observado durante un periodo.
+
+**Atributos:**
+- value: Decimal — Porcentaje de ocupación correspondiente al registro histórico.
+
+**Operaciones:**
+- value() — Devuelve el porcentaje representado.
+- isValid() — Determina si el porcentaje se encuentra dentro de un rango válido (El valor debe permanecer dentro del intervalo de 0 % a 100 %)
+
+OccupancyRate no representa la disponibilidad actual del estacionamiento. Su utilización dentro de Analytics corresponde exclusivamente al análisis de información histórica.
+
+
+#### ForecastSnapshot
+
+**Categoría:** Aggregate Root / Entity.
+
+**Propósito:** Conservar una representación histórica de un pronóstico generado por Prediction & Advisory para permitir su comparación posterior con la ocupación observada.
+
+**Atributos:**
+- forecastId: UUID — Identificador del pronóstico recibido.
+- institutionId: UUID — Institución a la que pertenece el pronóstico.
+- parkingLotId: UUID — Estacionamiento sobre el cual fue realizada la predicción.
+- generatedAt: Instant — Momento en que fue generado el pronóstico.
+- targetAt: Instant — Momento futuro para el cual fue realizada la estimación.
+- horizonMinutes: Integer — Horizonte temporal utilizado por la predicción.
+- modelVersion: String — Versión del modelo con el que se generó el pronóstico.
+- predictedOccupancyRate: OccupancyRate — Nivel de ocupación previsto.
+
+**Operaciones:**
+- targets(referenceTime) — Indica si el pronóstico corresponde al momento observado que se desea evaluar.
+- wasGeneratedWith(modelVersion) — Determina si el pronóstico fue generado con una versión específica del modelo.
+
+ForecastSnapshot representa una instantánea histórica. Una modificación posterior del modelo de predicción no debe alterar la información correspondiente a un pronóstico que ya fue generado.
+
+Analytics tampoco administra el modelo predictivo. modelVersion es únicamente un valor utilizado para diferenciar los resultados de precisión obtenidos entre diferentes versiones.
+
+
+#### PeakHour
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar un periodo identificado a partir del historial como uno de los momentos de mayor ocupación del estacionamiento.
+
+**Atributos:**
+- periodStart: Instant — Inicio del periodo identificado.
+- periodEnd: Instant — Final del periodo identificado.
+- occupancyRate: OccupancyRate — Nivel de ocupación observado durante dicho periodo.
+
+**Operaciones:**
+- contains(timestamp) — Determina si un instante se encuentra dentro del periodo representado.
+
+
+#### DemandPattern
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar un comportamiento recurrente identificado a partir de la comparación de información histórica correspondiente a diferentes días y horarios.
+
+**Atributos:**
+- period: String — Periodo temporal al que corresponde el patrón identificado.
+- occupancyRate: OccupancyRate — Nivel de ocupación representativo del comportamiento observado.
+
+**Operaciones:**
+- matches(period) — Indica si el patrón corresponde al periodo consultado.
+
+DemandPattern no genera predicciones por sí mismo. Su propósito dentro de Analytics es representar tendencias históricas que pueden ser consultadas y analizadas.
+
+
+#### PredictionAccuracy
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar las métricas obtenidas al comparar un conjunto de pronósticos con la ocupación realmente observada durante el periodo correspondiente.
+
+**Atributos:**
+- meanAbsoluteError: Decimal — Error absoluto medio expresado en puntos porcentuales.
+- withinMarginPercentage: Decimal — Porcentaje de pronósticos cuyo error se encuentra dentro del margen configurado.
+- modelVersion: String — Versión del modelo a la que corresponden las métricas.
+
+**Operaciones:**
+- meanAbsoluteError() — Devuelve el error absoluto medio calculado.
+- withinMarginPercentage() — Devuelve el porcentaje de pronósticos dentro del margen configurado.
+- belongsToModelVersion(modelVersion) — Indica si el resultado corresponde a una determinada versión del modelo.
+
+Cuando no existen pronósticos y datos de ocupación observada suficientes para efectuar una comparación, no debe generarse un PredictionAccuracy como si el cálculo fuera válido.
+
+
+#### HistoricalOccupancyRepository
+
+**Categoría:** Repository Interface.
+
+**Propósito:** Definir las operaciones necesarias para persistir y recuperar registros históricos de ocupación sin acoplar el dominio de Analytics a una tecnología específica de almacenamiento.
+
+**Operaciones:**
+- save(historicalOccupancy)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+
+Todas las consultas deben respetar la institución a la que pertenece la información.
+
+
+#### ForecastSnapshotRepository
+
+**Categoría:** Repository Interface.
+
+**Propósito:** Definir las operaciones necesarias para almacenar y recuperar las instantáneas de pronósticos utilizadas por Analytics para evaluar su precisión.
+
+**Operaciones:**
+- save(forecastSnapshot)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+
+Analytics utiliza este repositorio para acceder a su propia representación histórica del pronóstico y no para consultar directamente la persistencia interna de Prediction & Advisory.
+
+
+#### AnalyticsDomainService
+
+**Categoría:** Domain Service.
+
+**Propósito:** Ejecutar operaciones analíticas que requieren trabajar con varios registros históricos o relacionar la ocupación observada con pronósticos previamente generados.
+
+**Operaciones:**
+- identifyPeakHours(historicalOccupancies) — Identifica los periodos con mayor ocupación dentro de los registros disponibles.
+- identifyDemandPatterns(historicalOccupancies) — Permite identificar comportamientos recurrentes a partir del historial.
+- calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin) — Compara los pronósticos con la ocupación observada y genera las métricas correspondientes.
+
+El Domain Service no obtiene directamente los datos desde una base de datos. Los registros necesarios son recuperados mediante las abstracciones de Repository antes de realizar las operaciones del dominio. Tampoco genera nuevas predicciones ni modifica las recibidas desde Prediction & Advisory.
+
+
+#### Reglas de negocio
+
+El dominio de Analytics aplica las siguientes reglas de negocio:
+
+1. Todo registro de HistoricalOccupancy debe pertenecer a una institución identificada.
+2. Todo registro histórico debe estar asociado con el estacionamiento del que proviene la información.
+3. zoneId solo se mantiene cuando el registro corresponde específicamente a una zona del estacionamiento.
+4. El momento inicial de un periodo histórico no puede ser posterior a su momento final.
+5. Un OccupancyRate debe representar un valor entre 0 % y 100 %.
+6. entryCount y exitCount no pueden contener valores negativos.
+7. Las consultas históricas deben respetar el periodo solicitado por el administrador.
+8. Cuando se selecciona una zona, solo deben incluirse los registros correspondientes a dicha zona.
+9. Cuando no existen registros para el periodo solicitado, Analytics debe indicar que no existe información histórica disponible, en lugar de generar valores inexistentes.
+10. La información histórica debe poder presentarse agregada por hora y por día.
+11. Los periodos de mayor ocupación solo deben identificarse cuando existen suficientes datos históricos para realizar el análisis.
+12. Cuando la información histórica disponible sea insuficiente, Analytics debe informar esta condición y no presentar horas pico como si hubieran sido determinadas correctamente.
+13. Un ForecastSnapshot debe conservar la versión del modelo con la que fue generado el pronóstico.
+14. Un pronóstico histórico no debe ser modificado cuando posteriormente se publique una nueva versión del modelo.
+15. Una evaluación de precisión solo puede realizarse cuando exista información tanto del pronóstico como de la ocupación observada correspondiente.
+16. La evaluación de precisión debe calcular el error absoluto medio expresado en puntos porcentuales.
+17. La evaluación debe calcular el porcentaje de pronósticos cuyo error se encuentre dentro del margen configurado.
+18. Las métricas de precisión deben poder diferenciarse por versión del modelo.
+19. Cuando un periodo no posea suficiente información para comparar pronósticos y ocupación observada, Analytics debe indicar que no es posible calcular la precisión.
+20. Analytics no modifica el estado actual mantenido por Occupancy.
+21. Analytics no procesa directamente las señales producidas por los sensores IoT.
+22. Analytics no genera pronósticos de disponibilidad.
+23. Analytics no administra instituciones, estacionamientos, zonas ni espacios.
+24. Las referencias externas utilizadas por Analytics no convierten los objetos de otros Bounded Contexts en parte de su propio modelo de dominio.
+
+### 5.6.2. Interface Layer
+
+La Interface Layer expone las capacidades del Bounded Context Analytics a la consola administrativa de Quadrapp y recibe información proveniente de otros Bounded Contexts de la plataforma.
+
+Su responsabilidad es recibir solicitudes o eventos, validar su representación básica, transformarlos en Queries o mensajes de aplicación según corresponda, delegar su procesamiento a la Application Layer y convertir los resultados obtenidos en la representación esperada por el cliente o por el flujo de integración.
+
+Las reglas de negocio relacionadas con el análisis histórico, la identificación de periodos de mayor ocupación o el cálculo de precisión de las predicciones no se implementan en esta capa.
+
+Los principales componentes son `AnalyticsQueryController`, `OccupancyEventConsumer` y `ForecastGeneratedEventConsumer`.
+
+
+#### AnalyticsQueryController
+AnalyticsQueryController recibe solicitudes autorizadas relacionadas con la consulta de información histórica y analítica de los estacionamientos.
+
+Su principal responsabilidad es construir las Queries correspondientes a partir de la información recibida y delegar su ejecución a la Application Layer.
+
+El recurso REST definido actualmente para la consulta histórica es:
+
+`GET /api/v1/analytics/occupancy`
+
+La solicitud permite identificar:
+- el estacionamiento que se desea analizar;
+- la fecha inicial del periodo;
+- la fecha final del periodo;
+- la zona, cuando se desea limitar la consulta a una zona específica.
+
+Cuando el periodo solicitado es válido, el sistema devuelve la información histórica de ocupación agregada por hora y por día.
+Cuando la fecha inicial es posterior a la fecha final, la solicitud debe ser rechazada como un rango inválido.
+La consulta del historial de ocupación se delega a GetHistoricalOccupancyQueryHandler.
+
+**Consulta de periodos de mayor ocupación:**
+
+AnalyticsQueryController también permite iniciar el caso de uso correspondiente a la identificación de los periodos con mayor ocupación.
+
+La información requerida para esta consulta puede incluir:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+La operación se transforma en un GetPeakHoursQuery y se delega a GetPeakHoursQueryHandler.
+El controlador no identifica directamente cuáles son las horas pico ni aplica reglas sobre qué nivel de ocupación debe considerarse alto.
+Cuando existen suficientes datos históricos, el sistema debe mostrar los periodos de mayor ocupación y permitir identificar variaciones entre diferentes días y horarios. Cuando los datos disponibles son insuficientes, debe indicarse que no existe información suficiente para realizar el análisis.
+
+**Consulta de precisión de predicciones:**
+
+AnalyticsQueryController también permite iniciar la consulta de precisión de las predicciones generadas por Quadrapp.
+
+La consulta puede considerar:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+El controlador construye un GetPredictionAccuracyQuery y delega su procesamiento a GetPredictionAccuracyQueryHandler.
+
+La respuesta debe permitir presentar:
+- el error absoluto medio de las predicciones expresado en puntos porcentuales;
+- el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
+- la versión del modelo utilizada.
+
+
+**Consulta de precisión de predicciones:**
+AnalyticsQueryController también permite iniciar la consulta de precisión de las predicciones generadas por Quadrapp.
+
+La consulta puede considerar:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+El controlador construye un GetPredictionAccuracyQuery y delega su procesamiento a GetPredictionAccuracyQueryHandler.
+
+La respuesta debe permitir presentar:
+- el error absoluto medio de las predicciones expresado en puntos porcentuales;
+- el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
+- la versión del modelo utilizada.
+
+
+**Ámbito institucional de las consultas:**
+Las operaciones de Analytics deben ejecutarse dentro del ámbito de la institución correspondiente al usuario autenticado.
+
+Quadrapp utiliza un modelo multi-tenant lógico en el que la institución forma parte de los datos y del contexto de seguridad. Por esta razón, el cliente no debe poder modificar libremente el identificador institucional para consultar información perteneciente a otra universidad.
+
+
+#### OccupancyEventConsumer
+OccupancyEventConsumer recibe los eventos provenientes del Bounded Context Occupancy que son necesarios para mantener actualizada la representación histórica utilizada por Analytics.
+
+Su responsabilidad consiste en validar la representación básica del mensaje recibido y delegar su procesamiento a OccupancyEventHandler.
+
+La información recibida debe permitir identificar, como mínimo:
+- la institución;
+- el estacionamiento;
+- la zona cuando corresponda;
+- el momento de la observación;
+- el nivel de ocupación observado;
+- la información de flujo disponible cuando corresponda.
+
+
+#### ForecastGeneratedEventConsumer
+ForecastGeneratedEventConsumer recibe el evento ForecastGenerated proveniente del Bounded Context Prediction & Advisory.
+
+Su responsabilidad es validar la representación básica del mensaje recibido y delegarlo a ForecastGeneratedEventHandler.
+
+La información recibida debe permitir conservar los datos necesarios para evaluar posteriormente el pronóstico, como:
+- identificador del pronóstico;
+- institución;
+- estacionamiento;
+- momento en que fue generado;
+- momento futuro para el cual se realizó la estimación;
+- horizonte temporal;
+- versión del modelo;
+- valor de ocupación pronosticado.
+
+
+**Responsabilidades excluidas de Interface Layer:**
+
+La Interface Layer de Analytics no debe:
+- calcular directamente las horas pico;
+- calcular el error absoluto medio;
+- calcular el porcentaje de pronósticos dentro del margen;
+- determinar patrones históricos;
+- acceder directamente a la base de datos;
+- modificar el estado de Occupancy;
+- generar predicciones;
+- procesar señales provenientes de sensores;
+- administrar estacionamientos, zonas o instituciones;
+- implementar reglas de autenticación y autorización.
+
+Su responsabilidad se limita a recibir, transformar, delegar y representar las solicitudes y eventos que permiten utilizar las capacidades del Bounded Context Analytics.
+
+### 5.6.3. Application Layer
+
+La Application Layer coordina los casos de uso soportados por Analytics.
+
+Esta capa orquesta objetos del Domain Layer, repositorios y mensajes provenientes de otros Bounded Contexts, pero no contiene detalles específicos de persistencia, protocolos de mensajería, frameworks de aplicación ni mecanismos concretos de almacenamiento.
+
+Los principales flujos de aplicación considerados son:
+- Consulta del historial de ocupación.
+- Filtrado del historial por zona.
+- Identificación de los periodos de mayor ocupación.
+- Comparación de niveles de ocupación entre diferentes periodos.
+- Evaluación de la precisión de las predicciones.
+- Procesamiento de información proveniente de Occupancy.
+- Registro de pronósticos provenientes de Prediction & Advisory.
+
+
+#### GetHistoricalOccupancyQuery
+GetHistoricalOccupancyQuery representa una solicitud para consultar la información histórica de ocupación correspondiente a un estacionamiento dentro de un periodo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+`zoneId` es opcional, debido a que la consulta puede realizarse sobre todo el estacionamiento o limitarse a una zona determinada.
+
+
+#### GetHistoricalOccupancyQueryHandler
+GetHistoricalOccupancyQueryHandler coordina la consulta del historial de ocupación.
+
+El manejador realiza la siguiente secuencia:
+1. Recibe un GetHistoricalOccupancyQuery.
+2. Verifica que la fecha inicial no sea posterior a la fecha final.
+3. Cuando se especifica zoneId, utiliza HistoricalOccupancyRepository para recuperar únicamente los registros correspondientes a esa zona.
+4. Cuando no se especifica una zona, recupera los registros del estacionamiento completo.
+5. Limita los resultados al ámbito de la institución indicada.
+6. Recupera la información histórica correspondiente al periodo solicitado.
+7. Organiza los registros necesarios para su presentación por hora o por día.
+8. Devuelve la información requerida por la Interface Layer.
+9. Cuando no existen registros para el periodo solicitado, devuelve un resultado que permita informar dicha condición.
+
+
+#### GetPeakHoursQuery
+GetPeakHoursQuery representa una solicitud para identificar los periodos con mayor nivel de ocupación dentro de un intervalo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+La zona puede utilizarse cuando se desea analizar de manera independiente una sección específica del estacionamiento.
+
+
+#### GetPeakHoursQueryHandler
+GetPeakHoursQueryHandler coordina la identificación de los periodos de mayor ocupación.
+
+Su flujo de ejecución es:
+1. Recibe un GetPeakHoursQuery.
+2. Valida el rango temporal solicitado.
+3. Recupera mediante HistoricalOccupancyRepository los registros históricos correspondientes.
+4. Aplica el filtro de zona cuando este se encuentra presente.
+5. Verifica que exista información suficiente para realizar el análisis.
+6. Delega la identificación de los periodos de mayor ocupación a AnalyticsDomainService.
+7. Obtiene los objetos PeakHour resultantes.
+8. Retorna la información requerida por la Interface Layer.
+
+Cuando la información disponible no permite realizar un análisis válido, se devuelve un resultado que indique la ausencia de datos suficientes.
+La determinación de qué periodos representan los mayores niveles de ocupación pertenece al Domain Layer y no se implementa directamente en el handler.
+
+
+#### GetDemandPatternsQuery
+GetDemandPatternsQuery representa una solicitud para analizar el comportamiento recurrente de la ocupación dentro de un periodo.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+Este objeto permite solicitar la comparación de información histórica correspondiente a distintos días y horarios.
+
+
+#### GetDemandPatternsQueryHandler
+GetDemandPatternsQueryHandler coordina el análisis de patrones históricos de ocupación.
+
+El manejador realiza la siguiente secuencia:
+1. Recibe un GetDemandPatternsQuery.
+2. Valida el periodo solicitado.
+3. Recupera los registros históricos mediante HistoricalOccupancyRepository.
+4. Aplica el filtro de zona cuando corresponda.
+5. Verifica que exista información suficiente para comparar diferentes periodos.
+6. Delega el análisis a AnalyticsDomainService.
+7. Obtiene los objetos DemandPattern identificados.
+8. Retorna los resultados a la Interface Layer.
+
+El manejador no define por sí mismo qué constituye un patrón de demanda. Su responsabilidad consiste en coordinar la recuperación de información y delegar el análisis al dominio.
+
+
+#### GetPredictionAccuracyQuery
+GetPredictionAccuracyQuery representa una solicitud para evaluar la precisión de los pronósticos generados durante un periodo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- startDate: Instant
+- endDate: Instant
+
+La consulta se limita siempre a la institución y estacionamiento correspondientes.
+
+
+#### GetPredictionAccuracyQueryHandler
+GetPredictionAccuracyQueryHandler coordina la evaluación de precisión de las predicciones.
+
+Su flujo de ejecución es:
+1. Recibe un GetPredictionAccuracyQuery.
+2. Verifica que el rango temporal solicitado sea válido.
+3. Recupera mediante ForecastSnapshotRepository los pronósticos correspondientes al periodo.
+4. Recupera mediante HistoricalOccupancyRepository la ocupación observada para los momentos que deben compararse.
+5. Verifica que exista información suficiente de ambas fuentes.
+6. Relaciona cada pronóstico con la observación histórica correspondiente.
+7. Agrupa los pronósticos según la versión del modelo cuando sea necesario.
+8. Delega el cálculo de precisión a AnalyticsDomainService.
+9. Obtiene los objetos PredictionAccuracy resultantes.
+10. Retorna las métricas a la Interface Layer.
+
+Las métricas obtenidas incluyen:
+- Error absoluto medio
+- Porcentaje de pronósticos dentro del margen configurado
+- Versión del modelo asociada con el resultado
+
+Cuando no existe información suficiente para relacionar pronósticos y ocupación observada, el manejador devuelve un resultado que indique que la precisión no puede calcularse.
+El handler no implementa directamente las fórmulas utilizadas para calcular las métricas.
+
+
+#### OccupancyEventHandler
+OccupancyEventHandler coordina la incorporación de información proveniente de Occupancy al modelo histórico de Analytics.
+
+Su flujo principal es:
+1. Recibe la información correspondiente a un cambio o estado de ocupación procesado previamente.
+2. Obtiene la institución asociada con el evento.
+3. Obtiene el estacionamiento correspondiente.
+4. Obtiene la zona cuando esta se encuentra disponible.
+5. Conserva el momento original de la observación.
+6. Obtiene la información de ocupación necesaria para construir o actualizar la proyección histórica.
+7. Incorpora la información de flujo vehicular cuando esta se encuentre presente.
+8. Construye o actualiza el HistoricalOccupancy correspondiente.
+9. Persiste el resultado mediante HistoricalOccupancyRepository.
+
+El manejador no determina si un espacio está libre, ocupado o desconocido. Tampoco procesa información directamente desde sensores, ya que recibe información que previamente fue interpretada por Occupancy.
+
+La información histórica conserva las referencias recibidas sin apropiarse de los objetos correspondientes a estacionamientos o zonas.
+
+
+#### ForecastGeneratedEventHandler
+ForecastGeneratedEventHandler coordina el registro de la información necesaria de un pronóstico generado por Prediction & Advisory.
+
+Su flujo de ejecución es:
+1. Recibe la información correspondiente al pronóstico generado.
+2. Obtiene su identificador.
+3. Conserva la institución y estacionamiento relacionados.
+4. Conserva el momento en que se generó el pronóstico.
+5. Conserva el momento futuro al que corresponde la estimación.
+6. Conserva el horizonte temporal utilizado.
+7. Conserva la versión del modelo.
+8. Conserva el porcentaje de ocupación pronosticado.
+9. Construye un ForecastSnapshot.
+10. Persiste la instantánea mediante ForecastSnapshotRepository.
+
+El manejador no vuelve a ejecutar el modelo de predicción. Tampoco modifica el valor pronosticado recibido.
+
+Su responsabilidad consiste en conservar una representación histórica que pueda relacionarse posteriormente con la ocupación realmente observada.
+
+
+
+#### HistoricalOccupancyResult
+HistoricalOccupancyResult representa la información producida por una consulta histórica y entregada posteriormente a la Interface Layer.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+- records: List<HistoricalOccupancy>
+
+
+#### PeakHoursResult
+PeakHoursResult representa el resultado obtenido después de analizar los periodos de mayor ocupación.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- peakHours: List<PeakHour>
+- sufficientData: boolean
+
+`sufficientData` permite distinguir entre una consulta válida sin resultados relevantes y una situación en la que la cantidad de información disponible no permite realizar el análisis.
+
+
+#### DemandPatternsResult
+DemandPatternsResult representa los patrones identificados a partir de la comparación de información histórica.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- patterns: List<DemandPattern>
+- sufficientData: boolean
+
+Este resultado no contiene predicciones de disponibilidad futura. Representa únicamente comportamientos obtenidos del análisis histórico.
+
+
+#### PredictionAccuracyResult
+PredictionAccuracyResult representa la información resultante de evaluar la precisión de los pronósticos.
+Atributos:
+- parkingLotId: UUID
+- startDate: Instant
+- endDate: Instant
+- accuracyByModelVersion: List<PredictionAccuracy>
+- sufficientData: boolean
+
+Cuando `sufficientData` es falso, la Interface Layer puede informar que el periodo seleccionado no permite calcular las métricas de precisión.
+
+
+#### HistoricalOccupancyRepository
+HistoricalOccupancyRepository es utilizado por Application Layer para almacenar y recuperar la información histórica necesaria para los casos de uso.
+
+Las operaciones utilizadas principalmente son:
+- save(historicalOccupancy)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+
+La Application Layer depende de esta abstracción y no de una implementación concreta de persistencia.
+
+
+#### ForecastSnapshotRepository
+ForecastSnapshotRepository permite almacenar y recuperar los pronósticos conservados por Analytics.
+
+Las operaciones principales son:
+- save(forecastSnapshot)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+
+La Application Layer utiliza esta abstracción para obtener la información necesaria durante la evaluación de precisión.
+No accede directamente a la persistencia de Prediction & Advisory.
+
+
+#### AnalyticsDomainService
+AnalyticsDomainService es utilizado por los Query Handlers cuando una operación requiere aplicar reglas analíticas sobre múltiples elementos del dominio.
+
+Las principales operaciones utilizadas son:
+- identifyPeakHours(historicalOccupancies)
+- identifyDemandPatterns(historicalOccupancies)
+- calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin)
+
+La coordinación del caso de uso pertenece a Application Layer, mientras que las reglas y cálculos analíticos permanecen encapsulados dentro del Domain Layer.
+
+### 5.6.4. Infrastructure Layer
+
+La Infrastructure Layer contiene las implementaciones técnicas necesarias para almacenar, recuperar y recibir la información utilizada por el Bounded Context Analytics.
+
+Esta capa implementa las abstracciones definidas en Domain Layer y proporciona los mecanismos de integración necesarios para recibir información desde otros Bounded Contexts. De esta manera, las capas superiores pueden trabajar con repositorios e interfaces sin depender directamente de una base de datos, un sistema de mensajería o una tecnología específica.
+
+Los principales componentes son:
+- `HistoricalOccupancyRepositoryAdapter`
+- `ForecastSnapshotRepositoryAdapter`
+- `OccupancyIntegrationAdapter`
+- `PredictionIntegrationAdapter`
+
+
+#### HistoricalOccupancyRepositoryAdapter
+HistoricalOccupancyRepositoryAdapter implementa la interfaz HistoricalOccupancyRepository.
+
+Su responsabilidad es gestionar la persistencia de los registros de ocupación histórica utilizados por Analytics.
+
+Sus principales responsabilidades son:
+- almacenar nuevos registros de HistoricalOccupancy;
+- recuperar registros históricos pertenecientes a una institución;
+- recuperar información correspondiente a un estacionamiento determinado;
+- consultar registros dentro de un periodo;
+- aplicar consultas por zona cuando corresponda;
+- reconstruir objetos HistoricalOccupancy a partir de la información persistida;
+- conservar la información necesaria para las agregaciones por hora y por día.
+
+La implementación debe mantener separada la información perteneciente a cada institución.
+
+
+#### ForecastSnapshotRepositoryAdapter
+`ForecastSnapshotRepositoryAdapter` implementa la interfaz ForecastSnapshotRepository.
+
+Su responsabilidad es persistir la representación histórica de los pronósticos que Analytics necesita para evaluar posteriormente su precisión.
+
+Sus principales operaciones son:
+- registrar un ForecastSnapshot;
+- recuperar pronósticos dentro de un periodo determinado;
+- recuperar pronósticos asociados con un estacionamiento;
+- recuperar información según la versión del modelo;
+- conservar el momento de generación del pronóstico;
+- conservar el momento futuro al que corresponde la estimación;
+- conservar el valor pronosticado sin modificarlo.
+
+El adaptador no accede directamente al modelo interno de Prediction & Advisory.
+
+Analytics almacena únicamente la información que necesita para realizar sus propios procesos de evaluación.
+
+
+#### OccupancyIntegrationAdapter
+`OccupancyIntegrationAdapter` implementa el mecanismo técnico necesario para recibir la información publicada por el Bounded Context Occupancy.
+
+Su función consiste en adaptar los mensajes recibidos a una representación que pueda ser procesada por OccupancyEventConsumer.
+La información recibida puede incluir:
+
+- Institución
+- Estacionamiento
+- Zona cuando corresponda
+- Momento de la observación
+- Nivel de ocupación
+- Información de flujo disponible.
+
+
+#### PredictionIntegrationAdapter
+`PredictionIntegrationAdapter` proporciona el mecanismo técnico utilizado para recibir los eventos ForecastGenerated provenientes de Prediction & Advisory.
+
+Su responsabilidad consiste en transformar el contrato externo a la representación que Analytics necesita para procesar el pronóstico.
+
+La información recibida puede incluir:
+- Identificador del pronóstico
+- Institución
+- Estacionamiento
+- Momento de generación
+- Momento objetivo de la predicción
+- Horizonte temporal
+- Versión del modelo
+- Porcentaje de ocupación previsto.
+
+El adaptador no ejecuta el modelo de predicción ni modifica sus resultados.
+
+Su función es evitar que Analytics dependa directamente de la estructura interna de Prediction & Advisory.
+
+
+**Persistencia del historial de ocupación:**
+
+La infraestructura de Analytics debe conservar la información histórica necesaria para responder las consultas administrativas.
+
+Conceptualmente, cada registro persistido debe mantener:
+- la institución;
+- el estacionamiento;
+- la zona cuando corresponda;
+- el periodo representado;
+- el nivel de ocupación;
+- la cantidad de entradas;
+- la cantidad de salidas;
+- el nivel de agregación utilizado.
+
+La persistencia debe permitir recuperar la información de manera eficiente por institución, estacionamiento, zona y rango temporal.
+
+
+**Persistencia de pronósticos históricos:**
+
+Analytics también debe conservar una representación de los pronósticos que posteriormente serán comparados con la ocupación observada.
+
+Esta información debe mantener como mínimo:
+- El identificador del pronóstico
+- La institución
+- El estacionamiento
+- La fecha y hora de generación
+- El momento objetivo
+- El horizonte temporal
+- La versión del modelo
+- El nivel de ocupación pronosticado.
+
+Esta representación pertenece exclusivamente a Analytics y no reemplaza la información original administrada por Prediction & Advisory.
+
+
+**Consideraciones de aislamiento entre Bounded Contexts:**
+Analytics mantiene su propia persistencia y no debe acceder directamente a las bases de datos internas de otros Bounded Contexts.
+
+Por esta razón:
+- `institutionId` se mantiene como referencia externa;
+- `parkingLotId` se mantiene como referencia externa;
+- `zoneId` se mantiene como referencia externa;
+- Analytics no crea ni administra objetos Institution;
+- Analytics no crea ni administra objetos ParkingLot;
+- Analytics no crea ni administra objetos ParkingZone;
+- Analytics no persiste el estado actual de los espacios;
+- Analytics no almacena el modelo completo de Prediction & Advisory;
+- Analytics no establece claves foráneas hacia tablas pertenecientes a otros Bounded Contexts.
+
+La comunicación con Occupancy y Prediction & Advisory debe realizarse mediante los contratos de integración definidos para la solución, evitando acoplamiento directo entre sus modelos de persistencia.
+
+
+**Consideraciones de multi-tenancy:**
+La infraestructura de Analytics debe preservar el aislamiento de la información perteneciente a cada institución.
+
+Por ello, todos los registros históricos y pronósticos conservados deben estar asociados con un institutionId.
+
+Las consultas de infraestructura deben incluir este identificador dentro de sus criterios de acceso para evitar que información correspondiente a una institución sea recuperada como parte de las operaciones de otra.
+
+Este aislamiento debe mantenerse tanto para:
+- Historial de ocupación
+- Información por zona
+- Información de flujo
+- Pronósticos históricos
+- Resultados utilizados para calcular precisión.
+
+
+**Consideraciones tecnológicas:**
+La infraestructura se mantiene independiente de una tecnología específica en esta etapa del diseño.
+
+La arquitectura de Quadrapp exige que los servicios utilicen tecnologías open-source y que cada Bounded Context posea su propia persistencia, pero el documento actual todavía no determina un motor de base de datos concreto para Analytics.
+
+Por esta razón, clases como:
+- `HistoricalOccupancyRepositoryAdapter`
+- `ForecastSnapshotRepositoryAdapterv
+- `OccupancyIntegrationAdapter`
+- `PredictionIntegrationAdapter`
+
+representan responsabilidades técnicas y no una dependencia hacia un producto particular.
+
+La selección definitiva del motor de persistencia, ORM y mecanismo de mensajería deberá respetar estas interfaces sin introducir cambios en el Domain Layer o en los casos de uso definidos en Application Layer.
+
+### 5.6.5. Bounded Context Software Architecture Component Level Diagrams
+
+El Component Level Diagram del Bounded Context Analytics muestra los principales componentes internos encargados de procesar consultas, recibir eventos de otros contextos y gestionar la información histórica utilizada para el análisis.
+
+Los componentes principales son:
+- Analytics Query API, que recibe las consultas realizadas desde la consola administrativa.
+- Occupancy Event Consumer, que procesa los eventos provenientes de Occupancy.
+- Forecast Generated Event Consumer, que recibe los pronósticos generados por Prediction & Advisory.
+- Analytics Application, que coordina los casos de uso y handlers del contexto.
+- Analytics Domain, que contiene las reglas y conceptos del dominio analítico.
+- Analytics Persistence, que implementa los repositorios necesarios para acceder a la información almacenada.
+- Occupancy Integration y Prediction & Advisory Integration, que permiten integrar Analytics con los otros Bounded Contexts sin acoplar sus modelos internos.
+- Analytics Data Storage, donde se conserva la información histórica y los datos de pronósticos necesarios para los análisis.
+
+El flujo principal comienza cuando un administrador realiza una consulta desde la consola. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
+
+Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory ingresan mediante sus respectivos componentes de integración y consumidores, para luego ser procesados por Analytics Application.
+
+El flujo puede representarse de la siguiente manera:
+
+```text
+
+                          Admin Web Console
+                                 |
+                                 v
+                         Console BFF / Gateway
+                                 |
+                                 v
+                    +---------------------------+
+                    |      Analytics Service    |
+                    |                           |
+                    |    Analytics Query API    |
+                    |             |             |
+                    |             v             |
+                    |   Analytics Application   |
+                    |             |             |
+                    |             v             |
+                    |      Analytics Domain     |
+                    |             |             |
+                    |             v             |
+                    |   Analytics Persistence   |
+                    +-------------|-------------+
+                                  |
+                                  v
+                       Analytics Data Storage
+
+
+Occupancy
+    |
+    v
+Occupancy Integration
+    |
+    v
+Occupancy Event Consumer
+    |
+    v
+Analytics Application
+
+
+Prediction & Advisory
+    |
+    v
+Prediction & Advisory Integration
+    |
+    v
+Forecast Generated Event Consumer
+    |
+    v
+Analytics Application
+
+```
+
+De esta manera, Analytics mantiene sus responsabilidades y su persistencia separadas de los demás Bounded Contexts.
+
+**Analytics Component Level Diagram:**
+![AnalyticsComponentLevelDiagram](./assets/capitulo-05/AnalyticsComponentLevelDiagram.png)
+
+### 5.6.6. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams proporcionan una representación más detallada de la estructura orientada a la implementación del Bounded Context Analytics.
+
+Para Analytics, el Code Level se representa mediante:
+- **Domain Layer Class Diagram:** Describe el modelo de dominio orientado a objetos, incluyendo Aggregate Roots, Value Objects, Domain Services, interfaces de Repository, atributos, métodos, relaciones y multiplicidades.
+- **Database Design Diagram:** Representa las estructuras de persistencia necesarias para conservar el historial de ocupación y la información de pronósticos utilizada por Analytics.
+
+Ambos diagramas mantienen la consistencia con la separación por capas definida anteriormente y con las responsabilidades propias del Bounded Context.
+
+#### 5.6.6.1. Bounded Context Domain Layer Class Diagrams
+
+El Domain Layer Class Diagram representa la estructura orientada a la implementación del modelo de dominio de Analytics.
+
+El diagrama debe incluir los siguientes elementos:
+
+**Aggregate Roots**
+- HistoricalOccupancy
+- ForecastSnapshot
+
+**Value Objects**
+- OccupancyRate
+- PeakHour
+- DemandPattern
+- PredictionAccuracy
+
+**Repository Interfaces**
+- HistoricalOccupancyRepository
+- ForecastSnapshotRepository
+
+**Domain Service**
+- AnalyticsDomainService
+
+<br>
+
+Las principales relaciones que deben representarse son:
+- `HistoricalOccupancy` compone exactamente un `OccupancyRate`.
+- `ForecastSnapshot` compone exactamente un `OccupancyRate` para representar el porcentaje de ocupación pronosticado.
+- `HistoricalOccupancy` mantiene referencias externas mediante `institutionId`, `parkingLotId` y, cuando corresponda, `zoneId`.
+- `ForecastSnapshot` mantiene referencias externas mediante `institutionId` y `parkingLotId`.
+- `HistoricalOccupancyRepository` persiste y recupera objetos `HistoricalOccupancy`.
+- `ForecastSnapshotRepository` persiste y recupera objetos `ForecastSnapshot`.
+- `AnalyticsDomainService` analiza uno o más registros `HistoricalOccupancy`.
+- `AnalyticsDomainService` utiliza objetos `ForecastSnapshot` para evaluar la precisión de las predicciones.
+- `AnalyticsDomainService` produce objetos `PeakHour` al identificar los periodos de mayor ocupación.
+- `AnalyticsDomainService` produce objetos `DemandPattern` al analizar comportamientos históricos.
+- `AnalyticsDomainService` produce objetos `PredictionAccuracy` al comparar pronósticos con la ocupación observada.
+- `PeakHour` utiliza un `OccupancyRate` para representar el nivel de ocupación del periodo identificado.
+- `DemandPattern` utiliza un `OccupancyRate` para representar el comportamiento histórico observado.
+
+<br>
+
+El diagrama debe utilizar las convenciones de visibilidad UML:
+- (+) para miembros públicos
+- (-) para miembros privados
+- (#) para miembros protegidos cuando corresponda
+
+<br>
+
+Una referencia conceptual de las relaciones y multiplicidades es:
+
+```text
+
+HistoricalOccupancy "1" *-- "1" OccupancyRate
+
+ForecastSnapshot "1" *-- "1" OccupancyRate
+
+PeakHour "1" *-- "1" OccupancyRate
+
+DemandPattern "1" *-- "1" OccupancyRate
+
+HistoricalOccupancyRepository ..> HistoricalOccupancy : persists
+
+ForecastSnapshotRepository ..> ForecastSnapshot : persists
+
+AnalyticsDomainService ..> HistoricalOccupancy : analyzes
+
+AnalyticsDomainService ..> ForecastSnapshot : compares
+
+AnalyticsDomainService ..> PeakHour : produces
+
+AnalyticsDomainService ..> DemandPattern : identifies
+
+AnalyticsDomainService ..> PredictionAccuracy : calculates
+
+```
+<br>
+
+Los siguientes conceptos no deben aparecer como clases de dominio propias dentro de Analytics:
+
+- Institution
+- ParkingLot
+- ParkingZone
+- ParkingSpace
+- Sensor
+- PredictionModel
+
+Sus identificadores o datos mínimos pueden mantenerse como referencias externas cuando sean necesarios para realizar consultas o análisis, pero Analytics no administra su ciclo de vida.
+
+**DIAGRAMA — Analytics Domain Layer Class Diagram:**
+
+![AnalyticsDomainLayerClassDiagram](./assets/capitulo-05/AnalyticsDomainLayerClassDiagram.png)
+
+
+#### 5.6.6.2. Bounded Context Database Design Diagram
+
+El Database Design Diagram representa la estructura de persistencia propia del Bounded Context Analytics. Su objetivo es mostrar cómo se almacena la información histórica de ocupación y los pronósticos necesarios para realizar consultas analíticas y evaluar posteriormente su precisión.
+
+Analytics mantiene su persistencia separada de los demás Bounded Contexts. Los identificadores de institución, estacionamiento y zona se conservan únicamente como referencias externas, por lo que no se crean claves foráneas hacia bases de datos pertenecientes a otros contextos.
+
+El diseño lógico considera dos estructuras principales:
+- `analytics_historical_occupancy`, para almacenar la información histórica de ocupación y flujo vehicular.
+- `analytics_forecast_snapshots`, para conservar la información mínima de los pronósticos utilizada durante la evaluación de precisión.
+
+**analytics_historical_occupancy:**
+
+Esta tabla almacena los registros históricos utilizados para analizar el comportamiento de la ocupación de un estacionamiento o de una zona dentro de un periodo determinado.
+
+| Column | Type | Constraint | Description |
+|---|---|---|---|
+| `historical_occupancy_id` | UUID | PRIMARY KEY | Identificador único del registro histórico. |
+| `institution_id` | UUID | NOT NULL | Referencia externa a la institución propietaria de la información. |
+| `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
+| `zone_id` | UUID | NULL | Referencia externa a una zona específica cuando corresponda. |
+| `period_start` | TIMESTAMP | NOT NULL | Inicio del periodo representado. |
+| `period_end` | TIMESTAMP | NOT NULL | Final del periodo representado. |
+| `granularity` | VARCHAR | NOT NULL | Nivel de agregación utilizado, por ejemplo hora o día. |
+| `occupancy_rate` | DECIMAL | NOT NULL | Porcentaje de ocupación observado. |
+| `entry_count` | INTEGER | NOT NULL | Cantidad de ingresos registrados durante el periodo. |
+| `exit_count` | INTEGER | NOT NULL | Cantidad de salidas registradas durante el periodo. |
+
+Las principales restricciones lógicas son:
+- `period_start` no puede ser posterior a `period_end`.
+- `occupancy_rate` debe mantenerse entre 0 y 100.
+- `entry_count` no puede ser negativo.
+- `exit_count` no puede ser negativo.
+- `zone_id` puede ser nulo cuando el registro representa al estacionamiento completo.
+
+
+**analytics_forecast_snapshots:**
+
+Esta tabla conserva una representación histórica de los pronósticos generados por Prediction & Advisory. Analytics utiliza estos datos únicamente para compararlos posteriormente con la ocupación observada.
+
+| Column | Type | Constraint | Description |
+|---|---|---|---|
+| `forecast_id` | UUID | PRIMARY KEY | Identificador del pronóstico recibido. |
+| `institution_id` | UUID | NOT NULL | Referencia externa a la institución. |
+| `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
+| `generated_at` | TIMESTAMP | NOT NULL | Momento en el que se generó el pronóstico. |
+| `target_at` | TIMESTAMP | NOT NULL | Momento futuro para el cual se realizó la estimación. |
+| `horizon_minutes` | INTEGER | NOT NULL | Horizonte temporal utilizado por la predicción. |
+| `model_version` | VARCHAR | NOT NULL | Versión del modelo con el que se generó el pronóstico. |
+| `predicted_occupancy_rate` | DECIMAL | NOT NULL | Porcentaje de ocupación pronosticado. |
+
+Las principales restricciones lógicas son:
+- `predicted_occupancy_rate` debe mantenerse entre 0 y 100.
+- `horizon_minutes` debe ser mayor que 0.
+- `target_at` debe representar el instante al que corresponde el pronóstico.
+- La información histórica de un pronóstico no debe modificarse cuando posteriormente cambie la versión del modelo.
+
+
+**Relación entre las estructuras:**
+
+Las tablas no requieren una clave foránea directa entre sí. La comparación entre un pronóstico y la ocupación observada se realiza utilizando el contexto del estacionamiento y el periodo temporal correspondiente.
+
+Conceptualmente:
+
+```text
+analytics_forecast_snapshots
+        |
+        | parking_lot_id
+        | target_at
+        v
+analytics_historical_occupancy
+        |
+        | ocupación prevista
+        | vs.
+        | ocupación observada
+        v
+PredictionAccuracy
+```
+
+`PredictionAccuracy` no necesita una tabla propia, ya que representa un resultado calculado a partir de los pronósticos almacenados y los registros de ocupación observada.
+
+
+**Referencias externas:**
+
+Los siguientes identificadores se mantienen como referencias externas:
+
+- `institution_id`
+- `parking_lot_id`
+- `zone_id`
+
+Analytics no crea tablas propias para:
+- instituciones;
+- estacionamientos;
+- zonas;
+- espacios de estacionamiento;
+- sensores;
+- modelos de predicción.
+Estos elementos continúan siendo administrados por sus respectivos Bounded Contexts.
+
+
+**Aislamiento de información:**
+
+Todos los registros almacenados por Analytics deben mantener el identificador de la institución correspondiente. Este valor permite limitar las consultas y evitar que la información histórica de una institución sea utilizada dentro del contexto de otra.
+
+La persistencia debe permitir realizar consultas utilizando principalmente:
+- `institution_id`
+- `parking_lot_id`
+- `zone_id`, cuando corresponda
+- rango temporal
+- `model_version`, para análisis de precisión.
+
+
+**Diseño lógico:**
+
+Conceptualmente, la persistencia del Bounded Context queda organizada de la siguiente manera:
+
+```text
+                     ANALYTICS
+
+        ┌─────────────────────────────────┐
+        │ analytics_historical_occupancy  │
+        │─────────────────────────────────│
+        │ PK historical_occupancy_id      │
+        │    institution_id               │
+        │    parking_lot_id               │
+        │    zone_id                      │
+        │    period_start                 │
+        │    period_end                   │
+        │    granularity                  │
+        │    occupancy_rate               │
+        │    entry_count                  │
+        │    exit_count                   │
+        └─────────────────────────────────┘
+
+
+        ┌─────────────────────────────────┐
+        │ analytics_forecast_snapshots    │
+        │─────────────────────────────────│
+        │ PK forecast_id                  │
+        │    institution_id               │
+        │    parking_lot_id               │
+        │    generated_at                 │
+        │    target_at                    │
+        │    horizon_minutes              │
+        │    model_version                │
+        │    predicted_occupancy_rate     │
+        └─────────────────────────────────┘
+```
+
+
+El diseño se mantiene independiente de un motor de base de datos específico. La tecnología de persistencia podrá definirse posteriormente sin modificar las responsabilidades del Domain Layer ni de la Application Layer.
+
+<br>
+
+**DIAGRAMA — Analytics Database Design Diagram:**
+
+![AnalyticsDatabaseDesignDiagram](./assets/capitulo-05/AnalyticsDatabaseDesignDiagram.png)
+
 ## 5.7. Bounded Context: Notifications
 
 ---
