@@ -4251,6 +4251,86 @@ De esta manera, las etiquetas describen la acción o información disponible sin
 
 ### 6.2.3. Searching Systems
 
+El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la aplicación web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
+
+Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto de la plataforma, de manera que términos como Estacionamiento, Zona, Disponibilidad, Predicción e Historial se utilicen de forma consistente.
+
+**Principios generales:**
+
+- Toda consulta se realiza dentro del contexto de la institución del usuario autenticado, por lo que solo se presenta información correspondiente a su universidad.
+- Los filtros disponibles dependen del módulo en el que se encuentre el usuario y únicamente muestran opciones relevantes para esa consulta.
+- Cuando una búsqueda o consulta no devuelve información, la interfaz muestra un mensaje explicativo en lugar de presentar una vista vacía.
+- Los filtros seleccionados permanecen visibles mientras se revisan los resultados, permitiendo identificar fácilmente qué información se está consultando.
+- La información se presenta de manera diferente según su naturaleza: listas y tarjetas para disponibilidad, y gráficos o tablas para información histórica y analítica.
+
+<br>
+
+**Consulta de estacionamientos:**
+En la aplicación móvil, la consulta de estacionamientos permite al conductor visualizar los estacionamientos disponibles dentro de su institución y seleccionar aquel que desea revisar. Una vez seleccionado, puede acceder a su información de disponibilidad y consultar las zonas que lo conforman.
+
+Cada estacionamiento presenta la información necesaria para que el conductor pueda interpretar rápidamente su situación. Cuando no existen datos de ocupación vigentes, la aplicación lo comunica de forma explícita para evitar que información desactualizada sea interpretada como disponibilidad actual.
+
+Desde el detalle del estacionamiento, el usuario puede profundizar en una zona específica para revisar la cantidad de espacios disponibles, ocupados o sin información confiable.
+
+<br>
+
+**Consulta de disponibilidad por zona:**
+Cuando un estacionamiento se encuentra dividido en zonas, el conductor puede utilizar esta clasificación como un filtro para reducir la información mostrada y concentrarse en un sector específico.
+
+Los resultados se presentan de forma agrupada por zona, permitiendo comparar rápidamente dónde existe mayor disponibilidad. Cada resultado mantiene el estado de ocupación correspondiente y la antigüedad de la información disponible.
+
+Este mecanismo evita que el conductor tenga que revisar individualmente todos los espacios del estacionamiento para conocer qué sector presenta mejores condiciones.
+
+<br>
+
+**Consulta de predicciones:**
+
+Dentro de la información de un estacionamiento, la predicción funciona como una búsqueda temporal sobre la disponibilidad esperada. El conductor puede consultar diferentes horizontes de tiempo:
+- 15 minutos.
+- 30 minutos.
+- 45 minutos.
+- 60 minutos.
+
+Al seleccionar uno de estos horizontes, la aplicación muestra la ocupación esperada para ese momento y la información necesaria para interpretar el resultado. Cuando la predicción se basa en información limitada, esta condición se indica claramente mediante el estado Confianza baja.
+
+La asesoría de llegada utiliza además el tiempo estimado de llegada calculado por la aplicación para presentar al conductor información acorde con el momento en el que espera llegar al campus.
+
+<br>
+
+**Consulta del historial de ocupación:**
+
+En la aplicación web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
+
+Cuando corresponde, también puede limitar la consulta a una zona específica. Los resultados permiten revisar el comportamiento de la ocupación durante el periodo seleccionado y pueden organizarse por hora o por día para facilitar su interpretación.
+
+Si no existen registros para los criterios establecidos, la vista informa que no hay información disponible para el periodo seleccionado.
+
+<br>
+
+**Consulta de periodos de mayor ocupación:**
+
+A partir de los registros históricos, el administrador puede consultar los periodos en los que se concentra una mayor ocupación del estacionamiento.
+
+La búsqueda utiliza el periodo y el estacionamiento seleccionados para mostrar las variaciones temporales de la ocupación e identificar los momentos de mayor demanda. Cuando la cantidad de información disponible no es suficiente para realizar este análisis, la interfaz comunica esta situación en lugar de presentar resultados incompletos.
+
+<br>
+
+**Consulta de precisión de las predicciones:**
+
+La aplicación web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
+
+El administrador puede revisar resultados como el error absoluto medio (MAE) y el porcentaje de predicciones que se encuentran dentro del margen configurado. Los resultados se diferencian por versión del modelo para evitar combinar mediciones correspondientes a versiones distintas.
+
+Cuando no existen suficientes pronósticos y observaciones para realizar el cálculo, la plataforma indica que no es posible obtener una medida de precisión para el periodo consultado.
+
+<br>
+
+**Centro de alertas:**
+
+En la aplicación móvil, la sección de alertas concentra las notificaciones relacionadas con la disponibilidad prevista de los estacionamientos a los que el conductor se encuentra suscrito.
+
+El usuario puede gestionar sus preferencias y definir las franjas horarias en las que desea recibir este tipo de información. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes relacionadas con una posible baja disponibilidad, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
+
 ### 6.2.4. SEO Tags and Meta Tags
 
 ### 6.2.5. Navigation Systems
