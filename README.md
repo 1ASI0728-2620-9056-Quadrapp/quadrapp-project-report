@@ -4496,6 +4496,55 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 
 ### 6.2.5. Navigation Systems
 
+Los sistemas de navegación de Quadrapp están diseñados para que conductores, administradores y operadores accedan de forma rápida a las funcionalidades que necesitan según su contexto de uso. La aplicación móvil prioriza la consulta de disponibilidad y predicciones antes de llegar al campus, mientras que la consola web facilita el monitoreo y la gestión de los estacionamientos. Por su parte, la Landing Page guía a los visitantes desde la propuesta de valor hacia la descarga de la aplicación o el contacto institucional.
+
+#### Aplicación Móvil — Conductores de la Comunidad Educativa
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú inferior (tab bar)** | Mantiene accesos directos a las principales secciones de la aplicación: Inicio, Estacionamientos, Alertas y Preferencias. Permanece disponible durante la navegación principal. |
+| **Navegación jerárquica** | Desde Estacionamientos, el conductor puede seleccionar un estacionamiento y acceder a sus zonas, disponibilidad actual y predicciones. Esto permite avanzar desde información general hacia datos más específicos sin mostrar todo el contenido al mismo tiempo. |
+| **Selector de horizonte** | Dentro de la consulta predictiva, permite alternar entre los horizontes de 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad. |
+| **Navegación contextual** | Las acciones relacionadas con un estacionamiento aparecen junto a su información. Desde su detalle, el conductor puede consultar la disponibilidad actual, revisar la predicción y acceder a la asesoría de llegada sin volver al menú principal. |
+| **Indicadores de estado** | Los estados Disponible, Ocupado o Sin información se presentan de forma visible dentro de las consultas. También se informa cuando un dato está desactualizado o una predicción presenta confianza baja. |
+| **Retroalimentación visual** | La interfaz mantiene resaltada la sección seleccionada y actualiza visualmente la información cuando el usuario cambia de estacionamiento, zona u horizonte de predicción. |
+
+La navegación móvil sigue un recorrido progresivo:
+
+Estacionamientos → Estacionamiento seleccionado → Zona → Disponibilidad → Predicción / Asesoría de llegada
+
+Esta estructura mantiene como prioridad la información necesaria para que el conductor pueda anticipar las condiciones del estacionamiento antes de llegar al campus.
+
+
+#### Aplicación Web — Administradores y Operadores
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú lateral persistente** | Proporciona acceso permanente a las principales áreas de la consola: Operación, Estacionamientos, Dispositivos, Calendario, Analítica y Usuarios. |
+| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista. |
+| **Navegación jerárquica** | Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
+| **Navegación contextual** | Las acciones relacionadas con un elemento aparecen dentro de su propia vista. Por ejemplo, desde la configuración de un estacionamiento se puede gestionar su distribución sin trasladarse a una sección independiente. |
+| **Filtros de analítica** | Las vistas históricas permiten ajustar la información mostrada según estacionamiento, zona y periodo. En el análisis de precisión, los resultados también pueden diferenciarse por versión del modelo. |
+| **Estado de la sección activa** | El menú mantiene resaltado el módulo actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la consola. |
+
+El dashboard concentra la información necesaria para supervisar el estacionamiento durante la operación, incluyendo disponibilidad, flujo y posibles situaciones de saturación.
+
+Las funcionalidades administrativas se organizan de forma progresiva para evitar mezclar la operación diaria con tareas de configuración. El administrador puede registrar estacionamientos y posteriormente configurar los elementos que pertenecen a ellos, como zonas, espacios y dispositivos.
+
+
+#### Landing Page — Visitantes
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Navbar superior fijo** | Incluye accesos a las principales secciones informativas: Funcionalidades, Conductores, Instituciones, Nosotros y Contacto. Permanece disponible mientras el visitante recorre la página. |
+| **Scroll guiado por secciones** | La Landing Page utiliza una navegación vertical mediante anclas internas, permitiendo pasar rápidamente de la propuesta de valor a funcionalidades, segmentos y contacto. |
+| **Botones de llamada a la acción (CTA)** | Los botones destacados orientan al visitante hacia el siguiente paso. El conductor dispone de una llamada a la acción para acceder al sitio de descarga de la aplicación, mientras que el visitante institucional puede dirigirse al formulario de contacto. |
+| **Navegación por audiencia** | El contenido diferencia claramente la información destinada a conductores de aquella dirigida a instituciones, permitiendo que cada visitante encuentre la propuesta relacionada con sus necesidades. |
+| **Jerarquía visual** | Los encabezados y bloques de contenido organizan la información desde la propuesta de valor general hacia detalles sobre funcionalidades y beneficios de la solución. |
+| **Footer navegable** | Mantiene accesos secundarios a Política de privacidad, Términos y condiciones y Contacto desde la parte inferior de la página. |
+
+La Landing Page permite recorrer las secciones informativas sin abandonar el sitio y separa el contenido de acuerdo con los dos segmentos principales del producto.
+
 ## 6.3. Landing Page UI Design
 
 ### 6.3.1. Landing Page Wireframe
