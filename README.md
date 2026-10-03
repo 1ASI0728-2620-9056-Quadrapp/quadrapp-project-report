@@ -4143,6 +4143,23 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 ### 6.2.1. Organization Systems
 
+Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
+
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la consola administrativa se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
+- **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
+
+<br>
+
+También se aplican distintos esquemas de categorización:
+
+- **Por tópicos:** Las funcionalidades se agrupan en disponibilidad, predicción, alertas, configuración y analítica.
+- **Por audiencia:** La Landing Page diferencia claramente el contenido dirigido a conductores y el contenido orientado a instituciones educativas.
+- **Cronológica:** Se utiliza en historiales de ocupación, periodos de mayor demanda, eventos del calendario y evaluación de predicciones.
+- **Alfabética:** Puede utilizarse en listas extensas de estacionamientos, zonas o elementos de configuración para facilitar su localización.
+
+En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, su disponibilidad actual y las condiciones esperadas para su llegada.
+
 ### 6.2.2. Labeling Systems
 
 ### 6.2.3. Searching Systems
