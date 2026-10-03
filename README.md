@@ -4145,7 +4145,7 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
 
-- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la consola administrativa se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la aplicación web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
 - **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
 - **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
 
@@ -4161,6 +4161,93 @@ También se aplican distintos esquemas de categorización:
 En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, su disponibilidad actual y las condiciones esperadas para su llegada.
 
 ### 6.2.2. Labeling Systems
+
+El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la aplicación web y la Landing Page.
+
+Se evita mostrar términos técnicos internos como nombres de servicios, eventos de dominio o tecnologías IoT cuando no son necesarios para que el usuario complete una tarea.
+
+**Principios generales:**
+
+- Se utilizan etiquetas breves y fáciles de reconocer.
+- Un mismo concepto mantiene el mismo nombre en todos los productos.
+- Las acciones se representan mediante verbos directos.
+- Los términos técnicos se reservan para las funciones administrativas que realmente los requieren.
+- Los estados importantes se acompañan de elementos visuales que faciliten su interpretación.
+
+<br>
+
+**Landing Page:**
+
+Las etiquetas principales son:
+- Inicio
+- Conductores
+- Instituciones
+- Funcionalidades
+- Nosotros
+- Contacto
+- Descargar app
+
+En el pie de página se mantienen accesos claros a:
+- Política de privacidad
+- Términos y condiciones
+- Contacto
+
+<br>
+
+**Aplicación móvil:**
+
+Las principales etiquetas utilizadas son:
+- Inicio
+- Estacionamientos
+- Disponibilidad
+- Predicción
+- Mi llegada
+- Alertas
+- Preferencias
+- Cerrar sesión
+
+Para comunicar el estado de ocupación se utilizarán términos como:
+- Disponible
+- Ocupado
+- Sin información
+
+Cuando se muestra una predicción, se utilizan etiquetas fáciles de interpretar como:
+- 15 min
+- 30 min
+- 45 min
+- 60 min
+- Confianza baja
+
+Estas etiquetas permiten consultar las predicciones de forma clara y poco confusa para los usuarios, sin exponer detalles internos del modelo utilizado para generarlas.
+
+<br>
+
+**Aplicación Web:**
+
+Las secciones principales utilizan etiquetas relacionadas con las tareas del administrador:
+- Operación
+- Estacionamientos
+- Zonas
+- Sensores
+- Calendario
+- Analítica
+- Usuarios
+- Configuración
+
+Dentro de Analítica se utilizan etiquetas como:
+- Historial
+- Horas pico
+- Precisión
+
+En las acciones se utilizarán:
+- Ver detalle
+- Guardar cambios
+- Aplicar filtros
+- Invitar usuario
+- Añadir zona
+- Registrar evento
+
+De esta manera, las etiquetas describen la acción o información disponible sin obligar al usuario a interpretar términos técnicos.
 
 ### 6.2.3. Searching Systems
 
