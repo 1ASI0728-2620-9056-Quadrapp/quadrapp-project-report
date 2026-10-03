@@ -4333,6 +4333,167 @@ El usuario puede gestionar sus preferencias y definir las franjas horarias en la
 
 ### 6.2.4. SEO Tags and Meta Tags
 
+En Quadrapp, los SEO Tags y Meta Tags permiten mejorar la visibilidad de la solución en motores de búsqueda y facilitar que conductores de la comunidad educativa e instituciones interesadas encuentren información sobre el producto. La Landing Page funciona como el principal punto de entrada público, ya que presenta la propuesta de valor, las funcionalidades principales y contenido diferenciado para conductores e instituciones.
+
+#### SEO Tags:
+
+Los SEO Tags se utilizan para optimizar el posicionamiento orgánico de la Landing Page y comunicar de forma clara que Quadrapp es una solución orientada a la consulta y predicción de disponibilidad en estacionamientos universitarios.
+
+
+**Title Tag:**
+
+Define el título que se muestra en los resultados de búsqueda y en la pestaña del navegador.
+
+`<title>Quadrapp | Estacionamiento universitario inteligente</title>`
+
+El título combina el nombre del producto con una descripción breve de su propósito, evitando términos técnicos innecesarios.
+
+<br>
+
+**Meta Description:**
+
+Proporciona un resumen breve de la propuesta de valor de Quadrapp.
+
+`<meta name="description" content="Quadrapp te permite consultar la disponibilidad de estacionamientos universitarios y conocer las condiciones esperadas antes de llegar al campus."/>`
+
+La descripción destaca las dos capacidades principales orientadas al conductor: conocer la disponibilidad actual y anticipar las condiciones que encontrará al llegar.
+
+<br>
+
+**Meta Keywords:**
+
+Incluye términos relacionados directamente con el problema y con las capacidades de la solución.
+
+`<meta name="keywords" content="estacionamiento universitario, estacionamiento inteligente, disponibilidad de estacionamientos, predicción de disponibilidad, smart parking, campus universitario"/>`
+
+<br>
+
+**Meta Author:**
+
+Identifica a la organización responsable del producto.
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Header Tags:**
+
+Los Header Tags organizan semánticamente el contenido de la Landing Page y permiten establecer una jerarquía clara entre la propuesta de valor y la información secundaria.
+
+Un ejemplo de jerarquía para Quadrapp sería:
+
+```text
+<h1>Anticipa la disponibilidad antes de llegar al campus</h1>
+
+<h2>Estacionamientos universitarios con información actual y predicciones de disponibilidad</h2>
+
+<h3>Consulta dónde estacionar y conoce las condiciones esperadas para tu llegada</h3>
+```
+
+El encabezado principal comunica directamente el beneficio diferencial de Quadrapp: no limitarse a mostrar la disponibilidad actual, sino ofrecer información sobre las condiciones esperadas al momento de llegada. Esta capacidad forma parte central de la propuesta del producto.
+
+#### Meta Tags
+Los Meta Tags proporcionan información técnica al navegador y a los motores de búsqueda. También permiten establecer aspectos básicos de accesibilidad, adaptación a dispositivos y comportamiento de indexación.
+
+**Charset Meta Tag:**
+
+Define la codificación de caracteres utilizada por la Landing Page.
+
+`<meta charset="UTF-8" />`
+
+<br>
+
+**Viewport Meta Tag:**
+
+Permite que la página se adapte correctamente a diferentes tamaños de pantalla.
+
+```text
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+```
+
+<br>
+
+**Robots Meta Tag:**
+
+La Landing Page es contenido público y puede ser indexada por motores de búsqueda.
+
+```text
+<meta name="robots" content="index, follow" />
+```
+
+<br>
+
+**Canonical Tag:**
+
+La etiqueta canonical permitirá señalar la dirección oficial de la Landing Page y evitar posibles duplicidades de contenido.
+
+`<link rel="canonical" href="[URL oficial de la Landing Page]" />`
+
+
+#### Web Application Meta Tags
+La consola administrativa de Quadrapp es una aplicación destinada al personal autorizado de cada institución, por lo que sus vistas privadas no están orientadas al posicionamiento público en buscadores.
+
+<br>
+
+**Title Tag:**
+
+`<title>Quadrapp Console | Gestión de estacionamientos</title>`
+
+<br>
+
+**Meta Description:**
+
+```text
+<meta
+  name="description"
+  content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
+/>
+```
+
+<br>
+
+**Meta Author:**
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Robots Meta Tag:**
+
+Al tratarse de una aplicación de acceso restringido, las vistas internas no deben indexarse.
+
+`<meta name="robots" content="noindex, nofollow" />`
+
+
+#### Landing Page SEO Tags para la aplicación móvil
+
+Además de presentar la solución de forma general, la Landing Page incluirá contenido específico para el segmento de conductores y una llamada a la acción que los dirija hacia el sitio de descarga de la aplicación móvil.
+
+Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
+
+`<title>Quadrapp | Consulta la disponibilidad antes de llegar</title>`
+
+```text
+<meta
+  name="description"
+  content="Consulta la disponibilidad actual de los estacionamientos de tu universidad, revisa predicciones y conoce las condiciones esperadas antes de llegar al campus."
+/>
+```
+
+
+```text
+<meta
+  name="keywords"
+  content="Quadrapp, estacionamiento universitario, disponibilidad de estacionamiento, app de estacionamiento, predicción de disponibilidad, parking universitario"
+/>
+```
+
+`<meta name="author" content="Integra Labs" />`
+
+
 ### 6.2.5. Navigation Systems
 
 ## 6.3. Landing Page UI Design
