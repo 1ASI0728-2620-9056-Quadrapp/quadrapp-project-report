@@ -2888,33 +2888,121 @@ Con el objetivo de comprender la comunicación entre los diferentes Bounded Cont
 
 ### 4.2.4. Bounded Context Canvases
 
-**Parking Sensing:**
+La elaboración de los Bounded Context Canvases se realizó de manera iterativa a partir de los contextos identificados durante el Candidate Context Discovery. El objetivo fue revisar progresivamente el propósito, las reglas, capacidades y dependencias de cada contexto, asegurando que cada uno mantuviera responsabilidades claramente delimitadas y un lenguaje propio.
 
-![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensing_Canvases.png)
+Para ello se siguieron las etapas de Context Overview Definition, Business Rules Distillation & Ubiquitous Language Capture, Capability Analysis, Capability Layering cuando correspondía, Dependencies Capture y Design Critique.
 
-**Occupancy:**
+<br>
 
-![Occupancy_Canvases](./assets/capitulo-04/Occupancy_Canvases.png)
+**Context Overview Definition:**
+En una primera etapa se definió el propósito y alcance de cada Bounded Context, identificando qué responsabilidad principal debía asumir y qué elementos debían permanecer fuera de sus límites. Esto permitió diferenciar, por ejemplo, a Parking Sensing, encargado de interpretar las señales provenientes de la infraestructura IoT, de Occupancy, responsable de mantener el estado de ocupación utilizado por el negocio.
+
+También se identificó a Prediction & Advisory como el contexto central de Quadrapp, debido a que concentra la capacidad diferenciadora de anticipar la disponibilidad futura y proporcionar asesoría de llegada al conductor.
+
+<br>
+
+**Business Rules Distillation & Ubiquitous Language Capture:**
+Luego se identificaron las principales reglas de negocio de cada contexto y los términos que debían utilizarse de manera consistente dentro de sus límites.
+
+En Occupancy, por ejemplo, se definieron conceptos relacionados con disponibilidad, ocupación y estado desconocido, mientras que en Prediction & Advisory se consolidaron términos como Forecast, Forecast Horizon, Predicted Occupancy, Confidence Level, Arrival Advice y ETA.
+
+Esta separación permitió evitar que conceptos propios de sensores, predicción, analítica o identidad se mezclaran entre contextos diferentes.
+
+<br>
+
+**Capability Analysis:**
+
+A partir de sus responsabilidades y reglas se identificaron las capacidades que debía ofrecer cada contexto.
+
+Parking Sensing concentra las capacidades relacionadas con la recepción y traducción de señales físicas; Occupancy, el mantenimiento del estado consolidado de ocupación; Parking Configuration, la configuración de estacionamientos y su estructura; Prediction & Advisory, la generación de pronósticos y asesoría de llegada; Notifications, la gestión de suscripciones y alertas; Analytics, el análisis histórico y la evaluación de precisión; e IAM, la autenticación, autorización y gestión de sesiones.
+
+Este análisis permitió comprobar que cada capacidad estuviera ubicada en el contexto que mejor representaba su responsabilidad de negocio.
+
+<br>
+
+**Capability Layering:**
+
+Cuando fue necesario, las capacidades se agruparon según su función dentro del contexto. En Prediction & Advisory, por ejemplo, se distinguieron las capacidades de Forecasting, relacionadas con la generación de pronósticos, y Arrival Advisory, orientadas a transformar esos pronósticos en información útil según el tiempo estimado de llegada.
+
+Se decidió mantener ambas dentro del mismo Bounded Context debido a su estrecha relación y al hecho de que forman parte de la misma capacidad diferenciadora de Quadrapp.
+
+<br>
+
+**Dependencies Capture:**
+
+Después se identificaron las dependencias entre los distintos contextos, estableciendo qué información recibe cada uno y qué resultados proporciona.
+
+Por ejemplo, Parking Sensing entrega información interpretada a Occupancy; Occupancy proporciona el estado consolidado necesario para Prediction & Advisory y Analytics; Prediction & Advisory genera pronósticos utilizados por Analytics y Notifications; y IAM proporciona el contexto de autenticación y autorización requerido por las operaciones protegidas.
+
+Estas dependencias se reflejan posteriormente en el Context Map y permiten mantener separados los modelos internos de cada Bounded Context.
+
+<br>
+
+**Design Critique:**
+
+Finalmente se revisaron los límites propuestos y se analizaron posibles responsabilidades duplicadas o dependencias innecesarias.
+
+Como resultado de esta revisión se reforzó la separación entre Parking Sensing y Occupancy, evitando que ambos contextos representaran las mismas funciones. También se mantuvo el análisis de precisión fuera de Prediction & Advisory, asignándolo a Analytics, y la entrega de alertas se mantuvo dentro de Notifications.
+
+Este proceso permitió obtener los Bounded Contexts finales de Quadrapp con responsabilidades más claras y reducir el acoplamiento entre sus modelos.
+
+<br>
+
+**Resultado del proceso:**
+
+Como resultado de estas iteraciones se consolidaron los siguientes Bounded Contexts:
+
+- Prediction & Advisory — Core
+- Parking Sensing — Supporting
+- Occupancy — Supporting
+- Parking Configuration — Supporting
+- Notifications — Supporting
+- Analytics — Supporting
+- IAM — Generic
+
+A continuación, se presentan los Bounded Context Canvases que resumen el propósito, clasificación estratégica, roles, lenguaje ubicuo, decisiones de negocio, comunicaciones, supuestos y métricas identificadas durante este proceso.
+
+<br>
 
 **Prediction & Advisory:**
 
-![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&Advisory_Canvases.png)
+![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&AdvisoryCanvases.png)
+
+<br>
+
+**Parking Sensing:**
+
+![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensingCanvases.png)
+
+<br>
+
+**Occupancy:**
+
+![Occupancy_Canvases](./assets/capitulo-04/OccupancyCanvases.png)
+
+<br>
 
 **Parking Configuration:**
 
-![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfiguration_Canvases.png)
+![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfigurationCanvases.png)
+
+<br>
 
 **Notifications:**
 
-![Notifications_Canvases](./assets/capitulo-04/Notifications_Canvases.png)
+![Notifications_Canvases](./assets/capitulo-04/NotificationCanvases.png)
+
+<br>
 
 **Analytics:**
 
-![Analytics_Canvases](./assets/capitulo-04/Analytics_Canvases.png)
+![Analytics_Canvases](./assets/capitulo-04/AnalyticsCanvases.png)
+
+<br>
 
 **IAM:**
 
-![IAM_Canvases](./assets/capitulo-04/IAM_Canvases.png)
+![IAM_Canvases](./assets/capitulo-04/IAMCanvases.png)
 
 ### 4.2.5. Context Mapping
 
