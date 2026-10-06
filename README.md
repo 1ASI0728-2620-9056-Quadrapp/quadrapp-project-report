@@ -4143,13 +4143,407 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 ### 6.2.1. Organization Systems
 
+Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
+
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la aplicación web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
+- **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
+
+<br>
+
+También se aplican distintos esquemas de categorización:
+
+- **Por tópicos:** Las funcionalidades se agrupan en disponibilidad, predicción, alertas, configuración y analítica.
+- **Por audiencia:** La Landing Page diferencia claramente el contenido dirigido a conductores y el contenido orientado a instituciones educativas.
+- **Cronológica:** Se utiliza en historiales de ocupación, periodos de mayor demanda, eventos del calendario y evaluación de predicciones.
+- **Alfabética:** Puede utilizarse en listas extensas de estacionamientos, zonas o elementos de configuración para facilitar su localización.
+
+En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, su disponibilidad actual y las condiciones esperadas para su llegada.
+
 ### 6.2.2. Labeling Systems
+
+El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la aplicación web y la Landing Page.
+
+Se evita mostrar términos técnicos internos como nombres de servicios, eventos de dominio o tecnologías IoT cuando no son necesarios para que el usuario complete una tarea.
+
+**Principios generales:**
+
+- Se utilizan etiquetas breves y fáciles de reconocer.
+- Un mismo concepto mantiene el mismo nombre en todos los productos.
+- Las acciones se representan mediante verbos directos.
+- Los términos técnicos se reservan para las funciones administrativas que realmente los requieren.
+- Los estados importantes se acompañan de elementos visuales que faciliten su interpretación.
+
+<br>
+
+**Landing Page:**
+
+Las etiquetas principales son:
+- Inicio
+- Conductores
+- Instituciones
+- Funcionalidades
+- Nosotros
+- Contacto
+- Descargar app
+
+En el pie de página se mantienen accesos claros a:
+- Política de privacidad
+- Términos y condiciones
+- Contacto
+
+<br>
+
+**Aplicación móvil:**
+
+Las principales etiquetas utilizadas son:
+- Inicio
+- Estacionamientos
+- Disponibilidad
+- Predicción
+- Mi llegada
+- Alertas
+- Preferencias
+- Cerrar sesión
+
+Para comunicar el estado de ocupación se utilizarán términos como:
+- Disponible
+- Ocupado
+- Sin información
+
+Cuando se muestra una predicción, se utilizan etiquetas fáciles de interpretar como:
+- 15 min
+- 30 min
+- 45 min
+- 60 min
+- Confianza baja
+
+Estas etiquetas permiten consultar las predicciones de forma clara y poco confusa para los usuarios, sin exponer detalles internos del modelo utilizado para generarlas.
+
+<br>
+
+**Aplicación Web:**
+
+Las secciones principales utilizan etiquetas relacionadas con las tareas del administrador:
+- Operación
+- Estacionamientos
+- Zonas
+- Sensores
+- Calendario
+- Analítica
+- Usuarios
+- Configuración
+
+Dentro de Analítica se utilizan etiquetas como:
+- Historial
+- Horas pico
+- Precisión
+
+En las acciones se utilizarán:
+- Ver detalle
+- Guardar cambios
+- Aplicar filtros
+- Invitar usuario
+- Añadir zona
+- Registrar evento
+
+De esta manera, las etiquetas describen la acción o información disponible sin obligar al usuario a interpretar términos técnicos.
 
 ### 6.2.3. Searching Systems
 
+El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la aplicación web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
+
+Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto de la plataforma, de manera que términos como Estacionamiento, Zona, Disponibilidad, Predicción e Historial se utilicen de forma consistente.
+
+**Principios generales:**
+
+- Toda consulta se realiza dentro del contexto de la institución del usuario autenticado, por lo que solo se presenta información correspondiente a su universidad.
+- Los filtros disponibles dependen del módulo en el que se encuentre el usuario y únicamente muestran opciones relevantes para esa consulta.
+- Cuando una búsqueda o consulta no devuelve información, la interfaz muestra un mensaje explicativo en lugar de presentar una vista vacía.
+- Los filtros seleccionados permanecen visibles mientras se revisan los resultados, permitiendo identificar fácilmente qué información se está consultando.
+- La información se presenta de manera diferente según su naturaleza: listas y tarjetas para disponibilidad, y gráficos o tablas para información histórica y analítica.
+
+<br>
+
+**Consulta de estacionamientos:**
+En la aplicación móvil, la consulta de estacionamientos permite al conductor visualizar los estacionamientos disponibles dentro de su institución y seleccionar aquel que desea revisar. Una vez seleccionado, puede acceder a su información de disponibilidad y consultar las zonas que lo conforman.
+
+Cada estacionamiento presenta la información necesaria para que el conductor pueda interpretar rápidamente su situación. Cuando no existen datos de ocupación vigentes, la aplicación lo comunica de forma explícita para evitar que información desactualizada sea interpretada como disponibilidad actual.
+
+Desde el detalle del estacionamiento, el usuario puede profundizar en una zona específica para revisar la cantidad de espacios disponibles, ocupados o sin información confiable.
+
+<br>
+
+**Consulta de disponibilidad por zona:**
+Cuando un estacionamiento se encuentra dividido en zonas, el conductor puede utilizar esta clasificación como un filtro para reducir la información mostrada y concentrarse en un sector específico.
+
+Los resultados se presentan de forma agrupada por zona, permitiendo comparar rápidamente dónde existe mayor disponibilidad. Cada resultado mantiene el estado de ocupación correspondiente y la antigüedad de la información disponible.
+
+Este mecanismo evita que el conductor tenga que revisar individualmente todos los espacios del estacionamiento para conocer qué sector presenta mejores condiciones.
+
+<br>
+
+**Consulta de predicciones:**
+
+Dentro de la información de un estacionamiento, la predicción funciona como una búsqueda temporal sobre la disponibilidad esperada. El conductor puede consultar diferentes horizontes de tiempo:
+- 15 minutos.
+- 30 minutos.
+- 45 minutos.
+- 60 minutos.
+
+Al seleccionar uno de estos horizontes, la aplicación muestra la ocupación esperada para ese momento y la información necesaria para interpretar el resultado. Cuando la predicción se basa en información limitada, esta condición se indica claramente mediante el estado Confianza baja.
+
+La asesoría de llegada utiliza además el tiempo estimado de llegada calculado por la aplicación para presentar al conductor información acorde con el momento en el que espera llegar al campus.
+
+<br>
+
+**Consulta del historial de ocupación:**
+
+En la aplicación web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
+
+Cuando corresponde, también puede limitar la consulta a una zona específica. Los resultados permiten revisar el comportamiento de la ocupación durante el periodo seleccionado y pueden organizarse por hora o por día para facilitar su interpretación.
+
+Si no existen registros para los criterios establecidos, la vista informa que no hay información disponible para el periodo seleccionado.
+
+<br>
+
+**Consulta de periodos de mayor ocupación:**
+
+A partir de los registros históricos, el administrador puede consultar los periodos en los que se concentra una mayor ocupación del estacionamiento.
+
+La búsqueda utiliza el periodo y el estacionamiento seleccionados para mostrar las variaciones temporales de la ocupación e identificar los momentos de mayor demanda. Cuando la cantidad de información disponible no es suficiente para realizar este análisis, la interfaz comunica esta situación en lugar de presentar resultados incompletos.
+
+<br>
+
+**Consulta de precisión de las predicciones:**
+
+La aplicación web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
+
+El administrador puede revisar resultados como el error absoluto medio (MAE) y el porcentaje de predicciones que se encuentran dentro del margen configurado. Los resultados se diferencian por versión del modelo para evitar combinar mediciones correspondientes a versiones distintas.
+
+Cuando no existen suficientes pronósticos y observaciones para realizar el cálculo, la plataforma indica que no es posible obtener una medida de precisión para el periodo consultado.
+
+<br>
+
+**Centro de alertas:**
+
+En la aplicación móvil, la sección de alertas concentra las notificaciones relacionadas con la disponibilidad prevista de los estacionamientos a los que el conductor se encuentra suscrito.
+
+El usuario puede gestionar sus preferencias y definir las franjas horarias en las que desea recibir este tipo de información. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes relacionadas con una posible baja disponibilidad, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
+
 ### 6.2.4. SEO Tags and Meta Tags
 
+En Quadrapp, los SEO Tags y Meta Tags permiten mejorar la visibilidad de la solución en motores de búsqueda y facilitar que conductores de la comunidad educativa e instituciones interesadas encuentren información sobre el producto. La Landing Page funciona como el principal punto de entrada público, ya que presenta la propuesta de valor, las funcionalidades principales y contenido diferenciado para conductores e instituciones.
+
+#### SEO Tags:
+
+Los SEO Tags se utilizan para optimizar el posicionamiento orgánico de la Landing Page y comunicar de forma clara que Quadrapp es una solución orientada a la consulta y predicción de disponibilidad en estacionamientos universitarios.
+
+
+**Title Tag:**
+
+Define el título que se muestra en los resultados de búsqueda y en la pestaña del navegador.
+
+`<title>Quadrapp | Estacionamiento universitario inteligente</title>`
+
+El título combina el nombre del producto con una descripción breve de su propósito, evitando términos técnicos innecesarios.
+
+<br>
+
+**Meta Description:**
+
+Proporciona un resumen breve de la propuesta de valor de Quadrapp.
+
+`<meta name="description" content="Quadrapp te permite consultar la disponibilidad de estacionamientos universitarios y conocer las condiciones esperadas antes de llegar al campus."/>`
+
+La descripción destaca las dos capacidades principales orientadas al conductor: conocer la disponibilidad actual y anticipar las condiciones que encontrará al llegar.
+
+<br>
+
+**Meta Keywords:**
+
+Incluye términos relacionados directamente con el problema y con las capacidades de la solución.
+
+`<meta name="keywords" content="estacionamiento universitario, estacionamiento inteligente, disponibilidad de estacionamientos, predicción de disponibilidad, smart parking, campus universitario"/>`
+
+<br>
+
+**Meta Author:**
+
+Identifica a la organización responsable del producto.
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Header Tags:**
+
+Los Header Tags organizan semánticamente el contenido de la Landing Page y permiten establecer una jerarquía clara entre la propuesta de valor y la información secundaria.
+
+Un ejemplo de jerarquía para Quadrapp sería:
+
+```text
+<h1>Anticipa la disponibilidad antes de llegar al campus</h1>
+
+<h2>Estacionamientos universitarios con información actual y predicciones de disponibilidad</h2>
+
+<h3>Consulta dónde estacionar y conoce las condiciones esperadas para tu llegada</h3>
+```
+
+El encabezado principal comunica directamente el beneficio diferencial de Quadrapp: no limitarse a mostrar la disponibilidad actual, sino ofrecer información sobre las condiciones esperadas al momento de llegada. Esta capacidad forma parte central de la propuesta del producto.
+
+#### Meta Tags
+Los Meta Tags proporcionan información técnica al navegador y a los motores de búsqueda. También permiten establecer aspectos básicos de accesibilidad, adaptación a dispositivos y comportamiento de indexación.
+
+**Charset Meta Tag:**
+
+Define la codificación de caracteres utilizada por la Landing Page.
+
+`<meta charset="UTF-8" />`
+
+<br>
+
+**Viewport Meta Tag:**
+
+Permite que la página se adapte correctamente a diferentes tamaños de pantalla.
+
+```text
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+```
+
+<br>
+
+**Robots Meta Tag:**
+
+La Landing Page es contenido público y puede ser indexada por motores de búsqueda.
+
+```text
+<meta name="robots" content="index, follow" />
+```
+
+<br>
+
+**Canonical Tag:**
+
+La etiqueta canonical permitirá señalar la dirección oficial de la Landing Page y evitar posibles duplicidades de contenido.
+
+`<link rel="canonical" href="[URL oficial de la Landing Page]" />`
+
+
+#### Web Application Meta Tags
+La consola administrativa de Quadrapp es una aplicación destinada al personal autorizado de cada institución, por lo que sus vistas privadas no están orientadas al posicionamiento público en buscadores.
+
+<br>
+
+**Title Tag:**
+
+`<title>Quadrapp Console | Gestión de estacionamientos</title>`
+
+<br>
+
+**Meta Description:**
+
+```text
+<meta
+  name="description"
+  content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
+/>
+```
+
+<br>
+
+**Meta Author:**
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Robots Meta Tag:**
+
+Al tratarse de una aplicación de acceso restringido, las vistas internas no deben indexarse.
+
+`<meta name="robots" content="noindex, nofollow" />`
+
+
+#### Landing Page SEO Tags para la aplicación móvil
+
+Además de presentar la solución de forma general, la Landing Page incluirá contenido específico para el segmento de conductores y una llamada a la acción que los dirija hacia el sitio de descarga de la aplicación móvil.
+
+Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
+
+`<title>Quadrapp | Consulta la disponibilidad antes de llegar</title>`
+
+```text
+<meta
+  name="description"
+  content="Consulta la disponibilidad actual de los estacionamientos de tu universidad, revisa predicciones y conoce las condiciones esperadas antes de llegar al campus."
+/>
+```
+
+
+```text
+<meta
+  name="keywords"
+  content="Quadrapp, estacionamiento universitario, disponibilidad de estacionamiento, app de estacionamiento, predicción de disponibilidad, parking universitario"
+/>
+```
+
+`<meta name="author" content="Integra Labs" />`
+
+
 ### 6.2.5. Navigation Systems
+
+Los sistemas de navegación de Quadrapp están diseñados para que conductores, administradores y operadores accedan de forma rápida a las funcionalidades que necesitan según su contexto de uso. La aplicación móvil prioriza la consulta de disponibilidad y predicciones antes de llegar al campus, mientras que la consola web facilita el monitoreo y la gestión de los estacionamientos. Por su parte, la Landing Page guía a los visitantes desde la propuesta de valor hacia la descarga de la aplicación o el contacto institucional.
+
+#### Aplicación Móvil — Conductores de la Comunidad Educativa
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú inferior (tab bar)** | Mantiene accesos directos a las principales secciones de la aplicación: Inicio, Estacionamientos, Alertas y Preferencias. Permanece disponible durante la navegación principal. |
+| **Navegación jerárquica** | Desde Estacionamientos, el conductor puede seleccionar un estacionamiento y acceder a sus zonas, disponibilidad actual y predicciones. Esto permite avanzar desde información general hacia datos más específicos sin mostrar todo el contenido al mismo tiempo. |
+| **Selector de horizonte** | Dentro de la consulta predictiva, permite alternar entre los horizontes de 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad. |
+| **Navegación contextual** | Las acciones relacionadas con un estacionamiento aparecen junto a su información. Desde su detalle, el conductor puede consultar la disponibilidad actual, revisar la predicción y acceder a la asesoría de llegada sin volver al menú principal. |
+| **Indicadores de estado** | Los estados Disponible, Ocupado o Sin información se presentan de forma visible dentro de las consultas. También se informa cuando un dato está desactualizado o una predicción presenta confianza baja. |
+| **Retroalimentación visual** | La interfaz mantiene resaltada la sección seleccionada y actualiza visualmente la información cuando el usuario cambia de estacionamiento, zona u horizonte de predicción. |
+
+La navegación móvil sigue un recorrido progresivo:
+
+Estacionamientos → Estacionamiento seleccionado → Zona → Disponibilidad → Predicción / Asesoría de llegada
+
+Esta estructura mantiene como prioridad la información necesaria para que el conductor pueda anticipar las condiciones del estacionamiento antes de llegar al campus.
+
+
+#### Aplicación Web — Administradores y Operadores
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú lateral persistente** | Proporciona acceso permanente a las principales áreas de la consola: Operación, Estacionamientos, Dispositivos, Calendario, Analítica y Usuarios. |
+| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista. |
+| **Navegación jerárquica** | Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
+| **Navegación contextual** | Las acciones relacionadas con un elemento aparecen dentro de su propia vista. Por ejemplo, desde la configuración de un estacionamiento se puede gestionar su distribución sin trasladarse a una sección independiente. |
+| **Filtros de analítica** | Las vistas históricas permiten ajustar la información mostrada según estacionamiento, zona y periodo. En el análisis de precisión, los resultados también pueden diferenciarse por versión del modelo. |
+| **Estado de la sección activa** | El menú mantiene resaltado el módulo actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la consola. |
+
+El dashboard concentra la información necesaria para supervisar el estacionamiento durante la operación, incluyendo disponibilidad, flujo y posibles situaciones de saturación.
+
+Las funcionalidades administrativas se organizan de forma progresiva para evitar mezclar la operación diaria con tareas de configuración. El administrador puede registrar estacionamientos y posteriormente configurar los elementos que pertenecen a ellos, como zonas, espacios y dispositivos.
+
+
+#### Landing Page — Visitantes
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Navbar superior fijo** | Incluye accesos a las principales secciones informativas: Funcionalidades, Conductores, Instituciones, Nosotros y Contacto. Permanece disponible mientras el visitante recorre la página. |
+| **Scroll guiado por secciones** | La Landing Page utiliza una navegación vertical mediante anclas internas, permitiendo pasar rápidamente de la propuesta de valor a funcionalidades, segmentos y contacto. |
+| **Botones de llamada a la acción (CTA)** | Los botones destacados orientan al visitante hacia el siguiente paso. El conductor dispone de una llamada a la acción para acceder al sitio de descarga de la aplicación, mientras que el visitante institucional puede dirigirse al formulario de contacto. |
+| **Navegación por audiencia** | El contenido diferencia claramente la información destinada a conductores de aquella dirigida a instituciones, permitiendo que cada visitante encuentre la propuesta relacionada con sus necesidades. |
+| **Jerarquía visual** | Los encabezados y bloques de contenido organizan la información desde la propuesta de valor general hacia detalles sobre funcionalidades y beneficios de la solución. |
+| **Footer navegable** | Mantiene accesos secundarios a Política de privacidad, Términos y condiciones y Contacto desde la parte inferior de la página. |
+
+La Landing Page permite recorrer las secciones informativas sin abandonar el sitio y separa el contenido de acuerdo con los dos segmentos principales del producto.
 
 ## 6.3. Landing Page UI Design
 
