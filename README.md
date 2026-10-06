@@ -2888,45 +2888,195 @@ Con el objetivo de comprender la comunicación entre los diferentes Bounded Cont
 
 ### 4.2.4. Bounded Context Canvases
 
-**Parking Sensing:**
+La elaboración de los Bounded Context Canvases se realizó de manera iterativa a partir de los contextos identificados durante el Candidate Context Discovery. El objetivo fue revisar progresivamente el propósito, las reglas, capacidades y dependencias de cada contexto, asegurando que cada uno mantuviera responsabilidades claramente delimitadas y un lenguaje propio.
 
-![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensing_Canvases.png)
+Para ello se siguieron las etapas de Context Overview Definition, Business Rules Distillation & Ubiquitous Language Capture, Capability Analysis, Capability Layering cuando correspondía, Dependencies Capture y Design Critique.
 
-**Occupancy:**
+<br>
 
-![Occupancy_Canvases](./assets/capitulo-04/Occupancy_Canvases.png)
+**Context Overview Definition:**
+En una primera etapa se definió el propósito y alcance de cada Bounded Context, identificando qué responsabilidad principal debía asumir y qué elementos debían permanecer fuera de sus límites. Esto permitió diferenciar, por ejemplo, a Parking Sensing, encargado de interpretar las señales provenientes de la infraestructura IoT, de Occupancy, responsable de mantener el estado de ocupación utilizado por el negocio.
+
+También se identificó a Prediction & Advisory como el contexto central de Quadrapp, debido a que concentra la capacidad diferenciadora de anticipar la disponibilidad futura y proporcionar asesoría de llegada al conductor.
+
+<br>
+
+**Business Rules Distillation & Ubiquitous Language Capture:**
+Luego se identificaron las principales reglas de negocio de cada contexto y los términos que debían utilizarse de manera consistente dentro de sus límites.
+
+En Occupancy, por ejemplo, se definieron conceptos relacionados con disponibilidad, ocupación y estado desconocido, mientras que en Prediction & Advisory se consolidaron términos como Forecast, Forecast Horizon, Predicted Occupancy, Confidence Level, Arrival Advice y ETA.
+
+Esta separación permitió evitar que conceptos propios de sensores, predicción, analítica o identidad se mezclaran entre contextos diferentes.
+
+<br>
+
+**Capability Analysis:**
+
+A partir de sus responsabilidades y reglas se identificaron las capacidades que debía ofrecer cada contexto.
+
+Parking Sensing concentra las capacidades relacionadas con la recepción y traducción de señales físicas; Occupancy, el mantenimiento del estado consolidado de ocupación; Parking Configuration, la configuración de estacionamientos y su estructura; Prediction & Advisory, la generación de pronósticos y asesoría de llegada; Notifications, la gestión de suscripciones y alertas; Analytics, el análisis histórico y la evaluación de precisión; e IAM, la autenticación, autorización y gestión de sesiones.
+
+Este análisis permitió comprobar que cada capacidad estuviera ubicada en el contexto que mejor representaba su responsabilidad de negocio.
+
+<br>
+
+**Capability Layering:**
+
+Cuando fue necesario, las capacidades se agruparon según su función dentro del contexto. En Prediction & Advisory, por ejemplo, se distinguieron las capacidades de Forecasting, relacionadas con la generación de pronósticos, y Arrival Advisory, orientadas a transformar esos pronósticos en información útil según el tiempo estimado de llegada.
+
+Se decidió mantener ambas dentro del mismo Bounded Context debido a su estrecha relación y al hecho de que forman parte de la misma capacidad diferenciadora de Quadrapp.
+
+<br>
+
+**Dependencies Capture:**
+
+Después se identificaron las dependencias entre los distintos contextos, estableciendo qué información recibe cada uno y qué resultados proporciona.
+
+Por ejemplo, Parking Sensing entrega información interpretada a Occupancy; Occupancy proporciona el estado consolidado necesario para Prediction & Advisory y Analytics; Prediction & Advisory genera pronósticos utilizados por Analytics y Notifications; y IAM proporciona el contexto de autenticación y autorización requerido por las operaciones protegidas.
+
+Estas dependencias se reflejan posteriormente en el Context Map y permiten mantener separados los modelos internos de cada Bounded Context.
+
+<br>
+
+**Design Critique:**
+
+Finalmente se revisaron los límites propuestos y se analizaron posibles responsabilidades duplicadas o dependencias innecesarias.
+
+Como resultado de esta revisión se reforzó la separación entre Parking Sensing y Occupancy, evitando que ambos contextos representaran las mismas funciones. También se mantuvo el análisis de precisión fuera de Prediction & Advisory, asignándolo a Analytics, y la entrega de alertas se mantuvo dentro de Notifications.
+
+Este proceso permitió obtener los Bounded Contexts finales de Quadrapp con responsabilidades más claras y reducir el acoplamiento entre sus modelos.
+
+<br>
+
+**Resultado del proceso:**
+
+Como resultado de estas iteraciones se consolidaron los siguientes Bounded Contexts:
+
+- Prediction & Advisory — Core
+- Parking Sensing — Supporting
+- Occupancy — Supporting
+- Parking Configuration — Supporting
+- Notifications — Supporting
+- Analytics — Supporting
+- IAM — Generic
+
+A continuación, se presentan los Bounded Context Canvases que resumen el propósito, clasificación estratégica, roles, lenguaje ubicuo, decisiones de negocio, comunicaciones, supuestos y métricas identificadas durante este proceso.
+
+<br>
 
 **Prediction & Advisory:**
 
-![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&Advisory_Canvases.png)
+![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&AdvisoryCanvases.png)
+
+<br>
+
+**Parking Sensing:**
+
+![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensingCanvases.png)
+
+<br>
+
+**Occupancy:**
+
+![Occupancy_Canvases](./assets/capitulo-04/OccupancyCanvases.png)
+
+<br>
 
 **Parking Configuration:**
 
-![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfiguration_Canvases.png)
+![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfigurationCanvases.png)
+
+<br>
 
 **Notifications:**
 
-![Notifications_Canvases](./assets/capitulo-04/Notifications_Canvases.png)
+![Notifications_Canvases](./assets/capitulo-04/NotificationCanvases.png)
+
+<br>
 
 **Analytics:**
 
-![Analytics_Canvases](./assets/capitulo-04/Analytics_Canvases.png)
+![Analytics_Canvases](./assets/capitulo-04/AnalyticsCanvases.png)
+
+<br>
 
 **IAM:**
 
-![IAM_Canvases](./assets/capitulo-04/IAM_Canvases.png)
+![IAM_Canvases](./assets/capitulo-04/IAMCanvases.png)
 
 ### 4.2.5. Context Mapping
 
-El Context Mapping presenta las relaciones estructurales y los contratos de integración entre los bounded contexts de Quadrapp. El mapa permite reconocer qué contexto proporciona cada dato, cómo se protege el lenguaje del dominio y qué integraciones utilizan contratos publicados.
+En esta sección se comparan distintas formas en las que los Bounded Contexts de Quadrapp pueden relacionarse entre sí. La intención es encontrar una estructura que permita que cada contexto mantenga responsabilidades claras, evitando dependencias innecesarias y facilitando que la solución pueda evolucionar sin afectar otras partes del sistema.
 
-Parking Configuration expone los datos maestros del estacionamiento mediante Open Host Service. Parking Sensing entrega los eventos técnicos a Occupancy mediante una relación Customer/Supplier y una Anti-Corruption Layer que los transforma en conceptos del negocio. Occupancy publica los eventos y el estado actual que Prediction & Advisory utiliza para construir su propio feature store y generar estimaciones.
+Para ello, se analizan los bounded context Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, considerando patrones de integración de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel, Open Host Service, Published Language y Anti-Corruption Layer.
 
-Analytics adopta los eventos de Occupancy mediante Conformist y consume `ForecastGenerated` desde Prediction & Advisory para comparar las estimaciones con la ocupación observada. Prediction & Advisory publica los eventos destinados a Notifications mediante Published Language. IAM ofrece autenticación y autorización como un servicio transversal, mientras que las integraciones con el proveedor de mapas y el servicio de correo se aíslan mediante Anti-Corruption Layers.
+<br>
 
-![Context Mapping de Quadrapp](./assets/capitulo-04/ContextMapping.png)
+**Opción 1 – Contextos independientes con relaciones directas:**
 
-*Figura: Context Mapping de Quadrapp. Los recuadros continuos representan bounded contexts y los punteados, servicios externos; las etiquetas en amarillo indican el patrón de integración y las líneas discontinuas, las relaciones asíncronas basadas en eventos.*
+![ContextMapping_Option1](./assets/capitulo-04/ContextMapping_Option1.png)
+
+La primera alternativa mantiene los siete Bounded Contexts completamente separados y utiliza principalmente relaciones Customer/Supplier para intercambiar la información necesaria.
+
+Parking Configuration proporciona la estructura de los estacionamientos a Parking Sensing y Occupancy. Parking Sensing procesa las señales provenientes de la infraestructura IoT y entrega los eventos interpretados a Occupancy, que mantiene el estado actual de ocupación y disponibilidad.
+
+Occupancy proporciona su estado consolidado a Prediction & Advisory, que lo utiliza junto con la información contextual del estacionamiento para generar pronósticos y asesoría de llegada. Occupancy también proporciona sus eventos a Analytics, mientras que Prediction & Advisory entrega a Analytics los pronósticos generados para que puedan compararse posteriormente con la ocupación observada.
+
+Finalmente, Prediction & Advisory proporciona a Notifications los eventos predictivos relevantes para determinar cuándo se debe comunicar una situación al conductor. IAM funciona de forma transversal proporcionando la información de autenticación y autorización requerida por los demás contextos.
+
+Esta alternativa mantiene límites claros y permite una implementación sencilla de las relaciones. Sin embargo, utilizar contratos directos en todas las integraciones incrementa la dependencia entre productores y consumidores y obliga a cada contexto a adaptarse ante cambios en los contratos de los demás.
+
+<br>
+
+**Opción 2 – Uso de Shared Kernel entre contextos relacionados:**
+
+![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option2.png)
+
+La segunda alternativa mantiene la misma división en siete Bounded Contexts, pero introduce Shared Kernel entre aquellos que trabajan con conceptos estrechamente relacionados.
+Parking Sensing y Occupancy compartirían una representación mínima de los eventos relacionados con los espacios del estacionamiento. De forma similar, Occupancy y Analytics compartirían conceptos relacionados con la ocupación observada que posteriormente se utiliza para construir el historial.
+
+El resto de integraciones conservaría relaciones directas. Prediction & Advisory seguiría recibiendo información de Occupancy y Parking Configuration, mientras que Analytics recibiría los pronósticos generados para calcular su precisión.
+
+El principal beneficio de esta alternativa es reducir la cantidad de transformaciones entre modelos y simplificar inicialmente algunas integraciones. Sin embargo, un Shared Kernel exige coordinación entre los equipos responsables de los contextos involucrados, ya que cualquier modificación del modelo compartido puede afectar a ambos lados.
+
+En Quadrapp este riesgo resulta especialmente relevante entre Parking Sensing y Occupancy, porque uno representa conceptos técnicos de infraestructura mientras el otro representa conceptos de negocio. También afectaría la independencia de Analytics si compartiera directamente el modelo de Occupancy.
+
+Por ello, aunque puede reducir el esfuerzo inicial, esta alternativa se descarta debido al mayor acoplamiento entre los modelos.
+
+<br>
+
+**Opción 3 – Contextos independientes con protección de modelos:**
+
+![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option3.png)
+
+La tercera alternativa mantiene a los Bounded Contexts separados, pero introduce mecanismos específicos para evitar que los detalles internos de un contexto se propaguen directamente hacia otro.
+
+Entre Parking Sensing y Occupancy se utiliza una relación Customer/Supplier junto con una Anti-Corruption Layer. Esto permite que Parking Sensing continúe trabajando con información técnica proveniente de sensores y dispositivos, mientras Occupancy recibe únicamente la información necesaria para mantener el estado de disponibilidad de los espacios. De esta manera, Occupancy no necesita conocer cómo funciona internamente la tecnología de sensado.
+
+Parking Configuration actúa como la fuente de información sobre la estructura del estacionamiento, incluyendo estacionamientos, zonas, espacios, asociaciones de sensores y datos de contexto como el calendario académico y los eventos del campus. Esta información puede ponerse a disposición de los demás contextos mediante un Open Host Service, evitando que cada uno tenga que conocer directamente su modelo interno.
+
+Occupancy proporciona a Prediction & Advisory el estado actual de ocupación y el flujo consolidado del estacionamiento. Por otro lado, Analytics consume los eventos publicados por Occupancy mediante una relación Conformist, utilizando esa información para construir su propio historial sin compartir directamente el modelo de dominio de Occupancy.
+
+Cuando Prediction & Advisory genera un nuevo pronóstico, publica el evento ForecastGenerated. Analytics utiliza este evento para comparar la predicción con la ocupación que finalmente fue observada y así calcular las métricas de precisión del modelo.
+
+De manera similar, cuando se identifica una situación relevante como una posible saturación, Prediction & Advisory publica esa información para Notifications mediante Published Language. De esta forma, Notifications puede actuar sobre el evento sin depender de cómo se realiza internamente la predicción.
+
+IAM se mantiene como un contexto transversal encargado de la identidad, autenticación y autorización. Los demás contextos utilizan la información de usuario, institución y rol proporcionada por IAM cuando necesitan validar el acceso a sus funcionalidades.
+
+Las integraciones con servicios externos también se mantienen aisladas. IAM se comunica con el servicio de correo mediante una Anti-Corruption Layer para el envío de códigos de acceso, mientras que Notifications utiliza el mismo enfoque para integrarse con el proveedor de mensajería push.
+
+Finalmente, el proveedor de mapas no forma parte de las dependencias del backend. El cálculo del tiempo estimado de llegada se realiza directamente en la aplicación móvil y el servidor recibe únicamente el ETA expresado en minutos, manteniendo la decisión de privacidad definida para Quadrapp.
+
+<br>
+
+**Elección:**
+
+Se selecciona la Opción 3, ya que proporciona el mejor equilibrio entre separación de responsabilidades, autonomía de los Bounded Contexts y protección de sus modelos.
+La decisión más importante es mantener una Anti-Corruption Layer entre Parking Sensing y Occupancy. Esto evita que conceptos relacionados con sensores, dispositivos o telemetría formen parte del modelo de ocupación y permite modificar la tecnología de sensado sin alterar directamente las reglas de negocio.
+
+También se decide utilizar Conformist entre Occupancy y Analytics, en lugar de Shared Kernel. Analytics necesita consumir la información producida por Occupancy, pero no requiere compartir sus objetos de dominio ni su persistencia. De esta forma, conserva su propio modelo orientado al análisis histórico.
+
+Prediction & Advisory permanece como el Core Domain de Quadrapp y recibe únicamente la información necesaria para generar pronósticos y asesoría. Sus resultados se exponen mediante contratos publicados hacia Analytics y Notifications, evitando que estos contextos dependan de la implementación interna del modelo predictivo.
 
 ## 4.3. Software Architecture
 
