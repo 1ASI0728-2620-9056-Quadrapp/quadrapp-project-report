@@ -3322,7 +3322,7 @@ Por ello, aunque puede reducir el esfuerzo inicial, esta alternativa se descarta
 
 **Opción 3 – Contextos independientes con protección de modelos:**
 
-![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option3.png)
+![Context Mapping, opción 3: contextos independientes con protección de modelos](assets/capitulo-04/context-mapping-opcion-3.png)
 
 La tercera alternativa mantiene a los Bounded Contexts separados, pero introduce mecanismos específicos para evitar que los detalles internos de un contexto se propaguen directamente hacia otro.
 
