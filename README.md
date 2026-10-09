@@ -3164,121 +3164,88 @@ El último escenario muestra la incorporación de una institución. El equipo de
 
 ### 4.2.4. Bounded Context Canvases
 
-La elaboración de los Bounded Context Canvases se realizó de manera iterativa a partir de los contextos identificados durante el Candidate Context Discovery. El objetivo fue revisar progresivamente el propósito, las reglas, capacidades y dependencias de cada contexto, asegurando que cada uno mantuviera responsabilidades claramente delimitadas y un lenguaje propio.
+Con los contextos candidatos y sus flujos de mensajes definidos, se elaboró un Bounded Context Canvas para cada uno, usando la versión 5 de la plantilla de ddd-crew en Excalidraw, la misma herramienta del EventStorming. Los contextos se trabajaron en orden de importancia, empezando por el core, y cada canvas se construyó de forma iterativa con los siguientes pasos:
 
-Para ello se siguieron las etapas de Context Overview Definition, Business Rules Distillation & Ubiquitous Language Capture, Capability Analysis, Capability Layering cuando correspondía, Dependencies Capture y Design Critique.
+1. **Context Overview Definition:** definir el nombre, el propósito y la clasificación estratégica del contexto (tipo de dominio, modelo de negocio, evolución y rol).
+2. **Business Rules Distillation & Ubiquitous Language Capture:** extraer las reglas de negocio del EventStorming y registrar los términos propios del contexto.
+3. **Capability Analysis:** identificar las capacidades que ofrece el contexto a partir de los comandos y consultas que recibe.
+4. **Capability Layering:** cuando aplica, ordenar esas capacidades en capas.
+5. **Dependencies Capture:** registrar los mensajes de entrada y de salida y los colaboradores con los que se intercambian, a partir de los Domain Message Flows.
+6. **Design Critique:** revisar el diseño, registrar los supuestos, las métricas para validarlo y las preguntas abiertas, y evaluar alternativas.
 
-<br>
+En los canvas, los comandos se muestran en azul, los eventos en amarillo y las consultas en verde, como en la plantilla original. Las preguntas abiertas recogen los puntos críticos identificados en el paso 3 del EventStorming.
 
-**Context Overview Definition:**
-En una primera etapa se definió el propósito y alcance de cada Bounded Context, identificando qué responsabilidad principal debía asumir y qué elementos debían permanecer fuera de sus límites. Esto permitió diferenciar, por ejemplo, a Parking Sensing, encargado de interpretar las señales provenientes de la infraestructura IoT, de Occupancy, responsable de mantener el estado de ocupación utilizado por el negocio.
+**Aplicación de los pasos en el contexto core: Prediction & Advisory**
 
-También se identificó a Prediction & Advisory como el contexto central de Quadrapp, debido a que concentra la capacidad diferenciadora de anticipar la disponibilidad futura y proporcionar asesoría de llegada al conductor.
+Se trabajó primero Prediction & Advisory, por ser el contexto que materializa la propuesta de valor. Las figuras siguientes muestran el mismo canvas al cierre de cada paso.
 
-<br>
+En la definición general se estableció su propósito: anticipar la disponibilidad de cada estacionamiento a 15, 30, 45 y 60 minutos y orientar la llegada del conductor. Se clasificó como core, porque es lo que diferencia a Quadrapp de un contador de espacios; como custom built, porque el modelo de pronóstico se construye para este negocio, y como contexto de ejecución, porque produce decisiones que el conductor usa en el momento. En el modelo de negocio aporta tanto al compromiso de los conductores como al valor que justifica la licencia institucional.
 
-**Business Rules Distillation & Ubiquitous Language Capture:**
-Luego se identificaron las principales reglas de negocio de cada contexto y los términos que debían utilizarse de manera consistente dentro de sus límites.
+![Bounded Context Canvas de Prediction & Advisory, paso 1](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-1-overview.png)
 
-En Occupancy, por ejemplo, se definieron conceptos relacionados con disponibilidad, ocupación y estado desconocido, mientras que en Prediction & Advisory se consolidaron términos como Forecast, Forecast Horizon, Predicted Occupancy, Confidence Level, Arrival Advice y ETA.
+*Figura: Bounded Context Canvas de Prediction & Advisory, paso 1 (Context Overview Definition).*
 
-Esta separación permitió evitar que conceptos propios de sensores, predicción, analítica o identidad se mezclaran entre contextos diferentes.
+Al destilar las reglas de negocio se fijaron los horizontes de 15, 30, 45 y 60 minutos y se estableció que cada pronóstico registra su confianza y la versión del modelo, para que su precisión pueda medirse después. También se decidió que, sin datos suficientes, se usa la heurística de respaldo con confianza baja; que la saturación se prevé cuando la ocupación esperada supera el umbral del estacionamiento, y que la asesoría solo recibe el tiempo estimado de llegada en minutos, como establece CON-07. En paralelo se registraron los términos propios del contexto, como Forecast, Forecast Horizon, Confidence Level, Arrival Advice y Next Availability.
 
-<br>
+![Bounded Context Canvas de Prediction & Advisory, paso 2](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-2-reglas-lenguaje.png)
 
-**Capability Analysis:**
+*Figura: Bounded Context Canvas de Prediction & Advisory, paso 2 (Business Rules Distillation & Ubiquitous Language Capture).*
 
-A partir de sus responsabilidades y reglas se identificaron las capacidades que debía ofrecer cada contexto.
+En el análisis de capacidades se registraron los comandos y consultas que el contexto atiende: solicitar la asesoría de llegada, actualizar el tiempo estimado de llegada y consultar los pronósticos. A partir de ellos se identificaron dos capas: Forecasting, que genera los pronósticos y evalúa la saturación, y Arrival Advisory, que convierte esos pronósticos en una recomendación según el tiempo de llegada del conductor. Se decidió mantener ambas capas en el mismo contexto, porque la asesoría no existe sin el pronóstico y comparte su lenguaje.
 
-Parking Sensing concentra las capacidades relacionadas con la recepción y traducción de señales físicas; Occupancy, el mantenimiento del estado consolidado de ocupación; Parking Configuration, la configuración de estacionamientos y su estructura; Prediction & Advisory, la generación de pronósticos y asesoría de llegada; Notifications, la gestión de suscripciones y alertas; Analytics, el análisis histórico y la evaluación de precisión; e IAM, la autenticación, autorización y gestión de sesiones.
+![Bounded Context Canvas de Prediction & Advisory, paso 3](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-3-4-capacidades.png)
 
-Este análisis permitió comprobar que cada capacidad estuviera ubicada en el contexto que mejor representaba su responsabilidad de negocio.
+*Figura: Bounded Context Canvas de Prediction & Advisory, pasos 3 y 4 (Capability Analysis y Capability Layering).*
 
-<br>
+Al capturar las dependencias se completó la comunicación a partir de los Domain Message Flows. El contexto consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil del estacionamiento, el calendario y los eventos del campus, y recibe de este último la cancelación de un evento, que obliga a regenerar los pronósticos. Publica Pronóstico generado hacia Analytics, Saturación prevista hacia Notifications y la asesoría hacia la aplicación móvil.
 
-**Capability Layering:**
+![Bounded Context Canvas de Prediction & Advisory, paso 5](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-5-dependencias.png)
 
-Cuando fue necesario, las capacidades se agruparon según su función dentro del contexto. En Prediction & Advisory, por ejemplo, se distinguieron las capacidades de Forecasting, relacionadas con la generación de pronósticos, y Arrival Advisory, orientadas a transformar esos pronósticos en información útil según el tiempo estimado de llegada.
+*Figura: Bounded Context Canvas de Prediction & Advisory, paso 5 (Dependencies Capture).*
 
-Se decidió mantener ambas dentro del mismo Bounded Context debido a su estrecha relación y al hecho de que forman parte de la misma capacidad diferenciadora de Quadrapp.
+En la crítica del diseño se revisó si la medición de la precisión debía quedar en este contexto y se trasladó a Analytics, para que el contexto que pronostica no evalúe su propio error. También se confirmó que el cálculo del tiempo de llegada permanece en el dispositivo. Por último, se registraron los supuestos, las métricas de verificación tomadas de los escenarios de atributos de calidad y las preguntas abiertas que provienen de los puntos críticos del EventStorming.
 
-<br>
+![Bounded Context Canvas de Prediction & Advisory](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory.png)
 
-**Dependencies Capture:**
+*Figura: Bounded Context Canvas de Prediction & Advisory, paso 6 (Design Critique), versión final.*
 
-Después se identificaron las dependencias entre los distintos contextos, estableciendo qué información recibe cada uno y qué resultados proporciona.
+**Contextos de soporte y genéricos**
 
-Por ejemplo, Parking Sensing entrega información interpretada a Occupancy; Occupancy proporciona el estado consolidado necesario para Prediction & Advisory y Analytics; Prediction & Advisory genera pronósticos utilizados por Analytics y Notifications; y IAM proporciona el contexto de autenticación y autorización requerido por las operaciones protegidas.
+Parking Sensing se clasificó como un contexto de soporte de tipo gateway, porque traduce la telemetría de los sensores al lenguaje del dominio. Sus reglas aseguran que cada lectura se aplique una sola vez y en orden, que la detección se confirme tras el tiempo mínimo y que un sensor pase a falla cuando no reporta dentro de su intervalo o tiene batería crítica. Una decisión de diseño clave es que no calcula ocupación ni disponibilidad: solo entrega a Occupancy detecciones confirmadas, pasos de vehículos y fallas. Así, la tecnología de sensado puede cambiar sin afectar al resto del modelo.
 
-Estas dependencias se reflejan posteriormente en el Context Map y permiten mantener separados los modelos internos de cada Bounded Context.
+![Bounded Context Canvas de Parking Sensing](assets/capitulo-04/canvases/bounded-context-canvas-parking-sensing.png)
 
-<br>
+*Figura: Bounded Context Canvas de Parking Sensing.*
 
-**Design Critique:**
+Occupancy mantiene el estado de negocio de cada espacio y es la fuente de verdad de la ocupación actual. Su regla central es que un espacio desconocido nunca cuenta como libre, y cuando el conteo de accesos no coincide con la detección por espacio, prevalece esta última. Recibe las detecciones de Parking Sensing y el layout de Parking Configuration, atiende las consultas de Prediction & Advisory y de la aplicación, y publica la disponibilidad y los ingresos y salidas para Analytics.
 
-Finalmente se revisaron los límites propuestos y se analizaron posibles responsabilidades duplicadas o dependencias innecesarias.
+![Bounded Context Canvas de Occupancy](assets/capitulo-04/canvases/bounded-context-canvas-occupancy.png)
 
-Como resultado de esta revisión se reforzó la separación entre Parking Sensing y Occupancy, evitando que ambos contextos representaran las mismas funciones. También se mantuvo el análisis de precisión fuera de Prediction & Advisory, asignándolo a Analytics, y la entrega de alertas se mantuvo dentro de Notifications.
+*Figura: Bounded Context Canvas de Occupancy.*
 
-Este proceso permitió obtener los Bounded Contexts finales de Quadrapp con responsabilidades más claras y reducir el acoplamiento entre sus modelos.
+Parking Configuration se clasificó como un contexto de borrador, porque el administrador prepara la estructura del estacionamiento y luego la publica. Sus reglas garantizan nombres únicos por institución, un layout versionado en cada publicación y la asociación de cada sensor a un solo espacio o acceso. Publica el layout para Parking Sensing y Occupancy y atiende las consultas de perfil y calendario de Prediction & Advisory.
 
-<br>
+![Bounded Context Canvas de Parking Configuration](assets/capitulo-04/canvases/bounded-context-canvas-parking-configuration.png)
 
-**Resultado del proceso:**
+*Figura: Bounded Context Canvas de Parking Configuration.*
 
-Como resultado de estas iteraciones se consolidaron los siguientes Bounded Contexts:
+Analytics es un contexto de análisis: no interviene en la operación, sino que interpreta sus resultados. Consolida el historial de ocupación por fecha, hora y zona, identifica las horas pico y compara cada pronóstico con la ocupación observada para medir la precisión por horizonte y versión del modelo.
 
-- Prediction & Advisory — Core
-- Parking Sensing — Supporting
-- Occupancy — Supporting
-- Parking Configuration — Supporting
-- Notifications — Supporting
-- Analytics — Supporting
-- IAM — Generic
+![Bounded Context Canvas de Analytics](assets/capitulo-04/canvases/bounded-context-canvas-analytics.png)
 
-A continuación, se presentan los Bounded Context Canvases que resumen el propósito, clasificación estratégica, roles, lenguaje ubicuo, decisiones de negocio, comunicaciones, supuestos y métricas identificadas durante este proceso.
+*Figura: Bounded Context Canvas de Analytics.*
 
-<br>
+Notifications avisa al conductor cuando se prevé baja disponibilidad en las franjas que suscribió. Sus reglas evitan las alertas repetidas y descartan los tokens que el proveedor rechaza. Se clasificó como product, porque el envío de notificaciones push se apoya en un proveedor existente, aislado mediante una capa anticorrupción.
 
-**Prediction & Advisory:**
+![Bounded Context Canvas de Notifications](assets/capitulo-04/canvases/bounded-context-canvas-notifications.png)
 
-![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&AdvisoryCanvases.png)
+*Figura: Bounded Context Canvas de Notifications.*
 
-<br>
+Por último, IAM se clasificó como genérico, commodity y de tipo gateway, porque es la puerta de entrada a Quadrapp. Da de alta a las instituciones con sus dominios de correo, permite el ingreso de administradores y operadores solo por invitación y autentica con un código de un solo uso. No depende de un proveedor de identidad externo: entrega a los demás contextos la identidad, la institución y el rol de cada usuario.
 
-**Parking Sensing:**
+![Bounded Context Canvas de IAM](assets/capitulo-04/canvases/bounded-context-canvas-iam.png)
 
-![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensingCanvases.png)
-
-<br>
-
-**Occupancy:**
-
-![Occupancy_Canvases](./assets/capitulo-04/OccupancyCanvases.png)
-
-<br>
-
-**Parking Configuration:**
-
-![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfigurationCanvases.png)
-
-<br>
-
-**Notifications:**
-
-![Notifications_Canvases](./assets/capitulo-04/NotificationCanvases.png)
-
-<br>
-
-**Analytics:**
-
-![Analytics_Canvases](./assets/capitulo-04/AnalyticsCanvases.png)
-
-<br>
-
-**IAM:**
-
-![IAM_Canvases](./assets/capitulo-04/IAMCanvases.png)
+*Figura: Bounded Context Canvas de IAM.*
 
 ### 4.2.5. Context Mapping
 
