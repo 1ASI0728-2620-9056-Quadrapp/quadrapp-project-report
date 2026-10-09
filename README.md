@@ -14,7 +14,7 @@
 | Profesor | Enrique Alejandro Valdivia Verde |
 | Startup | Integra Labs |
 | Producto | Quadrapp |
-| Mes y año | Setiembre, 2026 |
+| Mes y año | Octubre, 2026 |
 
 **Integrantes**
 
@@ -45,6 +45,22 @@
 | 1.10 | 2026-09-19 | Sulca Sanchez, Piero Angel | Consolidación de los Constraints como Technical Stories, incorporación del Impact Mapping y ajuste del Architectural Drivers Backlog con la totalidad de las restricciones. |
 | 1.11 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de los diagramas de arquitectura de software a nivel de contexto y de paisaje del sistema. |
 | 1.12 | 2026-09-19 | Equipo Integra Labs | Consolidación del Student Outcome, el avance de conclusiones y el registro de colaboración para la entrega del primer hito. |
+| 1.13 | 2026-09-20 | Sulca Sanchez, Piero Angel | Incorporación de los diagramas de contenedores y de despliegue, de la evidencia de colaboración de GitHub y del enlace al video de exposición del primer hito, y corrección de la tabla de contenido. |
+| 2.0 | 2026-09-30 | Nanfuñay Liza, Pedro Jesus | Incorporación de la estructura de los capítulos V y VI para el segundo hito. |
+| 2.1 | 2026-10-02 | Nanfuñay Liza, Pedro Jesus | Incorporación del diseño táctico del Bounded Context Analytics, con sus capas y diagramas. |
+| 2.2 | 2026-10-02 | Nanfuñay Liza, Pedro Jesus | Incorporación de la Information Architecture: Organization, Labeling y Searching Systems, SEO Tags and Meta Tags y Navigation Systems. |
+| 2.3 | 2026-10-05 | Nanfuñay Liza, Pedro Jesus | Corrección de los Bounded Context Canvases y del Context Mapping a partir de la retroalimentación del primer hito. |
+| 2.4 | 2026-10-07 | Nanfuñay Liza, Pedro Jesus | Corrección del registro de entrevistas con el distrito, el inicio y la duración de cada grabación, y actualización de su foto en los perfiles del equipo. |
+| 2.5 | 2026-10-08 | Becerra Tejeda, Alessandra Nicole | Incorporación de las Style Guidelines generales y para web, mobile y dispositivos, con el branding, la paleta de colores y los criterios de accesibilidad. |
+| 2.6 | 2026-10-08 | Becerra Tejeda, Alessandra Nicole | Corrección de la explicación de los diagramas de paisaje y de contexto, y del registro de su entrevista con el distrito y el inicio de la grabación. |
+| 2.7 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación del diseño táctico del Bounded Context Prediction & Advisory, con sus capas y diagramas. |
+| 2.8 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación de los wireframes y wireflows de la aplicación móvil y de la consola de operación. |
+| 2.9 | 2026-10-09 | Becerra Tejeda, Alessandra Nicole | Incorporación del diseño táctico de los Bounded Contexts IAM y Notifications, con sus capas y diagramas, y de sus acciones del segundo hito en el Student Outcome. |
+| 2.10 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción del EventStorming en diez pasos, del Candidate Context Discovery en tres iteraciones y de cinco Domain Message Flows numerados, con el enlace al tablero de diseño estratégico en los anexos. |
+| 2.11 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción de los Bounded Context Canvases y de las tres alternativas de Context Mapping con la misma herramienta del EventStorming. |
+| 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
+| 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
+| 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
 
 # Project Report Collaboration Insights
 
@@ -60,13 +76,27 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Bejarano Martinez, Alvaro Leandro | Segmentos objetivo, User Personas, User Task Matrix, Empathy Mapping, EventStorming, Candidate Context Discovery y Domain Message Flows Modeling. |
 | Melgarejo Gomez, Marcia Victoria | As-is y To-be Scenario Mapping, Ubiquitous Language, Design Purpose, Quality Attribute Scenarios, funcionalidad primaria, Architectural Drivers Backlog y decisiones de diseño. |
 | Nanfuñay Liza, Pedro Jesus | Lean UX Process, análisis competitivo con sus estrategias y tácticas, Bounded Context Canvases y Context Mapping. |
-| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, configuración del repositorio y guía de contribución. |
+| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, diagramas de contenedores y de despliegue, configuración del repositorio y guía de contribución. |
 
 **Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 29 Pull Requests integrados y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. El analítico de contribuciones de GitHub confirma la participación de todo el equipo en la elaboración del informe.
 
 ![Analítico de contribuciones del repositorio del informe](assets/capitulo-07/collaboration-contributors.png)
 
 *Figura: analítico de Contributors del repositorio al cierre del primer hito. Registra 33 commits de Sulca Sanchez, 13 de Nanfuñay Liza, 11 de Becerra Tejeda, 9 de Bejarano Martinez y 4 de Melgarejo Gomez, lo que corresponde con los aportes descritos en el Registro de Versiones del Informe.*
+
+**Organización del trabajo en el segundo hito (TB1).** El equipo distribuyó el diseño táctico del capítulo V por bounded context y el capítulo VI por sección, y atendió en las secciones afectadas la retroalimentación recibida en el primer hito. Se mantuvo el flujo de trabajo del primer hito: ramas `feature/` y `fix/` por tarea, commits con Conventional Commits y la identidad de Git de cada integrante, e integración en `develop`. En paralelo, se inició la implementación de la Landing Page en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización. Las correcciones del capítulo IV se rehicieron con una sola herramienta por artefacto para mantener la coherencia entre ellos: Excalidraw para el EventStorming, los contextos candidatos, los message flows, los canvases y el context map, y Structurizr para los diagramas C4. El diseño táctico se elaboró sobre los contratos que fija el capítulo IV, es decir, los eventos publicados y las fachadas entre contextos, para que cada bounded context del capítulo V sea consistente con los demás.
+
+**Aportes por integrante en el segundo hito.**
+
+| Integrante | Secciones elaboradas o corregidas |
+| --- | --- |
+| Bejarano Martinez, Alvaro Leandro | Implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
+| Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
+| Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
+| Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
+| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
+
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 17 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.14 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
@@ -242,7 +272,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.<br>
-          TP: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
+          TB1: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
@@ -250,20 +280,25 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.
+          AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.<br>
+          TB1: Logré sustentar el diseño táctico del Bounded Context Prediction & Advisory, explicando cómo se generan los pronósticos, cómo se deriva la asesoría de llegada a partir del tiempo estimado y cómo los wireframes y wireflows llevan esas capacidades a la experiencia del conductor y del administrador.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.
+          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.<br>
+          TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
+          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.<br>
+          TB1: Logré sustentar la reconstrucción del diseño estratégico (EventStorming, contextos candidatos, message flows, canvases y context map) y el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
-        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.
+        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.<br><br>
+        <strong>TB1:</strong><br>
+        La sustentación del diseño táctico permitió explicar, contexto por contexto, cómo se implementan las capacidades de Quadrapp, desde la lectura de un sensor hasta la asesoría de llegada que recibe el conductor. Atender la retroalimentación del primer hito obligó a explicar con mayor precisión la técnica aplicada en cada artefacto del diseño estratégico y a justificar la decisión de arquitectura ante una audiencia técnica.
       </td>
     </tr>
     <tr>
@@ -272,28 +307,33 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.<br>
-          TP: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
+          TB1: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.
+          AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
+          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.
+          AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.<br>
+          TB1: Redacté el diseño táctico del Bounded Context Analytics y la Information Architecture, y corregí los Bounded Context Canvases, el Context Mapping y el registro de entrevistas a partir de la retroalimentación del primer hito.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
+          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.<br>
+          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y documenté las correcciones del capítulo IV explicando la técnica aplicada en cada paso, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
-        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.
+        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.<br><br>
+        <strong>TB1:</strong><br>
+        La redacción del diseño táctico como diccionario de clases, con sus capas, reglas de negocio y diagramas, permitió documentar la solución con un nivel de detalle implementable. Mantener los mismos nombres de eventos, fachadas y tablas entre el capítulo IV y el capítulo V, y entre los diagramas y el texto, aseguró que lectores con distinta especialidad encuentren una misma versión coherente del sistema.
       </td>
     </tr>
   </tbody>
