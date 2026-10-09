@@ -21,7 +21,7 @@
 | Nombres y apellidos | Código de estudiante |
 | --- | --- |
 | Becerra Tejeda, Alessandra Nicole | u202318947 |
-| Bejarano Martinez, Alvaro Leandro | Por completar |
+| Bejarano Martinez, Alvaro Leandro | U202311640 |
 | Melgarejo Gomez, Marcia Victoria | U20231C505 |
 | Nanfuñay Liza, Pedro Jesus | u202215462 |
 | Sulca Sanchez, Piero Angel | u202423711 |
@@ -32,24 +32,41 @@
 
 | Versión | Fecha | Autor | Descripción de modificación |
 | --- | --- | --- | --- |
-| 1.0 | 2026-09-15 | Integra Labs | Estructura inicial del informe para AV1. |
-| 1.1 | 2026-09-19 | Integra Labs  | Se añadieron los capítulos I, II, III y IV |
-
----
+| 1.0 | 2026-09-15 | Sulca Sanchez, Piero Angel | Estructura inicial del informe para el primer hito, con la carátula, el registro de versiones, el contenido y las plantillas de los capítulos. |
+| 1.1 | 2026-09-16 | Nanfuñay Liza, Pedro Jesus | Incorporación del Lean UX Process (problem statements, assumptions, hypothesis statements y canvas) y del análisis competitivo con sus estrategias y tácticas. |
+| 1.2 | 2026-09-19 | Melgarejo Gomez, Marcia Victoria | Incorporación del As-is y el To-be Scenario Mapping, el Ubiquitous Language y el Design Purpose del diseño estratégico. |
+| 1.3 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de las User Stories, las Epics, las Technical Stories y el análisis de antecedentes con 5W y 2H. |
+| 1.4 | 2026-09-19 | Bejarano Martinez, Alvaro Leandro | Incorporación de los segmentos objetivo, los User Personas, la User Task Matrix, el Empathy Mapping y el EventStorming con el descubrimiento de contextos candidatos. |
+| 1.5 | 2026-09-19 | Sulca Sanchez, Piero Angel | Unificación del informe en un único archivo `README.md`, eliminación del generador y actualización de la guía de contribución con el flujo de trabajo del equipo. |
+| 1.6 | 2026-09-19 | Sulca Sanchez, Piero Angel | Incorporación de la descripción de la startup, del diseño de entrevistas y del registro y análisis de las entrevistas realizadas. |
+| 1.7 | 2026-09-19 | Sulca Sanchez, Piero Angel | Reescritura de las User Stories en un único cuadro con las historias de la Landing Page y los criterios de request y response en las Technical Stories, e incorporación del Product Backlog priorizado por valor de negocio. |
+| 1.8 | 2026-09-19 | Nanfuñay Liza, Pedro Jesus | Incorporación de los Bounded Context Canvases y del Context Mapping, y corrección del alcance en el análisis competitivo y en el Lean UX. |
+| 1.9 | 2026-09-19 | Melgarejo Gomez, Marcia Victoria | Reescritura de los Quality Attribute Scenarios y elaboración de la funcionalidad primaria, el Architectural Drivers Backlog y las decisiones de diseño. |
+| 1.10 | 2026-09-19 | Sulca Sanchez, Piero Angel | Consolidación de los Constraints como Technical Stories, incorporación del Impact Mapping y ajuste del Architectural Drivers Backlog con la totalidad de las restricciones. |
+| 1.11 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de los diagramas de arquitectura de software a nivel de contexto y de paisaje del sistema. |
+| 1.12 | 2026-09-19 | Equipo Integra Labs | Consolidación del Student Outcome, el avance de conclusiones y el registro de colaboración para la entrega del primer hito. |
 
 # Project Report Collaboration Insights
 
-Repositorio del informe: [quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report).
+El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report), alojado en la organización de GitHub del equipo.
 
-El equipo elaborará el informe colaborativamente con GitFlow y Conventional Commits. Cada integrante registrará sus aportes con su propia cuenta y otro integrante revisará sus cambios antes de integrarlos en `develop`.
+**Organización del trabajo en el primer hito.** El equipo distribuyó las secciones del informe por integrante y acordó un flujo de trabajo común, documentado en la guía de contribución del repositorio: cada integrante trabaja en una rama `feature/` nombrada por la tarea, registra sus cambios con Conventional Commits en inglés y abre un Pull Request hacia `develop`, que se integra mediante merge commit para conservar la autoría de cada aporte. El informe se mantiene en un único archivo `README.md`, lo que exige que cada integrante intervenga solamente en las secciones que le corresponden y actualice su rama antes de integrar.
 
-Las evidencias de colaboración se actualizarán en cada entrega y serán coherentes con el Registro de Versiones del Informe.
+**Aportes por integrante en esta entrega.**
 
-| Entrega | Actividades y aportes de los integrantes | Evidencias de colaboración y commits |
-| --- | --- | --- |
-| AV1 | Por completar | Por completar |
+| Integrante | Secciones elaboradas |
+| --- | --- |
+| Becerra Tejeda, Alessandra Nicole | Antecedentes y problemática con 5W y 2H, User Stories, Epics y Technical Stories, y los diagramas de arquitectura a nivel de paisaje del sistema y de contexto. |
+| Bejarano Martinez, Alvaro Leandro | Segmentos objetivo, User Personas, User Task Matrix, Empathy Mapping, EventStorming, Candidate Context Discovery y Domain Message Flows Modeling. |
+| Melgarejo Gomez, Marcia Victoria | As-is y To-be Scenario Mapping, Ubiquitous Language, Design Purpose, Quality Attribute Scenarios, funcionalidad primaria, Architectural Drivers Backlog y decisiones de diseño. |
+| Nanfuñay Liza, Pedro Jesus | Lean UX Process, análisis competitivo con sus estrategias y tácticas, Bounded Context Canvases y Context Mapping. |
+| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, configuración del repositorio y guía de contribución. |
 
----
+**Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 29 Pull Requests integrados y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. El analítico de contribuciones de GitHub confirma la participación de todo el equipo en la elaboración del informe.
+
+![Analítico de contribuciones del repositorio del informe](assets/capitulo-07/collaboration-contributors.png)
+
+*Figura: analítico de Contributors del repositorio al cierre del primer hito. Registra 33 commits de Sulca Sanchez, 13 de Nanfuñay Liza, 11 de Becerra Tejeda, 9 de Bejarano Martinez y 4 de Melgarejo Gomez, lo que corresponde con los aportes descritos en el Registro de Versiones del Informe.*
 
 # Contenido
 
@@ -62,13 +79,15 @@ Las evidencias de colaboración se actualizarán en cada entrega y serán cohere
     - [1.1.2. Perfiles de integrantes del equipo](#112-perfiles-de-integrantes-del-equipo)
   - [1.2. Solution Profile](#12-solution-profile)
     - [1.2.1. Antecedentes y problemática](#121-antecedentes-y-problemática)
+      - [Antecedentes](#antecedentes)
+      - [Problemática (5Ws y 2Hs)](#problemática-5ws-y-2hs)
     - [1.2.2. Lean UX Process](#122-lean-ux-process)
       - [1.2.2.1. Lean UX Problem Statements](#1221-lean-ux-problem-statements)
       - [1.2.2.2. Lean UX Assumptions](#1222-lean-ux-assumptions)
       - [1.2.2.3. Lean UX Hypothesis Statements](#1223-lean-ux-hypothesis-statements)
       - [1.2.2.4. Lean UX Canvas](#1224-lean-ux-canvas)
   - [1.3. Segmentos objetivo](#13-segmentos-objetivo)
-- [Capítulo II: Requirements Elicitation & Analysis](#capítulo-ii-requirements-elicitation--analysis)
+- [Capítulo II: Requirements Elicitation &amp; Analysis](#capítulo-ii-requirements-elicitation--analysis)
   - [2.1. Competidores](#21-competidores)
     - [2.1.1. Análisis competitivo](#211-análisis-competitivo)
     - [2.1.2. Estrategias y tácticas frente a competidores](#212-estrategias-y-tácticas-frente-a-competidores)
@@ -109,7 +128,7 @@ Las evidencias de colaboración se actualizarán en cada entrega y serán cohere
     - [4.3.3. Software Architecture Container Level Diagrams](#433-software-architecture-container-level-diagrams)
     - [4.3.4. Software Architecture Deployment Diagrams](#434-software-architecture-deployment-diagrams)
 - [Conclusiones](#conclusiones)
-  - [Conclusiones y recomendaciones](#conclusiones-y-recomendaciones)
+  - [Avance de conclusiones](#avance-de-conclusiones)
   - [Video About-the-Team](#video-about-the-team)
 - [Bibliografía](#bibliografía)
 - [Anexos](#anexos)
@@ -157,10 +176,13 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
         </p>
       </td>
-      <td>Por completar.</td>
+      <td>
+        <strong>AV1:</strong><br>
+        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.
+      </td>
     </tr>
     <tr>
       <td>Comunica en forma escrita ideas y/o resultados con objetividad a público de diferentes especialidades y niveles jerarquicos, en el marco del desarrollo de un proyecto en ingeniería.</td>
@@ -183,10 +205,13 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Por completar.
+          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
         </p>
       </td>
-      <td>Por completar.</td>
+      <td>
+        <strong>AV1:</strong><br>
+        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.
+      </td>
     </tr>
   </tbody>
 </table>
@@ -241,11 +266,11 @@ El valor diferencial de Quadrapp no radica únicamente en mostrar los espacios d
 </td>
     </tr>
     <tr>
-      <td>Foto por completar</td>
+      <td><img src="assets/capitulo-01/yo.png" alt="Bejarano Martinez, Alvaro Leandro" width="160"></td>
       <td>Bejarano Martinez, Alvaro Leandro</td>
-      <td>Por completar</td>
+      <td>U202311640</td>
       <td>Ingeniería de Software</td>
-      <td>Descripción por completar.</td>
+      <td>Curso la carrera de Ingeniería de Software y me destaco por mi perseverancia, organización y capacidad para trabajar en equipo. Me esfuerzo por mantener un ambiente estructurado dentro del grupo, donde cada miembro se sienta valorado y sus ideas sean escuchadas y respetadas. Mi compromiso es fomentar la colaboración efectiva, asegurando que cada contribución se integre de manera ordenada y alineada con los objetivos comunes del equipo.</td>
     </tr>
     <tr>
       <td><img src="assets/capitulo-01/FotoMelgarejo.png" alt="Sulca Sanchez, Piero Angel" width="160"></td>
@@ -257,7 +282,7 @@ Me caracterizo por ser una persona curiosa, persistente y colaborativa.
 Tengo conocimientos en C++, HTML, CSS, JS, Phyton</td>
     </tr>
     <tr>
-      <td>v</td>
+      <td><img src="assets/capitulo-01/pedro-nanfuñay.jpeg" alt="Nanfuñay Liza, Pedro Jesús" width="160"></td>
       <td>Nanfuñay Liza, Pedro Jesus</td>
       <td>u202215462</td>
       <td>Ingeniería de Software</td>
@@ -299,7 +324,7 @@ En conjunto, los antecedentes evidencian que la gestión inteligente de estacion
 
 **¿Cuál es el problema?**
 
-La dificultad para conocer y anticipar la disponibilidad de espacios de estacionamiento dentro de los campus universitarios. La oferta limitada y la variación de la demanda durante la jornada académica pueden generar dificultades para encontrar espacios disponibles, incrementando el tiempo de búsqueda y la circulación de vehículos dentro del campus (Paudel et al., 2024; Channamallu et al., 2025).
+La dificultad para conocer y anticipar la disponibilidad de espacios de estacionamiento dentro de los campus universitarios. La oferta limitada y la variación de la demanda durante la jornada académica pueden generar dificultades para encontrar espacios disponibles, incrementando el tiempo de búsqueda y la circulación de vehículos dentro del campus (Paudel et al., 2024, y Channamallu et al., 2025).
 
 #### When (Cuándo)
 
@@ -375,10 +400,12 @@ El problema puede manifestarse en:
 * Dificultad de los usuarios para planificar anticipadamente su llegada al campus.
 * Menor aprovechamiento de la información histórica disponible para anticipar períodos de mayor o menor demanda.
 
-La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025; Mohandes et al., 2019).
+La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025, y Mohandes et al., 2019).
 
 
 ### 1.2.2. Lean UX Process
+
+El proceso Lean UX organiza los supuestos del equipo como hipótesis que deben contrastarse mediante resultados observables y aprendizaje continuo (Gothelf y Seiden, 2021). A partir de este enfoque se definen los Problem Statements, los supuestos, las hipótesis y el canvas de Quadrapp.
 
 #### 1.2.2.1. Lean UX Problem Statements
 
@@ -386,7 +413,7 @@ Hemos observado que los conductores que se trasladan a universidades y centros e
 
 Por otro lado, las universidades y administradores de estacionamientos necesitan gestionar de manera eficiente la ocupación, el ingreso y la salida de vehículos, así como aprovechar la información generada diariamente para comprender los patrones de movilidad de su comunidad. Los sistemas tradicionales suelen concentrarse en mostrar la disponibilidad actual o controlar el acceso, pero no aprovechan suficientemente los datos históricos y operativos para anticipar cómo cambiará la ocupación en los siguientes minutos.
 
-Esta situación evidencia una brecha entre conocer cuántos espacios están disponibles actualmente y poder estimar qué probabilidad existe de encontrar uno al momento de llegar. Factores como el tiempo estimado de llegada, vehículos que se aproximan al campus, reservas existentes, registros históricos de ocupación, fecha, hora y horarios académicos pueden aportar información relevante para reducir esta incertidumbre.
+Esta situación evidencia una brecha entre conocer cuántos espacios están disponibles actualmente y poder estimar qué probabilidad existe de encontrar uno al momento de llegar. Factores como el tiempo estimado de llegada, los registros históricos de ocupación, la fecha, la hora y los horarios académicos pueden aportar información relevante para reducir esta incertidumbre.
 
 Frente a esta problemática, Quadrapp busca atender inicialmente a conductores de la comunidad educativa y administradores de estacionamientos universitarios, mediante una plataforma que combine información en tiempo real con datos históricos y académicos para estimar la disponibilidad futura. De esta manera, se busca ayudar a los conductores a tomar mejores decisiones antes de llegar al campus y proporcionar a los administradores información útil para comprender y gestionar la demanda de sus estacionamientos.
 
@@ -509,7 +536,40 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
 
 ## 1.3. Segmentos objetivo
 
-*Pendiente de elaboración.*
+**Conductores de la comunidad educativa:**
+La falta de espacios en horas punta puede incrementar el tiempo de búsqueda, producir retrasos y afectar la experiencia de los conductores en el campus (Channamallu et al., 2025, y Mohandes et al., 2019). Este segmento necesita información predictiva para planificar su salida y estimar la probabilidad de encontrar un espacio al llegar.
+* **Relevancia para la solución:** Es el segmento de usuarios finales que consulta la disponibilidad, las predicciones y las recomendaciones desde la aplicación móvil.
+* **Edad estimada:** 17 a 55 años.
+* **Ubicación:** Zonas urbanas con alta concentración de sedes universitarias y centros de educación superior.
+* **Características demográficas y de comportamiento:**
+  * Incluye a jóvenes estudiantes, docentes y personal que conducen frecuentemente hacia el campus.
+  * Tienen una personalidad **Analítica / Práctica**, buscando optimizar cada minuto de su agenda diaria.
+  * Tienen horarios estrictos debido a cátedras, exámenes o turnos laborales.
+  * Utilizan smartphones y aplicaciones de movilidad (como Waze o Google Maps) de manera constante.
+  * Valoran enormemente la toma de decisiones basada en datos rápidos para evitar el tráfico.
+* **Necesidades principales:**
+  * Conocer la disponibilidad y la probabilidad de encontrar espacios libres antes de salir de casa mediante la IA predictiva.
+  * Recibir recomendaciones inteligentes de horarios de salida para evitar los picos de saturación.
+  * Ahorrar tiempo, combustible y dinero al no dar vueltas innecesarias ni usar cocheras informales.
+  * Llegar puntualmente y sin estrés a sus compromisos académicos.
+
+**Administradores de estacionamientos universitarios:**
+Comprende a los jefes de logística y operaciones del campus, supervisores de turno y operadores de puerta: quienes monitorean el aforo, coordinan el flujo vehicular en los accesos y elaboran los reportes de ocupación. No incluye a la alta dirección de la universidad, que actúa como cliente del modelo B2B y aparece en el Lean UX Canvas.
+
+Ante la variación del aforo y la demanda durante la jornada académica, estos gestores requieren paneles de control y métricas que les permitan supervisar la ocupación, identificar horas de mayor demanda y apoyar la gestión del estacionamiento.
+* **Relevancia para la solución:** Es el segmento operativo que utiliza la consola web y aporta la perspectiva institucional necesaria para adoptar y gestionar la plataforma.
+* **Edad estimada:** 30 a 60 años.
+* **Ubicación:** Campus universitarios y áreas adyacentes a las universidades.
+* **Características demográficas y de comportamiento:**
+  * Son jefes de logística, operaciones, seguridad del campus o concesionarios de playas de estacionamiento.
+  * Tienen una personalidad **Racional / Estratégica**, enfocada en la eficiencia, los procesos y el control.
+  * Se enfrentan a reclamos constantes por parte de la comunidad educativa debido a la congestión.
+  * Buscan modernizar sus sistemas tradicionales mediante tecnología, automatización y análisis de datos.
+* **Necesidades principales:**
+  * Optimizar la tasa de ocupación de los estacionamientos y aprovechar mejor los espacios disponibles.
+  * Reducir las filas y el caos vehicular en las puertas de ingreso durante los cambios de horario.
+  * Obtener reportes predictivos y métricas precisas sobre los patrones de demanda vehicular.
+  * Mejorar la satisfacción general de los estudiantes y docentes al brindar un servicio de acceso ordenado.
 
 ---
 
@@ -725,6 +785,8 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
   </tr>
 </table>
 
+La descripción de las capacidades de Apparka, ParkHelp y ParkMobile se elaboró a partir de la información publicada en sus sitios oficiales (Apparka, s. f., ParkHelp, s. f., y ParkMobile, s. f.). Las fortalezas, debilidades, oportunidades y amenazas corresponden al análisis del equipo con base en dichas capacidades y en el alcance propuesto para Quadrapp.
+
 ### 2.1.2. Estrategias y tácticas frente a competidores
 
 A partir del análisis competitivo realizado, se identificaron oportunidades para posicionar Quadrapp sin competir directamente mediante características que ya se encuentran presentes en otras soluciones de estacionamiento. La estrategia principal será concentrarse en la predicción de disponibilidad futura y el análisis del comportamiento de los estacionamientos universitarios, aprovechando información propia del contexto académico.
@@ -843,7 +905,7 @@ Este segmento reúne a quienes supervisan la operación diaria del estacionamien
 
 ### 2.2.2. Registro de entrevistas
 
-Cada entrevista se registró en video y se documenta con los datos del entrevistado, el enlace a la grabación, su duración y una captura del video, una captura del video y un resumen descriptivo de sus respuestas. Los resúmenes incorporan tanto las características objetivas como las subjetivas que más adelante sustentan los User Personas y los Empathy Maps.
+Cada entrevista se registró en video y se documenta con los datos del entrevistado, el enlace a la grabación, su duración, una captura del video y un resumen descriptivo de sus respuestas. Los resúmenes incorporan tanto las características objetivas como las subjetivas que más adelante sustentan los User Personas y los Empathy Maps.
 
 #### Segmento 1: Conductores de la comunidad educativa
 
@@ -853,9 +915,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | María Fernanda Tejeda Mena |
 | Edad | 20 años |
+| Distrito de residencia | Callao |
 | Ocupación y vínculo con la universidad | Estudiante de Derecho, 8.º ciclo |
-| Enlace de la grabación | [Ver entrevista](https://upcedupe-my.sharepoint.com/personal/u202318947_upc_edu_pe/_layouts/15/stream.aspx?id=%2Fpersonal%2Fu202318947%5Fupc%5Fedu%5Fpe%2FDocuments%2FVideos%2FClipchamp%2FEntrevista%201%20Segmento%201%20%2D%20Maria%20Fernanda%2FAssets%2Fvideo1517213583%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E3ee3d14a%2Db34c%2D43f6%2Db1b6%2Dfb894789b5f2) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
 | Duración | 4 minutos y 13 segundos |
+| Inicio | 00:07 min |
 | Captura | <img src="assets/capitulo-02/entrevistamariafernanda1.png" alt="Captura de la entrevista a María Fernanda Tejeda Mena" width="500"/> |
 | Resumen | Estudiante de Derecho que utiliza un auto familiar para asistir a la universidad de lunes a viernes. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que consulta ocasionalmente a sus compañeros o calcula la disponibilidad según el horario y la actividad del campus. En una ocasión tuvo que buscar estacionamiento durante 10 a 15 minutos y llegó tarde a clases. Además, estima que invierte entre 30 y 60 minutos adicionales por semana debido a la incertidumbre sobre encontrar un espacio. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
 
@@ -866,9 +930,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | Wilder Gonzalo Aliaga Urbina |
 | Edad | 21 años |
+| Distrito de residencia | San Isidro |
 | Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
 | Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQALFlPRSrnUR48PtAjDQ1f-AaB7rRMljFlq5JK61XENGM0?e=FsLoaG&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQALFlPRSrnUR48PtAjDQ1f-AaB7rRMljFlq5JK61XENGM0?e=FsLoaG&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
-| Duración | 8 minutos y 4 segundos |
+| Duración | 08:04 min |
+| Inicio | 00:24 min |
 | Captura | <img src="assets/capitulo-02/Entrevista2_GonzaloAliaga.png" alt="Captura de la entrevista a Wilder Gonzalo Aliaga Urbina" width="500"/> |
 | Resumen | Estudiante de Ingeniería de Software que utiliza su auto propio para movilizarse a su campus 3 veces a la semana. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que trata de salir con antelación para evitar situaciones de tráfico y estrés. En una ocasión, durante su trayecto al campus, tuvo muchas complicaciones debido a una situación de tráfico y cola de espera en el estacionamiento de su campus, lo que lo llevó a perder mucho tiempo, llegando tarde a su clase. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
 
@@ -893,7 +959,7 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Nombres y apellidos | Mario Grandes |
 | Edad | 26 años |
 | Ocupación y vínculo con la universidad | Encargado del estacionamiento del campus |
-| Enlace de la grabación | [Ver entrevista](https://youtu.be/Uwh7i71zwv4) |
+| Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4](https://youtu.be/Uwh7i71zwv4) |
 | Duración | 2 minutos y 27 segundos |
 | Captura | <img src="assets/capitulo-02/entrevista-mario-grandes.png" alt="Captura de la entrevista a Mario Grandes" width="500"/> |
 | Resumen | Encargado del estacionamiento de un campus universitario. Su función principal durante el turno es monitorear el flujo vehicular, supervisar al personal en las tranqueras y resolver los cuellos de botella en las horas punta. Conoce la disponibilidad de espacios por experiencia y mirando los reportes básicos de las tranqueras, que describe como poco confiables porque se actualizan con lentitud. El registro de ingresos lo realiza el personal de seguridad de forma manual y él arma los reportes diarios en una hoja de cálculo al finalizar el día. Relata que el lunes a las 8 de la mañana el estacionamiento estuvo cerca de llenarse: lo detectó revisando cámaras, se comunicó con los vigilantes para desviar vehículos hacia zonas alternas y, aunque la situación fue caótica, evitaron el bloqueo de la vía principal. Identifica como problema recurrente las filas en las tranqueras durante el cambio de hora de las 8 de la mañana, y lo atribuye a la falta de visibilidad en tiempo real sobre qué zonas tienen espacios libres. En el inicio de ciclo, los exámenes y los eventos masivos el flujo se dispara alrededor de un 50 por ciento: se preparan asignando más personal, pero carecen de datos históricos para dimensionar cuántos vehículos llegarán. La semana previa a la entrevista falló la lectora de una tranquera principal y debieron operarla manualmente durante 45 minutos hasta que soporte técnico reinició el sistema. Al preguntarle qué información le haría falta, responde que una plataforma analítica capaz de predecir la demanda y anticipar cuántos vehículos llegarán por hora, para organizar los accesos sin depender de suposiciones. |
@@ -901,10 +967,6 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 ### 2.2.3. Análisis de entrevistas
 
 Esta sección analiza, para cada segmento objetivo, las características objetivas y subjetivas identificadas en las entrevistas que sustentan la construcción de los arquetipos. El análisis se apoya en los registros de la sección anterior y se actualizará con el sustento porcentual correspondiente a medida que se completen las entrevistas de cada segmento.
-
-#### Segmento 1: Conductores de la comunidad educativa
-
-Esta sección analiza, para cada segmento objetivo, las características objetivas y subjetivas identificadas en las entrevistas que sustentan la construcción de los arquetipos. El análisis se apoya en los registros de la sección anterior. Los porcentajes se calculan sobre el número de entrevistas del segmento y deben leerse como indicativos, dado que cada entrevista representa el 33 % de la muestra.
 
 #### Segmento 1: Conductores de la comunidad educativa
 
@@ -940,7 +1002,7 @@ Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus 
 
 1. **La incertidumbre es el problema central.** Los tres entrevistados deciden a ciegas: no tienen datos y se apoyan en la intuición, en la experiencia y en mensajes de WhatsApp que pueden quedar desactualizados en pocos minutos.
 2. **El costo real es tiempo y puntualidad.** Los tres llegaron tarde en alguna ocasión y, en los casos que lo estimaron, pierden entre 30 minutos y 2 horas por semana entre salir antes y dar vueltas.
-3. **Las épocas críticas son predecibles.** Las semanas de exámenes, el inicio de ciclo y los eventos del campus saturan el estacionamiento, lo que respalda el uso del calendario académico y los eventos como insumo de la predicción.
+3. **Las épocas críticas aparecen como un factor relevante.** Un entrevistado señaló que las semanas de exámenes, el inicio de ciclo y los eventos del campus incrementan la dificultad para encontrar estacionamiento. Este hallazgo, identificado en 1 de 3 entrevistas (33 %), constituye un indicio para evaluar el calendario académico y los eventos como insumos de la predicción.
 4. **Las soluciones actuales son informales.** Salir antes y preguntar por WhatsApp reducen el riesgo, pero no lo eliminan ni dan información confiable.
 5. **La confianza depende de la precisión.** Un entrevistado indicó que abandonaría la herramienta si falla con frecuencia, por lo que la predicción debe presentarse como estimación con su nivel de confianza.
 
@@ -957,7 +1019,7 @@ Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus 
 
 **Conclusión preliminar**
 
-Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para la conductora, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
+Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para los conductores, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
 
 ## 2.3. Needfinding
 
@@ -2344,7 +2406,19 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 ## 3.3. Impact Mapping
 
-*Pendiente de elaboración.*
+El Impact Mapping relaciona los Business Outcomes definidos en el Lean UX con las personas que pueden contribuir a alcanzarlos, los cambios de comportamiento esperados, los entregables del producto y las User Stories que permiten implementarlos (Adzic, 2012). El resultado se organiza en dos mapas, uno para cada User Persona correspondiente a los segmentos objetivo del proyecto.
+
+### Conductores de la comunidad educativa
+
+Este mapa se centra en reducir en un 20 % el tiempo promedio de búsqueda. También incorpora como métricas que al menos el 60 % de los conductores activos consulte la predicción antes de llegar y que las estimaciones alcancen una precisión mínima del 80 %. Los impactos muestran los comportamientos que Andrea Santos debe adoptar y cada entregable se relaciona con la descripción completa de una User Story prioritaria.
+
+![Impact Mapping de conductores de la comunidad educativa](./assets/capitulo-03/impact-mapping-conductores.png)
+
+### Administradores de estacionamientos universitarios
+
+Este mapa integra los Business Outcomes relacionados con la implementación de un piloto durante el primer año, la disponibilidad de datos superior al 95 % y el uso del dashboard en cada turno. Los impactos muestran cómo Carlos Mendoza contribuye a la adopción, la configuración del estacionamiento, la supervisión operativa y el análisis de la demanda.
+
+![Impact Mapping de administradores de estacionamientos universitarios](./assets/capitulo-03/impact-mapping-administradores.png)
 
 ## 3.4. Product Backlog
 
@@ -2412,7 +2486,7 @@ La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El
 
 El backlog también se encuentra en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T). En esta etapa, el tablero documenta los 53 elementos del Product Backlog ordenados por valor de negocio. Cada tarjeta incluye el identificador de la historia y su estimación en Story Points.
 
-*Pendiente: captura del tablero.*
+![Product Backlog de Quadrapp en Trello](assets/capitulo-03/product-backlog-trello.png)
 
 ---
 
@@ -2420,7 +2494,7 @@ El backlog también se encuentra en un tablero público de Trello, disponible en
 
 ## 4.1. Strategic-Level Attribute-Driven Design
 
-En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicado a Quadrapp. Se define el propósito del diseño, los inputs del proceso (funcionalidad primaria, escenarios de atributos de calidad y restricciones), el backlog de Architectural Drivers, las decisiones de diseño con su evaluación de patrones y los escenarios de atributos de calidad refinados.
+En esta sección se presenta el proceso de Attribute-Driven Design (ADD) aplicado a Quadrapp. Se define el propósito del diseño, los inputs del proceso, el backlog de Architectural Drivers, las decisiones de diseño con su evaluación de patrones y los escenarios de atributos de calidad refinados. Este enfoque permite relacionar las decisiones arquitectónicas con los atributos de calidad y las restricciones que condicionan la solución (Bass et al., 2021).
 
 
 ### 4.1.1. Design Purpose
@@ -2481,22 +2555,30 @@ Se identificaron ocho escenarios de atributos de calidad en primera instancia, a
 
 #### 4.1.2.3. Constraints
 
-Las restricciones provienen del enunciado del curso, del modelo de negocio, del marco legal y de decisiones ya fijadas en las historias del Capítulo III. No son negociables y guían el diseño. Se expresan como Technical Stories.
+Las restricciones provienen del enunciado del curso, del modelo de negocio, del marco legal y de las decisiones ya fijadas en el modelo de dominio y en las historias del Capítulo III. No son negociables y guían el diseño desde el inicio: a diferencia de los atributos de calidad, no admiten grados de cumplimiento. Se expresan como Technical Stories con sus criterios de aceptación, de modo que puedan verificarse durante la implementación.
+
+Las cuatro primeras corresponden a la composición y el despliegue de la solución. Las siete siguientes fijan el sensado, la privacidad, la identidad, el alcance funcional y las condiciones de la experiencia de usuario. Las siete últimas detallan las tecnologías de cada producto y las reglas de acceso y transparencia que se desprenden de ellas.
 
 | Technical Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
 | --- | --- | --- | --- | --- |
-| CON-01 | Solución multicomponente integrada | Como Developer, necesito que la solución esté compuesta por una API REST interna, una aplicación móvil nativa para conductores, una consola web de operación para administradores y una Landing Page, integradas entre sí y con una experiencia de usuario consistente. | **Escenario 1: Redirección desde la Landing Page.**<br>Dado que los cuatro productos están desplegados,<br>cuando el visitante activa la llamada a la acción de su segmento,<br>entonces es dirigido al sitio de descarga de la aplicación móvil o al formulario de contacto institucional.<br><br>**Escenario 2: Consistencia entre productos.**<br>Dado que la aplicación móvil y la consola web consumen la misma API,<br>cuando ambas consultan el mismo estacionamiento,<br>entonces presentan la misma información de ocupación. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-01 | Solución multicomponente integrada | Como Developer, necesito que la solución esté compuesta por una API REST interna, una aplicación móvil para conductores, una consola web de operación para administradores y una Landing Page, integradas entre sí y con una experiencia de usuario consistente. | **Escenario 1: Redirección desde la Landing Page.**<br>Dado que los cuatro productos están desplegados,<br>cuando el visitante activa la llamada a la acción de su segmento,<br>entonces es dirigido al sitio de descarga de la aplicación móvil o al formulario de contacto institucional.<br><br>**Escenario 2: Consistencia entre productos.**<br>Dado que la aplicación móvil y la consola web consumen la misma API,<br>cuando ambas consultan el mismo estacionamiento,<br>entonces presentan la misma información de ocupación. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-02 | Domain-Driven Design | Como Developer, necesito que el sistema se descomponga en Bounded Contexts, cada uno con su propio modelo y su propia persistencia. | **Escenario 1: Un servicio por contexto.**<br>Dado que el sistema se descompone en Bounded Contexts,<br>cuando se define un servicio,<br>entonces pertenece a un solo contexto y es responsable de su modelo y sus datos.<br><br>**Escenario 2: Integración entre contextos.**<br>Dado que un contexto necesita información de otro,<br>cuando la solicita,<br>entonces la obtiene por su interfaz o por eventos de dominio, sin consultar el modelo de escritura del otro contexto. | EP02, EP03, EP04, EP05 |
-| CON-03 | Tecnologías open-source | Como Developer, necesito utilizar tecnologías open-source en los distintos niveles de la solución. | **Escenario 1: Componentes de la solución.**<br>Dado que cada componente requiere una tecnología,<br>cuando el equipo la selecciona,<br>entonces cuenta con licencia open-source y queda documentada en la sección 7.1.<br><br>**Escenario 2: Servicios de terceros.**<br>Dado que el correo y la mensajería push se contratan como servicios gestionados,<br>cuando se integran,<br>entonces quedan aislados detrás de una capa de integración y pueden reemplazarse sin modificar el dominio. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-04 | Despliegue en la nube | Como Developer, necesito desplegar los servicios de servidor en una plataforma cloud de forma reproducible. | **Escenario 1: Despliegue reproducible.**<br>Dado que los servicios se ejecutan en un proveedor cloud,<br>cuando se despliega una nueva versión,<br>entonces el despliegue se realiza desde la configuración versionada en el repositorio.<br><br>**Escenario 2: Gateway en el campus.**<br>Dado que el gateway opera en el campus,<br>cuando se actualiza el backend en la nube,<br>entonces el gateway continúa publicando sin cambios de configuración. | EP02, EP04 |
-| CON-05 | Ingesta IoT mediante gateway y MQTT | Como Developer, necesito que los sensores no se expongan a Internet y que sus lecturas lleguen al backend mediante un gateway que publica en un broker MQTT. | **Escenario 1: Publicación con confirmación.**<br>Dado que los sensores reportan al gateway,<br>cuando el gateway publica una lectura en el tópico del estacionamiento con QoS 1,<br>entonces el broker confirma la recepción y el mensaje queda disponible para el consumidor de ocupación.<br><br>**Escenario 2: Pérdida de conectividad.**<br>Dado que el gateway continúa recibiendo lecturas,<br>cuando pierde la conexión con el broker,<br>entonces las almacena en su búfer local y las reenvía al restablecerse la conexión. | EP02, EP04 |
+| CON-03 | Tecnologías open-source | Como Developer, necesito utilizar tecnologías open-source en los distintos niveles de la solución. | **Escenario 1: Componentes de la solución.**<br>Dado que cada componente requiere una tecnología,<br>cuando el equipo la selecciona,<br>entonces cuenta con licencia open-source y queda documentada en el capítulo de implementación.<br><br>**Escenario 2: Servicios de terceros.**<br>Dado que el correo y la mensajería push se contratan como servicios gestionados,<br>cuando se integran,<br>entonces quedan aislados detrás de una capa de integración y pueden reemplazarse sin modificar el dominio. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-04 | Despliegue en la nube | Como Developer, necesito desplegar los servicios de servidor en una plataforma cloud de forma reproducible. | **Escenario 1: Despliegue reproducible.**<br>Dado que los servicios se ejecutan en un proveedor cloud,<br>cuando se despliega una nueva versión,<br>entonces el despliegue se realiza desde la configuración versionada en el repositorio.<br><br>**Escenario 2: Continuidad del sensado.**<br>Dado que los nodos de sensado operan en la red del campus,<br>cuando se actualiza el backend en la nube,<br>entonces la ingesta continúa sin cambios de configuración en el campus. | EP02, EP04 |
+| CON-05 | Ingesta IoT sin exponer los sensores a Internet | Como Developer, necesito que los dispositivos de sensado permanezcan en la red local del campus y que sus lecturas lleguen al backend únicamente a través del componente de ingesta, para reducir su superficie de exposición. | **Escenario 1: Acceso desde fuera de la red del campus.**<br>Dado que los sensores operan en la red local de la institución,<br>cuando se intenta alcanzarlos desde una red externa,<br>entonces no resultan accesibles y no aceptan ninguna instrucción.<br><br>**Escenario 2: Salida de los eventos hacia el backend.**<br>Dado que la comunicación con el backend se concentra en un único componente de la red de sensado,<br>cuando un sensor genera una lectura,<br>entonces alcanza el backend a través de ese componente y nunca mediante una conexión directa del sensor. | EP02, EP04 |
 | CON-06 | Servicios externos de terceros | Como Developer, necesito integrar un servicio de correo para los códigos de acceso y un proveedor de mensajería push para las alertas, sin que su falla afecte el núcleo del producto. | **Escenario 1: Capa de integración.**<br>Dado que el sistema consume un proveedor externo,<br>cuando envía un correo o una notificación,<br>entonces lo hace a través de una capa de integración que aísla el modelo del proveedor del dominio.<br><br>**Escenario 2: Falla del proveedor.**<br>Dado que un proveedor externo no responde,<br>cuando el usuario consulta la disponibilidad o la predicción,<br>entonces esas funciones continúan operando sin degradación. | EP01, EP07 |
-| CON-07 | Privacidad de la ubicación y protección de datos personales | Como Developer, necesito que la ubicación del conductor no salga de su dispositivo y que los datos personales se traten conforme a la Ley N.° 29733, Ley de Protección de Datos Personales del Perú. | **Escenario 1: Solo minutos.**<br>Dado que la aplicación calcula el tiempo estimado de llegada en el dispositivo,<br>cuando solicita una asesoría,<br>entonces envía únicamente el tiempo estimado en minutos.<br><br>**Escenario 2: Solicitud con coordenadas.**<br>Dado que el servicio solo admite minutos,<br>cuando la solicitud incluye coordenadas geográficas,<br>entonces el sistema la rechaza con 400.<br><br>**Escenario 3: Datos mínimos y cifrados.**<br>Dado que el sistema recolecta datos personales,<br>cuando los almacena o transmite,<br>entonces recolecta solo los necesarios y los transmite cifrados. | EP01, EP03, EP07 |
-| CON-08 | Aislamiento de datos por institución | Como Developer, necesito que cada institución acceda únicamente a sus propios datos y que el alta de instituciones no sea pública. | **Escenario 1: Recurso de otra institución.**<br>Dado que toda sesión lleva la institución a la que pertenece,<br>cuando el usuario consulta un recurso de otra institución,<br>entonces la respuesta es 403 y no se devuelve información.<br><br>**Escenario 2: Alta restringida.**<br>Dado que no existe un registro público de instituciones,<br>cuando se intenta dar de alta una institución con un token de usuario,<br>entonces la respuesta es 403 y no se crea ninguna institución. | EP01, EP02, EP03, EP04, EP05 |
+| CON-07 | Privacidad de la ubicación y protección de datos personales | Como Developer, necesito que el tiempo estimado de llegada se calcule en la aplicación y que al servidor solo viajen los minutos, para no tratar la ubicación del conductor en los servicios de Quadrapp. Como Developer, necesito tratar únicamente los datos personales necesarios para la finalidad declarada de cada funcionalidad, para cumplir la Ley N.º 29733 (Congreso de la República del Perú, 2011) y su Reglamento, aprobado por el Decreto Supremo N.º 016-2024-JUS (Ministerio de Justicia y Derechos Humanos, 2024) y vigente desde el 31 de marzo de 2025. | **Escenario 1: Solicitud válida.**<br>Dado que la aplicación calcula el tiempo estimado con el proveedor de mapas en el propio dispositivo,<br>cuando envía la solicitud de asesoría de llegada,<br>entonces el cuerpo incluye únicamente el tiempo expresado en minutos.<br><br>**Escenario 2: Solicitud con coordenadas.**<br>Dado que el servicio no admite datos de ubicación,<br>cuando una solicitud incluye coordenadas geográficas,<br>entonces la respuesta es 400 y la solicitud no se procesa.<br><br>**Escenario 1: Minimización en el alta de una cuenta.**<br>Dado que el registro persigue verificar la pertenencia institucional del usuario,<br>cuando se crea una cuenta,<br>entonces se tratan solo el correo institucional, el nombre visible, el rol y la institución, y no se almacenan documento de identidad, código de estudiante ni placa vehicular.<br><br>**Escenario 2: Datos asociados a otras finalidades.**<br>Dado que las notificaciones requieren un token de dispositivo y las preferencias del usuario,<br>cuando se registran esos datos,<br>entonces se conservan únicamente mientras la suscripción permanece activa y se eliminan al darse de baja.<br><br>**Escenario 3: Información y registro de la aceptación.**<br>Dado que los términos y condiciones y la política de privacidad describen las finalidades del tratamiento,<br>cuando el usuario completa su registro,<br>entonces el sistema le presenta ambos documentos y registra su aceptación junto con la fecha y la versión vigente. | EP01, EP03, EP07 |
+| CON-08 | Aislamiento de datos entre instituciones | Como Developer, necesito que cada institución acceda únicamente a sus propios estacionamientos y usuarios, para sostener el modelo multi-institución sin mezclar información entre clientes. | **Escenario 1: Consulta dentro de la institución.**<br>Dado que el token de sesión identifica la institución del usuario,<br>cuando se consulta un recurso de esa institución,<br>entonces la respuesta incluye únicamente información que le pertenece.<br><br>**Escenario 2: Consulta fuera de la institución.**<br>Dado que el recurso solicitado pertenece a otra institución,<br>cuando se envía la solicitud,<br>entonces la respuesta es 403 y el intento queda registrado. | EP01, EP04 |
 | CON-09 | Autenticación sin contraseña | Como Developer, necesito que el acceso se realice mediante un código de un solo uso enviado al correo institucional o invitado, con sesiones basadas en tokens. | **Escenario 1: Sesión con claims.**<br>Dado que el usuario tiene un correo habilitado o una invitación vigente,<br>cuando ingresa un código válido,<br>entonces recibe un token de sesión con sus claims de usuario, institución y rol.<br><br>**Escenario 2: Límite de solicitudes.**<br>Dado que el mismo correo superó las solicitudes permitidas en la ventana configurada,<br>cuando solicita un nuevo código,<br>entonces la respuesta es 429 y no se emite el código. | EP01 |
-| CON-10 | Sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya reservas, cobros y reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de vigilancia. | **Escenario 1: Alcance funcional.**<br>Dado que el estacionamiento es gratuito y el ingreso exige la credencial institucional,<br>cuando se define el alcance de la solución,<br>entonces no incluye reservas, cobros, pagos ni reconocimiento de placas.<br><br>**Escenario 2: Conteo de flujo.**<br>Dado que el personal de vigilancia controla el acceso,<br>cuando un vehículo ingresa o sale,<br>entonces Quadrapp solo cuenta el flujo mediante sensores direccionales y no identifica vehículos ni conductores. | EP02, EP03, EP04 |
-| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que las aplicaciones cumplan criterios de accesibilidad y entreguen sus textos en español e inglés. | **Escenario 1: Idioma.**<br>Dado que la solicitud declara su idioma preferido entre es_419 y en_US,<br>cuando se consulta un recurso,<br>entonces la respuesta entrega los textos y formatos de fecha en ese idioma.<br><br>**Escenario 2: Accesibilidad.**<br>Dado que la interfaz expone etiquetas accesibles y un contraste mínimo de 4.5:1,<br>cuando se ejecuta la validación automatizada,<br>entonces no se reportan incumplimientos de nivel AA. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-
+| CON-10 | Alcance sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya las reservas, los cobros y el reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de la institución. | **Escenario 1: Operación de las barreras.**<br>Dado que la solución no gestiona el ingreso físico de los vehículos,<br>cuando un vehículo accede al estacionamiento,<br>entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>**Escenario 2: Ausencia de transacciones.**<br>Dado que el producto no administra pagos ni reservas de espacios,<br>cuando se consulta cualquiera de sus servicios,<br>entonces no se expone ninguna operación de cobro ni de reserva. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (World Wide Web Consortium, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
+| CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. OpenAPI proporciona una descripción independiente del lenguaje para las interfaces HTTP (OpenAPI Initiative, 2024). | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Angular o Vue, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Angular o Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Angular Material, PrimeNG, PrimeVue o Vuetify, según el framework elegido. | EP02, EP06 |
+| CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS desde una sola base de código (Flutter, s. f.). | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
+| CON-15 | Software del nodo de sensado | Como Developer, necesito desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas hacia el broker de la red local. | **Escenario 1: Tecnología del nodo.**<br>Dado que los nodos se construyen sobre microcontroladores ESP32,<br>cuando se implementa su software,<br>entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>**Escenario 2: Alcance del software embebido.**<br>Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>cuando el nodo detecta un cambio en su sensor,<br>entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>**Escenario 3: Conservación ante desconexión.**<br>Dado que la red local puede presentar interrupciones,<br>cuando el nodo no logra publicar una lectura,<br>entonces la conserva y la reenvía al restablecerse la conexión. | EP02, EP04 |
+| CON-16 | Detección por sensores sin identificación del vehículo | Como Developer, necesito que la detección de ocupación se realice con sensores de cochera y de paso, sin videovigilancia ni identificación de vehículos, manteniendo el contexto de sensado independiente de la tecnología empleada. | **Escenario 1: Fuentes de detección admitidas.**<br>Dado que el alcance actual contempla sensores registrados en el inventario de dispositivos,<br>cuando se procesa un evento de detección,<br>entonces proviene de un dispositivo registrado y su traducción al lenguaje del dominio ocurre en la capa anticorrupción, de modo que otra tecnología pueda incorporarse sin alterar el modelo de ocupación.<br><br>**Escenario 2: Ausencia de identificación del vehículo.**<br>Dado que los eventos informan presencia y dirección, no identidad,<br>cuando se procesa un evento de ocupación,<br>entonces no se almacena ningún dato que permita identificar al vehículo ni a su conductor. | EP02, EP04 |
+| CON-17 | Acceso restringido a la comunidad de cada institución | Como Developer, necesito restringir el registro a los dominios de correo habilitados por cada institución y reservar la creación de administradores a la invitación, para sostener el modelo B2B y la pertenencia institucional. | **Escenario 1: Dominio no habilitado.**<br>Dado que el dominio del correo no pertenece a ninguna institución registrada y no existe una invitación vigente ni una cuenta autorizada previamente,<br>cuando se solicita el acceso,<br>entonces el sistema no emite ningún código de verificación.<br><br>**Escenario 2: Creación de administradores.**<br>Dado que el rol de administrador no admite autorregistro,<br>cuando se intenta crear una cuenta con ese rol fuera del flujo de invitación o del alta inicial de la institución,<br>entonces la solicitud es rechazada.<br><br>**Escenario 3: Alta de instituciones.**<br>Dado que el alta de una institución no se expone públicamente,<br>cuando se envía la solicitud sin credenciales de plataforma,<br>entonces la respuesta es 403. | EP01, EP04 |
+| CON-18 | Términos y condiciones accesibles desde el pie de página | Como Developer, necesito enlazar los términos y condiciones del servicio desde el pie de página de la Landing Page y de las aplicaciones, para que el usuario conozca las condiciones antes de registrarse. | **Escenario 1: Disponibilidad del documento.**<br>Dado que los términos y condiciones se encuentran publicados,<br>cuando el usuario consulta el pie de página de cualquiera de los productos,<br>entonces accede al documento vigente. | EP06 |
 
 ### 4.1.3. Architectural Drivers Backlog
 
@@ -2522,10 +2604,16 @@ El Architectural Drivers Backlog se construyó de forma iterativa a partir del Q
 | CON-07 | Privacidad de la ubicación y protección de datos | La ubicación no sale del dispositivo; cumplimiento de la Ley N.° 29733. | High | Medium |
 | CON-08 | Aislamiento de datos por institución | Acceso restringido por institución y alta de instituciones no pública. | High | Medium |
 | CON-09 | Autenticación sin contraseña | Código de un solo uso, tokens de sesión y límite de solicitudes. | High | Medium |
+| CON-12 | Servicios web con el stack definido por el curso | Servicios RESTful sobre Spring Boot, ASP.NET Core o Nest, documentados con OpenAPI. | High | Medium |
+| CON-16 | Detección por sensores sin identificación del vehículo | Sensores de cochera y de paso, sin videovigilancia ni identificación; la traducción ocurre en la capa anticorrupción. | High | Medium |
+| CON-17 | Acceso restringido a la comunidad de cada institución | Registro limitado a dominios habilitados o invitación; los administradores no se autorregistran. | High | Medium |
 | CON-10 | Sin reservas, cobros ni control de acceso | Alcance acotado a información, predicción y gestión; el flujo se cuenta sin identificar vehículos. | High | Low |
+| CON-14 | Aplicación móvil multiplataforma con Flutter | Una sola base de código en Dart y Flutter para Android e iOS, sin tecnologías híbridas. | High | Low |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Landing Page en HTML5, CSS3 y JavaScript; consola en Angular o Vue con biblioteca Material. | High | Low |
 | CON-02 | Domain-Driven Design | Descomposición en Bounded Contexts con persistencia propia. | Medium | High |
 | QAD-08 | Soporte multi-institución (QAS-08) | Incorporar universidades por configuración, con datos aislados. | Medium | High |
 | FD-07 | Tiempo hasta la próxima disponibilidad (US36) | Estimar el rango de liberación de un espacio con el flujo de salidas y el pronóstico vigente. | Medium | High |
+| CON-15 | Software del nodo de sensado | Firmware en C++ sobre ESP32 que publica lecturas sin decidir el estado del espacio. | Medium | High |
 | FD-08 | Alertas por saturación prevista (US23) | Enviar alertas por franja horaria evitando repeticiones. | Medium | Medium |
 | FD-09 | Precisión de las predicciones (US34) | Comparar pronósticos y ocupación observada por versión de modelo. | Medium | Medium |
 | FD-10 | Calendario académico y eventos (US35) | Incorporar calendario y eventos como insumo del pronóstico. | Medium | Medium |
@@ -2533,7 +2621,7 @@ El Architectural Drivers Backlog se construyó de forma iterativa a partir del Q
 | CON-06 | Servicios externos de terceros | Correo y mensajería push aislados tras una capa de integración. | Medium | Medium |
 | CON-03 | Tecnologías open-source | Uso de tecnologías open-source en los distintos niveles. | Medium | Low |
 | CON-11 | Accesibilidad e internacionalización | Textos en es_419 y en_US y cumplimiento de nivel AA. | Medium | Low |
-
+| CON-18 | Términos y condiciones accesibles desde el pie de página | Documento vigente enlazado desde la Landing Page y las aplicaciones. | Medium | Low |
 
 ### 4.1.4. Architectural Design Decisions
 
@@ -2559,7 +2647,7 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 | Sensores publican por HTTPS directamente a la nube | Arquitectura más simple. | Expone los dispositivos; se pierden lecturas sin conexión; mayor consumo de batería por sensor. |
 | Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; requiere acceso entrante a la red del campus; no cumple los 5 s. |
 
-**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
+**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, nivel que establece una entrega de al menos una vez (OASIS, 2019), con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
 
 **Iteración 3: Procesamiento de eventos de ocupación** (Drivers: FD-02, FD-03, FD-07, QAD-03, QAD-05)
 
@@ -2780,6 +2868,8 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 
 ## 4.2. Strategic-Level Domain-Driven Design
 
+El diseño estratégico utiliza los principios de Domain-Driven Design para delimitar modelos, responsabilidades y relaciones según el lenguaje y las capacidades del dominio (Evans, 2004).
+
 ### 4.2.1. EventStorming
 
 El Event Storming permitió identificar de manera colaborativa los principales eventos de dominio, comandos, políticas y actores involucrados en el sistema QuadRapp. A través de esta técnica se visualizó el flujo completo del negocio, desde la autenticación de usuarios hasta la gestión de ocupación, predicciones y notificaciones.
@@ -2802,155 +2892,2007 @@ Con el objetivo de comprender la comunicación entre los diferentes Bounded Cont
 
 ### 4.2.4. Bounded Context Canvases
 
-**Parking Sensing:**
+La elaboración de los Bounded Context Canvases se realizó de manera iterativa a partir de los contextos identificados durante el Candidate Context Discovery. El objetivo fue revisar progresivamente el propósito, las reglas, capacidades y dependencias de cada contexto, asegurando que cada uno mantuviera responsabilidades claramente delimitadas y un lenguaje propio.
 
-![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensing_Canvases.png)
+Para ello se siguieron las etapas de Context Overview Definition, Business Rules Distillation & Ubiquitous Language Capture, Capability Analysis, Capability Layering cuando correspondía, Dependencies Capture y Design Critique.
 
-**Occupancy:**
+<br>
 
-![Occupancy_Canvases](./assets/capitulo-04/Occupancy_Canvases.png)
+**Context Overview Definition:**
+En una primera etapa se definió el propósito y alcance de cada Bounded Context, identificando qué responsabilidad principal debía asumir y qué elementos debían permanecer fuera de sus límites. Esto permitió diferenciar, por ejemplo, a Parking Sensing, encargado de interpretar las señales provenientes de la infraestructura IoT, de Occupancy, responsable de mantener el estado de ocupación utilizado por el negocio.
+
+También se identificó a Prediction & Advisory como el contexto central de Quadrapp, debido a que concentra la capacidad diferenciadora de anticipar la disponibilidad futura y proporcionar asesoría de llegada al conductor.
+
+<br>
+
+**Business Rules Distillation & Ubiquitous Language Capture:**
+Luego se identificaron las principales reglas de negocio de cada contexto y los términos que debían utilizarse de manera consistente dentro de sus límites.
+
+En Occupancy, por ejemplo, se definieron conceptos relacionados con disponibilidad, ocupación y estado desconocido, mientras que en Prediction & Advisory se consolidaron términos como Forecast, Forecast Horizon, Predicted Occupancy, Confidence Level, Arrival Advice y ETA.
+
+Esta separación permitió evitar que conceptos propios de sensores, predicción, analítica o identidad se mezclaran entre contextos diferentes.
+
+<br>
+
+**Capability Analysis:**
+
+A partir de sus responsabilidades y reglas se identificaron las capacidades que debía ofrecer cada contexto.
+
+Parking Sensing concentra las capacidades relacionadas con la recepción y traducción de señales físicas; Occupancy, el mantenimiento del estado consolidado de ocupación; Parking Configuration, la configuración de estacionamientos y su estructura; Prediction & Advisory, la generación de pronósticos y asesoría de llegada; Notifications, la gestión de suscripciones y alertas; Analytics, el análisis histórico y la evaluación de precisión; e IAM, la autenticación, autorización y gestión de sesiones.
+
+Este análisis permitió comprobar que cada capacidad estuviera ubicada en el contexto que mejor representaba su responsabilidad de negocio.
+
+<br>
+
+**Capability Layering:**
+
+Cuando fue necesario, las capacidades se agruparon según su función dentro del contexto. En Prediction & Advisory, por ejemplo, se distinguieron las capacidades de Forecasting, relacionadas con la generación de pronósticos, y Arrival Advisory, orientadas a transformar esos pronósticos en información útil según el tiempo estimado de llegada.
+
+Se decidió mantener ambas dentro del mismo Bounded Context debido a su estrecha relación y al hecho de que forman parte de la misma capacidad diferenciadora de Quadrapp.
+
+<br>
+
+**Dependencies Capture:**
+
+Después se identificaron las dependencias entre los distintos contextos, estableciendo qué información recibe cada uno y qué resultados proporciona.
+
+Por ejemplo, Parking Sensing entrega información interpretada a Occupancy; Occupancy proporciona el estado consolidado necesario para Prediction & Advisory y Analytics; Prediction & Advisory genera pronósticos utilizados por Analytics y Notifications; y IAM proporciona el contexto de autenticación y autorización requerido por las operaciones protegidas.
+
+Estas dependencias se reflejan posteriormente en el Context Map y permiten mantener separados los modelos internos de cada Bounded Context.
+
+<br>
+
+**Design Critique:**
+
+Finalmente se revisaron los límites propuestos y se analizaron posibles responsabilidades duplicadas o dependencias innecesarias.
+
+Como resultado de esta revisión se reforzó la separación entre Parking Sensing y Occupancy, evitando que ambos contextos representaran las mismas funciones. También se mantuvo el análisis de precisión fuera de Prediction & Advisory, asignándolo a Analytics, y la entrega de alertas se mantuvo dentro de Notifications.
+
+Este proceso permitió obtener los Bounded Contexts finales de Quadrapp con responsabilidades más claras y reducir el acoplamiento entre sus modelos.
+
+<br>
+
+**Resultado del proceso:**
+
+Como resultado de estas iteraciones se consolidaron los siguientes Bounded Contexts:
+
+- Prediction & Advisory — Core
+- Parking Sensing — Supporting
+- Occupancy — Supporting
+- Parking Configuration — Supporting
+- Notifications — Supporting
+- Analytics — Supporting
+- IAM — Generic
+
+A continuación, se presentan los Bounded Context Canvases que resumen el propósito, clasificación estratégica, roles, lenguaje ubicuo, decisiones de negocio, comunicaciones, supuestos y métricas identificadas durante este proceso.
+
+<br>
 
 **Prediction & Advisory:**
 
-![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&Advisory_Canvases.png)
+![Prediction&Advisory_Canvases](./assets/capitulo-04/Prediction&AdvisoryCanvases.png)
+
+<br>
+
+**Parking Sensing:**
+
+![ParkingSensing_Canvases](./assets/capitulo-04/ParkingSensingCanvases.png)
+
+<br>
+
+**Occupancy:**
+
+![Occupancy_Canvases](./assets/capitulo-04/OccupancyCanvases.png)
+
+<br>
 
 **Parking Configuration:**
 
-![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfiguration_Canvases.png)
+![ParkingConfiguration_Canvases](./assets/capitulo-04/ParkingConfigurationCanvases.png)
+
+<br>
 
 **Notifications:**
 
-![Notifications_Canvases](./assets/capitulo-04/Notifications_Canvases.png)
+![Notifications_Canvases](./assets/capitulo-04/NotificationCanvases.png)
+
+<br>
 
 **Analytics:**
 
-![Analytics_Canvases](./assets/capitulo-04/Analytics_Canvases.png)
+![Analytics_Canvases](./assets/capitulo-04/AnalyticsCanvases.png)
+
+<br>
 
 **IAM:**
 
-![IAM_Canvases](./assets/capitulo-04/IAM_Canvases.png)
+![IAM_Canvases](./assets/capitulo-04/IAMCanvases.png)
 
 ### 4.2.5. Context Mapping
 
-En esta sección se desarrollan distintas alternativas de Context Mapping para representar las relaciones entre los bounded contexts definidos para Quadrapp. El objetivo es evaluar cómo deben comunicarse entre sí, qué nivel de dependencia es adecuado y qué patrones de relación permiten mantener una arquitectura modular y alineada con las responsabilidades de cada contexto.
+En esta sección se comparan distintas formas en las que los Bounded Contexts de Quadrapp pueden relacionarse entre sí. La intención es encontrar una estructura que permita que cada contexto mantenga responsabilidades claras, evitando dependencias innecesarias y facilitando que la solución pueda evolucionar sin afectar otras partes del sistema.
 
-Para este análisis se consideran los bounded contexts Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, junto con patrones de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel y Anti-Corruption Layer.
+Para ello, se analizan los bounded context Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, considerando patrones de integración de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel, Open Host Service, Published Language y Anti-Corruption Layer.
+
+<br>
 
 **Opción 1 – Contextos independientes con relaciones directas:**
-Se mantienen los siete bounded contexts completamente separados y se establecen relaciones directas entre aquellos que necesitan intercambiar información. La mayor parte de las dependencias utilizan el patrón Customer/Supplier, donde un contexto proporciona información que otro requiere para ejecutar sus responsabilidades.
-
-Parking Configuration proporciona la estructura del estacionamiento a Parking Sensing y Occupancy. Luego, Parking Sensing transmite los eventos obtenidos de sensores a Occupancy, que determina la disponibilidad actual de los espacios.
-
-A partir de dicha información, Occupancy proporciona el estado actual a Prediction & Advisory y registra los eventos correspondientes en Analytics. Analytics procesa la información histórica y entrega patrones de demanda a Prediction & Advisory. Finalmente, las recomendaciones y alertas generadas por este último contexto son enviadas a Notifications.
-
-Por otro lado, IAM funciona como una capacidad transversal de identidad y autorización, por lo que los contextos que requieren información del usuario adoptan su modelo mediante una relación Conformist.
-
-Ventajas:
-- Mantiene responsabilidades claramente separadas.
-- Facilita la comprensión de las dependencias.
-- Permite que cada bounded context evolucione de forma independiente.
-- Evita compartir directamente modelos internos.
-
-Desventajas:
-- Existe una mayor cantidad de relaciones entre contextos.
-- Los cambios en contratos de integración pueden afectar a sus consumidores.
-- Puede generarse lógica repetida para transformar información entre modelos.
 
 ![ContextMapping_Option1](./assets/capitulo-04/ContextMapping_Option1.png)
 
+La primera alternativa mantiene los siete Bounded Contexts completamente separados y utiliza principalmente relaciones Customer/Supplier para intercambiar la información necesaria.
+
+Parking Configuration proporciona la estructura de los estacionamientos a Parking Sensing y Occupancy. Parking Sensing procesa las señales provenientes de la infraestructura IoT y entrega los eventos interpretados a Occupancy, que mantiene el estado actual de ocupación y disponibilidad.
+
+Occupancy proporciona su estado consolidado a Prediction & Advisory, que lo utiliza junto con la información contextual del estacionamiento para generar pronósticos y asesoría de llegada. Occupancy también proporciona sus eventos a Analytics, mientras que Prediction & Advisory entrega a Analytics los pronósticos generados para que puedan compararse posteriormente con la ocupación observada.
+
+Finalmente, Prediction & Advisory proporciona a Notifications los eventos predictivos relevantes para determinar cuándo se debe comunicar una situación al conductor. IAM funciona de forma transversal proporcionando la información de autenticación y autorización requerida por los demás contextos.
+
+Esta alternativa mantiene límites claros y permite una implementación sencilla de las relaciones. Sin embargo, utilizar contratos directos en todas las integraciones incrementa la dependencia entre productores y consumidores y obliga a cada contexto a adaptarse ante cambios en los contratos de los demás.
+
+<br>
+
 **Opción 2 – Uso de Shared Kernel entre contextos relacionados:**
-Se mantiene los siete bounded contexts, pero propone compartir ciertos conceptos entre aquellos que trabajan con información estrechamente relacionada. 
-
-En este caso, Parking Sensing y Occupancy compartirían un Shared Kernel asociado a la representación de eventos y espacios del estacionamiento. De manera similar, Occupancy y Analytics compartirían conceptos relacionados con los eventos de ocupación y su representación histórica.
-
-El resto de relaciones mantendría principalmente el patrón Customer/Supplier. Parking Configuration continuaría proporcionando la estructura del estacionamiento, mientras que Occupancy y Analytics suministrarían información actual e histórica respectivamente a Prediction & Advisory. Este último enviaría los resultados relevantes a Notifications.
-IAM continuaría operando como contexto genérico y los demás contextos se adaptarían a su modelo mediante relaciones Conformist.
-
-Ventajas:
-- Reduce la duplicación de conceptos entre contextos relacionados.
-- Disminuye la necesidad de transformar información.
-- Simplifica algunas comunicaciones internas.
-- Puede facilitar la implementación inicial.
-
-Desventajas:
-- Incrementa el acoplamiento entre bounded contexts.
-- Los cambios en un modelo compartido pueden afectar a varios contextos.
-- Reduce la independencia de evolución de los módulos.
-- Puede difuminar los límites del dominio si se comparte demasiada información.
-Aunque esta alternativa simplifica ciertas integraciones, el uso excesivo de Shared Kernel puede hacer que los bounded contexts pierdan parte de la autonomía que se busca mediante Domain-Driven Design.
 
 ![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option2.png)
 
+La segunda alternativa mantiene la misma división en siete Bounded Contexts, pero introduce Shared Kernel entre aquellos que trabajan con conceptos estrechamente relacionados.
+Parking Sensing y Occupancy compartirían una representación mínima de los eventos relacionados con los espacios del estacionamiento. De forma similar, Occupancy y Analytics compartirían conceptos relacionados con la ocupación observada que posteriormente se utiliza para construir el historial.
+
+El resto de integraciones conservaría relaciones directas. Prediction & Advisory seguiría recibiendo información de Occupancy y Parking Configuration, mientras que Analytics recibiría los pronósticos generados para calcular su precisión.
+
+El principal beneficio de esta alternativa es reducir la cantidad de transformaciones entre modelos y simplificar inicialmente algunas integraciones. Sin embargo, un Shared Kernel exige coordinación entre los equipos responsables de los contextos involucrados, ya que cualquier modificación del modelo compartido puede afectar a ambos lados.
+
+En Quadrapp este riesgo resulta especialmente relevante entre Parking Sensing y Occupancy, porque uno representa conceptos técnicos de infraestructura mientras el otro representa conceptos de negocio. También afectaría la independencia de Analytics si compartiera directamente el modelo de Occupancy.
+
+Por ello, aunque puede reducir el esfuerzo inicial, esta alternativa se descarta debido al mayor acoplamiento entre los modelos.
+
+<br>
+
 **Opción 3 – Contextos independientes con protección de modelos:**
-Se mantiene los bounded contexts independientes, pero introduce mecanismos para proteger los modelos internos cuando existen diferencias importantes entre ellos.
 
-La principal decisión es utilizar una Anti-Corruption Layer entre Parking Sensing y Occupancy. Parking Sensing trabaja con elementos técnicos como sensores, telemetría, señales y eventos de dispositivos, mientras que Occupancy trabaja con conceptos del negocio como ocupación, disponibilidad y estado de los espacios.
+![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option3.png)
 
-La Anti-Corruption Layer se encarga de transformar los eventos técnicos provenientes del sensado en información comprensible para el dominio de Occupancy. De esta manera, Occupancy no necesita conocer los detalles de implementación de los sensores y puede evolucionar independientemente de la tecnología utilizada para capturar los datos.
-Parking Configuration mantiene relaciones Customer/Supplier con Parking Sensing, Occupancy y Analytics, proporcionando información sobre campus, estacionamientos, zonas y espacios.
+La tercera alternativa mantiene a los Bounded Contexts separados, pero introduce mecanismos específicos para evitar que los detalles internos de un contexto se propaguen directamente hacia otro.
 
-Entre Occupancy y Analytics se propone un Shared Kernel limitado, debido a que ambos contextos necesitan una representación consistente de determinados datos históricos de ocupación. Su alcance debe mantenerse reducido para evitar generar una dependencia excesiva.
+Entre Parking Sensing y Occupancy se utiliza una relación Customer/Supplier junto con una Anti-Corruption Layer. Esto permite que Parking Sensing continúe trabajando con información técnica proveniente de sensores y dispositivos, mientras Occupancy recibe únicamente la información necesaria para mantener el estado de disponibilidad de los espacios. De esta manera, Occupancy no necesita conocer cómo funciona internamente la tecnología de sensado.
 
-Occupancy proporciona información actual de disponibilidad a Prediction & Advisory, mientras que Analytics aporta patrones históricos y tendencias de demanda. De esta manera, Prediction & Advisory puede combinar información actual e histórica para generar las predicciones de disponibilidad y recomendaciones al conductor.
+Parking Configuration actúa como la fuente de información sobre la estructura del estacionamiento, incluyendo estacionamientos, zonas, espacios, asociaciones de sensores y datos de contexto como el calendario académico y los eventos del campus. Esta información puede ponerse a disposición de los demás contextos mediante un Open Host Service, evitando que cada uno tenga que conocer directamente su modelo interno.
 
-Posteriormente, Prediction & Advisory se comunica con Notifications mediante una relación Customer/Supplier para solicitar el envío de alertas o recomendaciones relevantes.
-Finalmente, IAM se mantiene como contexto genérico. Los contextos que requieren identidad, autenticación o autorización utilizan su modelo mediante una relación Conformist, evitando replicar responsabilidades relacionadas con seguridad.
+Occupancy proporciona a Prediction & Advisory el estado actual de ocupación y el flujo consolidado del estacionamiento. Por otro lado, Analytics consume los eventos publicados por Occupancy mediante una relación Conformist, utilizando esa información para construir su propio historial sin compartir directamente el modelo de dominio de Occupancy.
 
-Ventajas:
-- Mantiene una clara separación de responsabilidades.
-- Protege el modelo de Occupancy de detalles técnicos del IoT.
-- Permite modificar sensores o mecanismos de captura sin afectar directamente al dominio.
-- Mantiene Prediction & Advisory independiente de la infraestructura de sensado.
-- Facilita la escalabilidad y evolución de cada contexto.
+Cuando Prediction & Advisory genera un nuevo pronóstico, publica el evento ForecastGenerated. Analytics utiliza este evento para comparar la predicción con la ocupación que finalmente fue observada y así calcular las métricas de precisión del modelo.
 
-Desventajas:
-- Requiere implementar una capa adicional de traducción.
-- Aumenta ligeramente la complejidad de integración.
-- El Shared Kernel entre Occupancy y Analytics requiere coordinación entre ambos contextos.
-- Implica un mayor esfuerzo inicial de diseño.
+De manera similar, cuando se identifica una situación relevante como una posible saturación, Prediction & Advisory publica esa información para Notifications mediante Published Language. De esta forma, Notifications puede actuar sobre el evento sin depender de cómo se realiza internamente la predicción.
 
-![ContextMapping_Option3](./assets/capitulo-04/ContextMapping_Option3.png)
+IAM se mantiene como un contexto transversal encargado de la identidad, autenticación y autorización. Los demás contextos utilizan la información de usuario, institución y rol proporcionada por IAM cuando necesitan validar el acceso a sus funcionalidades.
+
+Las integraciones con servicios externos también se mantienen aisladas. IAM se comunica con el servicio de correo mediante una Anti-Corruption Layer para el envío de códigos de acceso, mientras que Notifications utiliza el mismo enfoque para integrarse con el proveedor de mensajería push.
+
+Finalmente, el proveedor de mapas no forma parte de las dependencias del backend. El cálculo del tiempo estimado de llegada se realiza directamente en la aplicación móvil y el servidor recibe únicamente el ETA expresado en minutos, manteniendo la decisión de privacidad definida para Quadrapp.
+
+<br>
 
 **Elección:**
-Hemos seleccionado la opción 3 debido a que proporciona el mejor equilibrio entre separación de responsabilidades, independencia de los bounded contexts y control de las dependencias.
 
-La relación mediante Anti-Corruption Layer entre Parking Sensing y Occupancy es especialmente importante, ya que evita que conceptos técnicos como telemetría, sensores o dispositivos Edge formen parte directamente del modelo de ocupación. Esto permite que la tecnología de sensado pueda evolucionar sin alterar las reglas de negocio asociadas a la disponibilidad de los estacionamientos.
+Se selecciona la Opción 3, ya que proporciona el mejor equilibrio entre separación de responsabilidades, autonomía de los Bounded Contexts y protección de sus modelos.
+La decisión más importante es mantener una Anti-Corruption Layer entre Parking Sensing y Occupancy. Esto evita que conceptos relacionados con sensores, dispositivos o telemetría formen parte del modelo de ocupación y permite modificar la tecnología de sensado sin alterar directamente las reglas de negocio.
 
-Asimismo, el uso limitado de Shared Kernel entre Occupancy y Analytics permite mantener consistencia sobre los datos históricos de ocupación que ambos contextos necesitan, sin compartir modelos innecesarios con el resto de la solución.
+También se decide utilizar Conformist entre Occupancy y Analytics, en lugar de Shared Kernel. Analytics necesita consumir la información producida por Occupancy, pero no requiere compartir sus objetos de dominio ni su persistencia. De esta forma, conserva su propio modelo orientado al análisis histórico.
 
-Por otro lado, Prediction & Advisory se mantiene como el Core Domain de Quadrapp, ya que concentra el principal diferencial de la solución: estimar la probabilidad de encontrar un espacio disponible al momento de llegada y generar recomendaciones para el conductor a partir de información actual e histórica.
-
-En conjunto, esta alternativa permite que cada bounded context mantenga un propósito específico y pueda evolucionar de manera independiente, mientras las relaciones entre ellos permanecen claramente definidas y controladas.
+Prediction & Advisory permanece como el Core Domain de Quadrapp y recibe únicamente la información necesaria para generar pronósticos y asesoría. Sus resultados se exponen mediante contratos publicados hacia Analytics y Notifications, evitando que estos contextos dependan de la implementación interna del modelo predictivo.
 
 ## 4.3. Software Architecture
 
+Las vistas arquitectónicas siguen el modelo C4, que organiza la representación del sistema mediante niveles de abstracción y diagramas complementarios de paisaje y despliegue (Brown, s. f.).
+
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-Representa el ecosistema general de Quadrapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
+El System Landscape Diagram representa el ecosistema general de Quadrapp: las personas que lo utilizan, los sistemas con los que se relaciona y los límites entre ellos. Su propósito es ubicar a Quadrapp dentro de su entorno antes de detallar su estructura interna.
 
-<img src="assets/capitulo-04/4.3.1-landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
+Dos tipos de usuarios interactúan con el producto. Los conductores de la comunidad educativa consultan la disponibilidad actual, las predicciones y la asesoría de llegada, y reciben alertas. También los administradores de estacionamientos universitarios, que configuran los estacionamientos, monitorean la operación y analizan la demanda.
 
+<img src="assets/capitulo-04/Quadrapp-System-Landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
 
 ### 4.3.2. Software Architecture Context Level Diagrams
 
-<img src="assets/capitulo-04/4.3.2-context-level.png" alt="Universidad Peruana de Ciencias Aplicadas">
+El Context Diagram muestra a Quadrapp como un único sistema y detalla cómo se relaciona con las personas y los sistemas externos que lo rodean, sin describir su estructura interna, que se desarrolla en el diagrama de contenedores.
 
+<img src="assets/capitulo-04/Quadrapp-Context-Diagram.png" alt="Universidad Peruana de Ciencias Aplicadas">
+
+El conductor de la comunidad educativa utiliza Quadrapp para consultar la disponibilidad, revisar las predicciones y obtener la asesoría de llegada. El administrador de estacionamientos universitarios lo emplea para configurar los estacionamientos, supervisar la operación y analizar el historial de ocupación. En ambos casos, el acceso se realiza con un código de un solo uso enviado por el servicio de correo.
+
+La red de sensado del campus envía a Quadrapp las lecturas de ocupación y de paso de vehículos. Los sensores no se comunican directamente con el sistema, pues publican sus lecturas en el gateway del campus, que las transmite mediante MQTT con QoS 1. El proveedor de mensajería push recibe las solicitudes de alertas de Quadrapp para entregarlas a los dispositivos de los conductores.
+
+La aplicación móvil consulta el servicio de mapas desde el propio dispositivo para calcular el tiempo estimado de llegada y Quadrapp recibe ese tiempo expresado en minutos, de modo que la ubicación del conductor no llega a sus servicios.
 
 ### 4.3.3. Software Architecture Container Level Diagrams
 
-*Pendiente de elaboración.*
+Descompone Quadrapp en los contenedores que lo conforman y muestra cómo se comunican entre sí. Los clientes son la Landing Page, la aplicación móvil y la consola de operación, que acceden al sistema a través de un único punto de entrada. Cada bounded context se despliega como un servicio con su propia persistencia, según lo establecido en el constraint de Domain-Driven Design, y la caché de lectura sostiene el read model de disponibilidad. Los nodos de sensado publican sus lecturas en el broker de la red local y un consumidor las valida y traduce al lenguaje del dominio antes de que lleguen al servicio de ocupación.
+
+<img src="assets/capitulo-04/4.3.3-container-level.png" alt="Diagrama de contenedores de Quadrapp">
 
 ### 4.3.4. Software Architecture Deployment Diagrams
 
-*Pendiente de elaboración.*
+Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker permanecen en la red local del campus, sin exposición a Internet, y solo el consumidor de eventos establece la comunicación con la nube. Los servicios de dominio, el punto de entrada y el almacenamiento gestionado se despliegan en el proveedor cloud, mientras que la Landing Page se publica como sitio estático. La aplicación móvil resuelve el tiempo estimado de llegada contra el proveedor de mapas desde el propio dispositivo, de modo que la ubicación del conductor no llega a los servicios de Quadrapp.
+
+<img src="assets/capitulo-04/4.3.4-deployment.png" alt="Diagrama de despliegue de Quadrapp">
+
+---
+
+# Capítulo V: Tactical-Level Software Design
+
+## 5.1. Bounded Context: IAM
+
+## 5.2. Bounded Context: Parking Configuration
+
+## 5.3. Bounded Context: Parking Sensing
+
+## 5.4. Bounded Context: Occupancy
+
+## 5.5. Bounded Context: Prediction & Advisory
+
+## 5.6. Bounded Context: Analytics
+
+El Bounded Context Analytics es responsable de procesar y mantener la información histórica necesaria para analizar el comportamiento de la ocupación de los estacionamientos universitarios en Quadrapp.
+
+Su principal propósito es proporcionar a los administradores información que permita comprender cómo ha variado la ocupación a lo largo del tiempo, identificar los periodos de mayor demanda y evaluar la precisión de las predicciones generadas por el sistema.
+
+Este Bounded Context soporta principalmente:
+
+- US21 — Consultar historial de ocupación.
+- US22 — Identificar horas de mayor ocupación.
+- US34 — Consultar la precisión de las predicciones.
+- TS11 — Implementación de procesamiento histórico para analítica de ocupación.
+
+Analytics no determina el estado actual de un espacio ni procesa directamente las señales provenientes de los sensores. Estas responsabilidades pertenecen a Occupancy & Parking Sensing. Tampoco genera los pronósticos de disponibilidad, responsabilidad que pertenece a Prediction & Advisory.
+
+Las principales responsabilidades del Bounded Context Analytics son:
+
+- Mantener la información histórica de ocupación.
+- Asociar los registros históricos con el estacionamiento y la zona correspondientes.
+- Permitir consultas de ocupación dentro de un periodo determinado.
+- Permitir filtrar el historial por zona.
+- Proporcionar información agregada por hora y por día.
+- Identificar los periodos de mayor ocupación.
+- Permitir comparar niveles de ocupación entre diferentes días y horarios.
+- Mantener la información necesaria de los pronósticos generados para evaluar posteriormente su precisión.
+- Comparar los pronósticos con la ocupación realmente observada.
+- Calcular el error absoluto medio de las predicciones.
+- Calcular el porcentaje de pronósticos que se encuentran dentro del margen configurado.
+- Diferenciar los resultados obtenidos por versión del modelo de predicción.
+- Informar cuando no existe información histórica suficiente para realizar un análisis.
+- Mantener separados sus datos de los modelos internos pertenecientes a Occupancy y Prediction & Advisory.
+
+
+**Class Dictionary:**
+
+La siguiente tabla resume las clases e interfaces principales requeridas por Analytics.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|------------------ |-------|---------|-----------------|-----------------|
+| `HistoricalOccupancy` | Domain | Representa la información histórica de ocupación observada para un estacionamiento o zona durante un periodo. | `historicalOccupancyId`, `institutionId`, `parkingLotId`, `zoneId`, `periodStart`, `periodEnd`, `occupancyRate`, `entryCount`, `exitCount` | `belongsToPeriod()`, `belongsToZone()` |
+| `OccupancyRate` | Domain | Value Object que representa el porcentaje de ocupación observado. | `value` | `value()`, `isValid()` |
+| `PeakHour` | Domain | Value Object que representa un periodo identificado como uno de los momentos de mayor ocupación. | `periodStart`, `periodEnd`, `occupancyRate` | — |
+| `DemandPattern` | Domain | Value Object que representa un comportamiento recurrente identificado a partir de información histórica. | `period`, `occupancyRate` | — |
+| `PredictionAccuracy` | Domain | Value Object que representa las métricas obtenidas al comparar predicciones con ocupación observada. | `meanAbsoluteError`, `withinMarginPercentage`, `modelVersion` | — |
+| `HistoricalOccupancyRepository` | Domain | Abstracción para almacenar y consultar información histórica de ocupación. | — | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
+| `AnalyticsDomainService` | Domain | Ejecuta operaciones que requieren analizar múltiples registros históricos o comparar ocupación observada y pronósticos. | — | `identifyPeakHours()`, `identifyDemandPatterns()`, `calculatePredictionAccuracy()` |
+| `GetHistoricalOccupancyQuery` | Application | Representa una solicitud para consultar información histórica. | `institutionId`, `parkingLotId`, `zoneId`, `startDate`, `endDate` | — |
+| `GetHistoricalOccupancyQueryHandler` | Application | Coordina la consulta del historial de ocupación. | Dependencies | `handle()` |
+| `GetPeakHoursQuery` | Application | Representa una solicitud para identificar los periodos de mayor ocupación. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPeakHoursQueryHandler` | Application | Obtiene los registros históricos y coordina la identificación de horas pico. | Dependencies | `handle()` |
+| `GetPredictionAccuracyQuery` | Application | Representa una solicitud para evaluar la precisión de las predicciones en un periodo. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPredictionAccuracyQueryHandler` | Application | Coordina la comparación entre predicciones y ocupación observada. | Dependencies | `handle()` |
+| `OccupancyEventHandler` | Application | Procesa la información recibida desde Occupancy para actualizar las proyecciones históricas. | Dependencies | `handle()` |
+| `ForecastGeneratedEventHandler` | Application | Procesa los pronósticos recibidos desde Prediction & Advisory para permitir posteriormente su evaluación. | Dependencies | `handle()` |
+| `AnalyticsQueryController` | Interface | Expone las consultas disponibles para la consola administrativa. | Query Handler dependencies | `getHistoricalOccupancy()` |
+| `OccupancyEventConsumer` | Interface | Recibe los eventos provenientes de Occupancy. | Handler dependency | `consume()` |
+| `ForecastGeneratedEventConsumer` | Interface | Recibe los eventos `ForecastGenerated` provenientes de Prediction & Advisory. | Handler dependency | `consume()` |
+| `HistoricalOccupancyRepositoryAdapter` | Infrastructure | Implementa la persistencia del historial de ocupación. | Persistence dependency | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
+| `ForecastHistoryRepositoryAdapter` | Infrastructure | Mantiene la información de los pronósticos requerida para evaluar su precisión. | Persistence dependency | `save()`, `findByPeriod()` |
+| `OccupancyIntegrationAdapter` | Infrastructure | Encapsula el mecanismo técnico utilizado para recibir información desde Occupancy. | Integration dependency | `receive()` |
+| `PredictionIntegrationAdapter` | Infrastructure | Encapsula la integración utilizada para recibir `ForecastGenerated`. | Integration dependency | `receive()` |
+
+Los identificadores `institutionId`, `parkingLotId` y `zoneId` representan referencias externas. Analytics no administra el ciclo de vida de instituciones, estacionamientos o zonas.
+
+### 5.6.1. Domain Layer
+
+La Domain Layer contiene los conceptos, reglas y abstracciones de negocio que permiten representar y analizar la información histórica de ocupación dentro de Quadrapp. Esta capa no depende de HTTP, bases de datos, mecanismos de mensajería ni frameworks de aplicación.
+
+El principal Aggregate Root es `HistoricalOccupancy`. Además, el dominio mantiene una representación propia de los pronósticos recibidos desde Prediction & Advisory, denominada `ForecastSnapshot`, únicamente con la información necesaria para evaluar posteriormente su precisión.
+
+`HistoricalOccupancy` representa la ocupación observada de un estacionamiento o zona durante un periodo determinado. Esta información permite consultar el comportamiento histórico, comparar diferentes periodos e identificar los momentos de mayor ocupación.
+
+`ForecastSnapshot` representa una instantánea de un pronóstico previamente generado por Prediction & Advisory. Analytics no genera ni modifica dicho pronóstico; únicamente conserva los valores necesarios para contrastarlo posteriormente con la ocupación observada. Esta separación es coherente con el Context Mapping, donde Analytics consume `ForecastGenerated` para evaluar las estimaciones.
+
+Los identificadores `institutionId`, `parkingLotIdv` y `zoneId` actúan únicamente como referencias externas hacia conceptos administrados por otros Bounded Contexts. Analytics no administra instituciones, estacionamientos, zonas, espacios ni sensores.
+
+
+#### HistoricalOccupancy:
+
+**Categoría:** Aggregate Root.
+
+**Propósito:** Representar la información histórica de ocupación observada para un estacionamiento o una zona durante un periodo determinado.
+
+**Atributos:**
+- historicalOccupancyId: UUID — Identificador único del registro histórico.
+- institutionId: UUID — Referencia externa a la institución propietaria de la información.
+- parkingLotId: UUID — Referencia externa al estacionamiento al que corresponde el registro.
+- zoneId: UUID? — Referencia externa a una zona cuando la información ha sido desagregada por zona.
+- periodStart: Instant — Momento inicial del periodo representado.
+- periodEnd: Instant — Momento final del periodo representado.
+- occupancyRate: OccupancyRate — Porcentaje de ocupación observado durante el periodo.
+- entryCount: Integer — Cantidad de ingresos registrada durante el periodo.
+- exitCount: Integer — Cantidad de salidas registrada durante el periodo.
+
+**Operaciones:**
+- belongsToPeriod(startDate, endDate) — Determina si el registro se encuentra dentro del periodo solicitado.
+- belongsToZone(zoneId) — Indica si el registro corresponde a la zona especificada.
+- hasValidPeriod() — Comprueba que el inicio del periodo no sea posterior al final.
+- hasFlowData() — Indica si el registro dispone de información de entradas o salidas.
+
+institutionId, parkingLotId y zoneId no convierten a Institution, Parking Lot o Parking Zone en elementos pertenecientes al agregado. Sus ciclos de vida son administrados fuera de Analytics.
+
+
+#### OccupancyRate
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar el porcentaje de ocupación observado durante un periodo.
+
+**Atributos:**
+- value: Decimal — Porcentaje de ocupación correspondiente al registro histórico.
+
+**Operaciones:**
+- value() — Devuelve el porcentaje representado.
+- isValid() — Determina si el porcentaje se encuentra dentro de un rango válido (El valor debe permanecer dentro del intervalo de 0 % a 100 %)
+
+OccupancyRate no representa la disponibilidad actual del estacionamiento. Su utilización dentro de Analytics corresponde exclusivamente al análisis de información histórica.
+
+
+#### ForecastSnapshot
+
+**Categoría:** Aggregate Root / Entity.
+
+**Propósito:** Conservar una representación histórica de un pronóstico generado por Prediction & Advisory para permitir su comparación posterior con la ocupación observada.
+
+**Atributos:**
+- forecastId: UUID — Identificador del pronóstico recibido.
+- institutionId: UUID — Institución a la que pertenece el pronóstico.
+- parkingLotId: UUID — Estacionamiento sobre el cual fue realizada la predicción.
+- generatedAt: Instant — Momento en que fue generado el pronóstico.
+- targetAt: Instant — Momento futuro para el cual fue realizada la estimación.
+- horizonMinutes: Integer — Horizonte temporal utilizado por la predicción.
+- modelVersion: String — Versión del modelo con el que se generó el pronóstico.
+- predictedOccupancyRate: OccupancyRate — Nivel de ocupación previsto.
+
+**Operaciones:**
+- targets(referenceTime) — Indica si el pronóstico corresponde al momento observado que se desea evaluar.
+- wasGeneratedWith(modelVersion) — Determina si el pronóstico fue generado con una versión específica del modelo.
+
+ForecastSnapshot representa una instantánea histórica. Una modificación posterior del modelo de predicción no debe alterar la información correspondiente a un pronóstico que ya fue generado.
+
+Analytics tampoco administra el modelo predictivo. modelVersion es únicamente un valor utilizado para diferenciar los resultados de precisión obtenidos entre diferentes versiones.
+
+
+#### PeakHour
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar un periodo identificado a partir del historial como uno de los momentos de mayor ocupación del estacionamiento.
+
+**Atributos:**
+- periodStart: Instant — Inicio del periodo identificado.
+- periodEnd: Instant — Final del periodo identificado.
+- occupancyRate: OccupancyRate — Nivel de ocupación observado durante dicho periodo.
+
+**Operaciones:**
+- contains(timestamp) — Determina si un instante se encuentra dentro del periodo representado.
+
+
+#### DemandPattern
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar un comportamiento recurrente identificado a partir de la comparación de información histórica correspondiente a diferentes días y horarios.
+
+**Atributos:**
+- period: String — Periodo temporal al que corresponde el patrón identificado.
+- occupancyRate: OccupancyRate — Nivel de ocupación representativo del comportamiento observado.
+
+**Operaciones:**
+- matches(period) — Indica si el patrón corresponde al periodo consultado.
+
+DemandPattern no genera predicciones por sí mismo. Su propósito dentro de Analytics es representar tendencias históricas que pueden ser consultadas y analizadas.
+
+
+#### PredictionAccuracy
+
+**Categoría:** Value Object.
+
+**Propósito:** Representar las métricas obtenidas al comparar un conjunto de pronósticos con la ocupación realmente observada durante el periodo correspondiente.
+
+**Atributos:**
+- meanAbsoluteError: Decimal — Error absoluto medio expresado en puntos porcentuales.
+- withinMarginPercentage: Decimal — Porcentaje de pronósticos cuyo error se encuentra dentro del margen configurado.
+- modelVersion: String — Versión del modelo a la que corresponden las métricas.
+
+**Operaciones:**
+- meanAbsoluteError() — Devuelve el error absoluto medio calculado.
+- withinMarginPercentage() — Devuelve el porcentaje de pronósticos dentro del margen configurado.
+- belongsToModelVersion(modelVersion) — Indica si el resultado corresponde a una determinada versión del modelo.
+
+Cuando no existen pronósticos y datos de ocupación observada suficientes para efectuar una comparación, no debe generarse un PredictionAccuracy como si el cálculo fuera válido.
+
+
+#### HistoricalOccupancyRepository
+
+**Categoría:** Repository Interface.
+
+**Propósito:** Definir las operaciones necesarias para persistir y recuperar registros históricos de ocupación sin acoplar el dominio de Analytics a una tecnología específica de almacenamiento.
+
+**Operaciones:**
+- save(historicalOccupancy)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+
+Todas las consultas deben respetar la institución a la que pertenece la información.
+
+
+#### ForecastSnapshotRepository
+
+**Categoría:** Repository Interface.
+
+**Propósito:** Definir las operaciones necesarias para almacenar y recuperar las instantáneas de pronósticos utilizadas por Analytics para evaluar su precisión.
+
+**Operaciones:**
+- save(forecastSnapshot)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+
+Analytics utiliza este repositorio para acceder a su propia representación histórica del pronóstico y no para consultar directamente la persistencia interna de Prediction & Advisory.
+
+
+#### AnalyticsDomainService
+
+**Categoría:** Domain Service.
+
+**Propósito:** Ejecutar operaciones analíticas que requieren trabajar con varios registros históricos o relacionar la ocupación observada con pronósticos previamente generados.
+
+**Operaciones:**
+- identifyPeakHours(historicalOccupancies) — Identifica los periodos con mayor ocupación dentro de los registros disponibles.
+- identifyDemandPatterns(historicalOccupancies) — Permite identificar comportamientos recurrentes a partir del historial.
+- calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin) — Compara los pronósticos con la ocupación observada y genera las métricas correspondientes.
+
+El Domain Service no obtiene directamente los datos desde una base de datos. Los registros necesarios son recuperados mediante las abstracciones de Repository antes de realizar las operaciones del dominio. Tampoco genera nuevas predicciones ni modifica las recibidas desde Prediction & Advisory.
+
+
+#### Reglas de negocio
+
+El dominio de Analytics aplica las siguientes reglas de negocio:
+
+1. Todo registro de HistoricalOccupancy debe pertenecer a una institución identificada.
+2. Todo registro histórico debe estar asociado con el estacionamiento del que proviene la información.
+3. zoneId solo se mantiene cuando el registro corresponde específicamente a una zona del estacionamiento.
+4. El momento inicial de un periodo histórico no puede ser posterior a su momento final.
+5. Un OccupancyRate debe representar un valor entre 0 % y 100 %.
+6. entryCount y exitCount no pueden contener valores negativos.
+7. Las consultas históricas deben respetar el periodo solicitado por el administrador.
+8. Cuando se selecciona una zona, solo deben incluirse los registros correspondientes a dicha zona.
+9. Cuando no existen registros para el periodo solicitado, Analytics debe indicar que no existe información histórica disponible, en lugar de generar valores inexistentes.
+10. La información histórica debe poder presentarse agregada por hora y por día.
+11. Los periodos de mayor ocupación solo deben identificarse cuando existen suficientes datos históricos para realizar el análisis.
+12. Cuando la información histórica disponible sea insuficiente, Analytics debe informar esta condición y no presentar horas pico como si hubieran sido determinadas correctamente.
+13. Un ForecastSnapshot debe conservar la versión del modelo con la que fue generado el pronóstico.
+14. Un pronóstico histórico no debe ser modificado cuando posteriormente se publique una nueva versión del modelo.
+15. Una evaluación de precisión solo puede realizarse cuando exista información tanto del pronóstico como de la ocupación observada correspondiente.
+16. La evaluación de precisión debe calcular el error absoluto medio expresado en puntos porcentuales.
+17. La evaluación debe calcular el porcentaje de pronósticos cuyo error se encuentre dentro del margen configurado.
+18. Las métricas de precisión deben poder diferenciarse por versión del modelo.
+19. Cuando un periodo no posea suficiente información para comparar pronósticos y ocupación observada, Analytics debe indicar que no es posible calcular la precisión.
+20. Analytics no modifica el estado actual mantenido por Occupancy.
+21. Analytics no procesa directamente las señales producidas por los sensores IoT.
+22. Analytics no genera pronósticos de disponibilidad.
+23. Analytics no administra instituciones, estacionamientos, zonas ni espacios.
+24. Las referencias externas utilizadas por Analytics no convierten los objetos de otros Bounded Contexts en parte de su propio modelo de dominio.
+
+### 5.6.2. Interface Layer
+
+La Interface Layer expone las capacidades del Bounded Context Analytics a la consola administrativa de Quadrapp y recibe información proveniente de otros Bounded Contexts de la plataforma.
+
+Su responsabilidad es recibir solicitudes o eventos, validar su representación básica, transformarlos en Queries o mensajes de aplicación según corresponda, delegar su procesamiento a la Application Layer y convertir los resultados obtenidos en la representación esperada por el cliente o por el flujo de integración.
+
+Las reglas de negocio relacionadas con el análisis histórico, la identificación de periodos de mayor ocupación o el cálculo de precisión de las predicciones no se implementan en esta capa.
+
+Los principales componentes son `AnalyticsQueryController`, `OccupancyEventConsumer` y `ForecastGeneratedEventConsumer`.
+
+
+#### AnalyticsQueryController
+AnalyticsQueryController recibe solicitudes autorizadas relacionadas con la consulta de información histórica y analítica de los estacionamientos.
+
+Su principal responsabilidad es construir las Queries correspondientes a partir de la información recibida y delegar su ejecución a la Application Layer.
+
+El recurso REST definido actualmente para la consulta histórica es:
+
+`GET /api/v1/analytics/occupancy`
+
+La solicitud permite identificar:
+- el estacionamiento que se desea analizar;
+- la fecha inicial del periodo;
+- la fecha final del periodo;
+- la zona, cuando se desea limitar la consulta a una zona específica.
+
+Cuando el periodo solicitado es válido, el sistema devuelve la información histórica de ocupación agregada por hora y por día.
+Cuando la fecha inicial es posterior a la fecha final, la solicitud debe ser rechazada como un rango inválido.
+La consulta del historial de ocupación se delega a GetHistoricalOccupancyQueryHandler.
+
+**Consulta de periodos de mayor ocupación:**
+
+AnalyticsQueryController también permite iniciar el caso de uso correspondiente a la identificación de los periodos con mayor ocupación.
+
+La información requerida para esta consulta puede incluir:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+La operación se transforma en un GetPeakHoursQuery y se delega a GetPeakHoursQueryHandler.
+El controlador no identifica directamente cuáles son las horas pico ni aplica reglas sobre qué nivel de ocupación debe considerarse alto.
+Cuando existen suficientes datos históricos, el sistema debe mostrar los periodos de mayor ocupación y permitir identificar variaciones entre diferentes días y horarios. Cuando los datos disponibles son insuficientes, debe indicarse que no existe información suficiente para realizar el análisis.
+
+**Consulta de precisión de predicciones:**
+
+AnalyticsQueryController también permite iniciar la consulta de precisión de las predicciones generadas por Quadrapp.
+
+La consulta puede considerar:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+El controlador construye un GetPredictionAccuracyQuery y delega su procesamiento a GetPredictionAccuracyQueryHandler.
+
+La respuesta debe permitir presentar:
+- el error absoluto medio de las predicciones expresado en puntos porcentuales;
+- el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
+- la versión del modelo utilizada.
+
+
+**Consulta de precisión de predicciones:**
+AnalyticsQueryController también permite iniciar la consulta de precisión de las predicciones generadas por Quadrapp.
+
+La consulta puede considerar:
+- institución;
+- estacionamiento;
+- fecha inicial;
+- fecha final.
+
+El controlador construye un GetPredictionAccuracyQuery y delega su procesamiento a GetPredictionAccuracyQueryHandler.
+
+La respuesta debe permitir presentar:
+- el error absoluto medio de las predicciones expresado en puntos porcentuales;
+- el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
+- la versión del modelo utilizada.
+
+
+**Ámbito institucional de las consultas:**
+Las operaciones de Analytics deben ejecutarse dentro del ámbito de la institución correspondiente al usuario autenticado.
+
+Quadrapp utiliza un modelo multi-tenant lógico en el que la institución forma parte de los datos y del contexto de seguridad. Por esta razón, el cliente no debe poder modificar libremente el identificador institucional para consultar información perteneciente a otra universidad.
+
+
+#### OccupancyEventConsumer
+OccupancyEventConsumer recibe los eventos provenientes del Bounded Context Occupancy que son necesarios para mantener actualizada la representación histórica utilizada por Analytics.
+
+Su responsabilidad consiste en validar la representación básica del mensaje recibido y delegar su procesamiento a OccupancyEventHandler.
+
+La información recibida debe permitir identificar, como mínimo:
+- la institución;
+- el estacionamiento;
+- la zona cuando corresponda;
+- el momento de la observación;
+- el nivel de ocupación observado;
+- la información de flujo disponible cuando corresponda.
+
+
+#### ForecastGeneratedEventConsumer
+ForecastGeneratedEventConsumer recibe el evento ForecastGenerated proveniente del Bounded Context Prediction & Advisory.
+
+Su responsabilidad es validar la representación básica del mensaje recibido y delegarlo a ForecastGeneratedEventHandler.
+
+La información recibida debe permitir conservar los datos necesarios para evaluar posteriormente el pronóstico, como:
+- identificador del pronóstico;
+- institución;
+- estacionamiento;
+- momento en que fue generado;
+- momento futuro para el cual se realizó la estimación;
+- horizonte temporal;
+- versión del modelo;
+- valor de ocupación pronosticado.
+
+
+**Responsabilidades excluidas de Interface Layer:**
+
+La Interface Layer de Analytics no debe:
+- calcular directamente las horas pico;
+- calcular el error absoluto medio;
+- calcular el porcentaje de pronósticos dentro del margen;
+- determinar patrones históricos;
+- acceder directamente a la base de datos;
+- modificar el estado de Occupancy;
+- generar predicciones;
+- procesar señales provenientes de sensores;
+- administrar estacionamientos, zonas o instituciones;
+- implementar reglas de autenticación y autorización.
+
+Su responsabilidad se limita a recibir, transformar, delegar y representar las solicitudes y eventos que permiten utilizar las capacidades del Bounded Context Analytics.
+
+### 5.6.3. Application Layer
+
+La Application Layer coordina los casos de uso soportados por Analytics.
+
+Esta capa orquesta objetos del Domain Layer, repositorios y mensajes provenientes de otros Bounded Contexts, pero no contiene detalles específicos de persistencia, protocolos de mensajería, frameworks de aplicación ni mecanismos concretos de almacenamiento.
+
+Los principales flujos de aplicación considerados son:
+- Consulta del historial de ocupación.
+- Filtrado del historial por zona.
+- Identificación de los periodos de mayor ocupación.
+- Comparación de niveles de ocupación entre diferentes periodos.
+- Evaluación de la precisión de las predicciones.
+- Procesamiento de información proveniente de Occupancy.
+- Registro de pronósticos provenientes de Prediction & Advisory.
+
+
+#### GetHistoricalOccupancyQuery
+GetHistoricalOccupancyQuery representa una solicitud para consultar la información histórica de ocupación correspondiente a un estacionamiento dentro de un periodo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+`zoneId` es opcional, debido a que la consulta puede realizarse sobre todo el estacionamiento o limitarse a una zona determinada.
+
+
+#### GetHistoricalOccupancyQueryHandler
+GetHistoricalOccupancyQueryHandler coordina la consulta del historial de ocupación.
+
+El manejador realiza la siguiente secuencia:
+1. Recibe un GetHistoricalOccupancyQuery.
+2. Verifica que la fecha inicial no sea posterior a la fecha final.
+3. Cuando se especifica zoneId, utiliza HistoricalOccupancyRepository para recuperar únicamente los registros correspondientes a esa zona.
+4. Cuando no se especifica una zona, recupera los registros del estacionamiento completo.
+5. Limita los resultados al ámbito de la institución indicada.
+6. Recupera la información histórica correspondiente al periodo solicitado.
+7. Organiza los registros necesarios para su presentación por hora o por día.
+8. Devuelve la información requerida por la Interface Layer.
+9. Cuando no existen registros para el periodo solicitado, devuelve un resultado que permita informar dicha condición.
+
+
+#### GetPeakHoursQuery
+GetPeakHoursQuery representa una solicitud para identificar los periodos con mayor nivel de ocupación dentro de un intervalo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+La zona puede utilizarse cuando se desea analizar de manera independiente una sección específica del estacionamiento.
+
+
+#### GetPeakHoursQueryHandler
+GetPeakHoursQueryHandler coordina la identificación de los periodos de mayor ocupación.
+
+Su flujo de ejecución es:
+1. Recibe un GetPeakHoursQuery.
+2. Valida el rango temporal solicitado.
+3. Recupera mediante HistoricalOccupancyRepository los registros históricos correspondientes.
+4. Aplica el filtro de zona cuando este se encuentra presente.
+5. Verifica que exista información suficiente para realizar el análisis.
+6. Delega la identificación de los periodos de mayor ocupación a AnalyticsDomainService.
+7. Obtiene los objetos PeakHour resultantes.
+8. Retorna la información requerida por la Interface Layer.
+
+Cuando la información disponible no permite realizar un análisis válido, se devuelve un resultado que indique la ausencia de datos suficientes.
+La determinación de qué periodos representan los mayores niveles de ocupación pertenece al Domain Layer y no se implementa directamente en el handler.
+
+
+#### GetDemandPatternsQuery
+GetDemandPatternsQuery representa una solicitud para analizar el comportamiento recurrente de la ocupación dentro de un periodo.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+
+Este objeto permite solicitar la comparación de información histórica correspondiente a distintos días y horarios.
+
+
+#### GetDemandPatternsQueryHandler
+GetDemandPatternsQueryHandler coordina el análisis de patrones históricos de ocupación.
+
+El manejador realiza la siguiente secuencia:
+1. Recibe un GetDemandPatternsQuery.
+2. Valida el periodo solicitado.
+3. Recupera los registros históricos mediante HistoricalOccupancyRepository.
+4. Aplica el filtro de zona cuando corresponda.
+5. Verifica que exista información suficiente para comparar diferentes periodos.
+6. Delega el análisis a AnalyticsDomainService.
+7. Obtiene los objetos DemandPattern identificados.
+8. Retorna los resultados a la Interface Layer.
+
+El manejador no define por sí mismo qué constituye un patrón de demanda. Su responsabilidad consiste en coordinar la recuperación de información y delegar el análisis al dominio.
+
+
+#### GetPredictionAccuracyQuery
+GetPredictionAccuracyQuery representa una solicitud para evaluar la precisión de los pronósticos generados durante un periodo determinado.
+
+**Atributos:**
+- institutionId: UUID
+- parkingLotId: UUID
+- startDate: Instant
+- endDate: Instant
+
+La consulta se limita siempre a la institución y estacionamiento correspondientes.
+
+
+#### GetPredictionAccuracyQueryHandler
+GetPredictionAccuracyQueryHandler coordina la evaluación de precisión de las predicciones.
+
+Su flujo de ejecución es:
+1. Recibe un GetPredictionAccuracyQuery.
+2. Verifica que el rango temporal solicitado sea válido.
+3. Recupera mediante ForecastSnapshotRepository los pronósticos correspondientes al periodo.
+4. Recupera mediante HistoricalOccupancyRepository la ocupación observada para los momentos que deben compararse.
+5. Verifica que exista información suficiente de ambas fuentes.
+6. Relaciona cada pronóstico con la observación histórica correspondiente.
+7. Agrupa los pronósticos según la versión del modelo cuando sea necesario.
+8. Delega el cálculo de precisión a AnalyticsDomainService.
+9. Obtiene los objetos PredictionAccuracy resultantes.
+10. Retorna las métricas a la Interface Layer.
+
+Las métricas obtenidas incluyen:
+- Error absoluto medio
+- Porcentaje de pronósticos dentro del margen configurado
+- Versión del modelo asociada con el resultado
+
+Cuando no existe información suficiente para relacionar pronósticos y ocupación observada, el manejador devuelve un resultado que indique que la precisión no puede calcularse.
+El handler no implementa directamente las fórmulas utilizadas para calcular las métricas.
+
+
+#### OccupancyEventHandler
+OccupancyEventHandler coordina la incorporación de información proveniente de Occupancy al modelo histórico de Analytics.
+
+Su flujo principal es:
+1. Recibe la información correspondiente a un cambio o estado de ocupación procesado previamente.
+2. Obtiene la institución asociada con el evento.
+3. Obtiene el estacionamiento correspondiente.
+4. Obtiene la zona cuando esta se encuentra disponible.
+5. Conserva el momento original de la observación.
+6. Obtiene la información de ocupación necesaria para construir o actualizar la proyección histórica.
+7. Incorpora la información de flujo vehicular cuando esta se encuentre presente.
+8. Construye o actualiza el HistoricalOccupancy correspondiente.
+9. Persiste el resultado mediante HistoricalOccupancyRepository.
+
+El manejador no determina si un espacio está libre, ocupado o desconocido. Tampoco procesa información directamente desde sensores, ya que recibe información que previamente fue interpretada por Occupancy.
+
+La información histórica conserva las referencias recibidas sin apropiarse de los objetos correspondientes a estacionamientos o zonas.
+
+
+#### ForecastGeneratedEventHandler
+ForecastGeneratedEventHandler coordina el registro de la información necesaria de un pronóstico generado por Prediction & Advisory.
+
+Su flujo de ejecución es:
+1. Recibe la información correspondiente al pronóstico generado.
+2. Obtiene su identificador.
+3. Conserva la institución y estacionamiento relacionados.
+4. Conserva el momento en que se generó el pronóstico.
+5. Conserva el momento futuro al que corresponde la estimación.
+6. Conserva el horizonte temporal utilizado.
+7. Conserva la versión del modelo.
+8. Conserva el porcentaje de ocupación pronosticado.
+9. Construye un ForecastSnapshot.
+10. Persiste la instantánea mediante ForecastSnapshotRepository.
+
+El manejador no vuelve a ejecutar el modelo de predicción. Tampoco modifica el valor pronosticado recibido.
+
+Su responsabilidad consiste en conservar una representación histórica que pueda relacionarse posteriormente con la ocupación realmente observada.
+
+
+
+#### HistoricalOccupancyResult
+HistoricalOccupancyResult representa la información producida por una consulta histórica y entregada posteriormente a la Interface Layer.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- startDate: Instant
+- endDate: Instant
+- records: List<HistoricalOccupancy>
+
+
+#### PeakHoursResult
+PeakHoursResult representa el resultado obtenido después de analizar los periodos de mayor ocupación.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- peakHours: List<PeakHour>
+- sufficientData: boolean
+
+`sufficientData` permite distinguir entre una consulta válida sin resultados relevantes y una situación en la que la cantidad de información disponible no permite realizar el análisis.
+
+
+#### DemandPatternsResult
+DemandPatternsResult representa los patrones identificados a partir de la comparación de información histórica.
+
+**Atributos:**
+- parkingLotId: UUID
+- zoneId: UUID?
+- patterns: List<DemandPattern>
+- sufficientData: boolean
+
+Este resultado no contiene predicciones de disponibilidad futura. Representa únicamente comportamientos obtenidos del análisis histórico.
+
+
+#### PredictionAccuracyResult
+PredictionAccuracyResult representa la información resultante de evaluar la precisión de los pronósticos.
+Atributos:
+- parkingLotId: UUID
+- startDate: Instant
+- endDate: Instant
+- accuracyByModelVersion: List<PredictionAccuracy>
+- sufficientData: boolean
+
+Cuando `sufficientData` es falso, la Interface Layer puede informar que el periodo seleccionado no permite calcular las métricas de precisión.
+
+
+#### HistoricalOccupancyRepository
+HistoricalOccupancyRepository es utilizado por Application Layer para almacenar y recuperar la información histórica necesaria para los casos de uso.
+
+Las operaciones utilizadas principalmente son:
+- save(historicalOccupancy)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+
+La Application Layer depende de esta abstracción y no de una implementación concreta de persistencia.
+
+
+#### ForecastSnapshotRepository
+ForecastSnapshotRepository permite almacenar y recuperar los pronósticos conservados por Analytics.
+
+Las operaciones principales son:
+- save(forecastSnapshot)
+- findByPeriod(institutionId, parkingLotId, startDate, endDate)
+- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+
+La Application Layer utiliza esta abstracción para obtener la información necesaria durante la evaluación de precisión.
+No accede directamente a la persistencia de Prediction & Advisory.
+
+
+#### AnalyticsDomainService
+AnalyticsDomainService es utilizado por los Query Handlers cuando una operación requiere aplicar reglas analíticas sobre múltiples elementos del dominio.
+
+Las principales operaciones utilizadas son:
+- identifyPeakHours(historicalOccupancies)
+- identifyDemandPatterns(historicalOccupancies)
+- calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin)
+
+La coordinación del caso de uso pertenece a Application Layer, mientras que las reglas y cálculos analíticos permanecen encapsulados dentro del Domain Layer.
+
+### 5.6.4. Infrastructure Layer
+
+La Infrastructure Layer contiene las implementaciones técnicas necesarias para almacenar, recuperar y recibir la información utilizada por el Bounded Context Analytics.
+
+Esta capa implementa las abstracciones definidas en Domain Layer y proporciona los mecanismos de integración necesarios para recibir información desde otros Bounded Contexts. De esta manera, las capas superiores pueden trabajar con repositorios e interfaces sin depender directamente de una base de datos, un sistema de mensajería o una tecnología específica.
+
+Los principales componentes son:
+- `HistoricalOccupancyRepositoryAdapter`
+- `ForecastSnapshotRepositoryAdapter`
+- `OccupancyIntegrationAdapter`
+- `PredictionIntegrationAdapter`
+
+
+#### HistoricalOccupancyRepositoryAdapter
+HistoricalOccupancyRepositoryAdapter implementa la interfaz HistoricalOccupancyRepository.
+
+Su responsabilidad es gestionar la persistencia de los registros de ocupación histórica utilizados por Analytics.
+
+Sus principales responsabilidades son:
+- almacenar nuevos registros de HistoricalOccupancy;
+- recuperar registros históricos pertenecientes a una institución;
+- recuperar información correspondiente a un estacionamiento determinado;
+- consultar registros dentro de un periodo;
+- aplicar consultas por zona cuando corresponda;
+- reconstruir objetos HistoricalOccupancy a partir de la información persistida;
+- conservar la información necesaria para las agregaciones por hora y por día.
+
+La implementación debe mantener separada la información perteneciente a cada institución.
+
+
+#### ForecastSnapshotRepositoryAdapter
+`ForecastSnapshotRepositoryAdapter` implementa la interfaz ForecastSnapshotRepository.
+
+Su responsabilidad es persistir la representación histórica de los pronósticos que Analytics necesita para evaluar posteriormente su precisión.
+
+Sus principales operaciones son:
+- registrar un ForecastSnapshot;
+- recuperar pronósticos dentro de un periodo determinado;
+- recuperar pronósticos asociados con un estacionamiento;
+- recuperar información según la versión del modelo;
+- conservar el momento de generación del pronóstico;
+- conservar el momento futuro al que corresponde la estimación;
+- conservar el valor pronosticado sin modificarlo.
+
+El adaptador no accede directamente al modelo interno de Prediction & Advisory.
+
+Analytics almacena únicamente la información que necesita para realizar sus propios procesos de evaluación.
+
+
+#### OccupancyIntegrationAdapter
+`OccupancyIntegrationAdapter` implementa el mecanismo técnico necesario para recibir la información publicada por el Bounded Context Occupancy.
+
+Su función consiste en adaptar los mensajes recibidos a una representación que pueda ser procesada por OccupancyEventConsumer.
+La información recibida puede incluir:
+
+- Institución
+- Estacionamiento
+- Zona cuando corresponda
+- Momento de la observación
+- Nivel de ocupación
+- Información de flujo disponible.
+
+
+#### PredictionIntegrationAdapter
+`PredictionIntegrationAdapter` proporciona el mecanismo técnico utilizado para recibir los eventos ForecastGenerated provenientes de Prediction & Advisory.
+
+Su responsabilidad consiste en transformar el contrato externo a la representación que Analytics necesita para procesar el pronóstico.
+
+La información recibida puede incluir:
+- Identificador del pronóstico
+- Institución
+- Estacionamiento
+- Momento de generación
+- Momento objetivo de la predicción
+- Horizonte temporal
+- Versión del modelo
+- Porcentaje de ocupación previsto.
+
+El adaptador no ejecuta el modelo de predicción ni modifica sus resultados.
+
+Su función es evitar que Analytics dependa directamente de la estructura interna de Prediction & Advisory.
+
+
+**Persistencia del historial de ocupación:**
+
+La infraestructura de Analytics debe conservar la información histórica necesaria para responder las consultas administrativas.
+
+Conceptualmente, cada registro persistido debe mantener:
+- la institución;
+- el estacionamiento;
+- la zona cuando corresponda;
+- el periodo representado;
+- el nivel de ocupación;
+- la cantidad de entradas;
+- la cantidad de salidas;
+- el nivel de agregación utilizado.
+
+La persistencia debe permitir recuperar la información de manera eficiente por institución, estacionamiento, zona y rango temporal.
+
+
+**Persistencia de pronósticos históricos:**
+
+Analytics también debe conservar una representación de los pronósticos que posteriormente serán comparados con la ocupación observada.
+
+Esta información debe mantener como mínimo:
+- El identificador del pronóstico
+- La institución
+- El estacionamiento
+- La fecha y hora de generación
+- El momento objetivo
+- El horizonte temporal
+- La versión del modelo
+- El nivel de ocupación pronosticado.
+
+Esta representación pertenece exclusivamente a Analytics y no reemplaza la información original administrada por Prediction & Advisory.
+
+
+**Consideraciones de aislamiento entre Bounded Contexts:**
+Analytics mantiene su propia persistencia y no debe acceder directamente a las bases de datos internas de otros Bounded Contexts.
+
+Por esta razón:
+- `institutionId` se mantiene como referencia externa;
+- `parkingLotId` se mantiene como referencia externa;
+- `zoneId` se mantiene como referencia externa;
+- Analytics no crea ni administra objetos Institution;
+- Analytics no crea ni administra objetos ParkingLot;
+- Analytics no crea ni administra objetos ParkingZone;
+- Analytics no persiste el estado actual de los espacios;
+- Analytics no almacena el modelo completo de Prediction & Advisory;
+- Analytics no establece claves foráneas hacia tablas pertenecientes a otros Bounded Contexts.
+
+La comunicación con Occupancy y Prediction & Advisory debe realizarse mediante los contratos de integración definidos para la solución, evitando acoplamiento directo entre sus modelos de persistencia.
+
+
+**Consideraciones de multi-tenancy:**
+La infraestructura de Analytics debe preservar el aislamiento de la información perteneciente a cada institución.
+
+Por ello, todos los registros históricos y pronósticos conservados deben estar asociados con un institutionId.
+
+Las consultas de infraestructura deben incluir este identificador dentro de sus criterios de acceso para evitar que información correspondiente a una institución sea recuperada como parte de las operaciones de otra.
+
+Este aislamiento debe mantenerse tanto para:
+- Historial de ocupación
+- Información por zona
+- Información de flujo
+- Pronósticos históricos
+- Resultados utilizados para calcular precisión.
+
+
+**Consideraciones tecnológicas:**
+La infraestructura se mantiene independiente de una tecnología específica en esta etapa del diseño.
+
+La arquitectura de Quadrapp exige que los servicios utilicen tecnologías open-source y que cada Bounded Context posea su propia persistencia, pero el documento actual todavía no determina un motor de base de datos concreto para Analytics.
+
+Por esta razón, clases como:
+- `HistoricalOccupancyRepositoryAdapter`
+- `ForecastSnapshotRepositoryAdapterv
+- `OccupancyIntegrationAdapter`
+- `PredictionIntegrationAdapter`
+
+representan responsabilidades técnicas y no una dependencia hacia un producto particular.
+
+La selección definitiva del motor de persistencia, ORM y mecanismo de mensajería deberá respetar estas interfaces sin introducir cambios en el Domain Layer o en los casos de uso definidos en Application Layer.
+
+### 5.6.5. Bounded Context Software Architecture Component Level Diagrams
+
+El Component Level Diagram del Bounded Context Analytics muestra los principales componentes internos encargados de procesar consultas, recibir eventos de otros contextos y gestionar la información histórica utilizada para el análisis.
+
+Los componentes principales son:
+- Analytics Query API, que recibe las consultas realizadas desde la consola administrativa.
+- Occupancy Event Consumer, que procesa los eventos provenientes de Occupancy.
+- Forecast Generated Event Consumer, que recibe los pronósticos generados por Prediction & Advisory.
+- Analytics Application, que coordina los casos de uso y handlers del contexto.
+- Analytics Domain, que contiene las reglas y conceptos del dominio analítico.
+- Analytics Persistence, que implementa los repositorios necesarios para acceder a la información almacenada.
+- Occupancy Integration y Prediction & Advisory Integration, que permiten integrar Analytics con los otros Bounded Contexts sin acoplar sus modelos internos.
+- Analytics Data Storage, donde se conserva la información histórica y los datos de pronósticos necesarios para los análisis.
+
+El flujo principal comienza cuando un administrador realiza una consulta desde la consola. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
+
+Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory ingresan mediante sus respectivos componentes de integración y consumidores, para luego ser procesados por Analytics Application.
+
+El flujo puede representarse de la siguiente manera:
+
+```text
+
+                          Admin Web Console
+                                 |
+                                 v
+                         Console BFF / Gateway
+                                 |
+                                 v
+                    +---------------------------+
+                    |      Analytics Service    |
+                    |                           |
+                    |    Analytics Query API    |
+                    |             |             |
+                    |             v             |
+                    |   Analytics Application   |
+                    |             |             |
+                    |             v             |
+                    |      Analytics Domain     |
+                    |             |             |
+                    |             v             |
+                    |   Analytics Persistence   |
+                    +-------------|-------------+
+                                  |
+                                  v
+                       Analytics Data Storage
+
+
+Occupancy
+    |
+    v
+Occupancy Integration
+    |
+    v
+Occupancy Event Consumer
+    |
+    v
+Analytics Application
+
+
+Prediction & Advisory
+    |
+    v
+Prediction & Advisory Integration
+    |
+    v
+Forecast Generated Event Consumer
+    |
+    v
+Analytics Application
+
+```
+
+De esta manera, Analytics mantiene sus responsabilidades y su persistencia separadas de los demás Bounded Contexts.
+
+**Analytics Component Level Diagram:**
+![AnalyticsComponentLevelDiagram](./assets/capitulo-05/AnalyticsComponentLevelDiagram.png)
+
+### 5.6.6. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams proporcionan una representación más detallada de la estructura orientada a la implementación del Bounded Context Analytics.
+
+Para Analytics, el Code Level se representa mediante:
+- **Domain Layer Class Diagram:** Describe el modelo de dominio orientado a objetos, incluyendo Aggregate Roots, Value Objects, Domain Services, interfaces de Repository, atributos, métodos, relaciones y multiplicidades.
+- **Database Design Diagram:** Representa las estructuras de persistencia necesarias para conservar el historial de ocupación y la información de pronósticos utilizada por Analytics.
+
+Ambos diagramas mantienen la consistencia con la separación por capas definida anteriormente y con las responsabilidades propias del Bounded Context.
+
+#### 5.6.6.1. Bounded Context Domain Layer Class Diagrams
+
+El Domain Layer Class Diagram representa la estructura orientada a la implementación del modelo de dominio de Analytics.
+
+El diagrama debe incluir los siguientes elementos:
+
+**Aggregate Roots**
+- HistoricalOccupancy
+- ForecastSnapshot
+
+**Value Objects**
+- OccupancyRate
+- PeakHour
+- DemandPattern
+- PredictionAccuracy
+
+**Repository Interfaces**
+- HistoricalOccupancyRepository
+- ForecastSnapshotRepository
+
+**Domain Service**
+- AnalyticsDomainService
+
+<br>
+
+Las principales relaciones que deben representarse son:
+- `HistoricalOccupancy` compone exactamente un `OccupancyRate`.
+- `ForecastSnapshot` compone exactamente un `OccupancyRate` para representar el porcentaje de ocupación pronosticado.
+- `HistoricalOccupancy` mantiene referencias externas mediante `institutionId`, `parkingLotId` y, cuando corresponda, `zoneId`.
+- `ForecastSnapshot` mantiene referencias externas mediante `institutionId` y `parkingLotId`.
+- `HistoricalOccupancyRepository` persiste y recupera objetos `HistoricalOccupancy`.
+- `ForecastSnapshotRepository` persiste y recupera objetos `ForecastSnapshot`.
+- `AnalyticsDomainService` analiza uno o más registros `HistoricalOccupancy`.
+- `AnalyticsDomainService` utiliza objetos `ForecastSnapshot` para evaluar la precisión de las predicciones.
+- `AnalyticsDomainService` produce objetos `PeakHour` al identificar los periodos de mayor ocupación.
+- `AnalyticsDomainService` produce objetos `DemandPattern` al analizar comportamientos históricos.
+- `AnalyticsDomainService` produce objetos `PredictionAccuracy` al comparar pronósticos con la ocupación observada.
+- `PeakHour` utiliza un `OccupancyRate` para representar el nivel de ocupación del periodo identificado.
+- `DemandPattern` utiliza un `OccupancyRate` para representar el comportamiento histórico observado.
+
+<br>
+
+El diagrama debe utilizar las convenciones de visibilidad UML:
+- (+) para miembros públicos
+- (-) para miembros privados
+- (#) para miembros protegidos cuando corresponda
+
+<br>
+
+Una referencia conceptual de las relaciones y multiplicidades es:
+
+```text
+
+HistoricalOccupancy "1" *-- "1" OccupancyRate
+
+ForecastSnapshot "1" *-- "1" OccupancyRate
+
+PeakHour "1" *-- "1" OccupancyRate
+
+DemandPattern "1" *-- "1" OccupancyRate
+
+HistoricalOccupancyRepository ..> HistoricalOccupancy : persists
+
+ForecastSnapshotRepository ..> ForecastSnapshot : persists
+
+AnalyticsDomainService ..> HistoricalOccupancy : analyzes
+
+AnalyticsDomainService ..> ForecastSnapshot : compares
+
+AnalyticsDomainService ..> PeakHour : produces
+
+AnalyticsDomainService ..> DemandPattern : identifies
+
+AnalyticsDomainService ..> PredictionAccuracy : calculates
+
+```
+<br>
+
+Los siguientes conceptos no deben aparecer como clases de dominio propias dentro de Analytics:
+
+- Institution
+- ParkingLot
+- ParkingZone
+- ParkingSpace
+- Sensor
+- PredictionModel
+
+Sus identificadores o datos mínimos pueden mantenerse como referencias externas cuando sean necesarios para realizar consultas o análisis, pero Analytics no administra su ciclo de vida.
+
+**DIAGRAMA — Analytics Domain Layer Class Diagram:**
+
+![AnalyticsDomainLayerClassDiagram](./assets/capitulo-05/AnalyticsDomainLayerClassDiagram.png)
+
+
+#### 5.6.6.2. Bounded Context Database Design Diagram
+
+El Database Design Diagram representa la estructura de persistencia propia del Bounded Context Analytics. Su objetivo es mostrar cómo se almacena la información histórica de ocupación y los pronósticos necesarios para realizar consultas analíticas y evaluar posteriormente su precisión.
+
+Analytics mantiene su persistencia separada de los demás Bounded Contexts. Los identificadores de institución, estacionamiento y zona se conservan únicamente como referencias externas, por lo que no se crean claves foráneas hacia bases de datos pertenecientes a otros contextos.
+
+El diseño lógico considera dos estructuras principales:
+- `analytics_historical_occupancy`, para almacenar la información histórica de ocupación y flujo vehicular.
+- `analytics_forecast_snapshots`, para conservar la información mínima de los pronósticos utilizada durante la evaluación de precisión.
+
+**analytics_historical_occupancy:**
+
+Esta tabla almacena los registros históricos utilizados para analizar el comportamiento de la ocupación de un estacionamiento o de una zona dentro de un periodo determinado.
+
+| Column | Type | Constraint | Description |
+|---|---|---|---|
+| `historical_occupancy_id` | UUID | PRIMARY KEY | Identificador único del registro histórico. |
+| `institution_id` | UUID | NOT NULL | Referencia externa a la institución propietaria de la información. |
+| `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
+| `zone_id` | UUID | NULL | Referencia externa a una zona específica cuando corresponda. |
+| `period_start` | TIMESTAMP | NOT NULL | Inicio del periodo representado. |
+| `period_end` | TIMESTAMP | NOT NULL | Final del periodo representado. |
+| `granularity` | VARCHAR | NOT NULL | Nivel de agregación utilizado, por ejemplo hora o día. |
+| `occupancy_rate` | DECIMAL | NOT NULL | Porcentaje de ocupación observado. |
+| `entry_count` | INTEGER | NOT NULL | Cantidad de ingresos registrados durante el periodo. |
+| `exit_count` | INTEGER | NOT NULL | Cantidad de salidas registradas durante el periodo. |
+
+Las principales restricciones lógicas son:
+- `period_start` no puede ser posterior a `period_end`.
+- `occupancy_rate` debe mantenerse entre 0 y 100.
+- `entry_count` no puede ser negativo.
+- `exit_count` no puede ser negativo.
+- `zone_id` puede ser nulo cuando el registro representa al estacionamiento completo.
+
+
+**analytics_forecast_snapshots:**
+
+Esta tabla conserva una representación histórica de los pronósticos generados por Prediction & Advisory. Analytics utiliza estos datos únicamente para compararlos posteriormente con la ocupación observada.
+
+| Column | Type | Constraint | Description |
+|---|---|---|---|
+| `forecast_id` | UUID | PRIMARY KEY | Identificador del pronóstico recibido. |
+| `institution_id` | UUID | NOT NULL | Referencia externa a la institución. |
+| `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
+| `generated_at` | TIMESTAMP | NOT NULL | Momento en el que se generó el pronóstico. |
+| `target_at` | TIMESTAMP | NOT NULL | Momento futuro para el cual se realizó la estimación. |
+| `horizon_minutes` | INTEGER | NOT NULL | Horizonte temporal utilizado por la predicción. |
+| `model_version` | VARCHAR | NOT NULL | Versión del modelo con el que se generó el pronóstico. |
+| `predicted_occupancy_rate` | DECIMAL | NOT NULL | Porcentaje de ocupación pronosticado. |
+
+Las principales restricciones lógicas son:
+- `predicted_occupancy_rate` debe mantenerse entre 0 y 100.
+- `horizon_minutes` debe ser mayor que 0.
+- `target_at` debe representar el instante al que corresponde el pronóstico.
+- La información histórica de un pronóstico no debe modificarse cuando posteriormente cambie la versión del modelo.
+
+
+**Relación entre las estructuras:**
+
+Las tablas no requieren una clave foránea directa entre sí. La comparación entre un pronóstico y la ocupación observada se realiza utilizando el contexto del estacionamiento y el periodo temporal correspondiente.
+
+Conceptualmente:
+
+```text
+analytics_forecast_snapshots
+        |
+        | parking_lot_id
+        | target_at
+        v
+analytics_historical_occupancy
+        |
+        | ocupación prevista
+        | vs.
+        | ocupación observada
+        v
+PredictionAccuracy
+```
+
+`PredictionAccuracy` no necesita una tabla propia, ya que representa un resultado calculado a partir de los pronósticos almacenados y los registros de ocupación observada.
+
+
+**Referencias externas:**
+
+Los siguientes identificadores se mantienen como referencias externas:
+
+- `institution_id`
+- `parking_lot_id`
+- `zone_id`
+
+Analytics no crea tablas propias para:
+- instituciones;
+- estacionamientos;
+- zonas;
+- espacios de estacionamiento;
+- sensores;
+- modelos de predicción.
+Estos elementos continúan siendo administrados por sus respectivos Bounded Contexts.
+
+
+**Aislamiento de información:**
+
+Todos los registros almacenados por Analytics deben mantener el identificador de la institución correspondiente. Este valor permite limitar las consultas y evitar que la información histórica de una institución sea utilizada dentro del contexto de otra.
+
+La persistencia debe permitir realizar consultas utilizando principalmente:
+- `institution_id`
+- `parking_lot_id`
+- `zone_id`, cuando corresponda
+- rango temporal
+- `model_version`, para análisis de precisión.
+
+
+**Diseño lógico:**
+
+Conceptualmente, la persistencia del Bounded Context queda organizada de la siguiente manera:
+
+```text
+                     ANALYTICS
+
+        ┌─────────────────────────────────┐
+        │ analytics_historical_occupancy  │
+        │─────────────────────────────────│
+        │ PK historical_occupancy_id      │
+        │    institution_id               │
+        │    parking_lot_id               │
+        │    zone_id                      │
+        │    period_start                 │
+        │    period_end                   │
+        │    granularity                  │
+        │    occupancy_rate               │
+        │    entry_count                  │
+        │    exit_count                   │
+        └─────────────────────────────────┘
+
+
+        ┌─────────────────────────────────┐
+        │ analytics_forecast_snapshots    │
+        │─────────────────────────────────│
+        │ PK forecast_id                  │
+        │    institution_id               │
+        │    parking_lot_id               │
+        │    generated_at                 │
+        │    target_at                    │
+        │    horizon_minutes              │
+        │    model_version                │
+        │    predicted_occupancy_rate     │
+        └─────────────────────────────────┘
+```
+
+
+El diseño se mantiene independiente de un motor de base de datos específico. La tecnología de persistencia podrá definirse posteriormente sin modificar las responsabilidades del Domain Layer ni de la Application Layer.
+
+<br>
+
+**DIAGRAMA — Analytics Database Design Diagram:**
+
+![AnalyticsDatabaseDesignDiagram](./assets/capitulo-05/AnalyticsDatabaseDesignDiagram.png)
+
+## 5.7. Bounded Context: Notifications
+
+---
+
+# Capítulo VI: Solution UX Design
+
+## 6.1. Style Guidelines
+
+Las Style Guidelines establecen los criterios visuales y de interacción que dan coherencia a los cuatro productos de Quadrapp: la Landing Page, la aplicación móvil del conductor, la consola de operación de cada universidad y la consola de administración de plataforma de Integra Labs. Se definieron a partir de los diseños de interfaz elaborados por el equipo de frontend y se alinean con los constraints CON-11 (accesibilidad e internacionalización) y CON-13 (Material Design), con la privacidad de la ubicación (CON-07) y con la propuesta de valor del producto: informar con claridad y honestidad cuánta confianza merece cada dato.
+
+### 6.1.1. General Style Guidelines
+
+**Identidad de marca.** Quadrapp se presenta como un producto sobrio, confiable y orientado a la decisión. Su lenguaje visual transmite tres ideas: claridad (una respuesta antes que muchos datos), honestidad (toda estimación muestra su confianza y su antigüedad) y privacidad (el mensaje "compartimos minutos de llegada, nunca tu ubicación" se repite en los puntos de decisión). El logotipo es un ícono de marcador de ubicación en blanco sobre un cuadrado redondeado de color teal, acompañado del nombre "Quadrapp" en tipografía de trazo ligero. Sobre fondos oscuros, el ícono se invierte (marcador teal sobre fondo claro).
+
+**Paleta de colores.** La paleta se compone de un color de marca, neutros de fondo y texto, y colores semánticos que comunican el estado de la disponibilidad. Los valores hexadecimales se tomaron de los diseños entregados.
+
+<p align="center"><img src="assets/capitulo-06/colores/franja_paleta.png" width="700" alt="Paleta principal de Quadrapp"></p>
+
+| Rol | Color | Hex | Uso principal |
+|---|:---:|---|---|
+| Primario (marca) | <img src="assets/capitulo-06/colores/087F83.png" width="28" alt="#087F83"> | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
+| Primario oscuro | <img src="assets/capitulo-06/colores/052B39.png" width="28" alt="#052B39"> | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
+| Superficie oscura | <img src="assets/capitulo-06/colores/073B4C.png" width="28" alt="#073B4C"> | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
+| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola de plataforma |
+| Acento suave | <img src="assets/capitulo-06/colores/DDF3F1.png" width="28" alt="#DDF3F1"> | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
+| Fondo de pantalla | <img src="assets/capitulo-06/colores/F3F7F6.png" width="28" alt="#F3F7F6"> | `#F3F7F6` | Fondo general de las aplicaciones |
+| Superficie | <img src="assets/capitulo-06/colores/FFFFFF.png" width="28" alt="#FFFFFF"> | `#FFFFFF` | Tarjetas, formularios, modales |
+| Texto secundario | <img src="assets/capitulo-06/colores/4D5C5E.png" width="28" alt="#4D5C5E"> | `#4D5C5E` | Descripciones, etiquetas, ayudas |
+| Borde | <img src="assets/capitulo-06/colores/CEDDDA.png" width="28" alt="#CEDDDA"> | `#CEDDDA` | Bordes de tarjetas y campos |
+| Éxito / Buena disponibilidad | <img src="assets/capitulo-06/colores/16704D.png" width="28" alt="#16704D"> <img src="assets/capitulo-06/colores/DFF3E9.png" width="28" alt="#DFF3E9"> | `#16704D` (fondo `#DFF3E9`) | Espacios libres, categoría HIGH, estado operativo |
+| Atención / Limitada / UNKNOWN | <img src="assets/capitulo-06/colores/A36108.png" width="28" alt="#A36108"> <img src="assets/capitulo-06/colores/D98617.png" width="28" alt="#D98617"> <img src="assets/capitulo-06/colores/FFF2D6.png" width="28" alt="#FFF2D6"> | `#A36108` (acento `#D98617`, fondo `#FFF2D6`) | Disponibilidad limitada, espacios UNKNOWN, datos desactualizados |
+| Error / Baja disponibilidad | <img src="assets/capitulo-06/colores/BE4045.png" width="28" alt="#BE4045"> <img src="assets/capitulo-06/colores/FCE6E6.png" width="28" alt="#FCE6E6"> | `#BE4045` (fondo `#FCE6E6`) | Categoría LOW, dispositivos sin señal, acciones destructivas |
+
+**Significado de los colores de estado.** El color nunca es el único portador del significado: cada estado incluye siempre un texto y, cuando corresponde, un ícono (por ejemplo, "Buena disponibilidad", "Limitada", "Poca disponibilidad", "Sin datos"). La correspondencia con el dominio es:
+
+| Estado | Color | Etiqueta | En el plano | Texto en pantalla |
+|---|---|:---:|:---:|---|
+| HIGH | Verde | <img src="assets/capitulo-06/componentes/chip_buena.png" width="78" alt="chip buena"> | | Buena disponibilidad |
+| LIMITED | Ámbar | <img src="assets/capitulo-06/componentes/chip_limitada.png" width="86" alt="chip limitada"> | | Disponibilidad limitada |
+| LOW | Rojo | <img src="assets/capitulo-06/componentes/chip_poca.png" width="70" alt="chip poca"> | | Poca disponibilidad |
+| Espacio libre | Verde | <img src="assets/capitulo-06/componentes/chip_libre.png" width="78" alt="chip libre"> | <img src="assets/capitulo-06/estados/plaza_libre.png" width="34" alt="plaza libre"> | Libre |
+| Espacio ocupado | Gris petróleo | <img src="assets/capitulo-06/componentes/chip_ocupada.png" width="96" alt="chip ocupada"> | <img src="assets/capitulo-06/estados/plaza_ocupada.png" width="34" alt="plaza ocupada"> | Ocupada |
+| UNKNOWN | Ámbar con trama diagonal en el plano | <img src="assets/capitulo-06/componentes/chip_sin_datos.png" width="96" alt="chip sin_datos"> | <img src="assets/capitulo-06/estados/plaza_sin_datos.png" width="34" alt="plaza sin_datos"> | Sin datos / UNKNOWN (nunca se cuenta como libre) |
+
+**Contraste y accesibilidad.** Se verificó la relación de contraste de los pares de color principales frente al criterio WCAG 2.2 nivel AA (4.5:1 para texto normal, 3:1 para texto grande y componentes de interfaz).
+
+| Combinación | Muestra | Relación | Resultado |
+|---|:---:|---|---|
+| Texto `#052B39` sobre fondo `#F3F7F6` | <img src="assets/capitulo-06/contraste/052B39_sobre_F3F7F6.png" width="84" alt="texto #052B39 sobre #F3F7F6"> | 13.8:1 | Cumple |
+| Blanco sobre `#052B39` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_052B39.png" width="84" alt="texto #FFFFFF sobre #052B39"> | 14.9:1 | Cumple |
+| Blanco sobre botón teal `#087F83` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_087F83.png" width="84" alt="texto #FFFFFF sobre #087F83"> | 4.8:1 | Cumple |
+| Texto `#4D5C5E` sobre blanco | <img src="assets/capitulo-06/contraste/4D5C5E_sobre_FFFFFF.png" width="84" alt="texto #4D5C5E sobre #FFFFFF"> | 7.0:1 | Cumple |
+| Verde `#16704D` sobre `#DFF3E9` | <img src="assets/capitulo-06/contraste/16704D_sobre_DFF3E9.png" width="84" alt="texto #16704D sobre #DFF3E9"> | 5.2:1 | Cumple |
+| Rojo `#BE4045` sobre blanco | <img src="assets/capitulo-06/contraste/BE4045_sobre_FFFFFF.png" width="84" alt="texto #BE4045 sobre #FFFFFF"> | 5.2:1 | Cumple |
+| Teal `#087F83` como texto sobre `#F3F7F6` | <img src="assets/capitulo-06/contraste/087F83_sobre_F3F7F6.png" width="84" alt="texto #087F83 sobre #F3F7F6"> | 4.45:1 | Ligeramente bajo en texto pequeño |
+| Teal `#087F83` como texto sobre `#DDF3F1` | <img src="assets/capitulo-06/contraste/087F83_sobre_DDF3F1.png" width="84" alt="texto #087F83 sobre #DDF3F1"> | 4.15:1 | Bajo en texto pequeño |
+| Ámbar `#A36108` sobre `#FFF2D6` | <img src="assets/capitulo-06/contraste/A36108_sobre_FFF2D6.png" width="84" alt="texto #A36108 sobre #FFF2D6"> | 4.43:1 | Ligeramente bajo en texto pequeño |
+| Rojo `#BE4045` sobre `#FCE6E6` | <img src="assets/capitulo-06/contraste/BE4045_sobre_FCE6E6.png" width="84" alt="texto #BE4045 sobre #FCE6E6"> | 4.39:1 | Ligeramente bajo en texto pequeño |
+
+Para los cuatro casos bajo el umbral, la guía establece que el texto pequeño use una variante más oscura del mismo tono, o que se aplique peso seminegrita o tamaño grande. Los íconos y bordes de componentes mantienen al menos 3:1.
+
+| Variante para texto pequeño | Muestra | Relación |
+|---|:---:|---|
+| `#066A6E` sobre fondos claros (menta) | <img src="assets/capitulo-06/contraste/066A6E_sobre_DDF3F1.png" width="84" alt="texto #066A6E sobre #DDF3F1"> | 5.9:1 |
+| `#8A5206` sobre ámbar claro | <img src="assets/capitulo-06/contraste/8A5206_sobre_FFF2D6.png" width="84" alt="texto #8A5206 sobre #FFF2D6"> | 5.8:1 |
+| `#A8363B` sobre rojo claro | <img src="assets/capitulo-06/contraste/A8363B_sobre_FCE6E6.png" width="84" alt="texto #A8363B sobre #FCE6E6"> | 5.4:1 |
+
+**Tipografía.** Los diseños emplean una familia sans-serif de formas abiertas y alta legibilidad en pantalla, de aspecto similar a Inter, usada en toda la solución. La jerarquía se resuelve con tamaño y peso, no con cambios de familia.
+
+| Nivel | Uso | Peso | Referencia de tamaño |
+|---|---|---|---|
+| Display | Título principal de la Landing Page | Regular | 40–56 px (escritorio), 32 px (móvil) |
+| Título de pantalla | "Operación de turno", "Estacionamientos" | Seminegrita | 24–28 px |
+| Título de tarjeta | "Saturación prevista", "Alertas" | Seminegrita | 18–20 px |
+| Cifra destacada | 82 %, 184 libres | Seminegrita | 32–48 px |
+| Cuerpo | Descripciones y listas | Regular | 14–16 px |
+| Etiqueta / ayuda | Datos actualizados hace 2 min | Regular | 12–13 px |
+
+<p align="center"><img src="assets/capitulo-06/tipografia/tipografia.png" width="460" alt="Jerarquía tipográfica"></p>
+
+Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a 1.6) y sin mayúsculas sostenidas salvo en etiquetas cortas de sección (por ejemplo, "CÓMO FUNCIONA").
+
+**Iconografía.** Se utiliza un único conjunto de íconos lineales, de trazo uniforme y esquinas redondeadas, para mantener la coherencia (marcador de ubicación, escudo de privacidad, campana de alertas, gráfico de predicción, mapa de zonas, puerta de accesos, antena de sensores). Los íconos acompañan siempre a una etiqueta de texto en la navegación.
+
+**Forma, espacio y elevación.** Las tarjetas y los modales usan esquinas muy redondeadas (aprox. 16–24 px), los botones y campos esquinas medias (aprox. 12 px) y los chips de estado forma de píldora. La separación entre elementos sigue una escala de múltiplos de 4 u 8 px. La elevación es mínima: las tarjetas se distinguen por un borde fino (`#CEDDDA`) y una sombra muy suave, y los modales se apoyan en un fondo atenuado.
+
+**Voz y tono.** Los textos se redactan en español latinoamericano (es_419) con inglés (en_US) como alternativa, en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la consola ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
+
+**Imágenes y datos.** La Landing Page usa fotografía de campus y de trabajo en equipo en tonos cálidos, con superposiciones oscuras de color petróleo para asegurar la lectura del texto. En las aplicaciones no se usan fotografías; los datos se presentan con cifras grandes, barras de progreso, gráficos de línea simples y planos esquemáticos del estacionamiento.
+
+### 6.1.2. Web, Mobile & Devices Style Guidelines
+
+La solución se compone de cuatro productos con contextos de uso distintos. Esta sección precisa cómo se aplican las guías generales en cada uno.
+
+| Producto | Dispositivo principal | Usuario | Patrón de diseño |
+|---|---|---|---|
+| Landing Page | Navegador web (escritorio y móvil) | Visitante: conductor o institución | Página de desplazamiento vertical con secciones, llamadas a la acción por segmento y formulario de contacto |
+| Aplicación móvil del conductor | Teléfono (Android e iOS, Flutter) | Conductor de la comunidad educativa | Navegación inferior de cuatro destinos |
+| Consola de operación | Navegador web y pantalla móvil de turno | Administrador de estacionamientos universitarios | Navegación inferior de cinco destinos en móvil; panel con barra lateral en escritorio |
+| Consola de administración de plataforma | Navegador web de escritorio | Equipo de Integra Labs | Barra lateral oscura fija con tres secciones y contenido en tarjetas y tablas |
+
+**Aplicación móvil del conductor.**
+- *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta.
+- *Pantalla de inicio.* Una tarjeta oscura central responde la pregunta "¿Encontraré espacio al llegar?" con el porcentaje, la categoría, el tiempo de llegada "calculado en tu dispositivo" y la confianza. Debajo se muestran los horizontes de 15, 30, 45 y 60 minutos como fichas coloreadas por categoría.
+- *Acceso.* El inicio de sesión es de dos pasos: correo institucional y código de verificación de seis dígitos con cuenta regresiva para reenviar. Un aviso explica que, si la conexión se interrumpe, el código se conserva y se reintenta.
+- *Zonas.* Resumen de capacidad, libres y desconocidos, y tarjetas por zona con etiqueta de estado. El detalle de zona ofrece vista de mapa esquemático y vista de lista con filtros (Todas, Libres, Sin datos), siempre con la advertencia de que la vista es una muestra.
+- *Predicción.* Tarjeta con el tiempo de llegada y una tarjeta por horizonte con barra de progreso y categoría. Un panel inferior deslizable muestra el detalle (ocupación prevista, saturación, momento de generación, vigencia, fuente, nivel de confianza y versión del modelo).
+- *Alertas.* Interruptores por tipo de alerta, franjas horarias por estacionamiento con opción de pausar o eliminar, y un aviso de datos desactualizados.
+- *Estados transversales.* Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
+- *Interacción.* Objetivos táctiles de al menos 44 × 44 px, acciones principales en la mitad inferior de la pantalla y un único botón primario por vista.
+
+**Consola de operación (administradores de cada universidad).**
+- *Navegación.* Cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más. Un selector de campus en el encabezado oscuro indica el ámbito institucional.
+- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos.
+- *Gestión de la distribución.* Plano esquemático por zonas, edición mediante hojas inferiores ("Añadir zona", "Añadir espacio"), borrador con número de versión y publicación con una confirmación que resume los cambios. Las acciones con impacto (deshabilitar un espacio) exigen un diálogo de confirmación con botón rojo.
+- *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways en modo lectura, gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
+- *Administración.* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
+
+**Consola de administración de plataforma (Integra Labs).**
+- *Estructura.* Barra lateral oscura de ancho fijo con tres secciones (Dashboard general, Universidades, Sensores y gateways), identificación del ámbito global y del usuario en la parte inferior. El contenido usa una cuadrícula de tarjetas de indicadores y tablas con filtros, búsqueda y paginación.
+- *Flujos.* Alta de universidad en tres pasos (datos y dominios, primer administrador, crear e invitar) con validaciones en línea (por ejemplo, dominio duplicado) que bloquean el envío hasta resolver el conflicto; inventario global de dispositivos con salud, última comunicación y batería; gestión de un dispositivo con registro, reemplazo y baja.
+- *Principio de ámbito.* Cada pantalla indica explícitamente si trabaja en el ámbito global de plataforma o en el de una universidad, para respaldar el aislamiento de datos (CON-08).
+
+**Landing Page.**
+- *Estructura.* Encabezado con navegación (Cómo funciona, Conductores, Instituciones, Privacidad, Nosotros, FAQ) y botón de contacto; sección principal con titular, subtítulo y llamadas a la acción para conductores e instituciones; franja de beneficios; secciones por segmento con maqueta del producto; sección de señales de la predicción; privacidad por diseño; beneficios; presentación de Integra Labs; formulario de contacto institucional; preguntas frecuentes; y pie de página con enlaces a términos y política de privacidad (CON-18).
+- *Estilo.* Alterna fondos claros y oscuros para separar el mensaje de conductores del de instituciones; el botón primario es teal y el secundario es un botón con borde. Todas las secciones mantienen el mismo ancho máximo de contenido y centrado.
+
+**Comportamiento responsivo.**
+- Móvil (hasta 600 px): una columna, navegación inferior, tarjetas a todo el ancho con 16 px de margen lateral.
+- Tableta (600–1024 px): dos columnas en tarjetas de resumen, navegación inferior o lateral colapsada.
+- Escritorio (más de 1024 px): barra lateral fija en las consolas, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
+
+**Componentes comunes.**
+
+*Botones.* Primario (teal con texto blanco), secundario (borde y texto petróleo) y destructivo (rojo). Un solo botón primario por vista; los botones largos incluyen ícono a la derecha.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_botones.png" width="520" alt="Botones primario, secundario y destructivo"></p>
+
+*Tarjetas.* Fondo blanco, borde fino, esquinas redondeadas y título de tarjeta en la parte superior; las tarjetas destacadas usan fondo `#052B39` con texto blanco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_tarjetas.png" width="500" alt="Tarjeta estándar y tarjeta destacada"></p>
+
+*Chips y etiquetas.* Forma de píldora con color de fondo claro y texto oscuro del mismo tono, siempre con texto.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_chips.png" width="560" alt="Chips de estado"></p>
+
+*Avisos.* Informativo (menta), advertencia (ámbar claro), error (rojo claro) y éxito (verde claro), con ícono a la izquierda y mensaje breve.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_avisos.png" width="560" alt="Avisos informativo, advertencia, error y éxito"></p>
+
+*Formularios.* Etiqueta encima del campo, ayuda debajo, borde teal al enfocar, borde rojo con mensaje en línea cuando hay error y marca de obligatorio con asterisco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_formularios.png" width="560" alt="Campos de formulario en estado normal, con foco y con error"></p>
+
+*Modales y hojas inferiores.* Hoja deslizable para formularios y detalles en móvil; diálogo centrado para confirmaciones; fondo atenuado y botón de cierre visible.
+
+**Accesibilidad e internacionalización.**
+- Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page y en la consola de operación, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
+- El estado nunca depende solo del color; se acompaña de texto, ícono o trama.
+- Los textos están disponibles en es_419 y en_US (inglés por defecto), con formatos de fecha y hora según el idioma.
+- Los mensajes de error indican qué ocurrió y cómo resolverlo, y los datos desactualizados se señalan siempre con su antigüedad.
+
+**Privacidad en la interfaz.**
+Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesión, en la pantalla de inicio, en la predicción y en las preferencias de alertas, con un ícono de escudo y un texto equivalente a "Compartimos minutos de llegada, nunca tu ubicación", en coherencia con CON-07.
+
+
+
+## 6.2. Information Architecture
+
+### 6.2.1. Organization Systems
+
+Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
+
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la aplicación web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
+- **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
+
+<br>
+
+También se aplican distintos esquemas de categorización:
+
+- **Por tópicos:** Las funcionalidades se agrupan en disponibilidad, predicción, alertas, configuración y analítica.
+- **Por audiencia:** La Landing Page diferencia claramente el contenido dirigido a conductores y el contenido orientado a instituciones educativas.
+- **Cronológica:** Se utiliza en historiales de ocupación, periodos de mayor demanda, eventos del calendario y evaluación de predicciones.
+- **Alfabética:** Puede utilizarse en listas extensas de estacionamientos, zonas o elementos de configuración para facilitar su localización.
+
+En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, su disponibilidad actual y las condiciones esperadas para su llegada.
+
+### 6.2.2. Labeling Systems
+
+El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la aplicación web y la Landing Page.
+
+Se evita mostrar términos técnicos internos como nombres de servicios, eventos de dominio o tecnologías IoT cuando no son necesarios para que el usuario complete una tarea.
+
+**Principios generales:**
+
+- Se utilizan etiquetas breves y fáciles de reconocer.
+- Un mismo concepto mantiene el mismo nombre en todos los productos.
+- Las acciones se representan mediante verbos directos.
+- Los términos técnicos se reservan para las funciones administrativas que realmente los requieren.
+- Los estados importantes se acompañan de elementos visuales que faciliten su interpretación.
+
+<br>
+
+**Landing Page:**
+
+Las etiquetas principales son:
+- Inicio
+- Conductores
+- Instituciones
+- Funcionalidades
+- Nosotros
+- Contacto
+- Descargar app
+
+En el pie de página se mantienen accesos claros a:
+- Política de privacidad
+- Términos y condiciones
+- Contacto
+
+<br>
+
+**Aplicación móvil:**
+
+Las principales etiquetas utilizadas son:
+- Inicio
+- Estacionamientos
+- Disponibilidad
+- Predicción
+- Mi llegada
+- Alertas
+- Preferencias
+- Cerrar sesión
+
+Para comunicar el estado de ocupación se utilizarán términos como:
+- Disponible
+- Ocupado
+- Sin información
+
+Cuando se muestra una predicción, se utilizan etiquetas fáciles de interpretar como:
+- 15 min
+- 30 min
+- 45 min
+- 60 min
+- Confianza baja
+
+Estas etiquetas permiten consultar las predicciones de forma clara y poco confusa para los usuarios, sin exponer detalles internos del modelo utilizado para generarlas.
+
+<br>
+
+**Aplicación Web:**
+
+Las secciones principales utilizan etiquetas relacionadas con las tareas del administrador:
+- Operación
+- Estacionamientos
+- Zonas
+- Sensores
+- Calendario
+- Analítica
+- Usuarios
+- Configuración
+
+Dentro de Analítica se utilizan etiquetas como:
+- Historial
+- Horas pico
+- Precisión
+
+En las acciones se utilizarán:
+- Ver detalle
+- Guardar cambios
+- Aplicar filtros
+- Invitar usuario
+- Añadir zona
+- Registrar evento
+
+De esta manera, las etiquetas describen la acción o información disponible sin obligar al usuario a interpretar términos técnicos.
+
+### 6.2.3. Searching Systems
+
+El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la aplicación web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
+
+Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto de la plataforma, de manera que términos como Estacionamiento, Zona, Disponibilidad, Predicción e Historial se utilicen de forma consistente.
+
+**Principios generales:**
+
+- Toda consulta se realiza dentro del contexto de la institución del usuario autenticado, por lo que solo se presenta información correspondiente a su universidad.
+- Los filtros disponibles dependen del módulo en el que se encuentre el usuario y únicamente muestran opciones relevantes para esa consulta.
+- Cuando una búsqueda o consulta no devuelve información, la interfaz muestra un mensaje explicativo en lugar de presentar una vista vacía.
+- Los filtros seleccionados permanecen visibles mientras se revisan los resultados, permitiendo identificar fácilmente qué información se está consultando.
+- La información se presenta de manera diferente según su naturaleza: listas y tarjetas para disponibilidad, y gráficos o tablas para información histórica y analítica.
+
+<br>
+
+**Consulta de estacionamientos:**
+En la aplicación móvil, la consulta de estacionamientos permite al conductor visualizar los estacionamientos disponibles dentro de su institución y seleccionar aquel que desea revisar. Una vez seleccionado, puede acceder a su información de disponibilidad y consultar las zonas que lo conforman.
+
+Cada estacionamiento presenta la información necesaria para que el conductor pueda interpretar rápidamente su situación. Cuando no existen datos de ocupación vigentes, la aplicación lo comunica de forma explícita para evitar que información desactualizada sea interpretada como disponibilidad actual.
+
+Desde el detalle del estacionamiento, el usuario puede profundizar en una zona específica para revisar la cantidad de espacios disponibles, ocupados o sin información confiable.
+
+<br>
+
+**Consulta de disponibilidad por zona:**
+Cuando un estacionamiento se encuentra dividido en zonas, el conductor puede utilizar esta clasificación como un filtro para reducir la información mostrada y concentrarse en un sector específico.
+
+Los resultados se presentan de forma agrupada por zona, permitiendo comparar rápidamente dónde existe mayor disponibilidad. Cada resultado mantiene el estado de ocupación correspondiente y la antigüedad de la información disponible.
+
+Este mecanismo evita que el conductor tenga que revisar individualmente todos los espacios del estacionamiento para conocer qué sector presenta mejores condiciones.
+
+<br>
+
+**Consulta de predicciones:**
+
+Dentro de la información de un estacionamiento, la predicción funciona como una búsqueda temporal sobre la disponibilidad esperada. El conductor puede consultar diferentes horizontes de tiempo:
+- 15 minutos.
+- 30 minutos.
+- 45 minutos.
+- 60 minutos.
+
+Al seleccionar uno de estos horizontes, la aplicación muestra la ocupación esperada para ese momento y la información necesaria para interpretar el resultado. Cuando la predicción se basa en información limitada, esta condición se indica claramente mediante el estado Confianza baja.
+
+La asesoría de llegada utiliza además el tiempo estimado de llegada calculado por la aplicación para presentar al conductor información acorde con el momento en el que espera llegar al campus.
+
+<br>
+
+**Consulta del historial de ocupación:**
+
+En la aplicación web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
+
+Cuando corresponde, también puede limitar la consulta a una zona específica. Los resultados permiten revisar el comportamiento de la ocupación durante el periodo seleccionado y pueden organizarse por hora o por día para facilitar su interpretación.
+
+Si no existen registros para los criterios establecidos, la vista informa que no hay información disponible para el periodo seleccionado.
+
+<br>
+
+**Consulta de periodos de mayor ocupación:**
+
+A partir de los registros históricos, el administrador puede consultar los periodos en los que se concentra una mayor ocupación del estacionamiento.
+
+La búsqueda utiliza el periodo y el estacionamiento seleccionados para mostrar las variaciones temporales de la ocupación e identificar los momentos de mayor demanda. Cuando la cantidad de información disponible no es suficiente para realizar este análisis, la interfaz comunica esta situación en lugar de presentar resultados incompletos.
+
+<br>
+
+**Consulta de precisión de las predicciones:**
+
+La aplicación web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
+
+El administrador puede revisar resultados como el error absoluto medio (MAE) y el porcentaje de predicciones que se encuentran dentro del margen configurado. Los resultados se diferencian por versión del modelo para evitar combinar mediciones correspondientes a versiones distintas.
+
+Cuando no existen suficientes pronósticos y observaciones para realizar el cálculo, la plataforma indica que no es posible obtener una medida de precisión para el periodo consultado.
+
+<br>
+
+**Centro de alertas:**
+
+En la aplicación móvil, la sección de alertas concentra las notificaciones relacionadas con la disponibilidad prevista de los estacionamientos a los que el conductor se encuentra suscrito.
+
+El usuario puede gestionar sus preferencias y definir las franjas horarias en las que desea recibir este tipo de información. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes relacionadas con una posible baja disponibilidad, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
+
+### 6.2.4. SEO Tags and Meta Tags
+
+En Quadrapp, los SEO Tags y Meta Tags permiten mejorar la visibilidad de la solución en motores de búsqueda y facilitar que conductores de la comunidad educativa e instituciones interesadas encuentren información sobre el producto. La Landing Page funciona como el principal punto de entrada público, ya que presenta la propuesta de valor, las funcionalidades principales y contenido diferenciado para conductores e instituciones.
+
+#### SEO Tags:
+
+Los SEO Tags se utilizan para optimizar el posicionamiento orgánico de la Landing Page y comunicar de forma clara que Quadrapp es una solución orientada a la consulta y predicción de disponibilidad en estacionamientos universitarios.
+
+
+**Title Tag:**
+
+Define el título que se muestra en los resultados de búsqueda y en la pestaña del navegador.
+
+`<title>Quadrapp | Estacionamiento universitario inteligente</title>`
+
+El título combina el nombre del producto con una descripción breve de su propósito, evitando términos técnicos innecesarios.
+
+<br>
+
+**Meta Description:**
+
+Proporciona un resumen breve de la propuesta de valor de Quadrapp.
+
+`<meta name="description" content="Quadrapp te permite consultar la disponibilidad de estacionamientos universitarios y conocer las condiciones esperadas antes de llegar al campus."/>`
+
+La descripción destaca las dos capacidades principales orientadas al conductor: conocer la disponibilidad actual y anticipar las condiciones que encontrará al llegar.
+
+<br>
+
+**Meta Keywords:**
+
+Incluye términos relacionados directamente con el problema y con las capacidades de la solución.
+
+`<meta name="keywords" content="estacionamiento universitario, estacionamiento inteligente, disponibilidad de estacionamientos, predicción de disponibilidad, smart parking, campus universitario"/>`
+
+<br>
+
+**Meta Author:**
+
+Identifica a la organización responsable del producto.
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Header Tags:**
+
+Los Header Tags organizan semánticamente el contenido de la Landing Page y permiten establecer una jerarquía clara entre la propuesta de valor y la información secundaria.
+
+Un ejemplo de jerarquía para Quadrapp sería:
+
+```text
+<h1>Anticipa la disponibilidad antes de llegar al campus</h1>
+
+<h2>Estacionamientos universitarios con información actual y predicciones de disponibilidad</h2>
+
+<h3>Consulta dónde estacionar y conoce las condiciones esperadas para tu llegada</h3>
+```
+
+El encabezado principal comunica directamente el beneficio diferencial de Quadrapp: no limitarse a mostrar la disponibilidad actual, sino ofrecer información sobre las condiciones esperadas al momento de llegada. Esta capacidad forma parte central de la propuesta del producto.
+
+#### Meta Tags
+Los Meta Tags proporcionan información técnica al navegador y a los motores de búsqueda. También permiten establecer aspectos básicos de accesibilidad, adaptación a dispositivos y comportamiento de indexación.
+
+**Charset Meta Tag:**
+
+Define la codificación de caracteres utilizada por la Landing Page.
+
+`<meta charset="UTF-8" />`
+
+<br>
+
+**Viewport Meta Tag:**
+
+Permite que la página se adapte correctamente a diferentes tamaños de pantalla.
+
+```text
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+```
+
+<br>
+
+**Robots Meta Tag:**
+
+La Landing Page es contenido público y puede ser indexada por motores de búsqueda.
+
+```text
+<meta name="robots" content="index, follow" />
+```
+
+<br>
+
+**Canonical Tag:**
+
+La etiqueta canonical permitirá señalar la dirección oficial de la Landing Page y evitar posibles duplicidades de contenido.
+
+`<link rel="canonical" href="[URL oficial de la Landing Page]" />`
+
+
+#### Web Application Meta Tags
+La consola administrativa de Quadrapp es una aplicación destinada al personal autorizado de cada institución, por lo que sus vistas privadas no están orientadas al posicionamiento público en buscadores.
+
+<br>
+
+**Title Tag:**
+
+`<title>Quadrapp Console | Gestión de estacionamientos</title>`
+
+<br>
+
+**Meta Description:**
+
+```text
+<meta
+  name="description"
+  content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
+/>
+```
+
+<br>
+
+**Meta Author:**
+
+`<meta name="author" content="Integra Labs" />`
+
+<br>
+
+**Robots Meta Tag:**
+
+Al tratarse de una aplicación de acceso restringido, las vistas internas no deben indexarse.
+
+`<meta name="robots" content="noindex, nofollow" />`
+
+
+#### Landing Page SEO Tags para la aplicación móvil
+
+Además de presentar la solución de forma general, la Landing Page incluirá contenido específico para el segmento de conductores y una llamada a la acción que los dirija hacia el sitio de descarga de la aplicación móvil.
+
+Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
+
+`<title>Quadrapp | Consulta la disponibilidad antes de llegar</title>`
+
+```text
+<meta
+  name="description"
+  content="Consulta la disponibilidad actual de los estacionamientos de tu universidad, revisa predicciones y conoce las condiciones esperadas antes de llegar al campus."
+/>
+```
+
+
+```text
+<meta
+  name="keywords"
+  content="Quadrapp, estacionamiento universitario, disponibilidad de estacionamiento, app de estacionamiento, predicción de disponibilidad, parking universitario"
+/>
+```
+
+`<meta name="author" content="Integra Labs" />`
+
+
+### 6.2.5. Navigation Systems
+
+Los sistemas de navegación de Quadrapp están diseñados para que conductores, administradores y operadores accedan de forma rápida a las funcionalidades que necesitan según su contexto de uso. La aplicación móvil prioriza la consulta de disponibilidad y predicciones antes de llegar al campus, mientras que la consola web facilita el monitoreo y la gestión de los estacionamientos. Por su parte, la Landing Page guía a los visitantes desde la propuesta de valor hacia la descarga de la aplicación o el contacto institucional.
+
+#### Aplicación Móvil — Conductores de la Comunidad Educativa
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú inferior (tab bar)** | Mantiene accesos directos a las principales secciones de la aplicación: Inicio, Estacionamientos, Alertas y Preferencias. Permanece disponible durante la navegación principal. |
+| **Navegación jerárquica** | Desde Estacionamientos, el conductor puede seleccionar un estacionamiento y acceder a sus zonas, disponibilidad actual y predicciones. Esto permite avanzar desde información general hacia datos más específicos sin mostrar todo el contenido al mismo tiempo. |
+| **Selector de horizonte** | Dentro de la consulta predictiva, permite alternar entre los horizontes de 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad. |
+| **Navegación contextual** | Las acciones relacionadas con un estacionamiento aparecen junto a su información. Desde su detalle, el conductor puede consultar la disponibilidad actual, revisar la predicción y acceder a la asesoría de llegada sin volver al menú principal. |
+| **Indicadores de estado** | Los estados Disponible, Ocupado o Sin información se presentan de forma visible dentro de las consultas. También se informa cuando un dato está desactualizado o una predicción presenta confianza baja. |
+| **Retroalimentación visual** | La interfaz mantiene resaltada la sección seleccionada y actualiza visualmente la información cuando el usuario cambia de estacionamiento, zona u horizonte de predicción. |
+
+La navegación móvil sigue un recorrido progresivo:
+
+Estacionamientos → Estacionamiento seleccionado → Zona → Disponibilidad → Predicción / Asesoría de llegada
+
+Esta estructura mantiene como prioridad la información necesaria para que el conductor pueda anticipar las condiciones del estacionamiento antes de llegar al campus.
+
+
+#### Aplicación Web — Administradores y Operadores
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Menú lateral persistente** | Proporciona acceso permanente a las principales áreas de la consola: Operación, Estacionamientos, Dispositivos, Calendario, Analítica y Usuarios. |
+| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista. |
+| **Navegación jerárquica** | Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
+| **Navegación contextual** | Las acciones relacionadas con un elemento aparecen dentro de su propia vista. Por ejemplo, desde la configuración de un estacionamiento se puede gestionar su distribución sin trasladarse a una sección independiente. |
+| **Filtros de analítica** | Las vistas históricas permiten ajustar la información mostrada según estacionamiento, zona y periodo. En el análisis de precisión, los resultados también pueden diferenciarse por versión del modelo. |
+| **Estado de la sección activa** | El menú mantiene resaltado el módulo actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la consola. |
+
+El dashboard concentra la información necesaria para supervisar el estacionamiento durante la operación, incluyendo disponibilidad, flujo y posibles situaciones de saturación.
+
+Las funcionalidades administrativas se organizan de forma progresiva para evitar mezclar la operación diaria con tareas de configuración. El administrador puede registrar estacionamientos y posteriormente configurar los elementos que pertenecen a ellos, como zonas, espacios y dispositivos.
+
+
+#### Landing Page — Visitantes
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Navbar superior fijo** | Incluye accesos a las principales secciones informativas: Funcionalidades, Conductores, Instituciones, Nosotros y Contacto. Permanece disponible mientras el visitante recorre la página. |
+| **Scroll guiado por secciones** | La Landing Page utiliza una navegación vertical mediante anclas internas, permitiendo pasar rápidamente de la propuesta de valor a funcionalidades, segmentos y contacto. |
+| **Botones de llamada a la acción (CTA)** | Los botones destacados orientan al visitante hacia el siguiente paso. El conductor dispone de una llamada a la acción para acceder al sitio de descarga de la aplicación, mientras que el visitante institucional puede dirigirse al formulario de contacto. |
+| **Navegación por audiencia** | El contenido diferencia claramente la información destinada a conductores de aquella dirigida a instituciones, permitiendo que cada visitante encuentre la propuesta relacionada con sus necesidades. |
+| **Jerarquía visual** | Los encabezados y bloques de contenido organizan la información desde la propuesta de valor general hacia detalles sobre funcionalidades y beneficios de la solución. |
+| **Footer navegable** | Mantiene accesos secundarios a Política de privacidad, Términos y condiciones y Contacto desde la parte inferior de la página. |
+
+La Landing Page permite recorrer las secciones informativas sin abandonar el sitio y separa el contenido de acuerdo con los dos segmentos principales del producto.
+
+## 6.3. Landing Page UI Design
+
+### 6.3.1. Landing Page Wireframe
+
+### 6.3.2. Landing Page Mock-up
+
+## 6.4. Applications UX/UI Design
+
+### 6.4.1. Applications Wireframes
+
+### 6.4.2. Applications Wireflow Diagrams
 
 ---
 
 # Conclusiones
 
-## Conclusiones y recomendaciones
+## Avance de conclusiones
 
-*Pendiente de elaboración.*
+1. El trabajo realizado respalda el problema planteado para los conductores de la comunidad educativa. Las tres entrevistas registradas muestran que los participantes no conocen la disponibilidad antes de llegar, recurren a la intuición o a consultas por WhatsApp y han experimentado retrasos asociados con el tráfico, las colas o la búsqueda de un espacio. Estos resultados sustentan la necesidad de ofrecer información oportuna antes y durante el desplazamiento. Sin embargo, todavía no demuestran que la predicción reduzca el tiempo de búsqueda, ya que esta hipótesis requiere la implementación y evaluación de la solución.
+
+2. El avance del segmento de administradores también evidencia una gestión principalmente reactiva. La entrevista disponible señala que la ocupación se estima mediante la experiencia, reportes de las tranqueras y revisiones de cámaras, mientras que los registros se consolidan manualmente al terminar el turno. Este resultado respalda la utilidad potencial de una consola que reúna la ocupación actual, la saturación prevista y el análisis histórico. Debido a que solo se cuenta con una entrevista de este segmento, el hallazgo todavía no puede generalizarse a otras instituciones.
+
+3. Las evidencias obtenidas respaldan parcialmente los supuestos de Lean UX relacionados con la incertidumbre, la necesidad de anticipación y el valor de conocer la disponibilidad esperada al momento de llegada. Los criterios de éxito definidos, como reducir en 20 % el tiempo de búsqueda, alcanzar 80 % de precisión, lograr que 60 % de los conductores consulte la predicción y mantener más de 95 % de disponibilidad de datos, permanecen como metas por validar. Tampoco se ha comprobado todavía la adopción regular del dashboard ni la disposición de una institución para implementar un piloto.
+
+4. La especificación funcional traduce las necesidades identificadas en capacidades para ambos segmentos. La aplicación móvil prioriza la consulta de ocupación, la predicción y la asesoría de llegada, mientras que la consola web se orienta a la configuración, el monitoreo y el análisis de la operación. El Product Backlog organiza estas capacidades junto con el trabajo técnico necesario y proporciona una base para planificar la construcción incremental del producto.
+
+5. El diseño estratégico establece una arquitectura coherente con los riesgos principales del proyecto. Attribute-Driven Design permitió priorizar la precisión, la frescura de los datos, la tolerancia a fallas, el desempeño, la seguridad y el aislamiento entre instituciones. Domain-Driven Design separó las responsabilidades en siete bounded contexts y definió contratos de integración que evitan que los detalles de los sensores, la analítica y los proveedores externos se incorporen indebidamente al núcleo predictivo.
+
+6. El alcance definido concentra el valor de Quadrapp en informar, predecir y apoyar la gestión del estacionamiento. La solución no administra reservas, cobros ni el control físico de acceso. Además, el tiempo estimado de llegada se calcula en el dispositivo y el servidor recibe únicamente los minutos, lo que reduce el tratamiento de datos de ubicación y mantiene la propuesta alineada con el principio de recopilar solo la información necesaria.
+
+En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar y con una base funcional y arquitectónica para continuar su desarrollo. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
 
 ## Video About-the-Team
 
@@ -2960,7 +4902,43 @@ Representa el ecosistema general de Quadrapp, identificando los actores y sistem
 
 # Bibliografía
 
-*Pendiente de elaboración.*
+Adzic, G. (2012). *Impact mapping: Making a big impact with software products and projects*. Provoking Thoughts. https://www.impactmapping.org/book.html
+
+Apparka. (s. f.). *App Apparka*. Recuperado el 19 de septiembre de 2026 de https://apparka.pe/app-apparka/
+
+Bass, L., Clements, P., y Kazman, R. (2021). *Software architecture in practice* (4.ª ed.). Addison-Wesley Professional. https://www.pearson.com/en-us/subject-catalog/p/software-architecture-in-practice/P200000000111/9780137468218
+
+Brown, S. (s. f.). *The C4 model for visualising software architecture*. Recuperado el 19 de septiembre de 2026 de https://c4model.com/
+
+Channamallu, S. S., Kermanshachi, S., Rosenberger, J. M., Pamidimukkala, A., y Hladik, G. (2025). Determinants of user satisfaction in smart parking applications. *Transport Economics and Management, 3*, 214-221. https://doi.org/10.1016/j.team.2025.05.001
+
+Channamallu, S. S., Padavala, V. K., Kermanshachi, S., Rosenberger, J. M., y Pamidimukkala, A. (2023). Examining parking occupancy prediction models: A comparative analysis. *Transportation Research Procedia, 73*, 281-288. https://doi.org/10.1016/j.trpro.2023.11.919
+
+Congreso de la República del Perú. (2011). *Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/congreso-de-la-republica/normas-legales/243470
+
+Deno, J. S. J., Sree, S. K., Maheswari, S., y Sasikumar, P. (2026). Smart mobility infrastructure: Improving campus parking efficiency in real time. *Scientific Reports, 16*, 15186. https://doi.org/10.1038/s41598-026-46053-4
+
+Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of software*. Addison-Wesley Professional. https://www.informit.com/store/domain-driven-design-tackling-complexity-in-the-heart-9780321125217
+
+Flutter. (s. f.). *Build for and integrate with multiple platforms*. Recuperado el 19 de septiembre de 2026 de https://docs.flutter.dev/platform-integration
+
+Gothelf, J., y Seiden, J. (2021). *Lean UX* (3.ª ed.). O'Reilly Media. https://www.oreilly.com/library/view/lean-ux-3rd/9781098116293/
+
+Ministerio de Justicia y Derechos Humanos. (2024). *Decreto Supremo N.º 016-2024-JUS, Reglamento de la Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/smv/normas-legales/6426760-016-2024-jus
+
+Mohandes, M., Deriche, M., Abuelma'Atti, M. T., y Tasadduq, N. (2019). Preference-based smart parking system in a university campus. *IET Intelligent Transport Systems, 13*(2), 376-384. https://doi.org/10.1049/iet-its.2018.5207
+
+OASIS. (2019). *MQTT version 5.0*. https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html
+
+OpenAPI Initiative. (2024). *OpenAPI Specification v3.1.1*. https://spec.openapis.org/oas/v3.1.1.html
+
+ParkHelp. (s. f.). *Parking guidance for universities & education*. Recuperado el 19 de septiembre de 2026 de https://www.parkhelp.com/parking-solutions/universities-education/
+
+ParkMobile. (s. f.). *Smarter parking for students, staff, and visitors*. Recuperado el 19 de septiembre de 2026 de https://parkmobile.io/parking-providers/parkmobile-for/college-campuses
+
+Paudel, S., Vechione, M., y Gurbuz, O. (2024). Predicting university campus parking demand using machine learning models. *Transportation Research Record, 2678*(6), 14-26. https://doi.org/10.1177/03611981231193417
+
+World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 2.2*. https://www.w3.org/TR/WCAG22/
 
 ---
 
@@ -2970,4 +4948,4 @@ Representa el ecosistema general de Quadrapp, identificando los actores y sistem
 
 | Entrega | Enlace al video |
 | --- | --- |
-| AV1 | Por completar |
+| Primer Hito | [https://youtu.be/4N4Y5rLdgGs](https://youtu.be/4N4Y5rLdgGs) |
