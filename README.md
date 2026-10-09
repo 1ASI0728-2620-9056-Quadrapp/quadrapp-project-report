@@ -61,6 +61,7 @@
 | 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
 | 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
+| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
 
 # Project Report Collaboration Insights
 
@@ -96,7 +97,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
 | Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
 
-**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 17 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.14 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 17 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
@@ -7528,9 +7529,52 @@ La Landing Page permite recorrer las secciones informativas sin abandonar el sit
 
 ## 6.3. Landing Page UI Design
 
+La Landing Page es el primer contacto de los dos segmentos con Quadrapp. Su diseño traduce la arquitectura de información de la sección 6.2 en una sola página con anclas: la barra de navegación lleva a *Cómo funciona*, *Conductores*, *Instituciones*, *Privacidad*, *Nosotros* y *FAQ*, y cada segmento tiene su propia sección y su propia llamada a la acción. El conductor llega a *Conocer la app* y a las descargas para iOS y Android (US26); el administrador, a *Soy una institución*, *Solicitar una conversación* y al formulario de contacto institucional (US27).
+
+El contenido comunica el alcance real del producto para evitar falsas expectativas. Desde la portada se indica que Quadrapp no hace reservas, no cobra y no rastrea la ubicación (CON-10, CON-07); la sección de predicción aclara que una estimación orienta pero no reserva un espacio y explica el estado UNKNOWN; y la sección de privacidad explica que la aplicación calcula el tiempo estimado de llegada en el dispositivo. El pie de página enlaza los términos y condiciones y la política de privacidad (US28, CON-18).
+
+Los diseños se elaboraron en Figma, en el archivo de diseño del equipo, a partir de la propuesta de valor (US25) y del Design System de la sección 6.1. La versión implementada se publicó en [tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) y su código está en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización.
+
 ### 6.3.1. Landing Page Wireframe
 
+El wireframe define la estructura y la jerarquía de la página sin usar color: los bloques grises marcan imágenes y superficies, y el texto ya es el definitivo, para validar la arquitectura de información antes de aplicar el estilo visual.
+
+**Desktop Web Browser**
+
+La página se organiza en una columna de contenido de 1440 px con márgenes laterales de 72 px, que mantienen alineados todos los bloques. De arriba abajo:
+
+1. **Barra de navegación**, con la marca a la izquierda, las seis anclas al centro y la acción *Hablar con Integra Labs* a la derecha.
+2. **Portada**, con el mensaje principal ("Anticipa el estacionamiento antes de salir"), dos acciones diferenciadas por segmento y tres garantías de alcance: sin reservas, sin pagos y sin rastreo de ubicación.
+3. **Franja de valor**, con tres beneficios breves: antes de salir, durante el turno y con privacidad.
+4. **Cómo funciona**, con tres pasos numerados (*Observa*, *Entiende*, *Anticipa*) que resumen el recorrido del sensor a la decisión.
+5. **Para conductores**, con una vista previa de la aplicación (probabilidad y horizontes de 15 a 60 minutos) y los botones de descarga.
+6. **Para instituciones**, con una vista previa de la consola (operación del turno, saturación prevista y alertas) y la acción *Solicitar una conversación*.
+7. **Predicción con contexto**, con las cuatro señales del modelo y un aviso de transparencia.
+8. **Privacidad por diseño**, **Beneficios** y **Nosotros**, con la visión y la misión de Integra Labs.
+9. **Contacto institucional**, con un formulario de cinco campos y el consentimiento de uso de datos.
+10. **Preguntas frecuentes** y **pie de página** con los enlaces de producto, compañía y documentos legales.
+
+Se aplican los principios de jerarquía (un solo titular dominante por sección, con una etiqueta superior que nombra la sección), proximidad (cada sección agrupa texto, evidencia visual y acción), alineación (todo el contenido respeta los mismos márgenes) y repetición (las tarjetas de pasos, señales y beneficios comparten estructura). En diseño inclusivo, el formulario muestra etiquetas visibles sobre cada campo en lugar de depender del texto de ejemplo; los íconos siempre acompañan a un texto, y las preguntas frecuentes se presentan como un acordeón con respuestas cortas.
+
+![Wireframe de la Landing Page para Desktop Web Browser](assets/capitulo-06/landing/landing-wireframe-desktop.png)
+
+*Figura: wireframe de la Landing Page para Desktop Web Browser, elaborado en Figma.*
+
 ### 6.3.2. Landing Page Mock-up
+
+El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin cambiar la estructura ni los textos.
+
+**Desktop Web Browser**
+
+- **Color.** El teal primario `#087F83` identifica las acciones principales y la marca; el azul petróleo `#052B39` y la superficie `#073B4C` dan fondo a la portada y a la sección de instituciones; el acento `#DDF3F1` marca la franja de valor y los avisos informativos; y `#F3F7F6` separa las secciones claras.
+- **Estados.** La vista previa de la aplicación usa los colores de estado definidos: verde para buena disponibilidad, ámbar para disponibilidad limitada y rojo para baja disponibilidad, siempre acompañados del porcentaje, para que el color nunca sea la única señal. En la vista previa de la consola, el ámbar marca la franja de saturación prevista y los sensores en estado UNKNOWN.
+- **Tipografía e íconos.** Se emplea la familia sans-serif de la guía de estilos, con la jerarquía resuelta por tamaño y peso, e íconos de línea con el mismo grosor en toda la página.
+- **Imagen.** La portada usa una fotografía de un campus universitario, que sitúa el producto en su contexto, integrada mediante un degradado oscuro que mantiene el contraste del texto blanco.
+- **Accesibilidad.** Los pares de color de texto y fondo son los verificados en la sección 6.1 frente al nivel AA de WCAG 2.2; los botones primarios combinan texto blanco sobre `#087F83` (4.8:1) y el texto principal usa `#052B39` sobre fondos claros (13.8:1).
+
+![Mock-up de la Landing Page para Desktop Web Browser](assets/capitulo-06/landing/landing-mockup-desktop.png)
+
+*Figura: mock-up de la Landing Page para Desktop Web Browser, elaborado en Figma.*
 
 ## 6.4. Applications UX/UI Design
 
