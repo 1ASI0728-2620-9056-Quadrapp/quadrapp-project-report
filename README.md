@@ -3239,6 +3239,810 @@ Cada tabla incluye la institución como identificador de aislamiento (DD-09). El
 
 ## 5.5. Bounded Context: Prediction & Advisory
 
+El Bounded Context Prediction & Advisory es responsable de **anticipar la ocupación de los estacionamientos universitarios** de Quadrapp y de **convertir esa anticipación en una orientación útil para el conductor**: qué tan probable es encontrar un espacio libre al llegar y cuánto falta para que se libere uno cuando el estacionamiento está lleno.
+
+Su principal propósito es producir pronósticos de ocupación para los horizontes de 15, 30, 45 y 60 minutos, indicar con qué confianza fueron generados y derivar de ellos la asesoría de llegada y la estimación de la próxima disponibilidad que consume la aplicación móvil.
+
+Este Bounded Context soporta principalmente:
+
+- US10 — Consultar el pronóstico de ocupación por horizonte, identificando los horizontes faltantes o vencidos.
+- US13, US14 y US15 — Recibir asesoría de llegada (probabilidad de encontrar espacio, categoría y confianza) a partir del tiempo estimado de llegada (ETA).
+- US36 — Conocer la próxima disponibilidad cuando el estacionamiento está lleno.
+- TS07 — Servicio de predicción de ocupación con modelo principal y respaldo (FALLBACK).
+- TS02 — Es consumido por el BFF móvil (`GET /mobile/home`) para componer la pantalla de inicio.
+
+
+Las principales responsabilidades del Bounded Context Prediction & Advisory son:
+
+- Generar periódicamente un pronóstico por estacionamiento y por horizonte (15, 30, 45 y 60 minutos).
+- Registrar, para cada pronóstico, la ocupación esperada, la confianza, el método utilizado y la versión del modelo.
+- Aplicar un método de respaldo (FALLBACK) con confianza baja cuando el modelo principal no está disponible o no existe historial suficiente.
+- Indicar cuándo se espera que un estacionamiento alcance su umbral de saturación.
+- Informar si un pronóstico está vigente, vencido o faltante, sin depender del reloj del dispositivo.
+- Derivar la asesoría de llegada (probabilidad de espacio, categoría, confianza y horizonte utilizado) a partir del pronóstico vigente y del ETA.
+- Estimar el rango de minutos hasta la próxima liberación cuando no hay espacios libres, o indicar que no puede estimarse cuando no hay salidas.
+- Registrar la ocupación observada cuando llega el momento objetivo de un pronóstico, para vigilar el desempeño del propio modelo.
+- Publicar el evento `ForecastGenerated` para que Analytics y Notifications lo utilicen sin acceder al modelo interno de este contexto.
+- Garantizar que el servidor reciba únicamente el ETA en minutos, nunca coordenadas, y que ese ETA no se almacene.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales requeridas por Prediction & Advisory.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| Forecast | Domain | Aggregate Root. Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. | forecastId, institutionId, parkingLotId, horizon, generatedAt, targetAt, expectedOccupancy, confidence, method, modelVersion, saturation, observedOccupancy | validUntil(), isExpiredAt(), isFallback(), predictsSaturation(), recordObservation(), absoluteError(), pullDomainEvents() |
+| ForecastGenerated | Domain | Evento de dominio que anuncia que se generó un pronóstico. | forecastId, institutionId, parkingLotId, generatedAt, targetAt, horizonMinutes, modelVersion, expectedOccupancyPct, confidenceLevel, method, saturationExpectedAt | — |
+| OccupancyPercentage | Domain | Value Object que representa un porcentaje de ocupación entre 0 % y 100 %. | value | value(), isValid(), isAtOrAbove(), distanceTo() |
+| Probability | Domain | Value Object que representa un valor entre 0 y 1. | value | value(), isValid(), complement() |
+| Confidence | Domain | Value Object que representa qué tan confiable es un pronóstico o una asesoría. | value, level | of(), value(), level(), isLow(), lowerOneLevel() |
+| Saturation | Domain | Value Object que representa el momento en que se espera alcanzar el umbral de saturación. | expectedAt, thresholdPct | expectedAt(), thresholdPct(), minutesFrom() |
+| ModelPrediction | Domain | Value Object con el resultado crudo entregado por el modelo para un horizonte. | horizon, expectedOccupancy, confidenceValue, modelVersion | — |
+| ParkingLotProfile | Domain | Value Object con los datos mínimos del estacionamiento que Prediction & Advisory necesita. | institutionId, parkingLotId, saturationThreshold, flowWindowMinutes | belongsTo() |
+| EtaMinutes | Domain | Value Object que representa el tiempo estimado de llegada en minutos (0 a 120). | value | value(), isValid(), exceeds() |
+| ArrivalAdvice | Domain | Value Object derivado que resume la asesoría de llegada. No se persiste. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt | isLowConfidence() |
+| NextAvailability | Domain | Value Object derivado con el rango estimado hasta la próxima liberación. No se persiste. | available, minMinutes, maxMinutes, reason | estimated(), notNeeded(), noExits(), isEstimated() |
+| AdvisoryPolicy | Domain | Value Object con los umbrales configurables que se aplican al clasificar probabilidad, confianza y rango. | likelyFrom, uncertainFrom, highConfidenceFrom, mediumConfidenceFrom, fallbackConfidence, rangeSpread | categoryFor(), confidenceLevelFor() |
+| ForecastHorizon | Domain | Enumeración de los horizontes admitidos. | M15, M30, M45, M60 | minutes(), fromMinutes(), smallestCovering() |
+| ForecastMethod | Domain | Enumeración del método con el que se generó un pronóstico. | PRIMARY_MODEL, FALLBACK | — |
+| ConfidenceLevel | Domain | Enumeración del nivel de confianza. | HIGH, MEDIUM, LOW | — |
+| ArrivalCategory | Domain | Enumeración de la categoría de la asesoría de llegada. | LIKELY, UNCERTAIN, UNLIKELY | — |
+| UnavailabilityReason | Domain | Enumeración del motivo por el que no se entrega un rango de próxima disponibilidad. | HAS_FREE_SPACES, NO_EXITS | — |
+| ForecastRepository | Domain | Abstracción para almacenar y consultar pronósticos. | — | save(), findById(), findLatest(), findLatestByLot(), findPendingEvaluation() |
+| ForecastDomainService | Domain | Construye pronósticos a partir del resultado del modelo o del método de respaldo y estima la saturación. | policy | assembleFromModel(), assembleFallback(), estimateSaturation() |
+| AdvisoryDomainService | Domain | Selecciona el pronóstico adecuado, deriva la asesoría de llegada y estima la próxima disponibilidad. | policy | adviseArrival(), selectForecast(), estimateNextAvailability() |
+| GetForecastQuery | Application | Solicitud para consultar el pronóstico de un estacionamiento y un horizonte. | institutionId, parkingLotId, horizon | — |
+| GetForecastQueryHandler | Application | Coordina la consulta de un pronóstico y determina si está vigente o vencido. | Dependencies | handle() |
+| GetForecastsQuery | Application | Solicitud para consultar los pronósticos de todos los horizontes de un estacionamiento. | institutionId, parkingLotId | — |
+| GetForecastsQueryHandler | Application | Coordina la consulta de los cuatro horizontes marcando los faltantes y vencidos. | Dependencies | handle() |
+| GetArrivalAdviceQuery | Application | Solicitud para calcular la asesoría de llegada. | institutionId, parkingLotId, eta | — |
+| GetArrivalAdviceQueryHandler | Application | Coordina el cálculo de la asesoría de llegada sin persistir el ETA. | Dependencies | handle() |
+| GetNextAvailabilityQuery | Application | Solicitud para estimar la próxima disponibilidad de un estacionamiento. | institutionId, parkingLotId | — |
+| GetNextAvailabilityQueryHandler | Application | Coordina la estimación de la próxima disponibilidad. | Dependencies | handle() |
+| GenerateForecastsCommand | Application | Instrucción para generar los pronósticos de un estacionamiento. | parkingLotId | — |
+| GenerateForecastsCommandHandler | Application | Coordina la generación de pronósticos con el modelo o con el método de respaldo. | Dependencies | handle() |
+| EvaluateForecastsCommand | Application | Instrucción para registrar la ocupación observada de los pronósticos cuyo momento objetivo ya pasó. | asOf | — |
+| EvaluateForecastsCommandHandler | Application | Coordina el registro de la ocupación observada. | Dependencies | handle() |
+| ForecastResult | Application | Resultado de la consulta de un pronóstico. | forecast, status, serverTime | — |
+| ForecastSetResult | Application | Resultado de la consulta de todos los horizontes. | parkingLotId, items, serverTime | — |
+| ArrivalAdviceResult | Application | Resultado del cálculo de la asesoría de llegada. | advice, serverTime | — |
+| NextAvailabilityResult | Application | Resultado de la estimación de próxima disponibilidad. | availability, serverTime | — |
+| OccupancyReader | Application | Puerto de salida hacia Occupancy. | — | currentOccupancy(), freeSpaces(), exitsInWindow(), observedOccupancyAt(), recentSnapshots() |
+| ParkingLotSettingsReader | Application | Puerto de salida hacia Parking Configuration. | — | profileOf(), activeLots(), calendarEventsAround() |
+| PredictionModelPort | Application | Puerto de salida hacia el modelo de predicción. | — | predict() |
+| ForecastEventPublisher | Application | Puerto de salida para publicar eventos de dominio. | — | publish() |
+| ForecastQueryController | Interface | Expone la consulta de pronósticos y de próxima disponibilidad. | Query Handler dependencies | getForecast(), getNextAvailability() |
+| ArrivalAdviceController | Interface | Expone el cálculo de la asesoría de llegada. | Query Handler dependency | requestAdvice() |
+| PredictionAdvisoryFacade | Interface | API pública del módulo para otros módulos del monolito, en particular el BFF móvil. | Query Handler dependencies | forecastsOf(), adviceFor(), nextAvailabilityOf() |
+| ForecastScheduler | Interface | Dispara de forma periódica la generación y la evaluación de pronósticos. | Command Handler dependencies | generateForecasts(), evaluateForecasts() |
+| ArrivalAdviceRequest | Interface | Representación de la solicitud de asesoría. Solo admite dos campos. | lotId, etaMinutes | — |
+| ForecastResponse | Interface | Representación del pronóstico entregado al cliente. | lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime | — |
+| ArrivalAdviceResponse | Interface | Representación de la asesoría entregada al cliente. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime | — |
+| NextAvailabilityResponse | Interface | Representación de la próxima disponibilidad entregada al cliente. | available, minMinutes, maxMinutes, reason, serverTime | — |
+| ForecastRepositoryAdapter | Infrastructure | Implementa la persistencia de pronósticos sobre la tabla `forecasts`. | Persistence dependency | save(), findById(), findLatest(), findLatestByLot(), findPendingEvaluation() |
+| OccupancyReaderAdapter | Infrastructure | Encapsula el acceso a la información que publica Occupancy. | Integration dependency | currentOccupancy(), freeSpaces(), exitsInWindow(), observedOccupancyAt(), recentSnapshots() |
+| ParkingLotSettingsReaderAdapter | Infrastructure | Encapsula el acceso a la configuración del estacionamiento. | Integration dependency | profileOf(), activeLots(), calendarEventsAround() |
+| PredictionModelClient | Infrastructure | Encapsula la comunicación con el modelo de predicción. | Model dependency, timeout | predict() |
+| ForecastEventPublisherAdapter | Infrastructure | Encapsula el mecanismo técnico de publicación de `ForecastGenerated`. | Messaging dependency | publish() |
+
+
+### 5.5.1. Domain Layer
+
+
+La Domain Layer contiene los conceptos, reglas y abstracciones de negocio que permiten generar, interpretar y usar los pronósticos de ocupación. No depende de HTTP, bases de datos, mensajería, del modelo de predicción concreto ni de frameworks.
+
+
+**Aggregate 1: Forecast**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Forecast|Aggregate Root|Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. Conserva el método, la versión del modelo y la confianza con que se generó y, cuando llega su momento objetivo, la ocupación observada.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|forecastId|UUID|Private|Identificador único del pronóstico.|
+|institutionId|UUID|Private|Referencia externa a la institución propietaria de la información (IAM).|
+|parkingLotId|UUID|Private|Referencia externa al estacionamiento pronosticado (Parking Configuration).|
+|horizon|ForecastHorizon|Private|Horizonte del pronóstico: 15, 30, 45 o 60 minutos.|
+|generatedAt|Instant|Private|Momento en que se generó el pronóstico.|
+|targetAt|Instant|Private|Momento futuro para el que se estima la ocupación; es `generatedAt` más el horizonte.|
+|expectedOccupancy|OccupancyPercentage|Private|Porcentaje de ocupación esperado en `targetAt`.|
+|confidence|Confidence|Private|Valor y nivel de confianza del pronóstico.|
+|method|ForecastMethod|Private|Indica si se generó con el modelo principal o con el método de respaldo.|
+|modelVersion|String|Private|Versión del modelo o identificador de la política de respaldo.|
+|saturation|Saturation?|Private|Momento esperado de saturación, cuando el pronóstico lo anticipa.|
+|observedOccupancy|OccupancyPercentage?|Private|Ocupación realmente observada en `targetAt`; se registra una sola vez.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|validUntil()|Instant|Public|Momento hasta el cual el pronóstico es vigente; coincide con `targetAt`.|
+|isExpiredAt(now: Instant)|Boolean|Public|Indica si el pronóstico ya no es vigente en el instante dado.|
+|isFallback()|Boolean|Public|Indica si se generó con el método de respaldo.|
+|predictsSaturation()|Boolean|Public|Indica si anticipa que se alcanzará el umbral de saturación.|
+|hasObservation()|Boolean|Public|Indica si ya se registró la ocupación observada.|
+|recordObservation(observed: OccupancyPercentage, now: Instant)|Void|Public|Registra la ocupación observada, solo si `targetAt` ya ocurrió y no hay una observación previa.|
+|absoluteError()|Decimal?|Public|Diferencia absoluta, en puntos porcentuales, entre la ocupación esperada y la observada; no existe sin observación.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos de dominio pendientes.|
+
+Una vez generado, un pronóstico no cambia su ocupación esperada, su confianza, su método ni su versión; la única modificación permitida es registrar, una vez, la ocupación observada. `institutionId` y `parkingLotId` no hacen que Institution ni ParkingLot pertenezcan al agregado.
+
+**Domain Event: ForecastGenerated**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastGenerated|Domain Event|Anuncia que se generó un pronóstico. Lo consumen Analytics (para su `ForecastSnapshot`) y Notifications (para decidir alertas de saturación). No incluye ningún dato del conductor.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|forecastId|UUID|Private|Identificador del pronóstico generado.|
+|institutionId|UUID|Private|Institución a la que pertenece el pronóstico.|
+|parkingLotId|UUID|Private|Estacionamiento sobre el que se realizó la predicción.|
+|generatedAt|Instant|Private|Momento en que se generó.|
+|targetAt|Instant|Private|Momento futuro para el que se estimó la ocupación.|
+|horizonMinutes|Integer|Private|Horizonte utilizado, en minutos.|
+|modelVersion|String|Private|Versión del modelo con la que se generó.|
+|expectedOccupancyPct|Decimal|Private|Ocupación esperada, entre 0 y 100.|
+|confidenceLevel|ConfidenceLevel|Private|Nivel de confianza del pronóstico.|
+|method|ForecastMethod|Private|Método con el que se generó.|
+|saturationExpectedAt|Instant?|Private|Momento esperado de saturación, cuando existe.|
+
+**Value Object: OccupancyPercentage**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OccupancyPercentage|Value Object|Porcentaje de ocupación esperado, observado o umbral. Se recibe de Occupancy con la regla de que un espacio sin dato (UNKNOWN) nunca cuenta como libre.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|value|Decimal|Private|Porcentaje en el intervalo de 0 a 100.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|value()|Decimal|Public|Devuelve el porcentaje.|
+|isValid()|Boolean|Public|Determina si el valor está entre 0 % y 100 %.|
+|isAtOrAbove(other: OccupancyPercentage)|Boolean|Public|Indica si es igual o superior a otro porcentaje (por ejemplo, al umbral de saturación).|
+|distanceTo(other: OccupancyPercentage)|Decimal|Public|Diferencia absoluta, en puntos porcentuales, respecto de otro porcentaje.|
+
+**Value Object: Probability**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Probability|Value Object|Valor entre 0 y 1 (probabilidad o confianza). Se mantiene separado de `OccupancyPercentage` (0 a 100) para no confundir las escalas.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|value|Decimal|Private|Valor en el intervalo de 0 a 1.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|value()|Decimal|Public|Devuelve el valor.|
+|isValid()|Boolean|Public|Determina si el valor está entre 0 y 1.|
+|complement()|Probability|Public|Devuelve 1 menos el valor.|
+
+**Value Object: Confidence**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Confidence|Value Object|Qué tan confiable es un pronóstico o una asesoría: valor numérico y nivel cualitativo.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|value|Probability|Private|Valor de confianza entre 0 y 1.|
+|level|ConfidenceLevel|Private|Nivel cualitativo: HIGH, MEDIUM o LOW.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|of(value: Probability, method: ForecastMethod, policy: AdvisoryPolicy)|Confidence|Public (static)|Construye una confianza. El nivel sale de `AdvisoryPolicy`; con método FALLBACK es siempre LOW.|
+|value()|Probability|Public|Devuelve el valor numérico.|
+|level()|ConfidenceLevel|Public|Devuelve el nivel cualitativo.|
+|isLow()|Boolean|Public|Indica si el nivel es LOW.|
+|lowerOneLevel()|Confidence|Public|Devuelve una confianza un nivel más baja (HIGH pasa a MEDIUM y MEDIUM a LOW).|
+
+**Value Object: Saturation**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Saturation|Value Object|Momento en que se espera que el estacionamiento alcance su umbral de saturación.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|expectedAt|Instant|Private|Momento esperado de saturación; está entre `generatedAt` y `targetAt` del pronóstico.|
+|thresholdPct|OccupancyPercentage|Private|Umbral de saturación del estacionamiento usado en el cálculo (no se persiste; se reconstruye desde la configuración vigente).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|expectedAt()|Instant|Public|Devuelve el momento esperado de saturación.|
+|thresholdPct()|OccupancyPercentage|Public|Devuelve el umbral utilizado.|
+|minutesFrom(now: Instant)|Integer|Public|Minutos que faltan para la saturación desde el instante dado.|
+
+**Value Object: ModelPrediction**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ModelPrediction|Value Object|Resultado crudo que entrega el modelo para un horizonte, antes de convertirse en un `Forecast`.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|horizon|ForecastHorizon|Private|Horizonte al que corresponde la predicción.|
+|expectedOccupancy|OccupancyPercentage|Private|Ocupación esperada calculada por el modelo.|
+|confidenceValue|Probability|Private|Confianza informada por el modelo.|
+|modelVersion|String|Private|Versión del modelo que produjo la predicción.|
+
+**Value Object: ParkingLotProfile**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ParkingLotProfile|Value Object|Datos mínimos del estacionamiento que necesita este contexto, sin importar el modelo completo de Parking Configuration.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|institutionId|UUID|Private|Institución propietaria del estacionamiento.|
+|parkingLotId|UUID|Private|Identificador del estacionamiento.|
+|saturationThreshold|OccupancyPercentage|Private|Umbral a partir del cual se considera saturado.|
+|flowWindowMinutes|Integer|Private|Ventana, en minutos, para medir el flujo de salidas.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|belongsTo(institutionId: UUID)|Boolean|Public|Indica si el estacionamiento pertenece a la institución dada.|
+
+**Value Object: EtaMinutes**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|EtaMinutes|Value Object|Tiempo estimado de llegada en minutos (0 a 120). Es el único dato del trayecto que el servidor conoce: no contiene coordenadas, ruta ni identificación del conductor. El ETA se estima en la app móvil.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|value|Integer|Private|Minutos hasta la llegada, entre 0 y 120.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|value()|Integer|Public|Devuelve los minutos.|
+|isValid()|Boolean|Public|Determina si es un entero entre 0 y 120.|
+|exceeds(horizon: ForecastHorizon)|Boolean|Public|Indica si el ETA es mayor que el horizonte dado.|
+
+**Value Object: ArrivalAdvice**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ArrivalAdvice|Value Object (derivado, no persistido)|Qué tan probable es encontrar un espacio libre al llegar, para un ETA determinado. Se calcula en cada solicitud.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|etaMinutes|EtaMinutes|Private|ETA con el que se calculó la asesoría.|
+|probabilityOfSpace|Probability|Private|Probabilidad de encontrar al menos un espacio libre al llegar.|
+|category|ArrivalCategory|Private|Categoría derivada de la probabilidad: LIKELY, UNCERTAIN o UNLIKELY.|
+|confidence|Confidence|Private|Confianza de la asesoría.|
+|horizonUsed|ForecastHorizon|Private|Horizonte del pronóstico utilizado.|
+|generatedAt|Instant|Private|Momento en que se generó el pronóstico utilizado (permite mostrar la antigüedad del dato).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|isLowConfidence()|Boolean|Public|Indica si la confianza de la asesoría es baja.|
+
+**Value Object: NextAvailability**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NextAvailability|Value Object (derivado, no persistido)|Rango estimado de minutos hasta la próxima liberación de un espacio cuando el estacionamiento está lleno, o el motivo por el que no se entrega.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|available|Boolean|Private|Indica si existe una estimación.|
+|minMinutes|Integer?|Private|Límite inferior del rango; solo cuando `available` es verdadero.|
+|maxMinutes|Integer?|Private|Límite superior del rango; solo cuando `available` es verdadero.|
+|reason|UnavailabilityReason?|Private|Motivo por el que no hay estimación; solo cuando `available` es falso.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|estimated(min: Integer, max: Integer)|NextAvailability|Public (static)|Construye una estimación con rango.|
+|notNeeded()|NextAvailability|Public (static)|Caso con espacios libres (reason = HAS_FREE_SPACES).|
+|noExits()|NextAvailability|Public (static)|Caso sin salidas con las cuales estimar (reason = NO_EXITS).|
+|isEstimated()|Boolean|Public|Indica si contiene un rango.|
+
+**Value Object: AdvisoryPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AdvisoryPolicy|Value Object|Umbrales configurables que clasifican la probabilidad, la confianza y el rango de próxima disponibilidad, para que no queden dispersos en los servicios de dominio.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|likelyFrom|Probability|Private|Probabilidad mínima para la categoría LIKELY.|
+|uncertainFrom|Probability|Private|Probabilidad mínima para UNCERTAIN; por debajo es UNLIKELY.|
+|highConfidenceFrom|Probability|Private|Confianza mínima para el nivel HIGH.|
+|mediumConfidenceFrom|Probability|Private|Confianza mínima para el nivel MEDIUM; por debajo es LOW.|
+|fallbackConfidence|Probability|Private|Confianza asignada a los pronósticos de respaldo (siempre menor que `mediumConfidenceFrom`).|
+|rangeSpread|Decimal|Private|Amplitud relativa del rango de próxima disponibilidad alrededor del valor central.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|categoryFor(probability: Probability)|ArrivalCategory|Public|Devuelve la categoría que corresponde a una probabilidad.|
+|confidenceLevelFor(value: Probability)|ConfidenceLevel|Public|Devuelve el nivel de confianza que corresponde a un valor.|
+
+Los valores iniciales de `AdvisoryPolicy` se calibran con los datos del piloto (TS07); el modelo solo exige `uncertainFrom` < `likelyFrom` y `mediumConfidenceFrom` < `highConfidenceFrom`.
+
+**Enumerations**
+
+|Nombre|Categoría|Valores|Descripción|
+|-|-|-|-|
+|ForecastHorizon|Enumeration|M15, M30, M45, M60|Horizontes admitidos para un pronóstico.|
+|ForecastMethod|Enumeration|PRIMARY_MODEL, FALLBACK|Método con el que se generó un pronóstico.|
+|ConfidenceLevel|Enumeration|HIGH, MEDIUM, LOW|Nivel cualitativo de confianza.|
+|ArrivalCategory|Enumeration|LIKELY, UNCERTAIN, UNLIKELY|Categoría de la asesoría de llegada: LIKELY (es probable encontrar espacio), UNCERTAIN (es incierto), UNLIKELY (es poco probable).|
+|UnavailabilityReason|Enumeration|HAS_FREE_SPACES, NO_EXITS|Motivo por el que no se entrega un rango: HAS_FREE_SPACES (hay espacios libres) o NO_EXITS (lleno y sin salidas recientes).|
+
+Methods de `ForecastHorizon`
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|minutes()|Integer|Public|Devuelve el horizonte en minutos.|
+|fromMinutes(minutes: Integer)|ForecastHorizon|Public (static)|Convierte un entero en horizonte; rechaza todo valor distinto de 15, 30, 45 o 60.|
+|smallestCovering(eta: EtaMinutes)|ForecastHorizon|Public (static)|Menor horizonte que cubre un ETA; si el ETA supera 60 minutos devuelve M60.|
+
+**Repository: ForecastRepository**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastRepository|Repository (interfaz)|Define cómo persistir y recuperar pronósticos sin acoplar el dominio a una tecnología de almacenamiento. Toda consulta respeta la institución del usuario.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|save(forecast: Forecast)|Void|Public|Guarda un pronóstico nuevo o actualiza su ocupación observada.|
+|findById(institutionId: UUID, forecastId: UUID)|Forecast?|Public|Recupera un pronóstico dentro de la institución indicada.|
+|findLatest(institutionId: UUID, parkingLotId: UUID, horizon: ForecastHorizon)|Forecast?|Public|Pronóstico más reciente de un estacionamiento para un horizonte.|
+|findLatestByLot(institutionId: UUID, parkingLotId: UUID)|`List<Forecast>`|Public|Pronósticos más recientes de un estacionamiento, uno por horizonte.|
+|findPendingEvaluation(targetUntil: Instant)|`List<Forecast>`|Public|Pronósticos cuyo `targetAt` ya ocurrió y aún no tienen ocupación observada. Lo usa un proceso del sistema, no una solicitud de usuario.|
+
+**Domain Service: ForecastDomainService**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastDomainService|Domain Service|Construye pronósticos válidos a partir del resultado del modelo o del método de respaldo y estima el momento de saturación. No invoca al modelo ni accede a la base de datos.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|policy|AdvisoryPolicy|Private|Política con los umbrales aplicables.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|assembleFromModel(prediction: ModelPrediction, lot: ParkingLotProfile, current: OccupancyPercentage, now: Instant)|Forecast|Public|Construye un `Forecast` PRIMARY_MODEL a partir de un `ModelPrediction`, calculando `targetAt` y la saturación esperada.|
+|assembleFallback(horizon: ForecastHorizon, lot: ParkingLotProfile, current: OccupancyPercentage, now: Instant)|Forecast|Public|Construye un `Forecast` FALLBACK con confianza LOW. |
+|estimateSaturation(current: OccupancyPercentage, expected: OccupancyPercentage, horizon: ForecastHorizon, lot: ParkingLotProfile, now: Instant)|Saturation?|Public|Determina si se alcanzará el umbral del estacionamiento.|
+
+**Domain Service: AdvisoryDomainService**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AdvisoryDomainService|Domain Service|Selecciona el pronóstico adecuado y deriva la asesoría de llegada y la próxima disponibilidad a partir de datos ya obtenidos por la Application Layer.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|policy|AdvisoryPolicy|Private|Política con los umbrales de categoría, confianza y rango.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|`adviseArrival(eta: EtaMinutes, forecasts: List<Forecast>, lot: ParkingLotProfile, now: Instant)`|ArrivalAdvice?|Public|Deriva un `ArrivalAdvice`. La probabilidad vale 1 mientras la ocupación esperada no supere el umbral de saturación y baja linealmente a 0 en 100 %.|
+|estimateNextAvailability(freeSpaces: Integer, exitsInWindow: Integer, windowMinutes: Integer)|NextAvailability|Public|Con espacios libres devuelve `notNeeded()`; sin libres y sin salidas en la ventana, `noExits()`.|
+|`selectForecast(eta: EtaMinutes, forecasts: List<Forecast>, now: Instant)`|Forecast?|Public|Selecciona el pronóstico vigente más adecuado.|
+
+### Reglas de negocio
+
+1. Todo `Forecast` pertenece a una institución identificada y a un estacionamiento.
+2. El horizonte solo puede ser 15, 30, 45 o 60 minutos, y `targetAt` es `generatedAt` más el horizonte.
+3. La ocupación esperada y la observada están entre 0 % y 100 %; el valor de confianza, entre 0 y 1.
+4. Todo pronóstico conserva su método y la versión del modelo, también cuando se generó con el respaldo.
+5. Un pronóstico FALLBACK tiene siempre nivel de confianza LOW.
+6. Si el modelo no está disponible, no responde a tiempo, omite un horizonte o no hay historial suficiente, se genera el pronóstico con el método FALLBACK, que asume que la ocupación esperada es la actual.
+7. Si no existe una lectura de ocupación utilizable, no se genera ningún pronóstico; el contexto no inventa un valor.
+8. Un pronóstico es vigente hasta su `targetAt` (`validUntil`). Uno vencido se devuelve marcado, junto con la hora del servidor, y no se usa para la asesoría.
+9. Un horizonte para el que nunca se generó un pronóstico se informa como faltante.
+10. Un pronóstico no cambia una vez generado; solo se registra, una vez y cuando `targetAt` ya ocurrió, la ocupación observada.
+11. La saturación esperada solo existe cuando el pronóstico anticipa alcanzar el umbral del estacionamiento, y su momento está entre `generatedAt` y `targetAt`.
+12. El ETA es un entero entre 0 y 120 minutos.
+13. La asesoría usa el menor horizonte vigente que cubre el ETA. Si el ETA supera 60 minutos, o solo hay un horizonte menor que el ETA, usa el más cercano y baja un nivel la confianza.
+14. La probabilidad de espacio es 1 mientras la ocupación esperada no supere el umbral de saturación y baja linealmente hasta 0 al 100 %. La categoría sale de `AdvisoryPolicy`.
+15. Con un pronóstico FALLBACK la asesoría tiene confianza LOW y su categoría nunca es más optimista que UNCERTAIN.
+16. La próxima disponibilidad solo se estima cuando no hay espacios libres; un espacio sin dato (UNKNOWN) nunca cuenta como libre.
+17. Si el estacionamiento está lleno y no hubo salidas en la ventana de flujo, se informa NO_EXITS y no se estima. Si las hubo, el rango se calcula como `ventana / salidas`, ampliado por `rangeSpread`, con un mínimo de 1 minuto.
+18. La asesoría y la próxima disponibilidad se calculan en cada solicitud y no se persisten.
+19. El servidor recibe solo `lotId` y `etaMinutes`; nunca recibe, guarda ni registra coordenadas ni trayectos.
+20. Todo acceso se realiza dentro de la institución del usuario autenticado.
+21. El contexto no modifica el estado de Occupancy, no procesa señales de sensores y no calcula las métricas de precisión que muestra Analytics.
+
+### 5.5.2. Interface Layer
+
+
+La Interface Layer expone las capacidades del Bounded Context a la aplicación móvil, al BFF móvil y a los procesos programados. Recibe solicitudes, valida su forma, las transforma en Queries o Commands, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La institución se obtiene siempre del token validado por IAM, nunca de un parámetro; un estacionamiento de otra institución se responde como no encontrado.
+
+**Controller 1: ForecastQueryController**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastQueryController|Controller (REST)|Recibe las consultas de pronóstico y de próxima disponibilidad.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|getForecastHandler|GetForecastQueryHandler|Private|Caso de uso: consultar un pronóstico.|
+|getNextAvailabilityHandler|GetNextAvailabilityQueryHandler|Private|Caso de uso: próxima disponibilidad.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|getForecast(lotId: UUID, horizon: Integer)|`ResponseEntity<ForecastResponse>`|Public|`GET /api/v1/forecasts?lotId={lotId}&horizon={15,30,45,60}`. Un pronóstico vencido se devuelve igual; el cliente compara `validUntil` con `serverTime`.|
+|getNextAvailability(lotId: UUID)|`ResponseEntity<NextAvailabilityResponse>`|Public|`GET /api/v1/forecasts/{lotId}/next-availability`. Devuelve el rango o el motivo de no estimación.|
+
+Respuesta de `getForecast`:
+
+```json
+{
+  "lotId": "7c1f2b0e-5a3d-4c61-9f0e-2b6a1d8e4c10", "horizon": 30, "expectedOccupancyPct": 86.5,
+  "confidence": { "value": 0.72, "level": "MEDIUM" }, "method": "PRIMARY_MODEL",
+  "generatedAt": "2026-03-10T13:41:05.120Z", "validUntil": "2026-03-10T14:11:05.120Z",
+  "saturation": { "expectedAt": "2026-03-10T14:02:00Z", "pct": 90 }, "serverTime": "2026-03-10T13:44:12.400Z"
+}
+```
+
+|Situación|Respuesta|
+|-|-|
+|Horizonte distinto de 15, 30, 45 o 60|400|
+|Estacionamiento inexistente o de otra institución|404|
+|Nunca se generó un pronóstico para ese horizonte|404, pronóstico faltante|
+|Token ausente o inválido|401|
+
+**Controller 2: ArrivalAdviceController**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ArrivalAdviceController|Controller (REST)|Recibe `lotId` y `etaMinutes` y devuelve la asesoría de llegada.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|getArrivalAdviceHandler|GetArrivalAdviceQueryHandler|Private|Caso de uso: asesoría de llegada.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|requestAdvice(request: ArrivalAdviceRequest)|`ResponseEntity<ArrivalAdviceResponse>`|Public|`POST /api/v1/arrival-advices`. El ETA viaja en el cuerpo; cualquier otro campo se rechaza con 400.|
+
+Solicitud y respuesta:
+
+```json
+{ "lotId": "7c1f2b0e-5a3d-4c61-9f0e-2b6a1d8e4c10", "etaMinutes": 20 }
+
+{ "etaMinutes": 20, "probabilityOfSpace": 0.64, "category": "UNCERTAIN",
+  "confidence": { "value": 0.55, "level": "MEDIUM" }, "horizonUsed": 30,
+  "generatedAt": "2026-03-10T13:41:05.120Z", "serverTime": "2026-03-10T13:44:12.400Z" }
+```
+
+|Situación|Respuesta|
+|-|-|
+|`etaMinutes` fuera de 0 a 120 o no entero|400|
+|El cuerpo trae campos adicionales (por ejemplo, coordenadas)|400|
+|Estacionamiento inexistente o de otra institución|404|
+|No hay pronóstico vigente para calcular la asesoría|404, asesoría no disponible|
+
+**Facade 1: PredictionAdvisoryFacade**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|PredictionAdvisoryFacade|Facade|API en proceso del módulo para el BFF móvil (TS02).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|forecastsOf(institutionId: UUID, parkingLotId: UUID)|ForecastSetResult|Public|Estado de los cuatro horizontes.|
+|adviceFor(institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes)|ArrivalAdviceResult?|Public|Asesoría; ninguna si no hay pronóstico vigente o ETA.|
+|nextAvailabilityOf(institutionId: UUID, parkingLotId: UUID)|NextAvailabilityResult|Public|Próxima disponibilidad.|
+
+**Scheduler 1: ForecastScheduler**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastScheduler|Scheduler|Dispara la generación y la evaluación periódicas de pronósticos.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|generateForecasts()|Void|Public|Envía un `GenerateForecastsCommand` por estacionamiento activo.|
+|evaluateForecasts()|Void|Public|Envía un `EvaluateForecastsCommand`.|
+
+Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
+
+**Data Transfer Objects**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ArrivalAdviceRequest|Request DTO|lotId, etaMinutes|Entrada de la asesoría; no admite otros campos.|
+|ForecastResponse|Response DTO|lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime|Pronóstico entregado al cliente.|
+|ArrivalAdviceResponse|Response DTO|etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime|Asesoría entregada al cliente.|
+|NextAvailabilityResponse|Response DTO|available, minMinutes, maxMinutes, reason, serverTime|Próxima disponibilidad entregada al cliente.|
+
+### 5.5.3. Application Layer
+
+La Application Layer coordina los casos de uso de Prediction & Advisory: orquesta el dominio, el repositorio y los puertos hacia otros Bounded Contexts, sin detalles de persistencia, integración ni ejecución del modelo. Sus capacidades son consultar pronósticos (con faltantes y vencidos), calcular la asesoría de llegada, estimar la próxima disponibilidad, generar pronósticos, registrar la ocupación observada y publicar `ForecastGenerated`.
+
+**Queries y Commands**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|GetForecastQuery|Query|institutionId: UUID, parkingLotId: UUID, horizon: ForecastHorizon|Pronóstico más reciente de un horizonte.|
+|GetForecastsQuery|Query|institutionId: UUID, parkingLotId: UUID|Pronósticos de los cuatro horizontes.|
+|GetArrivalAdviceQuery|Query|institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
+|GetNextAvailabilityQuery|Query|institutionId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
+|GenerateForecastsCommand|Command|parkingLotId: UUID|Generar los pronósticos de un estacionamiento.|
+|EvaluateForecastsCommand|Command|asOf: Instant|Registrar la ocupación observada de los pronósticos vencidos.|
+
+**Query Handlers y Command Handlers**
+
+|Nombre|Categoría|Método|Dependencias|
+|-|-|-|-|
+|GetForecastQueryHandler|Query Handler|handle(query: GetForecastQuery): ForecastResult|ForecastRepository, ParkingLotSettingsReader, Clock|
+|GetForecastsQueryHandler|Query Handler|handle(query: GetForecastsQuery): ForecastSetResult|ForecastRepository, ParkingLotSettingsReader, Clock|
+|GetArrivalAdviceQueryHandler|Query Handler|handle(query: GetArrivalAdviceQuery): ArrivalAdviceResult|ForecastRepository, ParkingLotSettingsReader, AdvisoryDomainService, Clock|
+|GetNextAvailabilityQueryHandler|Query Handler|handle(query: GetNextAvailabilityQuery): NextAvailabilityResult|ParkingLotSettingsReader, OccupancyReader, AdvisoryDomainService, Clock|
+|GenerateForecastsCommandHandler|Command Handler|handle(command: GenerateForecastsCommand): Void|ParkingLotSettingsReader, OccupancyReader, PredictionModelPort, ForecastDomainService, ForecastRepository, ForecastEventPublisher, Clock|
+|EvaluateForecastsCommandHandler|Command Handler|handle(command: EvaluateForecastsCommand): Void|ForecastRepository, OccupancyReader, Clock|
+
+**Flujos de ejecución**
+
+`GetForecastQueryHandler`:
+
+1. Verifica que el estacionamiento pertenece a la institución.
+2. Recupera el pronóstico más reciente del horizonte; si no existe, lo informa como faltante.
+3. Determina con la hora del servidor si está vigente o vencido y devuelve un `ForecastResult`.
+
+`GetForecastsQueryHandler`:
+
+1. Verifica la pertenencia del estacionamiento y recupera los pronósticos más recientes.
+2. Marca cada horizonte (15, 30, 45, 60) como vigente, vencido o faltante; un faltante no invalida los demás.
+3. Devuelve un `ForecastSetResult` con la hora del servidor.
+
+`GetArrivalAdviceQueryHandler`:
+
+1. Obtiene el `ParkingLotProfile` y los pronósticos más recientes.
+2. Delega en `AdvisoryDomainService`; si no hay pronóstico vigente, informa que la asesoría no está disponible.
+3. Devuelve un `ArrivalAdviceResult`. No almacena ni registra el ETA.
+
+`GetNextAvailabilityQueryHandler`:
+
+1. Obtiene el `ParkingLotProfile`, los espacios libres (sin contar los UNKNOWN) y las salidas dentro de la ventana de flujo.
+2. Delega en `AdvisoryDomainService` y devuelve un `NextAvailabilityResult`. Cubre los tres casos de US36: con libres no hay estimación, lleno con salidas da un rango, lleno sin salidas informa que no puede estimarse.
+
+`GenerateForecastsCommandHandler`:
+
+1. Obtiene el `ParkingLotProfile` y la ocupación actual; sin lectura utilizable, termina sin generar pronósticos.
+2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
+3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
+4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated`.
+
+`EvaluateForecastsCommandHandler`:
+
+1. Recupera los pronósticos con `targetAt` anterior o igual a `asOf` y sin ocupación observada.
+2. Obtiene de Occupancy la ocupación observada de cada uno; si existe, la registra en el agregado y lo persiste. Si no existe, el pronóstico sigue pendiente.
+
+
+**Resultados de aplicación**
+
+|Nombre|Categoría|Atributos|
+|-|-|-|
+|ForecastResult|Result|forecast, status (VALID o EXPIRED), serverTime|
+|ForecastSetResult|Result|parkingLotId, items (VALID, EXPIRED o MISSING por horizonte), serverTime|
+|ArrivalAdviceResult|Result|advice, serverTime|
+|NextAvailabilityResult|Result|availability, serverTime|
+
+`serverTime` sale de un reloj inyectable; la vigencia siempre se compara con esa hora y no con la del dispositivo.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|ForecastRepository|Puerto (Domain Layer)|save, findById, findLatest, findLatestByLot, findPendingEvaluation|Guardar y recuperar pronósticos.|
+|OccupancyReader|Puerto hacia Occupancy|currentOccupancy(parkingLotId), freeSpaces(parkingLotId), exitsInWindow(parkingLotId, windowMinutes), observedOccupancyAt(parkingLotId, instant), recentSnapshots(parkingLotId, from, to)|Leer datos de ocupación.|
+|ParkingLotSettingsReader|Puerto hacia Parking Configuration|profileOf(institutionId, parkingLotId), activeLots(), calendarEventsAround(institutionId, from, to)|Leer la configuración necesaria.|
+|PredictionModelPort|Puerto hacia el modelo|`predict(features): List<ModelPrediction>`|Obtener predicciones por horizonte.|
+|ForecastEventPublisher|Puerto de eventos|publish(events)|Publicar eventos de dominio.|
+
+
+### 5.5.4. Infrastructure Layer
+
+La Infrastructure Layer contiene las implementaciones técnicas que almacenan pronósticos, obtienen datos de otros Bounded Contexts, invocan al modelo y publican eventos. Implementa las abstracciones del dominio y de la Application Layer, de modo que las capas superiores no dependen de una base de datos, un modelo concreto ni un mecanismo de mensajería.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|ForecastRepositoryAdapter|Repository (implementación)|ForecastRepository|Spring Data JPA, MySQL|Guarda y recupera pronósticos en la tabla `forecasts`.|
+|OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|API pública del módulo Occupancy|Lee los datos de ocupación.|
+|ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|API pública del módulo Parking Configuration|Lee la configuración del estacionamiento.|
+|PredictionModelClient|Adapter (cliente del modelo)|PredictionModelPort|Cliente HTTP, Resilience4j|Invoca al modelo y traduce su respuesta a `ModelPrediction`.|
+|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring|Publica `ForecastGenerated` tras confirmar la transacción.|
+
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
+|Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
+|Multi-tenancy|`institutionId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
+|Tecnología|Monolito modular en Java 21 y Spring Boot 3 sobre MySQL. Domain y Application Layer no dependen de ella.|
+
+### 5.5.5. Bounded Context Software Architecture Component Level Diagrams
+
+El Component Level Diagram descompone el contenedor del Bounded Context en sus componentes: sus responsabilidades, tecnología e interacciones.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Prediction & Advisory Service | Java 21, Spring Boot 3 (módulo del monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
+| Prediction Database | MySQL 8.0.16+ | Almacena la tabla `forecasts`. |
+
+Solo el servicio tiene lógica propia, por lo que es el contenedor que se descompone. En el diagrama también aparecen, únicamente como colaboradores directos, Mobile App, Mobile BFF, Occupancy Service, Parking Configuration Service, Analytics Service, Notifications Service y Prediction Model.
+
+#### Componentes de Prediction & Advisory Service
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Forecast Query Controller | Interface | Recibe consultas de pronóstico y próxima disponibilidad. | Spring MVC `@RestController` | ForecastQueryController, ForecastResponse, NextAvailabilityResponse |
+| Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
+| Prediction Advisory Facade | Interface | API en proceso para el Mobile BFF. | Spring bean | PredictionAdvisoryFacade |
+| Forecast Scheduler | Interface | Dispara la generación y evaluación periódicas. | Spring `@Scheduled` | ForecastScheduler |
+| Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
+| Command Handlers | Application | Casos de uso de comando: generar y evaluar pronósticos. | Spring `@Service` | GenerateForecasts y EvaluateForecasts (Command y Handler) |
+| Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
+| Forecast Domain Service | Domain | Construye pronósticos y estima la saturación. | Java (dominio puro) | ForecastDomainService, ModelPrediction, ParkingLotProfile |
+| Forecast Aggregate | Domain | Mantiene el pronóstico y sus invariantes. | Java (dominio puro) | Forecast, ForecastGenerated, OccupancyPercentage, Probability, Confidence, Saturation, EtaMinutes y las enumeraciones |
+| Forecast Repository Adapter | Infrastructure | Guarda y recupera pronósticos por institución. | Spring Data JPA | ForecastRepositoryAdapter |
+| Occupancy Reader Adapter | Infrastructure | Lee datos de Occupancy. | Adaptador Java (anti-corruption) | OccupancyReaderAdapter |
+| Parking Lot Settings Adapter | Infrastructure | Lee la configuración de Parking Configuration. | Adaptador Java (anti-corruption) | ParkingLotSettingsReaderAdapter |
+| Prediction Model Client | Infrastructure | Invoca al modelo con timeout y cortacircuitos. | Cliente HTTP, Resilience4j | PredictionModelClient |
+| Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
+
+Prediction & Advisory Component Level Diagram: **PredictionAdvisoryComponentLevelDiagram**
+![Prediction & Advisory Component Level Diagram](./assets/capitulo-05/PredictionAdvisoryComponentLevelDiagram.png)
+
+
+## 5.5.6. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+### 5.5.6.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama muestra atributos y métodos con visibilidad UML (+ público, - privado, # protegido); cada relación lleva nombre, dirección y multiplicidad. Tiene dos paquetes: el lado productor (`Forecast` y lo que lo compone) y el lado consumidor (`ArrivalAdvice`, `NextAvailability` y sus servicios), derivado y nunca persistido.
+
+|Categoría|Clases|
+|-|-|
+|Aggregate Root|Forecast|
+|Domain Event|ForecastGenerated|
+|Value Objects|OccupancyPercentage, Probability, Confidence, Saturation, ModelPrediction, ParkingLotProfile, EtaMinutes, ArrivalAdvice, NextAvailability, AdvisoryPolicy|
+|Enumerations|ForecastHorizon, ForecastMethod, ConfidenceLevel, ArrivalCategory, UnavailabilityReason|
+|Repository Interface|ForecastRepository|
+|Domain Services|ForecastDomainService, AdvisoryDomainService|
+
+Institution, ParkingLot, Sensor, HistoricalOccupancy y ForecastSnapshot no aparecen: pertenecen a otros contextos y solo se conservan referencias externas.
+
+**DIAGRAMA — Prediction & Advisory Domain Layer Class Diagram:**
+
+**PredictionAdvisoryDomainLayerClassDiagram**
+
+![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDomainLayerClassDiagram.png)
+
+### 5.5.6.2. Bounded Context Database Design Diagram
+
+Prediction & Advisory es dueño de una sola tabla, `forecasts`; la asesoría y la próxima disponibilidad no tienen tabla porque se derivan en cada solicitud. Las tablas de otros contextos aparecen solo como referencia.
+
+**Tabla `forecasts`**
+
+|Columna|Tipo|Nulo|Atributo de `Forecast`|Descripción|
+|-|-|-|-|-|
+|id|BIGINT AUTO_INCREMENT|No|forecastId|Clave primaria.|
+|lot_id|BIGINT|No|parkingLotId|Estacionamiento (FK a `parking_lots`). `institutionId` se obtiene de `parking_lots.institution_id`.|
+|horizon_min|TINYINT UNSIGNED|No|horizon|Horizonte en minutos: 15, 30, 45 o 60.|
+|generated_at|DATETIME(3)|No|generatedAt|Momento en que se generó.|
+|target_at|DATETIME(3)|No|targetAt|Momento objetivo; también es `validUntil` (no se almacena).|
+|expected_occupancy_pct|DECIMAL(5,2)|No|expectedOccupancy|Ocupación esperada, entre 0 y 100.|
+|confidence|DECIMAL(4,3)|No|confidence.value|Valor de confianza, entre 0 y 1.|
+|confidence_level|ENUM('HIGH','MEDIUM','LOW')|No|confidence.level|Nivel de confianza.|
+|method|ENUM('PRIMARY_MODEL','FALLBACK')|No|method|Método con el que se generó.|
+|model_version|VARCHAR(40)|No|modelVersion|Versión del modelo o de la política de respaldo.|
+|saturation_expected_at|DATETIME(3)|Sí|saturation.expectedAt|Momento esperado de saturación.|
+|observed_occupancy_pct|DECIMAL(5,2)|Sí|observedOccupancy|Ocupación observada en `target_at`.|
+|abs_error|DECIMAL(5,2), generada almacenada|Sí|absoluteError()|Error absoluto; solo lectura.|
+
+**Restricciones e índices**
+
+|Elemento|Definición|Regla que respalda|
+|-|-|-|
+|`uq_forecasts_lot_horizon_time`|UNIQUE (lot_id, horizon_min, generated_at)|Evita duplicados; acelera la búsqueda del más reciente.|
+|`idx_forecasts_lot_target`|INDEX (lot_id, target_at)|Consultas por estacionamiento y momento objetivo.|
+|`fk_forecasts_lot`|FOREIGN KEY (lot_id) → `parking_lots(id)` ON DELETE CASCADE|Los pronósticos no sobreviven a su estacionamiento.|
+|`chk_forecasts_horizon`|horizon_min IN (15, 30, 45, 60)|Regla 2.|
+|`chk_forecasts_expected`|expected_occupancy_pct BETWEEN 0 AND 100|Regla 3.|
+|`chk_forecasts_observed`|observed_occupancy_pct IS NULL OR BETWEEN 0 AND 100|Regla 3.|
+|`chk_forecasts_confidence`|confidence BETWEEN 0 AND 1|Regla 3.|
+|`chk_forecasts_fallback`|`method <> 'FALLBACK' OR confidence_level = 'LOW'`|Regla 5.|
+
+**Relaciones con otras tablas**
+
+- `parking_lots` (Parking Configuration) 1 — N `forecasts`: clave foránea `fk_forecasts_lot`.
+- `forecasts` 0..1 — N `notifications` (Notifications): clave foránea `fk_notifications_forecast`.
+- `occupancy_snapshots` y `calendar_events` son insumos del modelo: se leen por los puertos y no tienen FK hacia `forecasts`.
+
+**Consideraciones de diseño**
+
+- **Aislamiento.** La tabla no tiene `institution_id`; toda consulta filtra por institución a través de `parking_lots`.
+- **Columnas de evaluación.** `observed_occupancy_pct` y `abs_error` son solo para vigilar el modelo de este contexto; Analytics calcula la precisión con su propio `ForecastSnapshot`.
+- **FK desde `notifications`.** `fk_notifications_forecast` no define `ON DELETE` (se comporta como RESTRICT), por lo que borrar un estacionamiento puede ser rechazado si una alerta referencia uno de sus pronósticos. Como `notifications.forecast_id` admite nulos, se recomienda `ON DELETE SET NULL`; es un cambio en Notifications y debe acordarse con ese contexto.
+- **Crecimiento.** Hasta cuatro filas por estacionamiento en cada ejecución; conviene definir una política de depuración.
+
+**DIAGRAMA — Prediction & Advisory Database Design Diagram:**
+
+![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDatabaseDesignDiagram.png)
+
+
 ## 5.6. Bounded Context: Analytics
 
 El Bounded Context Analytics es responsable de procesar y mantener la información histórica necesaria para analizar el comportamiento de la ocupación de los estacionamientos universitarios en Quadrapp.
@@ -5079,9 +5883,155 @@ La Landing Page permite recorrer las secciones informativas sin abandonar el sit
 
 ### 6.4.1. Applications Wireframes
 
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene tres tipos de usuario con vistas distintas: el **conductor** y el **administrador de universidad**, ambos en la aplicación móvil, y el **administrador de plataforma** (personal de Integra Labs), en una consola web.
+
+
+#### VISTA CONDUCTOR (APP MÓVIL)
+
+Acceso institucional: pantalla de ingreso del conductor. Solicita el correo institucional, cuyo dominio debe pertenecer a una universidad registrada en Quadrapp.  
+
+![Wireframe - Acceso institucional](./assets/capitulo-06/wireframes/Acceso%20institucional.png)
+
+**Verificación OTP**: el conductor ingresa el código de verificación de un solo uso enviado a su correo para completar el acceso.  
+
+![Wireframe - Verificación OTP](./assets/capitulo-06/wireframes/Verificación%20OTP.png)
+
+**Inicio y asesoría de llegada**: pantalla principal. Muestra la disponibilidad actual del estacionamiento de la sede elegida y la asesoría de llegada: la probabilidad de encontrar espacio según el tiempo en que el conductor estima llegar.  
+
+![Wireframe - Inicio y asesoría de llegada](./assets/capitulo-06/wireframes/Inicio%20y%20asesoría%20de%20llegada.png)
+
+**Detalle por zonas**: desglosa la disponibilidad del estacionamiento por zona, para que el conductor elija hacia dónde dirigirse.  
+
+![Wireframe - Detalle por zonas](./assets/capitulo-06/wireframes/Detalle%20por%20zonas.png)
+
+**Detalle de Zona Norte**: detalle de una zona (en el ejemplo, Zona Norte) con el estado de sus espacios.  
+
+![Wireframe - Detalle de Zona Norte](./assets/capitulo-06/wireframes/Detalle%20de%20Zona%20Norte.png)
+
+Lista: variante de la pantalla anterior que presenta los espacios de la zona en formato de lista.  
+
+![Wireframe - Detalle de Zona Norte · Lista](./assets/capitulo-06/wireframes/Detalle%20de%20Zona%20Norte%20·%20Lista.png)
+
+**Predicciones por horizonte**: muestra el pronóstico de ocupación para los horizontes de 15, 30, 45 y 60 minutos, identificando los que están vencidos o faltantes.  
+
+![Wireframe - Predicciones por horizonte](./assets/capitulo-06/wireframes/Predicciones%20por%20horizonte.png)
+
+**Detalle de predicción · 15 min**: detalle del pronóstico de un horizonte: ocupación esperada, confianza, método y vigencia.  
+
+![Wireframe - Detalle de predicción · 15 min](./assets/capitulo-06/wireframes/Detalle%20de%20predicción%20·%2015%20min.png)
+
+**Alertas y preferencias:** permite activar o desactivar las alertas (saturación y baja disponibilidad al llegar) y administrar las franjas horarias en que se reciben.  
+
+![Wireframe - Alertas y preferencias](./assets/capitulo-06/wireframes/Alertas%20y%20preferencias.png)
+
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+
+**Inicio de operación**: pantalla principal del turno. Resume el estado operativo del estacionamiento y da acceso rápido a las tareas de operación.  
+
+![Wireframe - Inicio de operación](./assets/capitulo-06/wireframes/Inicio%20de%20operación.png)
+
+**Estacionamientos y zonas**: lista los estacionamientos de la universidad y sus zonas, con su estado de ocupación.  
+
+![Wireframe - Estacionamientos y zonas](./assets/capitulo-06/wireframes/Estacionamientos%20y%20zonas.png)
+
+**Gestión de zonas y layout**: permite editar el layout del estacionamiento (zonas y espacios) y publicar los cambios.  
+
+![Wireframe - Gestión de zonas y layout](./assets/capitulo-06/wireframes/Gestión%20de%20zonas%20y%20layout.png)
+
+**Accesos y configuración**: administra los accesos vehiculares y los parámetros de configuración del estacionamiento.  
+
+![Wireframe - Accesos y configuración](./assets/capitulo-06/wireframes/Accesos%20y%20configuración.png)
+
+**Salud de dispositivos**: muestra el estado de los dispositivos IoT del estacionamiento y permite reportar un problema.  
+
+![Wireframe - Salud de dispositivos](./assets/capitulo-06/wireframes/Salud%20de%20dispositivos.png)
+
+**Analítica y precisión**: presenta las métricas de ocupación y la precisión de los pronósticos, con opción de exportar el reporte.  
+
+![Wireframe - Analítica y precisión](./assets/capitulo-06/wireframes/Analítica%20y%20precisión.png)
+
+**Más · campus y equipo**: reúne la gestión del campus y del equipo: calendario de eventos, dominios institucionales e invitaciones al equipo.  
+
+![Wireframe - Más · campus y equipo](./assets/capitulo-06/wireframes/Más%20·%20campus%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+
+**Dashboard general**: vista inicial de la consola. Resume el estado de la plataforma: universidades registradas y dispositivos IoT.  
+
+![Wireframe - Dashboard general](./assets/capitulo-06/wireframes/01%20·%20Dashboard%20general.png)
+
+**Universidades**: listado de las universidades que usan Quadrapp, con acceso a su detalle y al alta de nuevas.  
+
+![Wireframe - Universidades](./assets/capitulo-06/wireframes/02%20·%20Universidades.png)
+
+**Alta de universidad**: formulario para registrar una nueva universidad en la plataforma.  
+
+![Wireframe - Alta de universidad](./assets/capitulo-06/wireframes/03%20·%20Alta%20de%20universidad.png)
+
+**Universidad Central**: detalle de una universidad (en el ejemplo, Universidad Central): sus datos, dominios y estacionamientos.  
+
+![Wireframe - Universidad Central](./assets/capitulo-06/wireframes/04%20·%20Universidad%20Central.png)
+
+**Inventario IoT global**: inventario de todos los dispositivos IoT de la plataforma, con su estado y la universidad a la que están asignados.  
+
+![Wireframe - Inventario IoT global](./assets/capitulo-06/wireframes/05%20·%20Inventario%20IoT%20global.png)
+
+**Gestión de dispositivo · G-03**: detalle de un dispositivo (en el ejemplo, G-03) con las acciones de reasignarlo o darlo de baja.  
+
+![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/06%20·%20Gestión%20de%20dispositivo%20·%20G-03.png)
+
+
 ### 6.4.2. Applications Wireflow Diagrams
 
----
+Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan diez diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
+
+#### VISTA CONDUCTOR (APP MÓVIL)
+
+**Wireflow 1 · Acceso, ingreso y cierre de sesión**: Parte de Acceso institucional, continúa con la Verificación OTP y llega a Inicio y asesoría de llegada; desde ahí, la ventana Cuenta permite cerrar sesión y volver al acceso.  
+
+![Wireflow 1 - Acceso, ingreso y cierre de sesión](./assets/capitulo-06/wireflows/Wireflow%201%20·%20Acceso,%20ingreso%20y%20cierre%20de%20sesión.png)
+
+**Wireflow 2 · Disponibilidad al llegar**: Desde el Inicio, el conductor indica en cuántos minutos llega (¿Cuándo llegas?), consulta las Predicciones por horizonte y abre el Detalle de predicción de un horizonte.  
+
+![Wireflow 2 - Disponibilidad al llegar](./assets/capitulo-06/wireflows/Wireflow%202%20·%20Disponibilidad%20al%20llegar.png)
+
+**Wireflow 3 · Sede y zonas**: Desde el Inicio el conductor elige la sede (Elegir sede) y recorre el Detalle por zonas hasta el Detalle de una zona, en su vista de mapa o de lista.  
+
+![Wireflow 3 - Sede y zonas](./assets/capitulo-06/wireflows/Wireflow%203%20·%20Sede%20y%20zonas.png)
+
+**Wireflow 4 · Alertas por franja horaria**: En Alertas y preferencias, el conductor agrega una Nueva franja horaria y regresa a la pantalla con la franja ya configurada.  
+
+![Wireflow 4 - Alertas por franja horaria](./assets/capitulo-06/wireflows/Wireflow%204%20·%20Alertas%20por%20franja%20horaria.png)
+
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+
+**Wireflow 5 · Operación de turno**: Desde Inicio de operación, el administrador revisa Estacionamientos y zonas y entra a la Gestión de zonas y layout.  
+
+![Wireflow 5 - Operación de turno](./assets/capitulo-06/wireflows/Wireflow%205%20·%20Operación%20de%20turno.png)
+
+**Wireflow 6 · Editar y publicar el layout**: Desde la Gestión de zonas y layout se añaden zonas y espacios, se deshabilitan espacios y se publica el layout tras una confirmación.  
+
+![Wireflow 6 - Editar y publicar el layout](./assets/capitulo-06/wireflows/Wireflow%206%20·%20Editar%20y%20publicar%20el%20layout.png)
+
+**Wireflow 7 · Accesos, dispositivos y analítica**: Muestra tres recorridos: editar la configuración desde Accesos y configuración, reportar un problema desde Salud de dispositivos y exportar un reporte desde Analítica y precisión.  
+
+![Wireflow 7 - Accesos, dispositivos y analítica](./assets/capitulo-06/wireflows/Wireflow%207%20·%20Accesos,%20dispositivos%20y%20analítica.png)
+
+**Wireflow 8 · Calendario, dominios y equipo**: Desde Más · campus y equipo, el administrador crea un evento de calendario, añade un dominio institucional o invita a un nuevo integrante al equipo.  
+
+![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+
+**Wireflow 9 · Universidades**: Desde el Dashboard general, el administrador entra al listado de Universidades, registra una nueva en Alta de universidad y consulta el detalle de una universidad.  
+
+![Wireflow 9 - Universidades](./assets/capitulo-06/wireflows/Wireflow%209%20·%20Universidades.png)
+
+**Wireflow 10 · Dispositivos IoT**: Desde el Inventario IoT global se registra un dispositivo o se abre su gestión, desde donde puede reasignarse o darse de baja.  
+
+![Wireflow 10 - Dispositivos IoT](./assets/capitulo-06/wireflows/Wireflow%2010%20·%20Dispositivos%20IoT.png)
+
+
 
 # Conclusiones
 
