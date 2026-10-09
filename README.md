@@ -1169,35 +1169,37 @@ Las entrevistas registradas identifican como problema común la falta de informa
 
 
 ### 2.3.2. User Task Matrix
-  
-#### Conductores de la comunidad educativa
 
-| Tarea | Frecuencia | Prioridad | Frustración |
-| ------ | ------ | ------ | ------ |
-| Ingresar a la aplicación con la cuenta institucional | Diario | Muy Alta | Alta |
-| Ver qué estacionamientos del campus están disponibles | Diario | Muy Alta | Media |
-| Conocer cuántos espacios libres hay en este momento | Diario | Muy Alta | Alta |
-| Revisar la ocupación por zonas del estacionamiento | Diario | Alta | Media |
-| Consultar cómo estará la disponibilidad en los próximos minutos | Diario | Muy Alta | Alta |
-| Ver de forma simple si el estacionamiento estará saturado al llegar | Diario | Alta | Media |
-| Recibir una recomendación según el tiempo que me falta para llegar | Diario | Muy Alta | Alta |
-| Actualizar la recomendación si cambia mi tiempo de llegada | Diario | Alta | Media |
-| Recibir notificaciones cuando la disponibilidad se ponga complicada | Diario | Alta | Media |
-| Configurar qué tipo de alertas quiero recibir | Ocasional | Media | Baja |
+El User Task Matrix reúne las tareas que realizan los User Personas de los dos segmentos objetivo para cumplir sus objetivos: **Andrea Santos**, estudiante de Ingeniería de Software de 21 años que llega al campus en su auto todos los días, representa a los conductores de la comunidad educativa, y **Carlos Mendoza**, jefe de Logística y Operaciones del Campus, representa a los administradores de estacionamientos universitarios.
 
-#### Administradores de estacionamientos universitarios
+Las tareas se identificaron en las entrevistas y en el As-is Scenario Mapping, y corresponden a lo que cada persona hace hoy, exista o no una solución de software. La frecuencia se expresa como diaria, semanal, mensual u ocasional, y la importancia, como alta, media o baja. Un guion indica que la persona no realiza la tarea.
 
-| Tarea | Frecuencia | Prioridad | Frustración |
-| ------ | ------ | ------ | ------ |
-| Dar de alta y configurar los estacionamientos del campus | Ocasional | Alta | Media |
-| Definir las zonas y la cantidad de espacios de cada estacionamiento | Ocasional | Alta | Media |
-| Vincular los sensores físicos con cada espacio de parqueo | Ocasional | Alta | Alta |
-| Configurar las entradas y salidas de vehículos | Ocasional | Media | Media |
-| Verificar que los sensores estén funcionando correctamente | Diario | Muy Alta | Alta |
-| Consultar la ocupación actual de los estacionamientos | Diario | Muy Alta | Alta |
-| Revisar el historial de ocupación de periodos anteriores | Semanal | Alta | Media |
-| Identificar los horarios de mayor demanda | Semanal | Alta | Alta |
-| Detectar y revisar inconsistencias entre los sensores y los accesos | Diario | Alta | Alta |
+<table>
+  <thead>
+    <tr><th rowspan="2">Tarea</th><th colspan="2">Andrea Santos (conductora)</th><th colspan="2">Carlos Mendoza (administrador)</th></tr>
+    <tr><th>Frecuencia</th><th>Importancia</th><th>Frecuencia</th><th>Importancia</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Decidir a qué hora salir hacia el campus</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Preguntar a compañeros por WhatsApp si hay espacio</td><td>Diaria</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Elegir a qué estacionamiento o puerta dirigirse</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Esperar en la cola de la tranquera y presentar la credencial</td><td>Diaria</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Buscar un espacio libre recorriendo el estacionamiento</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Avisar al docente o a los compañeros que llegará tarde</td><td>Ocasional</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Estimar si el estacionamiento se llenará en las horas punta</td><td>Diaria</td><td>Alta</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Supervisar el flujo vehicular en las horas punta</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Coordinar al personal de las tranqueras y de vigilancia</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Confirmar la ocupación mediante recorridos o cámaras</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Desviar los vehículos hacia zonas alternas cuando un área se llena</td><td>—</td><td>—</td><td>Semanal</td><td>Alta</td></tr>
+    <tr><td>Registrar los ingresos y consolidar el reporte del turno</td><td>—</td><td>—</td><td>Diaria</td><td>Media</td></tr>
+    <tr><td>Preparar la operación para exámenes y eventos del campus</td><td>—</td><td>—</td><td>Mensual</td><td>Alta</td></tr>
+    <tr><td>Informar la ocupación del periodo a la dirección</td><td>—</td><td>—</td><td>Mensual</td><td>Media</td></tr>
+  </tbody>
+</table>
+
+Para Andrea, las tareas más frecuentes e importantes ocurren antes de llegar y en el ingreso: decidir a qué hora salir, elegir a qué estacionamiento dirigirse y buscar un espacio libre. Las realiza todos los días y con información informal o desactualizada, como los mensajes de WhatsApp de sus compañeros. Para Carlos, las tareas de mayor frecuencia e importancia ocurren durante el turno: supervisar el flujo en las horas punta, coordinar al personal de las tranqueras y confirmar la ocupación mediante recorridos o cámaras.
+
+La principal diferencia está en el alcance. Andrea resuelve una decisión individual antes de salir, mientras que Carlos gestiona la operación de todo el estacionamiento y la reporta a la dirección; por eso sus tareas de consolidación y de reporte, aunque menos frecuentes, tienen importancia alta o media. La coincidencia más relevante es que ambos necesitan estimar si el estacionamiento se llenará en las horas punta, y los dos lo hacen hoy por intuición o con datos que se actualizan con lentitud.
 
 ### 2.3.3. Empathy Mapping
 
