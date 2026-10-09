@@ -3854,6 +3854,86 @@ Solo el servicio tiene lógica propia, por lo que es el contenedor que se descom
 | Prediction Model Client | Infrastructure | Invoca al modelo con timeout y cortacircuitos. | Cliente HTTP, Resilience4j | PredictionModelClient |
 | Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
 
+Prediction & Advisory Component Level Diagram: **PredictionAdvisoryComponentLevelDiagram**
+![Prediction & Advisory Component Level Diagram](./assets/capitulo-05/PredictionAdvisoryComponentLevelDiagram.png)
+
+
+## 5.5.6. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+### 5.5.6.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama muestra atributos y métodos con visibilidad UML (+ público, - privado, # protegido); cada relación lleva nombre, dirección y multiplicidad. Tiene dos paquetes: el lado productor (`Forecast` y lo que lo compone) y el lado consumidor (`ArrivalAdvice`, `NextAvailability` y sus servicios), derivado y nunca persistido.
+
+|Categoría|Clases|
+|-|-|
+|Aggregate Root|Forecast|
+|Domain Event|ForecastGenerated|
+|Value Objects|OccupancyPercentage, Probability, Confidence, Saturation, ModelPrediction, ParkingLotProfile, EtaMinutes, ArrivalAdvice, NextAvailability, AdvisoryPolicy|
+|Enumerations|ForecastHorizon, ForecastMethod, ConfidenceLevel, ArrivalCategory, UnavailabilityReason|
+|Repository Interface|ForecastRepository|
+|Domain Services|ForecastDomainService, AdvisoryDomainService|
+
+Institution, ParkingLot, Sensor, HistoricalOccupancy y ForecastSnapshot no aparecen: pertenecen a otros contextos y solo se conservan referencias externas.
+
+**DIAGRAMA — Prediction & Advisory Domain Layer Class Diagram:**
+
+**PredictionAdvisoryDomainLayerClassDiagram**
+
+![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDomainLayerClassDiagram.png)
+
+### 5.5.6.2. Bounded Context Database Design Diagram
+
+Prediction & Advisory es dueño de una sola tabla, `forecasts`; la asesoría y la próxima disponibilidad no tienen tabla porque se derivan en cada solicitud. Las tablas de otros contextos aparecen solo como referencia.
+
+**Tabla `forecasts`**
+
+|Columna|Tipo|Nulo|Atributo de `Forecast`|Descripción|
+|-|-|-|-|-|
+|id|BIGINT AUTO_INCREMENT|No|forecastId|Clave primaria.|
+|lot_id|BIGINT|No|parkingLotId|Estacionamiento (FK a `parking_lots`). `institutionId` se obtiene de `parking_lots.institution_id`.|
+|horizon_min|TINYINT UNSIGNED|No|horizon|Horizonte en minutos: 15, 30, 45 o 60.|
+|generated_at|DATETIME(3)|No|generatedAt|Momento en que se generó.|
+|target_at|DATETIME(3)|No|targetAt|Momento objetivo; también es `validUntil` (no se almacena).|
+|expected_occupancy_pct|DECIMAL(5,2)|No|expectedOccupancy|Ocupación esperada, entre 0 y 100.|
+|confidence|DECIMAL(4,3)|No|confidence.value|Valor de confianza, entre 0 y 1.|
+|confidence_level|ENUM('HIGH','MEDIUM','LOW')|No|confidence.level|Nivel de confianza.|
+|method|ENUM('PRIMARY_MODEL','FALLBACK')|No|method|Método con el que se generó.|
+|model_version|VARCHAR(40)|No|modelVersion|Versión del modelo o de la política de respaldo.|
+|saturation_expected_at|DATETIME(3)|Sí|saturation.expectedAt|Momento esperado de saturación.|
+|observed_occupancy_pct|DECIMAL(5,2)|Sí|observedOccupancy|Ocupación observada en `target_at`.|
+|abs_error|DECIMAL(5,2), generada almacenada|Sí|absoluteError()|Error absoluto; solo lectura.|
+
+**Restricciones e índices**
+
+|Elemento|Definición|Regla que respalda|
+|-|-|-|
+|`uq_forecasts_lot_horizon_time`|UNIQUE (lot_id, horizon_min, generated_at)|Evita duplicados; acelera la búsqueda del más reciente.|
+|`idx_forecasts_lot_target`|INDEX (lot_id, target_at)|Consultas por estacionamiento y momento objetivo.|
+|`fk_forecasts_lot`|FOREIGN KEY (lot_id) → `parking_lots(id)` ON DELETE CASCADE|Los pronósticos no sobreviven a su estacionamiento.|
+|`chk_forecasts_horizon`|horizon_min IN (15, 30, 45, 60)|Regla 2.|
+|`chk_forecasts_expected`|expected_occupancy_pct BETWEEN 0 AND 100|Regla 3.|
+|`chk_forecasts_observed`|observed_occupancy_pct IS NULL OR BETWEEN 0 AND 100|Regla 3.|
+|`chk_forecasts_confidence`|confidence BETWEEN 0 AND 1|Regla 3.|
+|`chk_forecasts_fallback`|`method <> 'FALLBACK' OR confidence_level = 'LOW'`|Regla 5.|
+
+**Relaciones con otras tablas**
+
+- `parking_lots` (Parking Configuration) 1 — N `forecasts`: clave foránea `fk_forecasts_lot`.
+- `forecasts` 0..1 — N `notifications` (Notifications): clave foránea `fk_notifications_forecast`.
+- `occupancy_snapshots` y `calendar_events` son insumos del modelo: se leen por los puertos y no tienen FK hacia `forecasts`.
+
+**Consideraciones de diseño**
+
+- **Aislamiento.** La tabla no tiene `institution_id`; toda consulta filtra por institución a través de `parking_lots`.
+- **Columnas de evaluación.** `observed_occupancy_pct` y `abs_error` son solo para vigilar el modelo de este contexto; Analytics calcula la precisión con su propio `ForecastSnapshot`.
+- **FK desde `notifications`.** `fk_notifications_forecast` no define `ON DELETE` (se comporta como RESTRICT), por lo que borrar un estacionamiento puede ser rechazado si una alerta referencia uno de sus pronósticos. Como `notifications.forecast_id` admite nulos, se recomienda `ON DELETE SET NULL`; es un cambio en Notifications y debe acordarse con ese contexto.
+- **Crecimiento.** Hasta cuatro filas por estacionamiento en cada ejecución; conviene definir una política de depuración.
+
+**DIAGRAMA — Prediction & Advisory Database Design Diagram:**
+
+![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDatabaseDesignDiagram.png)
 
 
 ## 5.6. Bounded Context: Analytics
