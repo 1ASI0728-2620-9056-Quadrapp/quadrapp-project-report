@@ -4295,48 +4295,56 @@ Las Style Guidelines establecen los criterios visuales y de interacción que dan
 
 **Paleta de colores.** La paleta se compone de un color de marca, neutros de fondo y texto, y colores semánticos que comunican el estado de la disponibilidad. Los valores hexadecimales se tomaron de los diseños entregados.
 
+<p align="center"><img src="assets/capitulo-06/colores/franja_paleta.png" width="700" alt="Paleta principal de Quadrapp"></p>
+
 | Rol | Color | Hex | Uso principal |
-|---|---|---|---|
-| Primario (marca) | Teal | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
-| Primario oscuro | Azul petróleo | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
-| Superficie oscura | Azul petróleo medio | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
-| Fondo oscuro profundo | Petróleo profundo | `#031B25` | Barra lateral de la consola de plataforma |
-| Acento suave | Menta | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
-| Fondo de pantalla | Gris verdoso claro | `#F3F7F6` | Fondo general de las aplicaciones |
-| Superficie | Blanco | `#FFFFFF` | Tarjetas, formularios, modales |
-| Texto secundario | Gris petróleo | `#4D5C5E` | Descripciones, etiquetas, ayudas |
-| Borde | Gris verdoso | `#CEDDDA` | Bordes de tarjetas y campos |
-| Éxito / Buena disponibilidad | Verde | `#16704D` (fondo `#DFF3E9`) | Espacios libres, categoría HIGH, estado operativo |
-| Atención / Limitada / UNKNOWN | Ámbar | `#A36108` (acento `#D98617`, fondo `#FFF2D6`) | Disponibilidad limitada, espacios UNKNOWN, datos desactualizados |
-| Error / Baja disponibilidad | Rojo | `#BE4045` (fondo `#FCE6E6`) | Categoría LOW, dispositivos sin señal, acciones destructivas |
+|---|:---:|---|---|
+| Primario (marca) | <img src="assets/capitulo-06/colores/087F83.png" width="28" alt="#087F83"> | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
+| Primario oscuro | <img src="assets/capitulo-06/colores/052B39.png" width="28" alt="#052B39"> | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
+| Superficie oscura | <img src="assets/capitulo-06/colores/073B4C.png" width="28" alt="#073B4C"> | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
+| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola de plataforma |
+| Acento suave | <img src="assets/capitulo-06/colores/DDF3F1.png" width="28" alt="#DDF3F1"> | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
+| Fondo de pantalla | <img src="assets/capitulo-06/colores/F3F7F6.png" width="28" alt="#F3F7F6"> | `#F3F7F6` | Fondo general de las aplicaciones |
+| Superficie | <img src="assets/capitulo-06/colores/FFFFFF.png" width="28" alt="#FFFFFF"> | `#FFFFFF` | Tarjetas, formularios, modales |
+| Texto secundario | <img src="assets/capitulo-06/colores/4D5C5E.png" width="28" alt="#4D5C5E"> | `#4D5C5E` | Descripciones, etiquetas, ayudas |
+| Borde | <img src="assets/capitulo-06/colores/CEDDDA.png" width="28" alt="#CEDDDA"> | `#CEDDDA` | Bordes de tarjetas y campos |
+| Éxito / Buena disponibilidad | <img src="assets/capitulo-06/colores/16704D.png" width="28" alt="#16704D"> <img src="assets/capitulo-06/colores/DFF3E9.png" width="28" alt="#DFF3E9"> | `#16704D` (fondo `#DFF3E9`) | Espacios libres, categoría HIGH, estado operativo |
+| Atención / Limitada / UNKNOWN | <img src="assets/capitulo-06/colores/A36108.png" width="28" alt="#A36108"> <img src="assets/capitulo-06/colores/D98617.png" width="28" alt="#D98617"> <img src="assets/capitulo-06/colores/FFF2D6.png" width="28" alt="#FFF2D6"> | `#A36108` (acento `#D98617`, fondo `#FFF2D6`) | Disponibilidad limitada, espacios UNKNOWN, datos desactualizados |
+| Error / Baja disponibilidad | <img src="assets/capitulo-06/colores/BE4045.png" width="28" alt="#BE4045"> <img src="assets/capitulo-06/colores/FCE6E6.png" width="28" alt="#FCE6E6"> | `#BE4045` (fondo `#FCE6E6`) | Categoría LOW, dispositivos sin señal, acciones destructivas |
 
 **Significado de los colores de estado.** El color nunca es el único portador del significado: cada estado incluye siempre un texto y, cuando corresponde, un ícono (por ejemplo, "Buena disponibilidad", "Limitada", "Poca disponibilidad", "Sin datos"). La correspondencia con el dominio es:
 
-| Estado | Color | Texto en pantalla |
-|---|---|---|
-| HIGH | Verde | Buena disponibilidad |
-| LIMITED | Ámbar | Disponibilidad limitada |
-| LOW | Rojo | Poca disponibilidad |
-| Espacio libre | Verde | Libre |
-| Espacio ocupado | Gris petróleo | Ocupada |
-| UNKNOWN | Ámbar con trama diagonal en el plano | Sin datos / UNKNOWN (nunca se cuenta como libre) |
+| Estado | Color | Etiqueta | En el plano | Texto en pantalla |
+|---|---|:---:|:---:|---|
+| HIGH | Verde | <img src="assets/capitulo-06/componentes/chip_buena.png" width="78" alt="chip buena"> | | Buena disponibilidad |
+| LIMITED | Ámbar | <img src="assets/capitulo-06/componentes/chip_limitada.png" width="86" alt="chip limitada"> | | Disponibilidad limitada |
+| LOW | Rojo | <img src="assets/capitulo-06/componentes/chip_poca.png" width="70" alt="chip poca"> | | Poca disponibilidad |
+| Espacio libre | Verde | <img src="assets/capitulo-06/componentes/chip_libre.png" width="78" alt="chip libre"> | <img src="assets/capitulo-06/estados/plaza_libre.png" width="34" alt="plaza libre"> | Libre |
+| Espacio ocupado | Gris petróleo | <img src="assets/capitulo-06/componentes/chip_ocupada.png" width="96" alt="chip ocupada"> | <img src="assets/capitulo-06/estados/plaza_ocupada.png" width="34" alt="plaza ocupada"> | Ocupada |
+| UNKNOWN | Ámbar con trama diagonal en el plano | <img src="assets/capitulo-06/componentes/chip_sin_datos.png" width="96" alt="chip sin_datos"> | <img src="assets/capitulo-06/estados/plaza_sin_datos.png" width="34" alt="plaza sin_datos"> | Sin datos / UNKNOWN (nunca se cuenta como libre) |
 
 **Contraste y accesibilidad.** Se verificó la relación de contraste de los pares de color principales frente al criterio WCAG 2.2 nivel AA (4.5:1 para texto normal, 3:1 para texto grande y componentes de interfaz).
 
-| Combinación | Relación | Resultado |
-|---|---|---|
-| Texto `#052B39` sobre fondo `#F3F7F6` | 13.8:1 | Cumple |
-| Blanco sobre `#052B39` | 14.9:1 | Cumple |
-| Blanco sobre botón teal `#087F83` | 4.8:1 | Cumple |
-| Texto `#4D5C5E` sobre blanco | 7.0:1 | Cumple |
-| Verde `#16704D` sobre `#DFF3E9` | 5.2:1 | Cumple |
-| Rojo `#BE4045` sobre blanco | 5.2:1 | Cumple |
-| Teal `#087F83` como texto sobre `#F3F7F6` | 4.45:1 | Ligeramente bajo en texto pequeño |
-| Teal `#087F83` como texto sobre `#DDF3F1` | 4.15:1 | Bajo en texto pequeño |
-| Ámbar `#A36108` sobre `#FFF2D6` | 4.43:1 | Ligeramente bajo en texto pequeño |
-| Rojo `#BE4045` sobre `#FCE6E6` | 4.39:1 | Ligeramente bajo en texto pequeño |
+| Combinación | Muestra | Relación | Resultado |
+|---|:---:|---|---|
+| Texto `#052B39` sobre fondo `#F3F7F6` | <img src="assets/capitulo-06/contraste/052B39_sobre_F3F7F6.png" width="84" alt="texto #052B39 sobre #F3F7F6"> | 13.8:1 | Cumple |
+| Blanco sobre `#052B39` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_052B39.png" width="84" alt="texto #FFFFFF sobre #052B39"> | 14.9:1 | Cumple |
+| Blanco sobre botón teal `#087F83` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_087F83.png" width="84" alt="texto #FFFFFF sobre #087F83"> | 4.8:1 | Cumple |
+| Texto `#4D5C5E` sobre blanco | <img src="assets/capitulo-06/contraste/4D5C5E_sobre_FFFFFF.png" width="84" alt="texto #4D5C5E sobre #FFFFFF"> | 7.0:1 | Cumple |
+| Verde `#16704D` sobre `#DFF3E9` | <img src="assets/capitulo-06/contraste/16704D_sobre_DFF3E9.png" width="84" alt="texto #16704D sobre #DFF3E9"> | 5.2:1 | Cumple |
+| Rojo `#BE4045` sobre blanco | <img src="assets/capitulo-06/contraste/BE4045_sobre_FFFFFF.png" width="84" alt="texto #BE4045 sobre #FFFFFF"> | 5.2:1 | Cumple |
+| Teal `#087F83` como texto sobre `#F3F7F6` | <img src="assets/capitulo-06/contraste/087F83_sobre_F3F7F6.png" width="84" alt="texto #087F83 sobre #F3F7F6"> | 4.45:1 | Ligeramente bajo en texto pequeño |
+| Teal `#087F83` como texto sobre `#DDF3F1` | <img src="assets/capitulo-06/contraste/087F83_sobre_DDF3F1.png" width="84" alt="texto #087F83 sobre #DDF3F1"> | 4.15:1 | Bajo en texto pequeño |
+| Ámbar `#A36108` sobre `#FFF2D6` | <img src="assets/capitulo-06/contraste/A36108_sobre_FFF2D6.png" width="84" alt="texto #A36108 sobre #FFF2D6"> | 4.43:1 | Ligeramente bajo en texto pequeño |
+| Rojo `#BE4045` sobre `#FCE6E6` | <img src="assets/capitulo-06/contraste/BE4045_sobre_FCE6E6.png" width="84" alt="texto #BE4045 sobre #FCE6E6"> | 4.39:1 | Ligeramente bajo en texto pequeño |
 
-Para los cuatro casos bajo el umbral, la guía establece que el texto pequeño use una variante más oscura del mismo tono (por ejemplo `#066A6E` sobre fondos claros, con 5.9:1; `#8A5206` sobre ámbar claro, con 5.8:1; y `#A8363B` sobre rojo claro, con 5.4:1), o que se aplique peso seminegrita o tamaño grande. Los íconos y bordes de componentes mantienen al menos 3:1.
+Para los cuatro casos bajo el umbral, la guía establece que el texto pequeño use una variante más oscura del mismo tono, o que se aplique peso seminegrita o tamaño grande. Los íconos y bordes de componentes mantienen al menos 3:1.
+
+| Variante para texto pequeño | Muestra | Relación |
+|---|:---:|---|
+| `#066A6E` sobre fondos claros (menta) | <img src="assets/capitulo-06/contraste/066A6E_sobre_DDF3F1.png" width="84" alt="texto #066A6E sobre #DDF3F1"> | 5.9:1 |
+| `#8A5206` sobre ámbar claro | <img src="assets/capitulo-06/contraste/8A5206_sobre_FFF2D6.png" width="84" alt="texto #8A5206 sobre #FFF2D6"> | 5.8:1 |
+| `#A8363B` sobre rojo claro | <img src="assets/capitulo-06/contraste/A8363B_sobre_FCE6E6.png" width="84" alt="texto #A8363B sobre #FCE6E6"> | 5.4:1 |
 
 **Tipografía.** Los diseños emplean una familia sans-serif de formas abiertas y alta legibilidad en pantalla, de aspecto similar a Inter, usada en toda la solución. La jerarquía se resuelve con tamaño y peso, no con cambios de familia.
 
@@ -4348,6 +4356,8 @@ Para los cuatro casos bajo el umbral, la guía establece que el texto pequeño u
 | Cifra destacada | 82 %, 184 libres | Seminegrita | 32–48 px |
 | Cuerpo | Descripciones y listas | Regular | 14–16 px |
 | Etiqueta / ayuda | Datos actualizados hace 2 min | Regular | 12–13 px |
+
+<p align="center"><img src="assets/capitulo-06/tipografia/tipografia.png" width="460" alt="Jerarquía tipográfica"></p>
 
 Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a 1.6) y sin mayúsculas sostenidas salvo en etiquetas cortas de sección (por ejemplo, "CÓMO FUNCIONA").
 
@@ -4402,12 +4412,28 @@ La solución se compone de cuatro productos con contextos de uso distintos. Esta
 - Escritorio (más de 1024 px): barra lateral fija en las consolas, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
 
 **Componentes comunes.**
-- *Botones.* Primario (teal con texto blanco), secundario (borde y texto petróleo) y destructivo (rojo). Un solo botón primario por vista; los botones largos incluyen ícono a la derecha.
-- *Tarjetas.* Fondo blanco, borde fino, esquinas redondeadas y título de tarjeta en la parte superior; las tarjetas destacadas usan fondo `#052B39` con texto blanco.
-- *Chips y etiquetas.* Forma de píldora con color de fondo claro y texto oscuro del mismo tono, siempre con texto.
-- *Avisos.* Informativo (menta), advertencia (ámbar claro), error (rojo claro) y éxito (verde claro), con ícono a la izquierda y mensaje breve.
-- *Formularios.* Etiqueta encima del campo, ayuda debajo, borde teal al enfocar, borde rojo con mensaje en línea cuando hay error y marca de obligatorio con asterisco.
-- *Modales y hojas inferiores.* Hoja deslizable para formularios y detalles en móvil; diálogo centrado para confirmaciones; fondo atenuado y botón de cierre visible.
+
+*Botones.* Primario (teal con texto blanco), secundario (borde y texto petróleo) y destructivo (rojo). Un solo botón primario por vista; los botones largos incluyen ícono a la derecha.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_botones.png" width="520" alt="Botones primario, secundario y destructivo"></p>
+
+*Tarjetas.* Fondo blanco, borde fino, esquinas redondeadas y título de tarjeta en la parte superior; las tarjetas destacadas usan fondo `#052B39` con texto blanco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_tarjetas.png" width="500" alt="Tarjeta estándar y tarjeta destacada"></p>
+
+*Chips y etiquetas.* Forma de píldora con color de fondo claro y texto oscuro del mismo tono, siempre con texto.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_chips.png" width="560" alt="Chips de estado"></p>
+
+*Avisos.* Informativo (menta), advertencia (ámbar claro), error (rojo claro) y éxito (verde claro), con ícono a la izquierda y mensaje breve.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_avisos.png" width="560" alt="Avisos informativo, advertencia, error y éxito"></p>
+
+*Formularios.* Etiqueta encima del campo, ayuda debajo, borde teal al enfocar, borde rojo con mensaje en línea cuando hay error y marca de obligatorio con asterisco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_formularios.png" width="560" alt="Campos de formulario en estado normal, con foco y con error"></p>
+
+*Modales y hojas inferiores.* Hoja deslizable para formularios y detalles en móvil; diálogo centrado para confirmaciones; fondo atenuado y botón de cierre visible.
 
 **Accesibilidad e internacionalización.**
 - Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page y en la consola de operación, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
@@ -4415,7 +4441,9 @@ La solución se compone de cuatro productos con contextos de uso distintos. Esta
 - Los textos están disponibles en es_419 y en_US (inglés por defecto), con formatos de fecha y hora según el idioma.
 - Los mensajes de error indican qué ocurrió y cómo resolverlo, y los datos desactualizados se señalan siempre con su antigüedad.
 
-**Privacidad en la interfaz.** Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesión, en la pantalla de inicio, en la predicción y en las preferencias de alertas, con un ícono de escudo y un texto equivalente a "Compartimos minutos de llegada, nunca tu ubicación", en coherencia con CON-07.
+**Privacidad en la interfaz.**
+Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesión, en la pantalla de inicio, en la predicción y en las preferencias de alertas, con un ícono de escudo y un texto equivalente a "Compartimos minutos de llegada, nunca tu ubicación", en coherencia con CON-07.
+
 
 
 ## 6.2. Information Architecture
