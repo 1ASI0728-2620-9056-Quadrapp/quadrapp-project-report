@@ -3410,8 +3410,8 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 | Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
 |---|---|---|---|
 | Tenant | `Tenant` | `EmailDomain` (entidad), `TenantStatus` (ONBOARDING, ACTIVE) | Representa a una institución y sus dominios habilitados. Un dominio solo puede pertenecer a una institución (conflicto 409). Retirar un dominio impide nuevos registros pero conserva las cuentas ya verificadas. |
-| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_ADMIN, INSTITUTION_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
-| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol asignado fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez. |
+| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_OPERATOR, PARKING_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
+| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol PARKING_ADMIN o PARKING_OPERATOR, también fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez (US31). |
 | OtpChallenge | `OtpChallenge` | `OneTimeCode` (guardado como hash), `AttemptCounter` | Desafío de acceso por código de un solo uso. Expira, agota intentos y se consume al usarse. |
 | Session | `RefreshToken` | `TokenClaims` (usuario, institución, rol) | Sesión revocable. El cierre de sesión revoca el token de refresco asociado. |
 | PlatformCredential | `PlatformCredential` | `CredentialStatus` | Credencial del equipo de plataforma, distinta de la cuenta de un usuario, que autoriza el alta de instituciones (TS15). |
@@ -3420,6 +3420,15 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 - `AccessPolicy`: decide si un correo puede recibir un código. Aplica, en orden, las reglas de cuenta existente, invitación vigente y dominio habilitado (US01, escenarios 1, 4 y 5).
 - `AccessPolicy` también resuelve los permisos de cada rol (`permissionsOf`, `can`), con lo que "los permisos se asignan por rol".
 - `OtpRequestThrottle`: determina si un correo superó el número de solicitudes permitidas en la ventana configurada (respuesta 429, CON-09).
+
+**Roles y permisos.** Los roles corresponden a los dos segmentos objetivo: el conductor usa la aplicación móvil, y el administrador y el operador comparten la consola web de operación con permisos distintos.
+
+| Rol | Usuarios | Permisos principales | Historias |
+|---|---|---|---|
+| `DRIVER` | Conductores de la comunidad educativa | Consultar estacionamientos, disponibilidad, pronósticos y asesoría de llegada; gestionar sus alertas y preferencias. | US04 a US15, US23, US24, US33, US36 |
+| `PARKING_OPERATOR` | Operadores de puerta y supervisores de turno | Monitorear el turno, la salud de los dispositivos y las incidencias. No configura estacionamientos ni dispositivos, ni gestiona cuentas. | US20, US29 |
+| `PARKING_ADMIN` | Administradores de estacionamientos | Los permisos del operador y, además, configurar estacionamientos, dispositivos y calendario; gestionar los dominios de correo; invitar administradores y operadores; consultar la analítica y definir reglas de alerta. | US16 a US22, US30 a US32, US34, US35 |
+
 **Mensajes de entrada (canvas).** `SignInRequested`, `SessionValidated` y `RoleAssignmentRequested`, enviados desde la app móvil y el Admin Dashboard.
  
 **Domain Events publicados.** `AccessGranted`, `AccessDenied`, `UserIdentityProvided`, `AuthorizedContextProvided`, `SessionRevoked`, `RoleAssigned`, `TenantProvisioned`, `EmailDomainEnabled`, `EmailDomainRetired`, `InvitationIssued`, `InvitationAccepted` y `UserAccountCreated`. `UserIdentityProvided` y `AuthorizedContextProvided` son el lenguaje publicado hacia los demás contextos: entregan usuario, institución, rol y permisos autorizados, y viajan como claims del token.
@@ -3430,7 +3439,7 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 1. Un correo recibe un código solo si su dominio está habilitado, si tiene una invitación vigente o si ya tiene una cuenta; en otro caso no se emite ningún código.
 2. El código tiene vigencia corta, un número máximo de intentos y se almacena únicamente como hash.
 3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa la capa de seguridad del backend para el aislamiento entre instituciones (CON-08).
-4. Los administradores se crean solo por invitación o en el alta inicial de la institución (CON-17).
+4. Los administradores y los operadores se crean solo por invitación; el primer administrador se crea en el alta inicial de la institución (CON-17). Ningún rol administrativo admite autorregistro.
 5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
 
 ### 5.1.2. Interface Layer
@@ -3444,7 +3453,7 @@ El contexto expone una API REST documentada con OpenAPI (CON-12). Todas las ruta
 | `AuthController` | `POST /api/v1/auth/refresh` | 200 con nuevo token de acceso; 401 si el token de refresco venció | TS01 |
 | `AuthController` | `POST /api/v1/auth/logout` | 204 y revocación del token de refresco | US02 (ruta propuesta) |
 | `AuthController` | `GET /api/v1/auth/session` | `SessionValidated`: 200 con usuario, institución, rol y permisos vigentes; 401 si la sesión no es válida | Canvas (ruta propuesta) |
-| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no es administrador institucional | Canvas, US31 (ruta propuesta) |
+| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no tiene el rol PARKING_ADMIN | Canvas, US31 (ruta propuesta) |
 | `TenantController` | `POST /api/v1/tenants` | 201 con la institución y la invitación de su primer administrador; 403 sin credenciales de plataforma; 409 si el dominio ya existe | TS15 |
 | `EmailDomainController` | `POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}` | 201 o 204; 409 si el dominio pertenece a otra institución | US30 (rutas propuestas) |
 | `InvitationController` | `POST /api/v1/invitations` | 201 con la invitación registrada y enviada | US31 (ruta propuesta) |
@@ -3766,7 +3775,7 @@ Methods
 
 ### 5.2.2. Interface Layer
 
-La Interface Layer expone las capacidades del contexto a la consola web de operación, a la aplicación móvil y a los demás módulos. Recibe solicitudes, valida su forma, las transforma en Commands o Queries, delega en la Application Layer y representa el resultado. La capa de seguridad del backend (Spring Security, DD-08) valida el token antes de que la solicitud llegue al controlador: las operaciones de escritura exigen el rol de administrador (`PARKING_ADMIN`), y las consultas admiten también al operador y, para la lista de estacionamientos y el layout, al conductor. `tenantId` se toma siempre del token, nunca de un parámetro.
+La Interface Layer expone las capacidades del contexto a la consola web de operación, a la aplicación móvil y a los demás módulos. Recibe solicitudes, valida su forma, las transforma en Commands o Queries, delega en la Application Layer y representa el resultado. La capa de seguridad del backend (Spring Security, DD-08) valida el token antes de que la solicitud llegue al controlador: las operaciones de escritura exigen el rol de administrador (`PARKING_ADMIN`), y las consultas admiten también al operador (`PARKING_OPERATOR`) y, para la lista de estacionamientos y el layout, al conductor (`DRIVER`). `tenantId` se toma siempre del token, nunca de un parámetro.
 
 **Controllers REST**
 
@@ -4262,7 +4271,7 @@ El mensaje no contiene etiquetas de espacios ni datos de vehículos (CON-15, CON
 |DeviceHealthController|`GET /api/v1/devices/health?parkingLotId={lotId}`|200 con el estado, el nivel de batería, la señal, la última comunicación, el motivo de falla y la marca de mantenimiento de cada dispositivo|TS10, escenario 1; US20|
 |DeviceHealthController|`GET /api/v1/sensing/incidents?parkingLotId={lotId}`|200 con las incidencias abiertas (dispositivo desconocido, sensor sin asociación o institución inconsistente)|TS04 (ruta propuesta)|
 
-Ambas rutas exigen el rol de administrador u operador. `tenantId` se toma del token.
+Ambas rutas exigen el rol `PARKING_ADMIN` o `PARKING_OPERATOR`. `tenantId` se toma del token.
 
 **Open Host Service: ParkingSensingFacade**
 
@@ -6325,9 +6334,9 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 | NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja. Darse de baja conserva las demás suscripciones. |
 | NotificationPreferences | `NotificationPreferences` | `AlertType` (LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST), `Channel` | Preferencias del usuario: notificaciones activas o no, tipos de alerta y canales habilitados. Desactivarlas conserva la suscripción pero omite el envío. |
 | DeviceRegistration | `DeviceRegistration` | `DeviceToken`, `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
-| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador (institucional o de estacionamiento) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
+| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
 | NotificationTemplate | `NotificationTemplate` | `AlertType`, `Channel`, `Locale` (es_419, en_US) | Plantilla del mensaje por tipo de alerta, canal e idioma. |
-| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_ADMINS, INSTITUTION_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
+| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
  
 **Domain Services.**
 - `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
