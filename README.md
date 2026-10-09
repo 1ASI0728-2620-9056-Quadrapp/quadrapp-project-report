@@ -132,6 +132,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
   - [Video About-the-Team](#video-about-the-team)
 - [Bibliografía](#bibliografía)
 - [Anexos](#anexos)
+  - [Tablero de diseño estratégico](#tablero-de-diseño-estratégico)
   - [Videos de Exposiciones](#videos-de-exposiciones)
 
 ---
@@ -2874,23 +2875,292 @@ El diseño estratégico utiliza los principios de Domain-Driven Design para deli
 
 ### 4.2.1. EventStorming
 
-El Event Storming permitió identificar de manera colaborativa los principales eventos de dominio, comandos, políticas y actores involucrados en el sistema QuadRapp. A través de esta técnica se visualizó el flujo completo del negocio, desde la autenticación de usuarios hasta la gestión de ocupación, predicciones y notificaciones.
+El EventStorming se desarrolló en una sesión de trabajo del equipo siguiendo los diez pasos propuestos en el material del curso, a partir del problema, los segmentos y las decisiones del Attribute-Driven Design descritas en las secciones anteriores. El objetivo fue identificar los eventos del dominio de Quadrapp, ordenarlos en el tiempo, reconocer los puntos críticos del proceso y agrupar los agregados resultantes en bounded contexts candidatos.
 
-![Event Storming – Quadrapp](./assets/capitulo-04/eventstorming.png)
+La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta mediante el enlace registrado en los Anexos.
+
+Por la cantidad de eventos, la línea de tiempo se organizó en tres fases del negocio: la incorporación de la institución y la configuración del estacionamiento, el sensado y la ocupación en tiempo real, y la predicción, la asesoría de llegada y las alertas.
+
+**Paso 1. Unstructured Exploration**
+
+En el primer paso, el equipo realizó una lluvia de ideas de los eventos de dominio de Quadrapp, redactados en tiempo pasado porque describen hechos que ya ocurrieron en el negocio. Se identificaron 56 eventos, que abarcan el alta de la institución y el acceso con código de un solo uso, la configuración de estacionamientos, zonas, espacios y dispositivos, la recepción y validación de las lecturas de los sensores, el estado de cada espacio, la generación de pronósticos, la asesoría de llegada, las alertas y la medición de la precisión del modelo. En esta etapa los eventos se presentan sin orden, porque el propósito es explorar el dominio antes de estructurarlo.
+
+![EventStorming paso 1: eventos de dominio de Quadrapp sin orden](assets/capitulo-04/eventstorming/eventstorming-paso-01-exploracion.png)
+
+*Figura: EventStorming, paso 1 (Unstructured Exploration). Eventos de dominio identificados durante la exploración inicial, sin orden cronológico.*
+
+**Paso 2. Timelines**
+
+En el segundo paso, los eventos se ordenaron en el tiempo. Cada fase se organizó en carriles, uno por actor o por parte del proceso, y en cada carril la fila superior muestra el camino exitoso, mientras que debajo se ubican los escenarios alternativos que se desprenden de cada evento.
+
+La primera fase empieza cuando el equipo de Integra Labs da de alta a una institución, habilita sus dominios de correo e invita a su primer administrador. El administrador acepta la invitación, inicia sesión con un código de acceso y configura el estacionamiento: registra el estacionamiento, sus zonas, espacios y accesos vehiculares, registra los dispositivos, asocia cada sensor a un espacio y publica el layout. Por último, registra el calendario académico y los eventos del campus, que después influyen en la demanda.
+
+![EventStorming paso 2: incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-02a-incorporacion.png)
+
+*Figura: EventStorming, paso 2 (Timelines), fase de incorporación y configuración. Las líneas punteadas indican el traspaso entre carriles.*
+
+La segunda fase describe lo que ocurre cada vez que un sensor reporta. La lectura se recibe, se valida y, cuando el estado se mantiene durante el tiempo mínimo, la detección se confirma. Recién entonces el espacio se marca como ocupado o libre y la disponibilidad se actualiza. En los carriles inferiores aparecen las lecturas descartadas, el reenvío de las lecturas retenidas por el gateway cuando se recupera la conexión, la falla de un sensor que deja el espacio como desconocido y el reemplazo del dispositivo, además del registro de ingresos y salidas a partir de los sensores de paso.
+
+![EventStorming paso 2: sensado y ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-02b-operacion.png)
+
+*Figura: EventStorming, paso 2 (Timelines), fase de sensado y ocupación.*
+
+La tercera fase contiene la propuesta de valor. El pronóstico se genera para cada horizonte y, si la ocupación esperada supera el umbral, se prevé la saturación. El conductor inicia sesión, solicita la asesoría de llegada y la actualiza si cambia su tiempo estimado de llegada; también puede suscribirse a alertas por franja horaria. En paralelo, cada pronóstico se compara con la ocupación finalmente observada para recalcular la precisión del modelo y consolidar el historial.
+
+![EventStorming paso 2: predicción, asesoría y alertas](assets/capitulo-04/eventstorming/eventstorming-paso-02c-prediccion.png)
+
+*Figura: EventStorming, paso 2 (Timelines), fase de predicción, asesoría y alertas.*
+
+**Paso 3. Pain Points**
+
+En el tercer paso se revisó la línea de tiempo para identificar los puntos críticos: dudas, reglas que aún no están definidas y riesgos que deben resolverse antes de implementar. Cada punto crítico se registró como un rombo rosado unido al evento en el que aparece. Se identificaron 14 puntos críticos.
+
+En la incorporación, las dudas se concentran en los datos mínimos para dar de alta una institución, la vigencia de una invitación, el efecto de un cambio de layout sobre las asociaciones de sensores y si el calendario pertenece a la institución o a cada estacionamiento.
+
+![EventStorming paso 3: puntos críticos de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-03a-incorporacion.png)
+
+*Figura: EventStorming, paso 3 (Pain Points), fase de incorporación y configuración.*
+
+En el sensado, los puntos críticos son técnicos y de negocio a la vez: el tiempo mínimo que confirma una detección sin falsos cambios, cuántas horas de lecturas puede retener el gateway, cuánto esperar antes de marcar un espacio como desconocido, qué hacer con un sensor sin espacio asociado y qué prevalece cuando el conteo de accesos no coincide con la detección por espacio.
+
+![EventStorming paso 3: puntos críticos del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-03b-operacion.png)
+
+*Figura: EventStorming, paso 3 (Pain Points), fase de sensado y ocupación.*
+
+En la predicción, las dudas giran en torno a la confianza del resultado: cuánto historial se necesita para un pronóstico confiable, qué umbral define la saturación, qué hacer si el tiempo de llegada supera los 60 minutos, cómo evitar alertas excesivas y qué error es aceptable para considerar preciso el modelo.
+
+![EventStorming paso 3: puntos críticos de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-03c-prediccion.png)
+
+*Figura: EventStorming, paso 3 (Pain Points), fase de predicción, asesoría y alertas.*
+
+**Paso 4. Pivotal Points**
+
+En el cuarto paso se identificaron los eventos pivotales, es decir, aquellos después de los cuales el proceso entra en una fase distinta. Cada uno se marcó con una línea vertical inmediatamente después del evento. Se identificaron seis eventos pivotales.
+
+En la incorporación hay dos: "Institución dada de alta", a partir del cual la institución existe en la plataforma y puede tener usuarios, y "Layout publicado", que deja el estacionamiento listo para recibir lecturas.
+
+![EventStorming paso 4: eventos pivotales de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-04a-incorporacion.png)
+
+*Figura: EventStorming, paso 4 (Pivotal Points), fase de incorporación y configuración.*
+
+En el sensado, "Detección confirmada" marca el momento en que una señal técnica se convierte en un hecho de negocio, y "Disponibilidad actualizada" cierra el ciclo con el estado que consumen los demás procesos. Esta frontera es la que después separa a Parking Sensing de Occupancy.
+
+![EventStorming paso 4: eventos pivotales del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-04b-operacion.png)
+
+*Figura: EventStorming, paso 4 (Pivotal Points), fase de sensado y ocupación.*
+
+En la predicción, "Pronóstico generado" habilita la asesoría y las alertas, y "Asesoría de llegada emitida" entrega al conductor el resultado que justifica el producto.
+
+![EventStorming paso 4: eventos pivotales de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-04c-prediccion.png)
+
+*Figura: EventStorming, paso 4 (Pivotal Points), fase de predicción, asesoría y alertas.*
+
+**Paso 5. Commands**
+
+En el quinto paso se identificaron los comandos que producen cada evento. Cada comando se registró en un post-it azul a la izquierda del evento que dispara, con el actor que lo ejecuta en un post-it amarillo encima. En este paso solo se incluyen los comandos que ejecuta una persona; los que ejecuta el sistema se incorporan en el paso siguiente, y los que ejecuta un sistema externo, en el paso 8. El modelo tiene tres actores: el equipo de Integra Labs, el administrador de estacionamientos y el conductor.
+
+En la incorporación, el equipo de Integra Labs da de alta la institución y habilita sus dominios de correo; el resto de los comandos los ejecuta el administrador, desde aceptar la invitación hasta publicar el layout y registrar el calendario.
+
+![EventStorming paso 5: comandos de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-05a-incorporacion.png)
+
+*Figura: EventStorming, paso 5 (Commands), fase de incorporación y configuración.*
+
+En el sensado casi no hay comandos de personas, porque el proceso es automático. El único es el reemplazo de un dispositivo, que el administrador ejecuta después de una falla.
+
+![EventStorming paso 5: comandos del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-05b-operacion.png)
+
+*Figura: EventStorming, paso 5 (Commands), fase de sensado y ocupación.*
+
+En la predicción, el conductor solicita el código de acceso, solicita la asesoría de llegada, actualiza su tiempo estimado de llegada y se suscribe a alertas. El administrador exporta el reporte histórico.
+
+![EventStorming paso 5: comandos de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-05c-prediccion.png)
+
+*Figura: EventStorming, paso 5 (Commands), fase de predicción, asesoría y alertas.*
+
+**Paso 6. Policies**
+
+En el sexto paso se agregaron las políticas, que representan las reacciones automáticas del sistema: cuando ocurre un evento, el sistema ejecuta un comando sin que intervenga una persona. Cada política se registró en un post-it morado sobre el comando que ejecuta. Se identificaron 22 políticas.
+
+En la incorporación, las políticas invitan al primer administrador cuando se da de alta la institución, crean la cuenta cuando se acepta una invitación y hacen vencer las invitaciones que no se usan dentro del plazo.
+
+![EventStorming paso 6: políticas de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-06a-incorporacion.png)
+
+*Figura: EventStorming, paso 6 (Policies), fase de incorporación y configuración.*
+
+El sensado y la ocupación son, casi por completo, una cadena de políticas. Cada lectura recibida se valida; si el estado se mantiene durante el tiempo mínimo, se confirma la detección; cada detección actualiza el estado del espacio y cada cambio de estado recalcula la disponibilidad. Cuando vence el intervalo de reporte de un sensor o su batería es crítica, se detecta la falla, el espacio pasa a desconocido y el dispositivo se marca para mantenimiento. Los pasos de vehículo registran ingresos y salidas, y una reconciliación periódica contrasta el conteo de accesos con la detección por espacio.
+
+![EventStorming paso 6: políticas del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-06b-operacion.png)
+
+*Figura: EventStorming, paso 6 (Policies), fase de sensado y ocupación.*
+
+En la predicción, el pronóstico se genera en cada ciclo o cuando cambia el calendario, y cada pronóstico se evalúa para detectar una saturación. Si se prevé saturación en una franja suscrita, se envía la alerta. Cuando cambia el tiempo estimado de llegada, la asesoría se recalcula, y cuando es poco probable encontrar espacio, se estima la próxima disponibilidad. En Analítica, al llegar la hora objetivo de cada pronóstico, este se evalúa contra la ocupación observada y se recalcula la precisión del modelo.
+
+![EventStorming paso 6: políticas de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-06c-prediccion.png)
+
+*Figura: EventStorming, paso 6 (Policies), fase de predicción, asesoría y alertas.*
+
+**Paso 7. Read Models**
+
+En el séptimo paso se identificaron los read models, es decir, la información que cada actor consulta antes de ejecutar un comando. Cada read model se registró en un post-it verde junto al comando que apoya. Se identificaron 12 read models.
+
+En la incorporación, el administrador consulta los estacionamientos de su institución, el layout del estacionamiento, el inventario de dispositivos, el equipo de la institución y el calendario académico.
+
+![EventStorming paso 7: read models de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-07a-incorporacion.png)
+
+*Figura: EventStorming, paso 7 (Read Models), fase de incorporación y configuración.*
+
+En el sensado, el administrador consulta la salud de los dispositivos (estado, batería y última comunicación) antes de reemplazar uno.
+
+![EventStorming paso 7: read models del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-07b-operacion.png)
+
+*Figura: EventStorming, paso 7 (Read Models), fase de sensado y ocupación.*
+
+En la predicción, el conductor consulta la disponibilidad y los pronósticos antes de pedir la asesoría y sus preferencias de notificación antes de suscribirse. El administrador consulta el historial, las horas pico y la precisión antes de exportar el reporte.
+
+![EventStorming paso 7: read models de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-07c-prediccion.png)
+
+*Figura: EventStorming, paso 7 (Read Models), fase de predicción, asesoría y alertas.*
+
+**Paso 8. External Systems**
+
+En el octavo paso se incorporaron los sistemas externos, representados con post-its rojos. Algunos reciben órdenes del sistema y otros ejecutan comandos sobre él.
+
+En la incorporación interviene el servicio de correo, que entrega las invitaciones y los códigos de acceso.
+
+![EventStorming paso 8: sistemas externos de la incorporación y configuración](assets/capitulo-04/eventstorming/eventstorming-paso-08a-incorporacion.png)
+
+*Figura: EventStorming, paso 8 (External Systems), fase de incorporación y configuración.*
+
+En el sensado, los sensores de cochera y de paso publican las lecturas, y el gateway del campus reenvía las que retuvo en su búfer local cuando se recupera la conexión, de acuerdo con la decisión de la iteración 2 del ADD. Ambos ejecutan comandos sobre el sistema.
+
+![EventStorming paso 8: sistemas externos del sensado y la ocupación](assets/capitulo-04/eventstorming/eventstorming-paso-08b-operacion.png)
+
+*Figura: EventStorming, paso 8 (External Systems), fase de sensado y ocupación.*
+
+En la predicción intervienen el servicio de correo, el proveedor de mensajería push, que entrega las alertas, y el servicio de mapas. Este último se consulta solo desde el dispositivo del conductor para calcular el tiempo estimado de llegada; el servidor recibe únicamente los minutos, como establece CON-07.
+
+![EventStorming paso 8: sistemas externos de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-08c-prediccion.png)
+
+*Figura: EventStorming, paso 8 (External Systems), fase de predicción, asesoría y alertas.*
+
+**Paso 9. Aggregates**
+
+En el noveno paso, los comandos y los eventos se agruparon en agregados, es decir, en los objetos del dominio que reciben los comandos, protegen las reglas de negocio y producen los eventos. Se identificaron 18 agregados. En la figura, cada agregado aparece como un post-it alto de color amarillo pálido, con los comandos que recibe a la izquierda, los eventos que produce a la derecha y su regla principal debajo.
+
+La separación más importante está en el sensado. SensorFeed recibe las lecturas, descarta las duplicadas o fuera de orden y confirma la detección; DeviceHealth controla el intervalo de reporte y la batería de cada sensor, y GatewayLink representa el reenvío de lecturas retenidas. Ninguno de ellos conoce el estado de negocio del espacio, que pertenece a SpaceOccupancy, ni la disponibilidad del estacionamiento, que pertenece a LotOccupancy. De forma similar, Device registra qué dispositivo está instalado y dónde, mientras que DeviceHealth sabe qué está reportando en este momento. En la predicción, Forecast genera los pronósticos y detecta la saturación, y ArrivalAdvice calcula la asesoría solo con el tiempo estimado en minutos.
+
+![EventStorming paso 9: agregados de Quadrapp con sus comandos y eventos](assets/capitulo-04/eventstorming/eventstorming-paso-09-agregados.png)
+
+*Figura: EventStorming, paso 9 (Aggregates). Agregados en amarillo pálido, con los comandos que reciben, los eventos que producen y la regla principal de cada uno.*
+
+**Paso 10. Bounded Contexts**
+
+En el último paso, los agregados se agruparon en bounded contexts candidatos según la cercanía de su funcionalidad y las políticas que los conectan. Se obtuvieron siete contextos. Prediction & Advisory es el contexto core, porque contiene la propuesta de valor de Quadrapp. Parking Configuration, Parking Sensing, Occupancy, Analytics y Notifications son contextos de soporte, e IAM es genérico.
+
+Las flechas moradas representan las políticas que conectan los contextos, y las punteadas, las consultas. Parking Configuration entrega a Parking Sensing el mapa entre sensores y espacios, y a Occupancy los espacios y la capacidad de cada zona. Parking Sensing entrega a Occupancy solo las detecciones confirmadas y las fallas. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil, el calendario y los eventos del campus. Sus pronósticos alimentan a Analytics y sus saturaciones previstas, a Notifications.
+
+![EventStorming paso 10: bounded contexts candidatos de Quadrapp](assets/capitulo-04/eventstorming/eventstorming-paso-10-bounded-contexts.png)
+
+*Figura: EventStorming, paso 10 (Bounded Contexts). Contextos delimitados con línea punteada; el contexto core tiene borde grueso. Las flechas moradas representan políticas y las punteadas, consultas.*
+
+La tabla siguiente relaciona los eventos de dominio clave del tablero con los nombres que se utilizan en los Bounded Context Canvases y en el diseño táctico.
+
+| Evento en el tablero | Nombre en el modelo | Contexto |
+| --- | --- | --- |
+| Institución dada de alta | TenantProvisioned | IAM |
+| Layout publicado | ParkingLayoutProvided | Parking Configuration |
+| Evento del campus registrado | CampusEventProvided | Parking Configuration |
+| Detección confirmada | SensorStateChanged | Parking Sensing |
+| Falla de sensor detectada | DeviceFaultDetected | Parking Sensing |
+| Disponibilidad actualizada | OccupancyUpdated | Occupancy |
+| Ingreso o salida registrado | EntryExitRecorded | Occupancy |
+| Pronóstico generado | ForecastGenerated | Prediction & Advisory |
+| Saturación prevista | SaturationPredicted | Prediction & Advisory |
+| Asesoría de llegada emitida | ArrivalAdviceIssued | Prediction & Advisory |
+| Precisión del modelo recalculada | AccuracyMetricsProvided | Analytics |
+| Alerta de baja disponibilidad enviada | UserNotificationDelivered | Notifications |
 
 ### 4.2.2. Candidate Context Discovery
 
-A partir del análisis realizado en el Event Storming, se agruparon los conceptos relacionados y se identificaron los Bounded Contexts candidatos del sistema. Estos contextos representan límites claros de responsabilidad dentro del dominio de QuadRapp y facilitan la definición de una arquitectura modular y mantenible.
+A partir del EventStorming, se realizó el descubrimiento de contextos candidatos para identificar los bounded contexts de Quadrapp. El proceso se desarrolló en tres iteraciones sobre una versión simplificada de la línea de tiempo, que conserva los eventos que mejor representan cada parte del proceso. En cada iteración se aplicó una de las técnicas propuestas: start-with-simple y look-for-pivotal-events para una primera división del dominio, un refinamiento de los borradores según el lenguaje y las reglas de cada parte, y start-with-value para clasificar los contextos resultantes según su valor para el negocio.
 
-![Candidate Context Discovery – Parte 1](./assets/capitulo-04/4parte1.jpg)
+**Iteración 1. Start-with-simple y look-for-pivotal-events**
 
-![Candidate Context Discovery – Parte 2](./assets/capitulo-04/4parte2.jpg)
+En la primera iteración, la línea de tiempo se descompuso en pasos secuenciales, usando como límites los seis eventos pivotales identificados en el paso 4 del EventStorming: institución dada de alta, layout publicado, detección confirmada, disponibilidad actualizada, pronóstico generado y asesoría de llegada emitida. Así se obtuvieron siete fases, desde el alta hasta las alertas y el seguimiento, y debajo de ellas se propusieron seis contextos en borrador. En esta versión, el acceso y la configuración del estacionamiento quedaron juntos, igual que los sensores y la ocupación.
+
+En esta iteración también se observó que algunos eventos no pertenecen a una sola fase. La falla de un sensor, el espacio marcado como desconocido, los ingresos y salidas, los eventos del campus, las suscripciones a alertas y el historial aparecen en distintos momentos del proceso, por lo que se registraron aparte para ubicarlos en la siguiente iteración.
+
+![Candidate Context Discovery, iteración 1: fases delimitadas por los eventos pivotales](assets/capitulo-04/eventstorming/candidate-context-discovery-1-pivotales.png)
+
+*Figura: Candidate Context Discovery, iteración 1. Línea de tiempo simplificada dividida en fases por los eventos pivotales, con los contextos en borrador y, debajo, los eventos que aparecen en varias fases.*
+
+**Iteración 2. Refinamiento de los contextos candidatos**
+
+En la segunda iteración, cada evento se ubicó en el carril del contexto candidato al que pertenece, manteniendo su posición en el tiempo. Los borradores se ajustaron según dos criterios: que los eventos de un mismo contexto compartan el lenguaje y las reglas de negocio, y que el contexto pueda evolucionar sin arrastrar a los demás.
+
+Con ese criterio, el borrador de acceso y estacionamientos se dividió en IAM y Parking Configuration, porque las instituciones, invitaciones y códigos de acceso no comparten reglas con los estacionamientos, zonas y espacios. El cambio más importante fue separar el borrador de sensores y ocupación en dos contextos. Parking Sensing habla de lecturas, dispositivos, intervalos de reporte y tiempo mínimo de detección; Occupancy habla del estado de negocio del espacio, la disponibilidad y el flujo. Por eso la falla de un sensor queda en Parking Sensing, mientras que el espacio marcado como desconocido y los ingresos y salidas quedan en Occupancy. Así, cambiar la tecnología de sensado no afecta el modelo de ocupación. Los borradores de predicción y asesoría se unieron en Prediction & Advisory, porque la asesoría solo existe a partir del pronóstico y comparte su lenguaje de horizontes, confianza y saturación. El borrador de alertas y precisión se dividió en Notifications y Analytics, porque enviar una alerta y medir el error del modelo responden a reglas distintas.
+
+![Candidate Context Discovery, iteración 2: línea de tiempo por contexto candidato](assets/capitulo-04/eventstorming/candidate-context-discovery-2-contextos.png)
+
+*Figura: Candidate Context Discovery, iteración 2. Cada carril corresponde a un contexto candidato y cada evento conserva su posición en el tiempo. A la derecha se indica el límite entre Parking Sensing y Occupancy.*
+
+**Iteración 3. Start-with-value**
+
+En la tercera iteración, los contextos candidatos se clasificaron según su aporte a la propuesta de valor de Quadrapp, que es anticipar la disponibilidad y orientar la llegada del conductor. Prediction & Advisory se consideró core, porque sin el pronóstico y la asesoría Quadrapp sería un contador de espacios más. Parking Configuration, Parking Sensing, Occupancy, Analytics y Notifications se clasificaron como contextos de soporte, porque son específicos del negocio pero existen para sostener al core. IAM se clasificó como genérico, porque resuelve una necesidad común a cualquier aplicación.
+
+![Candidate Context Discovery, iteración 3: clasificación de los contextos por valor](assets/capitulo-04/eventstorming/candidate-context-discovery-3-valor.png)
+
+*Figura: Candidate Context Discovery, iteración 3. Contextos clasificados según su aporte a la propuesta de valor, con la responsabilidad principal de cada uno.*
+
+El resultado del proceso son siete contextos candidatos, que se resumen en la tabla siguiente.
+
+| Contexto candidato | Tipo | Responsabilidad | Eventos representativos |
+| --- | --- | --- | --- |
+| Prediction & Advisory | Core | Pronosticar la disponibilidad a 15, 30, 45 y 60 minutos y emitir la asesoría de llegada | Pronóstico generado, Saturación prevista, Asesoría de llegada emitida |
+| Parking Configuration | Soporte | Definir estacionamientos, zonas, espacios, accesos, dispositivos y calendario | Estacionamiento registrado, Sensor asociado a espacio, Layout publicado |
+| Parking Sensing | Soporte | Traducir la telemetría de los sensores en detecciones confiables y vigilar su salud | Lectura validada, Detección confirmada, Falla de sensor detectada |
+| Occupancy | Soporte | Mantener el estado de cada espacio, la disponibilidad y el flujo vehicular | Espacio marcado como ocupado, Espacio marcado como desconocido, Disponibilidad actualizada |
+| Analytics | Soporte | Consolidar el historial y medir la precisión del modelo | Pronóstico evaluado con la ocupación observada, Precisión del modelo recalculada |
+| Notifications | Soporte | Enviar alertas de baja disponibilidad según las franjas suscritas | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
+| IAM | Genérico | Gestionar instituciones, invitaciones, acceso con código de un solo uso y roles | Institución dada de alta, Sesión iniciada |
 
 ### 4.2.3. Domain Message Flows Modeling
 
-Con el objetivo de comprender la comunicación entre los diferentes Bounded Contexts, se modeló el flujo de mensajes del escenario principal del sistema: cuando un conductor solicita una asesoría de llegada. Este modelado permite visualizar cómo interactúan los contextos de Occupancy, Prediction & Advisory y Notifications para brindar una respuesta al usuario.
+Una vez identificados los contextos candidatos, se modeló cómo colaboran para resolver los escenarios principales del negocio. Para ello se elaboraron diagramas de Domain Message Flow, que muestran, para un escenario concreto, los mensajes que intercambian los actores, los bounded contexts y los sistemas externos.
 
-![Domain Message Flows Modeling – Conductor solicita asesoría de llegada](./assets/capitulo-04/domainmessage.png)
+Los diagramas siguen la notación de mensaje y contenido combinados. Los actores se representan con una figura de persona, los bounded contexts con una elipse morada y los sistemas con un círculo punteado. Cada mensaje es una tarjeta de color según su tipo: azul para los comandos, naranja para los eventos y verde para las consultas. La tarjeta indica el nombre del mensaje y sus datos más importantes, y el número en la parte superior, que también aparece sobre la flecha, señala el orden en que ocurre dentro del escenario. Las flechas van del emisor al receptor y respetan las relaciones del Context Map: los eventos fluyen del contexto upstream al downstream, y las consultas, del downstream al upstream.
+
+Se modelaron cinco escenarios, elegidos para que cada bounded context participe en al menos uno.
+
+El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil del estacionamiento, y responde con el evento Asesoría de llegada emitida, que incluye la categoría, la probabilidad, la confianza y la próxima disponibilidad.
+
+![Domain Message Flow: conductor solicita asesoría de llegada](assets/capitulo-04/eventstorming/message-flow-asesoria.png)
+
+*Figura: Domain Message Flow del escenario "Conductor solicita asesoría de llegada". Los números indican el orden de los mensajes.*
+
+En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de baja disponibilidad.
+
+![Domain Message Flow: saturación prevista y alerta al conductor](assets/capitulo-04/eventstorming/message-flow-saturacion.png)
+
+*Figura: Domain Message Flow del escenario "Saturación prevista y alerta al conductor". Los números indican el orden de los mensajes.*
+
+El tercer escenario muestra la falla de un sensor. Parking Sensing detecta que el sensor dejó de reportar dentro de su intervalo y publica el evento Falla de sensor detectada, con el que Occupancy marca el espacio como desconocido. El administrador consulta la salud de los dispositivos desde la consola y reemplaza el dispositivo en Parking Configuration, que publica la nueva asociación entre el sensor y el espacio. Cuando el sensor nuevo publica su primera lectura, Parking Sensing confirma la detección y Occupancy recupera el estado real del espacio.
+
+![Domain Message Flow: falla de un sensor y reemplazo del dispositivo](assets/capitulo-04/eventstorming/message-flow-falla.png)
+
+*Figura: Domain Message Flow del escenario "Falla de un sensor y reemplazo del dispositivo". Los números indican el orden de los mensajes.*
+
+El cuarto escenario describe el flujo de una lectura en operación normal. El gateway del campus publica la lectura mediante MQTT con QoS 1; Parking Sensing consulta a Parking Configuration el espacio asociado al sensor y, tras el tiempo mínimo, publica el evento Detección confirmada. Occupancy actualiza la disponibilidad y la publica tanto para Analytics, que construye el historial, como para la aplicación móvil.
+
+![Domain Message Flow: detección de un vehículo y actualización de la disponibilidad](assets/capitulo-04/eventstorming/message-flow-deteccion.png)
+
+*Figura: Domain Message Flow del escenario "Detección de un vehículo y actualización de la disponibilidad". Los números indican el orden de los mensajes.*
+
+El último escenario muestra la incorporación de una institución. El equipo de Integra Labs la da de alta en IAM, que envía la invitación por el servicio de correo. El administrador acepta la invitación, configura el estacionamiento desde la consola y publica el layout en Parking Configuration, que lo comunica a Parking Sensing, con la asociación entre sensores y espacios, y a Occupancy, con la capacidad de cada zona.
+
+![Domain Message Flow: alta de una institución y publicación del layout](assets/capitulo-04/eventstorming/message-flow-incorporacion.png)
+
+*Figura: Domain Message Flow del escenario "Alta de una institución y publicación del layout". Los números indican el orden de los mensajes.*
 
 ### 4.2.4. Bounded Context Canvases
 
@@ -3053,7 +3323,7 @@ Por ello, aunque puede reducir el esfuerzo inicial, esta alternativa se descarta
 
 **Opción 3 – Contextos independientes con protección de modelos:**
 
-![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option3.png)
+![Context Mapping, opción 3: contextos independientes con protección de modelos](assets/capitulo-04/context-mapping-opcion-3.png)
 
 La tercera alternativa mantiene a los Bounded Contexts separados, pero introduce mecanismos específicos para evitar que los detalles internos de un contexto se propaguen directamente hacia otro.
 
@@ -6100,6 +6370,14 @@ World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 
 ---
 
 # Anexos
+
+## Tablero de diseño estratégico
+
+El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows y el Context Map elegido se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
+
+| Artefacto | Enlace |
+| --- | --- |
+| Strategic-Level Domain-Driven Design (Excalidraw) | [Abrir tablero](https://excalidraw.com/#json=AwfVtCDCsg4Nfujz9eTx2,SHK0Hbpkf3Tu3b42qHBk4A) |
 
 ## Videos de Exposiciones
 
