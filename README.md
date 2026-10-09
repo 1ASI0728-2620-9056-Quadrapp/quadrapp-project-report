@@ -62,6 +62,7 @@
 | 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
 | 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
+| 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del diseño de base de datos y del diagrama de clases de Analytics: reemplazo de los diagramas en texto por la descripción del diagrama y alineación con PostgreSQL. |
 
 # Project Report Collaboration Insights
 
@@ -6611,7 +6612,7 @@ Ambos diagramas mantienen la consistencia con la separación por capas definida 
 
 El Domain Layer Class Diagram representa la estructura orientada a la implementación del modelo de dominio de Analytics.
 
-El diagrama debe incluir los siguientes elementos:
+El diagrama incluye los siguientes elementos:
 
 **Aggregate Roots**
 - HistoricalOccupancy
@@ -6632,7 +6633,7 @@ El diagrama debe incluir los siguientes elementos:
 
 <br>
 
-Las principales relaciones que deben representarse son:
+Las principales relaciones son:
 - `HistoricalOccupancy` compone exactamente un `OccupancyRate`.
 - `ForecastSnapshot` compone exactamente un `OccupancyRate` para representar el porcentaje de ocupación pronosticado.
 - `HistoricalOccupancy` mantiene referencias externas mediante `tenantId`, `parkingLotId` y, cuando corresponda, `zoneId`.
@@ -6649,43 +6650,14 @@ Las principales relaciones que deben representarse son:
 
 <br>
 
-El diagrama debe utilizar las convenciones de visibilidad UML:
+El diagrama usa las convenciones de visibilidad de UML:
 - (+) para miembros públicos
 - (-) para miembros privados
 - (#) para miembros protegidos cuando corresponda
 
 <br>
 
-Una referencia conceptual de las relaciones y multiplicidades es:
-
-```text
-
-HistoricalOccupancy "1" *-- "1" OccupancyRate
-
-ForecastSnapshot "1" *-- "1" OccupancyRate
-
-PeakHour "1" *-- "1" OccupancyRate
-
-DemandPattern "1" *-- "1" OccupancyRate
-
-HistoricalOccupancyRepository ..> HistoricalOccupancy : persists
-
-ForecastSnapshotRepository ..> ForecastSnapshot : persists
-
-AnalyticsDomainService ..> HistoricalOccupancy : analyzes
-
-AnalyticsDomainService ..> ForecastSnapshot : compares
-
-AnalyticsDomainService ..> PeakHour : produces
-
-AnalyticsDomainService ..> DemandPattern : identifies
-
-AnalyticsDomainService ..> PredictionAccuracy : calculates
-
-```
-<br>
-
-Los siguientes conceptos no deben aparecer como clases de dominio propias dentro de Analytics:
+Los siguientes conceptos no son clases del dominio de Analytics:
 
 - Institution
 - ParkingLot
@@ -6762,22 +6734,7 @@ Las principales restricciones lógicas son:
 
 Las tablas no requieren una clave foránea directa entre sí. La comparación entre un pronóstico y la ocupación observada se realiza utilizando el contexto del estacionamiento y el periodo temporal correspondiente.
 
-Conceptualmente:
-
-```text
-analytics_forecast_snapshots
-        |
-        | parking_lot_id
-        | target_at
-        v
-analytics_historical_occupancy
-        |
-        | ocupación prevista
-        | vs.
-        | ocupación observada
-        v
-PredictionAccuracy
-```
+El pronóstico guardado en `analytics_forecast_snapshots` se compara con el registro de `analytics_historical_occupancy` del mismo estacionamiento cuyo periodo contiene su `target_at`; de esa comparación entre la ocupación prevista y la observada se obtiene `PredictionAccuracy`.
 
 `PredictionAccuracy` no necesita una tabla propia, ya que representa un resultado calculado a partir de los pronósticos almacenados y los registros de ocupación observada.
 
@@ -6812,45 +6769,9 @@ La persistencia debe permitir realizar consultas utilizando principalmente:
 - `model_version`, para análisis de precisión.
 
 
-**Diseño lógico:**
+**Tecnología:**
 
-Conceptualmente, la persistencia del Bounded Context queda organizada de la siguiente manera:
-
-```text
-                     ANALYTICS
-
-        ┌─────────────────────────────────┐
-        │ analytics_historical_occupancy  │
-        │─────────────────────────────────│
-        │ PK historical_occupancy_id      │
-        │    tenant_id               │
-        │    parking_lot_id               │
-        │    zone_id                      │
-        │    period_start                 │
-        │    period_end                   │
-        │    granularity                  │
-        │    occupancy_rate               │
-        │    entry_count                  │
-        │    exit_count                   │
-        └─────────────────────────────────┘
-
-
-        ┌─────────────────────────────────┐
-        │ analytics_forecast_snapshots    │
-        │─────────────────────────────────│
-        │ PK forecast_id                  │
-        │    tenant_id               │
-        │    parking_lot_id               │
-        │    generated_at                 │
-        │    target_at                    │
-        │    horizon_minutes              │
-        │    model_version                │
-        │    predicted_occupancy_rate     │
-        └─────────────────────────────────┘
-```
-
-
-El diseño se mantiene independiente de un motor de base de datos específico. La tecnología de persistencia podrá definirse posteriormente sin modificar las responsabilidades del Domain Layer ni de la Application Layer.
+Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-01, sin claves foráneas hacia los esquemas de otros módulos (CON-02). Las capas de dominio y de aplicación no dependen de esta tecnología: acceden a los datos únicamente mediante los repositorios `HistoricalOccupancyRepository` y `ForecastSnapshotRepository`.
 
 <br>
 
