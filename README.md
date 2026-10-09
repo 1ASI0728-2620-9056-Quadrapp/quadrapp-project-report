@@ -3599,6 +3599,124 @@ Methods
 20. Todo acceso se realiza dentro de la institución del usuario autenticado.
 21. El contexto no modifica el estado de Occupancy, no procesa señales de sensores y no calcula las métricas de precisión que muestra Analytics.
 
+## 5.5.2. Interface Layer
+
+
+La Interface Layer expone las capacidades del Bounded Context a la aplicación móvil, al BFF móvil y a los procesos programados. Recibe solicitudes, valida su forma, las transforma en Queries o Commands, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La institución se obtiene siempre del token validado por IAM, nunca de un parámetro; un estacionamiento de otra institución se responde como no encontrado.
+
+**Controller 1: ForecastQueryController**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastQueryController|Controller (REST)|Recibe las consultas de pronóstico y de próxima disponibilidad.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|getForecastHandler|GetForecastQueryHandler|Private|Caso de uso: consultar un pronóstico.|
+|getNextAvailabilityHandler|GetNextAvailabilityQueryHandler|Private|Caso de uso: próxima disponibilidad.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|getForecast(lotId: UUID, horizon: Integer)|`ResponseEntity<ForecastResponse>`|Public|`GET /api/v1/forecasts?lotId={lotId}&horizon={15,30,45,60}`. Un pronóstico vencido se devuelve igual; el cliente compara `validUntil` con `serverTime`.|
+|getNextAvailability(lotId: UUID)|`ResponseEntity<NextAvailabilityResponse>`|Public|`GET /api/v1/forecasts/{lotId}/next-availability`. Devuelve el rango o el motivo de no estimación.|
+
+Respuesta de `getForecast`:
+
+```json
+{
+  "lotId": "7c1f2b0e-5a3d-4c61-9f0e-2b6a1d8e4c10", "horizon": 30, "expectedOccupancyPct": 86.5,
+  "confidence": { "value": 0.72, "level": "MEDIUM" }, "method": "PRIMARY_MODEL",
+  "generatedAt": "2026-03-10T13:41:05.120Z", "validUntil": "2026-03-10T14:11:05.120Z",
+  "saturation": { "expectedAt": "2026-03-10T14:02:00Z", "pct": 90 }, "serverTime": "2026-03-10T13:44:12.400Z"
+}
+```
+
+|Situación|Respuesta|
+|-|-|
+|Horizonte distinto de 15, 30, 45 o 60|400|
+|Estacionamiento inexistente o de otra institución|404|
+|Nunca se generó un pronóstico para ese horizonte|404, pronóstico faltante|
+|Token ausente o inválido|401|
+
+**Controller 2: ArrivalAdviceController**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ArrivalAdviceController|Controller (REST)|Recibe `lotId` y `etaMinutes` y devuelve la asesoría de llegada.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|getArrivalAdviceHandler|GetArrivalAdviceQueryHandler|Private|Caso de uso: asesoría de llegada.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|requestAdvice(request: ArrivalAdviceRequest)|`ResponseEntity<ArrivalAdviceResponse>`|Public|`POST /api/v1/arrival-advices`. El ETA viaja en el cuerpo; cualquier otro campo se rechaza con 400.|
+
+Solicitud y respuesta:
+
+```json
+{ "lotId": "7c1f2b0e-5a3d-4c61-9f0e-2b6a1d8e4c10", "etaMinutes": 20 }
+
+{ "etaMinutes": 20, "probabilityOfSpace": 0.64, "category": "UNCERTAIN",
+  "confidence": { "value": 0.55, "level": "MEDIUM" }, "horizonUsed": 30,
+  "generatedAt": "2026-03-10T13:41:05.120Z", "serverTime": "2026-03-10T13:44:12.400Z" }
+```
+
+|Situación|Respuesta|
+|-|-|
+|`etaMinutes` fuera de 0 a 120 o no entero|400|
+|El cuerpo trae campos adicionales (por ejemplo, coordenadas)|400|
+|Estacionamiento inexistente o de otra institución|404|
+|No hay pronóstico vigente para calcular la asesoría|404, asesoría no disponible|
+
+**Facade 1: PredictionAdvisoryFacade**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|PredictionAdvisoryFacade|Facade|API en proceso del módulo para el BFF móvil (TS02).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|forecastsOf(institutionId: UUID, parkingLotId: UUID)|ForecastSetResult|Public|Estado de los cuatro horizontes.|
+|adviceFor(institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes)|ArrivalAdviceResult?|Public|Asesoría; ninguna si no hay pronóstico vigente o ETA.|
+|nextAvailabilityOf(institutionId: UUID, parkingLotId: UUID)|NextAvailabilityResult|Public|Próxima disponibilidad.|
+
+**Scheduler 1: ForecastScheduler**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastScheduler|Scheduler|Dispara la generación y la evaluación periódicas de pronósticos.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|generateForecasts()|Void|Public|Envía un `GenerateForecastsCommand` por estacionamiento activo.|
+|evaluateForecasts()|Void|Public|Envía un `EvaluateForecastsCommand`.|
+
+Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
+
+**Data Transfer Objects**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ArrivalAdviceRequest|Request DTO|lotId, etaMinutes|Entrada de la asesoría; no admite otros campos.|
+|ForecastResponse|Response DTO|lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime|Pronóstico entregado al cliente.|
+|ArrivalAdviceResponse|Response DTO|etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime|Asesoría entregada al cliente.|
+|NextAvailabilityResponse|Response DTO|available, minMinutes, maxMinutes, reason, serverTime|Próxima disponibilidad entregada al cliente.|
+
+
+
 ## 5.6. Bounded Context: Analytics
 
 El Bounded Context Analytics es responsable de procesar y mantener la información histórica necesaria para analizar el comportamiento de la ocupación de los estacionamientos universitarios en Quadrapp.
