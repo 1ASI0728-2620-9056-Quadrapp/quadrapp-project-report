@@ -5676,6 +5676,104 @@ La Landing Page permite recorrer las secciones informativas sin abandonar el sit
 
 ### 6.4.1. Applications Wireframes
 
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene tres tipos de usuario con vistas distintas: el **conductor** y el **administrador de universidad**, ambos en la aplicación móvil, y el **administrador de plataforma** (personal de Integra Labs), en una consola web.
+
+
+#### VISTA CONDUCTOR (APP MÓVIL)
+
+Acceso institucional: pantalla de ingreso del conductor. Solicita el correo institucional, cuyo dominio debe pertenecer a una universidad registrada en Quadrapp.  
+
+![Wireframe - Acceso institucional](./assets/capitulo-06/wireframes/Acceso%20institucional.png)
+
+**Verificación OTP**: el conductor ingresa el código de verificación de un solo uso enviado a su correo para completar el acceso.  
+
+![Wireframe - Verificación OTP](./assets/capitulo-06/wireframes/Verificación%20OTP.png)
+
+**Inicio y asesoría de llegada**: pantalla principal. Muestra la disponibilidad actual del estacionamiento de la sede elegida y la asesoría de llegada: la probabilidad de encontrar espacio según el tiempo en que el conductor estima llegar.  
+
+![Wireframe - Inicio y asesoría de llegada](./assets/capitulo-06/wireframes/Inicio%20y%20asesoría%20de%20llegada.png)
+
+**Detalle por zonas**: desglosa la disponibilidad del estacionamiento por zona, para que el conductor elija hacia dónde dirigirse.  
+
+![Wireframe - Detalle por zonas](./assets/capitulo-06/wireframes/Detalle%20por%20zonas.png)
+
+**Detalle de Zona Norte**: detalle de una zona (en el ejemplo, Zona Norte) con el estado de sus espacios.  
+
+![Wireframe - Detalle de Zona Norte](./assets/capitulo-06/wireframes/Detalle%20de%20Zona%20Norte.png)
+
+Lista: variante de la pantalla anterior que presenta los espacios de la zona en formato de lista.  
+
+![Wireframe - Detalle de Zona Norte · Lista](./assets/capitulo-06/wireframes/Detalle%20de%20Zona%20Norte%20·%20Lista.png)
+
+**Predicciones por horizonte**: muestra el pronóstico de ocupación para los horizontes de 15, 30, 45 y 60 minutos, identificando los que están vencidos o faltantes.  
+
+![Wireframe - Predicciones por horizonte](./assets/capitulo-06/wireframes/Predicciones%20por%20horizonte.png)
+
+**Detalle de predicción · 15 min**: detalle del pronóstico de un horizonte: ocupación esperada, confianza, método y vigencia.  
+
+![Wireframe - Detalle de predicción · 15 min](./assets/capitulo-06/wireframes/Detalle%20de%20predicción%20·%2015%20min.png)
+
+**Alertas y preferencias:** permite activar o desactivar las alertas (saturación y baja disponibilidad al llegar) y administrar las franjas horarias en que se reciben.  
+
+![Wireframe - Alertas y preferencias](./assets/capitulo-06/wireframes/Alertas%20y%20preferencias.png)
+
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+
+**Inicio de operación**: pantalla principal del turno. Resume el estado operativo del estacionamiento y da acceso rápido a las tareas de operación.  
+
+![Wireframe - Inicio de operación](./assets/capitulo-06/wireframes/Inicio%20de%20operación.png)
+
+**Estacionamientos y zonas**: lista los estacionamientos de la universidad y sus zonas, con su estado de ocupación.  
+
+![Wireframe - Estacionamientos y zonas](./assets/capitulo-06/wireframes/Estacionamientos%20y%20zonas.png)
+
+**Gestión de zonas y layout**: permite editar el layout del estacionamiento (zonas y espacios) y publicar los cambios.  
+
+![Wireframe - Gestión de zonas y layout](./assets/capitulo-06/wireframes/Gestión%20de%20zonas%20y%20layout.png)
+
+**Accesos y configuración**: administra los accesos vehiculares y los parámetros de configuración del estacionamiento.  
+
+![Wireframe - Accesos y configuración](./assets/capitulo-06/wireframes/Accesos%20y%20configuración.png)
+
+**Salud de dispositivos**: muestra el estado de los dispositivos IoT del estacionamiento y permite reportar un problema.  
+
+![Wireframe - Salud de dispositivos](./assets/capitulo-06/wireframes/Salud%20de%20dispositivos.png)
+
+**Analítica y precisión**: presenta las métricas de ocupación y la precisión de los pronósticos, con opción de exportar el reporte.  
+
+![Wireframe - Analítica y precisión](./assets/capitulo-06/wireframes/Analítica%20y%20precisión.png)
+
+**Más · campus y equipo**: reúne la gestión del campus y del equipo: calendario de eventos, dominios institucionales e invitaciones al equipo.  
+
+![Wireframe - Más · campus y equipo](./assets/capitulo-06/wireframes/Más%20·%20campus%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+
+**Dashboard general**: vista inicial de la consola. Resume el estado de la plataforma: universidades registradas y dispositivos IoT.  
+
+![Wireframe - Dashboard general](./assets/capitulo-06/wireframes/01%20·%20Dashboard%20general.png)
+
+**Universidades**: listado de las universidades que usan Quadrapp, con acceso a su detalle y al alta de nuevas.  
+
+![Wireframe - Universidades](./assets/capitulo-06/wireframes/02%20·%20Universidades.png)
+
+**Alta de universidad**: formulario para registrar una nueva universidad en la plataforma.  
+
+![Wireframe - Alta de universidad](./assets/capitulo-06/wireframes/03%20·%20Alta%20de%20universidad.png)
+
+**Universidad Central**: detalle de una universidad (en el ejemplo, Universidad Central): sus datos, dominios y estacionamientos.  
+
+![Wireframe - Universidad Central](./assets/capitulo-06/wireframes/04%20·%20Universidad%20Central.png)
+
+**Inventario IoT global**: inventario de todos los dispositivos IoT de la plataforma, con su estado y la universidad a la que están asignados.  
+
+![Wireframe - Inventario IoT global](./assets/capitulo-06/wireframes/05%20·%20Inventario%20IoT%20global.png)
+
+**Gestión de dispositivo · G-03**: detalle de un dispositivo (en el ejemplo, G-03) con las acciones de reasignarlo o darlo de baja.  
+
+![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/06%20·%20Gestión%20de%20dispositivo%20·%20G-03.png)
+
+
 ### 6.4.2. Applications Wireflow Diagrams
 
 ---
