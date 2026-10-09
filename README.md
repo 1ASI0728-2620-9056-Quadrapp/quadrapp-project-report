@@ -3978,6 +3978,449 @@ El esquema `configuration` de PostgreSQL contiene una tabla por agregado raíz y
 
 ## 5.3. Bounded Context: Parking Sensing
 
+El Bounded Context Parking Sensing es responsable de **traducir la telemetría de los sensores de cochera y de paso en detecciones confiables**. Es la frontera entre el mundo técnico del IoT (lectura, identificador técnico, batería, señal, intervalo de reporte) y el lenguaje del negocio que usa Occupancy. Por eso cumple el rol de gateway context y actúa como capa anticorrupción del sistema.
+
+Su propósito es recibir las lecturas que el gateway del campus publica en el broker MQTT, descartar las duplicadas o fuera de orden, confirmar cada cambio de estado tras el tiempo mínimo de detección y vigilar la salud de cada dispositivo. Entrega a Occupancy solo las detecciones confirmadas, los pasos de vehículos y las fallas. No conoce el estado de negocio del espacio (libre, ocupado o desconocido), que pertenece a Occupancy, ni las etiquetas visibles de los espacios, que pertenecen a Parking Configuration.
+
+Este Bounded Context soporta principalmente:
+
+- TS04 — Consumir y validar los mensajes que el gateway publica en el broker.
+- TS05 — Recibir con QoS 1 y sesión persistente, sin perder los mensajes publicados durante una desconexión.
+- TS06 — Descartar lecturas duplicadas o fuera de orden y confirmar los cambios tras el tiempo mínimo.
+- TS10 y US20 — Vigilar la salud de los dispositivos, detectar fallas y registrar su recuperación.
+- US05 y US07 — Aportar las detecciones confirmadas con las que Occupancy actualiza la disponibilidad.
+
+Las principales responsabilidades del Bounded Context Parking Sensing son:
+
+- Suscribirse al broker MQTT y confirmar cada mensaje solo después de procesarlo y guardarlo.
+- Validar el formato de cada mensaje y apartar los inválidos en un registro de mensajes rechazados.
+- Resolver el dispositivo mediante la fachada de Parking Configuration y registrar una incidencia si no está registrado o no tiene espacio asociado.
+- Aplicar cada lectura una sola vez (por `eventId`) y en orden (por la marca de tiempo del dispositivo).
+- Confirmar el cambio de estado de un espacio cuando se mantiene el tiempo mínimo de detección, y descartar los cambios breves.
+- Publicar los pasos de vehículos con su dirección.
+- Detectar los dispositivos sin reporte dentro de su intervalo o con batería crítica, marcarlos para mantenimiento y detectar su recuperación.
+- Distinguir la falla de un sensor de la desconexión de su gateway.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Parking Sensing.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| SensorFeed | Domain | Aggregate Root. Flujo de lecturas de un sensor de cochera o de paso. | deviceId, tenantId, parkingLotId, hardwareId, kind, targetId, confirmedState, pending, lastReadingAt, minimumDetection, active | open(), accept(), confirmIfStable(), recordPassage(), retarget(), resetConfirmation(), deactivate() |
+| DeviceHealth | Domain | Aggregate Root. Salud de un dispositivo: último reporte, batería, señal y falla. | deviceId, tenantId, parkingLotId, deviceType, targetId, reportInterval, lastSeenAt, battery, signal, lastGatewayId, status, faultReason, maintenanceRequired | monitor(), recordReport(), isOverdue(), markFault(), retarget(), retire() |
+| GatewayLink | Domain | Aggregate Root. Conexión de un gateway del campus con el broker. | gatewayId, tenantId, parkingLotId, hardwareId, status, connectedSince, disconnectedAt, lastReplay | register(), connect(), disconnect(), registerReplay(), isOffline() |
+| SensorReading | Domain | Value Object. Lectura normalizada por la capa anticorrupción. | eventId, hardwareId, kind, state, direction, readingAt, battery, signal, gatewayHardwareId | isOlderThan() |
+| PendingDetection | Domain | Value Object. Cambio de estado que aún no cumple el tiempo mínimo. | state, since | isStableAt() |
+| MinimumDetectionTime, ReportInterval, BatteryLevel, SignalStrength, HealthPolicy, ReplaySummary | Domain | Value Objects con su validación propia. | valor o rango | hasElapsed(), deadlineAfter(), isCriticalBelow() |
+| FeedKind, ReadingKind, DetectionState, PassDirection, ReadingOutcome, MonitoredDeviceType, HealthStatus, FaultReason, LinkStatus | Domain | Enumeraciones del contexto. | — | — |
+| HealthEvaluationService | Domain | Domain Service. Decide el motivo de una falla considerando el estado del gateway. | — | evaluateOverdue() |
+| SensorFeedRepository, DeviceHealthRepository, GatewayLinkRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findByDeviceId(), findOverdue() |
+| SensorStateChanged, VehiclePassageDetected, DeviceFaultDetected, SensorCommunicationRestored, DeviceFlaggedForMaintenance, BufferedReadingsReceived | Domain | Domain Events publicados (Published Language). | Ver 5.3.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de procesamiento y vigilancia. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Consultas de salud e incidencias. | Dependencies | handle() |
+| Device*EventHandler | Application | Event Handlers de los cambios del inventario. | Dependencies | handle() |
+| DeviceDirectory, ReadingDeduplicationStore, IncidentLog, RejectedReadingStore, SensingEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.3.3 |
+| MqttInboundListener | Interface | Consumer MQTT de lecturas y estado de gateways. | Command Handler dependencies | onReading(), onGatewayStatus() |
+| DeviceHealthController | Interface | Controller REST de salud e incidencias. | Query Handler dependencies | getHealth(), getIncidents() |
+| ParkingSensingFacade | Interface | Open Host Service en proceso para el módulo de composición. | Query Handler dependency | healthSummaryOf() |
+| SensingSchedulers | Interface | Procesos programados de confirmación y vigilancia. | Command Handler dependencies | confirmPendingDetections(), detectOverdueDevices() |
+| ConfigurationEventListener | Interface | Consumer de los eventos de Parking Configuration. | Event Handler dependencies | on() |
+| SensorReadingTranslator | Infrastructure | Capa anticorrupción: traduce el JSON del gateway a `SensorReading`. | Validator | translate() |
+| *RepositoryAdapter, JdbcReadingDeduplicationStore, JpaIncidentLog, JpaRejectedReadingStore | Infrastructure | Persistencia en el esquema `sensing`. | Persistence dependency | save(), find…(), markProcessed() |
+| DeviceDirectoryAdapter | Infrastructure | Implementa `DeviceDirectory` sobre la fachada de Parking Configuration, con caché. | Facade dependency | resolve(), evict() |
+| SensingEventPublisherAdapter | Infrastructure | Publica los eventos de dominio tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.3.1. Domain Layer
+
+La Domain Layer contiene las reglas que convierten lecturas en detecciones y reportes en estados de salud. No depende de MQTT, de JSON, de la base de datos ni de Spring. Los tres agregados salen del paso 9 del EventStorming (sección 4.2.1): `SensorFeed`, `DeviceHealth` y `GatewayLink`. Se separaron porque cada uno avanza con un estímulo distinto: las lecturas de un sensor, el paso del tiempo frente a su intervalo de reporte y la conexión del gateway.
+
+**Aggregate 1: SensorFeed**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|SensorFeed|Aggregate Root|Flujo de lecturas de un sensor. En un sensor de cochera, confirma los cambios de estado que se mantienen el tiempo mínimo; en un sensor de paso, registra cada paso con su dirección. Su identidad es el `deviceId` del dispositivo.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador del dispositivo (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución a la que pertenece el sensor (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|hardwareId|String|Private|Identificador técnico que informa el sensor.|
+|kind|FeedKind|Private|SPACE para un sensor de cochera; PASS para un sensor de paso.|
+|targetId|UUID|Private|Espacio o acceso asociado, como identificador opaco. El contexto no conoce su etiqueta.|
+|confirmedState|DetectionState?|Private|Último estado confirmado; vacío hasta la primera confirmación o tras una recuperación.|
+|pending|PendingDetection?|Private|Cambio en espera de cumplir el tiempo mínimo.|
+|lastReadingAt|Instant|Private|Marca de tiempo del dispositivo de la última lectura aplicada.|
+|minimumDetection|MinimumDetectionTime|Private|Tiempo mínimo de detección del estacionamiento, recibido en `ParkingLayoutProvided`.|
+|active|Boolean|Private|Falso cuando el dispositivo fue dado de baja o reemplazado.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|open(deviceId, tenantId, parkingLotId, hardwareId, kind, targetId, minimumDetection)|SensorFeed|Public (static)|Crea el flujo con la primera lectura de un dispositivo asociado.|
+|accept(reading: SensorReading)|ReadingOutcome|Public|Descarta una lectura anterior a `lastReadingAt` (OUT_OF_ORDER, TS06, escenario 2). Si el estado coincide con el confirmado, descarta el cambio pendiente (BRIEF_CHANGE_DISCARDED) o no hace nada (UNCHANGED). Si difiere, abre o mantiene el cambio pendiente (PENDING); si ese cambio ya cumplió el tiempo mínimo según las marcas del dispositivo, lo confirma (CONFIRMED).|
+|confirmIfStable(now: Instant)|Boolean|Public|Confirma el cambio pendiente cuando cumplió el tiempo mínimo sin una lectura contraria y registra `SensorStateChanged` (TS06, escenarios 3 y 4).|
+|recordPassage(reading: SensorReading)|ReadingOutcome|Public|En un sensor de paso, aplica el orden y registra `VehiclePassageDetected` con la dirección (PASSAGE_RECORDED).|
+|retarget(targetId: UUID, minimumDetection: MinimumDetectionTime)|Void|Public|Actualiza el destino o el tiempo mínimo cuando cambian el layout o la asociación.|
+|resetConfirmation()|Void|Public|Vacía el estado confirmado para que la siguiente detección estable se informe aunque repita el estado anterior (US20, escenario 4).|
+|deactivate()|Void|Public|Deja de aceptar lecturas del dispositivo (US32, escenario 3).|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado SensorFeed**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|SensorReading|Value Object|eventId: UUID, hardwareId: String, kind: ReadingKind, state: DetectionState?, direction: PassDirection?, readingAt: Instant, battery: BatteryLevel?, signal: SignalStrength?, gatewayHardwareId: String|Lectura ya validada y traducida por la capa anticorrupción. Una lectura SPACE trae estado; una PASS trae dirección; una HEARTBEAT solo trae batería y señal.|
+|PendingDetection|Value Object|state: DetectionState, since: Instant|Cambio en espera. `isStableAt(now, minimum)` indica si cumplió el tiempo mínimo.|
+|MinimumDetectionTime|Value Object|seconds: Integer|Entre 3 y 60 segundos. `hasElapsed(from, to)` compara dos instantes.|
+|FeedKind|Enumeration|SPACE, PASS|Tipo de flujo.|
+|ReadingKind|Enumeration|SPACE, PASS, HEARTBEAT|Tipo de lectura.|
+|DetectionState|Enumeration|FREE, OCCUPIED|Presencia detectada. No incluye UNKNOWN: ese estado es de negocio y lo decide Occupancy.|
+|PassDirection|Enumeration|IN, OUT|Dirección del paso.|
+|ReadingOutcome|Enumeration|PENDING, CONFIRMED, UNCHANGED, BRIEF_CHANGE_DISCARDED, OUT_OF_ORDER, PASSAGE_RECORDED|Resultado de aplicar una lectura.|
+
+**Aggregate 2: DeviceHealth**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeviceHealth|Aggregate Root|Salud de un dispositivo registrado. Se crea al recibir `DeviceRegistered`, de modo que también falla un dispositivo que nunca llegó a reportar.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador del dispositivo.|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|deviceType|MonitoredDeviceType|Private|SPACE_SENSOR, PASS_SENSOR o GATEWAY.|
+|targetId|UUID?|Private|Espacio o acceso asociado, que se informa en las fallas.|
+|reportInterval|ReportInterval|Private|Intervalo de reporte esperado, recibido en `DeviceRegistered`.|
+|lastSeenAt|Instant?|Private|Último reporte recibido (lectura o heartbeat).|
+|battery|BatteryLevel?|Private|Último nivel de batería informado.|
+|signal|SignalStrength?|Private|Última intensidad de señal informada.|
+|lastGatewayId|UUID?|Private|Gateway por el que llegó el último reporte.|
+|status|HealthStatus|Private|OPERATIONAL, FAULT o RETIRED.|
+|faultReason|FaultReason?|Private|Motivo de la falla vigente.|
+|faultDetectedAt|Instant?|Private|Momento en que se detectó la falla.|
+|maintenanceRequired|Boolean|Private|Indica si el dispositivo quedó marcado para mantenimiento.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|monitor(deviceId, tenantId, parkingLotId, deviceType, reportInterval, now)|DeviceHealth|Public (static)|Empieza a vigilar un dispositivo; el plazo del primer reporte corre desde el registro.|
+|recordReport(at, battery, signal, gatewayId, policy)|Void|Public|Registra la última comunicación (US20, escenario 1). Con batería bajo el umbral, marca la falla CRITICAL_BATTERY (TS10, escenario 3). Si estaba en falla y la batería es válida, vuelve a OPERATIONAL y registra `SensorCommunicationRestored` (US20, escenario 3).|
+|isOverdue(now: Instant)|Boolean|Public|Indica si venció el intervalo de reporte desde el último reporte.|
+|markFault(reason: FaultReason, now: Instant)|Void|Public|Pasa a FAULT y registra `DeviceFaultDetected`. Con NO_REPORT o CRITICAL_BATTERY, además marca el dispositivo para mantenimiento y registra `DeviceFlaggedForMaintenance`.|
+|retarget(targetId: UUID)|Void|Public|Actualiza el destino informado en las fallas.|
+|retire(now: Instant)|Void|Public|Pasa a RETIRED y registra `DeviceFaultDetected` con el motivo DECOMMISSIONED, para que el espacio deje de contar con ese sensor.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado DeviceHealth**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ReportInterval|Value Object|seconds: Integer|`deadlineAfter(lastSeenAt)` devuelve el instante en que vence el reporte.|
+|BatteryLevel|Value Object|percent: Integer|Entre 0 y 100. `isCriticalBelow(thresholdPct)` compara con el umbral.|
+|SignalStrength|Value Object|rssiDbm: Integer|Intensidad de la señal en dBm; se muestra en la consola y no decide fallas.|
+|HealthPolicy|Value Object|criticalBatteryPct: Integer, checkPeriodSeconds: Integer|Umbral de batería crítica (15 % por defecto) y frecuencia de revisión (30 s), que permite detectar la falla en 1 min o menos (QAS-05).|
+|MonitoredDeviceType|Enumeration|SPACE_SENSOR, PASS_SENSOR, GATEWAY|Tipo de dispositivo vigilado.|
+|HealthStatus|Enumeration|OPERATIONAL, FAULT, RETIRED|Estado de salud.|
+|FaultReason|Enumeration|NO_REPORT, CRITICAL_BATTERY, GATEWAY_OFFLINE, DECOMMISSIONED|Motivo de la falla.|
+
+**Aggregate 3: GatewayLink**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|GatewayLink|Aggregate Root|Conexión de un gateway del campus con el broker. Permite distinguir un sensor dañado de un sensor que no reporta porque su gateway perdió la conexión.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|gatewayId|UUID|Private|Identificador del gateway (dispositivo de tipo GATEWAY).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento al que atiende.|
+|hardwareId|String|Private|Identificador técnico del gateway.|
+|status|LinkStatus|Private|CONNECTED o DISCONNECTED.|
+|connectedSince|Instant?|Private|Inicio de la conexión vigente.|
+|disconnectedAt|Instant?|Private|Momento de la última desconexión.|
+|lastReplay|ReplaySummary?|Private|Resumen del último reenvío de lecturas retenidas.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(gatewayId, tenantId, parkingLotId, hardwareId)|GatewayLink|Public (static)|Crea el enlace al recibir `DeviceRegistered` de un gateway.|
+|connect(at: Instant)|Void|Public|Pasa a CONNECTED.|
+|disconnect(at: Instant)|Void|Public|Pasa a DISCONNECTED; se dispara con el mensaje de última voluntad (Last Will) que el broker publica cuando el gateway se desconecta.|
+|registerReplay(summary: ReplaySummary)|Void|Public|Registra el reenvío de lecturas retenidas y `BufferedReadingsReceived` (QAS-03).|
+|isOffline()|Boolean|Public|Indica si el gateway está desconectado.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado GatewayLink**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ReplaySummary|Value Object|readingCount: Integer, oldestReadingAt: Instant, receivedAt: Instant|Cantidad y antigüedad de las lecturas retenidas que reenvió el gateway.|
+|LinkStatus|Enumeration|CONNECTED, DISCONNECTED|Estado de la conexión.|
+
+**Domain Services**
+
+|Nombre|Categoría|Métodos|Descripción|
+|-|-|-|-|
+|HealthEvaluationService|Domain Service|evaluateOverdue(health: DeviceHealth, gateway: GatewayLink?, now: Instant): FaultReason?|Si el dispositivo venció su intervalo y su último gateway está desconectado, devuelve GATEWAY_OFFLINE: el espacio pasa a desconocido, pero el sensor no se marca para mantenimiento. Si el gateway está conectado, devuelve NO_REPORT. Si el intervalo no venció, no devuelve nada.|
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|SensorFeedRepository|save(feed), findByDeviceId(deviceId), findPendingConfirmation()|Persistencia de `SensorFeed`.|
+|DeviceHealthRepository|save(health), findByDeviceId(deviceId), findOverdue(now), findByParkingLot(tenantId, parkingLotId)|Persistencia de `DeviceHealth`.|
+|GatewayLinkRepository|save(link), findById(gatewayId), findByHardwareId(hardwareId)|Persistencia de `GatewayLink`.|
+
+**Domain Events publicados (Published Language)**
+
+|Evento|Atributos|Consumidor|
+|-|-|-|
+|SensorStateChanged|eventId, deviceId, tenantId, parkingLotId, spaceId, state (FREE u OCCUPIED), detectedAt|Occupancy, que actualiza el estado del espacio.|
+|VehiclePassageDetected|eventId, deviceId, tenantId, parkingLotId, accessPointId, direction (IN u OUT), detectedAt|Occupancy, que registra el ingreso o la salida.|
+|DeviceFaultDetected|deviceId, tenantId, parkingLotId, targetId, reason, detectedAt|Occupancy, que marca el espacio como desconocido (UNKNOWN).|
+|SensorCommunicationRestored|deviceId, tenantId, parkingLotId, targetId, restoredAt|Occupancy y la consola. El espacio deja de ser desconocido con la siguiente `SensorStateChanged`, no con este evento.|
+|DeviceFlaggedForMaintenance|deviceId, tenantId, parkingLotId, reason, flaggedAt|Consola de operación, mediante la fachada.|
+|BufferedReadingsReceived|gatewayId, tenantId, parkingLotId, readingCount, oldestReadingAt|Consola de operación, mediante la fachada.|
+
+`SensorStateChanged` y `DeviceFaultDetected` son los nombres que fija la tabla de eventos de la sección 4.2.1 para "Detección confirmada" y "Falla de sensor detectada". `SensorStateChanged` conserva el `eventId` de la lectura que confirmó el cambio, de modo que Occupancy también puede descartar duplicados.
+
+### Reglas de negocio
+
+1. Solo se procesan lecturas de dispositivos registrados y no dados de baja; las demás se descartan y generan una incidencia (TS04, escenario 3; US32, escenario 3).
+2. Una lectura de un sensor sin espacio ni acceso asociado no genera eventos de dominio y registra una incidencia de mapeo (TS04, escenario 4).
+3. Un mensaje con formato inválido se aparta en el registro de rechazados y no genera eventos (TS04, escenario 2).
+4. Cada lectura se aplica una sola vez según su `eventId` (TS06, escenario 1).
+5. Una lectura con marca de tiempo anterior a la última aplicada del mismo sensor se descarta (TS06, escenario 2).
+6. Un cambio de estado se confirma solo si se mantiene durante el tiempo mínimo de detección; un cambio más breve se descarta sin emitir eventos (TS06, escenarios 3 y 4).
+7. El contexto informa presencia y dirección, nunca la identidad del vehículo ni de su conductor (CON-16).
+8. Un dispositivo sin reporte dentro de su intervalo o con batería bajo el umbral pasa a falla y se marca para mantenimiento (TS10, QAS-05).
+9. Si el dispositivo no reporta porque su gateway está desconectado, se informa GATEWAY_OFFLINE y no se marca para mantenimiento.
+10. Un dispositivo en falla se recupera con un reporte válido; el espacio deja de ser desconocido solo con la siguiente detección estable (US20, escenarios 3 y 4).
+11. Las lecturas que el gateway retuvo durante una desconexión se procesan con las mismas reglas de orden y duplicidad (QAS-03).
+12. El contexto no calcula ocupación ni disponibilidad, y no decide el estado UNKNOWN de un espacio.
+
+### 5.3.2. Interface Layer
+
+La Interface Layer recibe las lecturas del broker MQTT, atiende las consultas de la consola, dispara los procesos programados y escucha los cambios del inventario. Valida la forma de cada entrada, la transforma en Commands o Queries y delega en la Application Layer. No contiene reglas de negocio.
+
+**Consumer 1: MqttInboundListener**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|MqttInboundListener|Consumer (MQTT)|Recibe las lecturas y el estado de los gateways. Confirma cada mensaje al broker solo después de que su transacción se guardó, por lo que un fallo provoca la reentrega y no la pérdida (TS05).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|translator|SensorReadingTranslator|Private|Capa anticorrupción que valida y traduce el mensaje.|
+|commandHandlers|Sensing Command Handlers|Private|Casos de uso de procesamiento.|
+|rejectedStore|RejectedReadingStore|Private|Registro de mensajes inválidos.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|onReading(topic: String, payload: Bytes)|Void|Public|Tópico `quadrapp/{tenantId}/{gatewayId}/readings`. Traduce el mensaje y envía `ProcessSensorReadingCommand`, `RecordVehiclePassageCommand` o `RecordHeartbeatCommand` según su tipo; si es inválido, lo guarda como rechazado y lo confirma.|
+|onGatewayStatus(topic: String, payload: Bytes)|Void|Public|Tópico `quadrapp/{tenantId}/{gatewayId}/status`. Envía `UpdateGatewayLinkCommand` con la conexión, la desconexión (Last Will) o el resumen del reenvío.|
+
+Mensaje de lectura que publica el gateway:
+
+```json
+{
+  "eventId": "8f0d5c0e-3b1a-4d7e-9a35-2f8b1c7e4a10",
+  "sensorId": "sensor-0342",
+  "kind": "SPACE",
+  "state": "OCCUPIED",
+  "ts": "2026-10-09T13:05:12.200Z",
+  "battery": 82,
+  "rssi": -71
+}
+```
+
+El mensaje no contiene etiquetas de espacios ni datos de vehículos (CON-15, CON-16). El `tenantId` del tópico es confiable porque el broker solo permite a cada gateway publicar bajo su propio prefijo; aun así, si no coincide con la institución del dispositivo, el mensaje se descarta con una incidencia TENANT_MISMATCH (CON-08).
+
+**Controller 1: DeviceHealthController**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|DeviceHealthController|`GET /api/v1/devices/health?parkingLotId={lotId}`|200 con el estado, el nivel de batería, la señal, la última comunicación, el motivo de falla y la marca de mantenimiento de cada dispositivo|TS10, escenario 1; US20|
+|DeviceHealthController|`GET /api/v1/sensing/incidents?parkingLotId={lotId}`|200 con las incidencias abiertas (dispositivo desconocido, sensor sin asociación o institución inconsistente)|TS04 (ruta propuesta)|
+
+Ambas rutas exigen el rol de administrador u operador. `tenantId` se toma del token.
+
+**Open Host Service: ParkingSensingFacade**
+
+|Nombre|Tipo de retorno|Consumidor|Descripción|
+|-|-|-|-|
+|healthSummaryOf(tenantId: UUID, parkingLotId: UUID)|DeviceHealthSummaryView|Módulo de composición (`GET /console/overview`, TS17)|Cantidad de dispositivos operativos, en falla y marcados para mantenimiento, y gateways desconectados.|
+
+**Procesos programados: SensingSchedulers**
+
+|Método|Frecuencia|Command|Descripción|
+|-|-|-|-|
+|confirmPendingDetections()|Cada 1 s|ConfirmPendingDetectionsCommand|Confirma los cambios pendientes que cumplieron el tiempo mínimo sin una lectura contraria.|
+|detectOverdueDevices()|Cada 30 s|DetectOverdueDevicesCommand|Revisa los intervalos de reporte vencidos (QAS-05).|
+
+En el despliegue con varias réplicas, cada proceso se ejecuta en una sola réplica a la vez, con un bloqueo en la base de datos (ShedLock).
+
+**Event Consumer: ConfigurationEventListener**
+
+|Evento recibido (Parking Configuration)|Event Handler|
+|-|-|
+|DeviceRegistered|DeviceRegisteredEventHandler|
+|SensorAssigned, DeviceReplaced, ParkingLayoutProvided|DeviceAssignmentChangedEventHandler|
+|DeviceDecommissioned|DeviceDecommissionedEventHandler|
+
+### 5.3.3. Application Layer
+
+La Application Layer coordina el procesamiento de lecturas, la vigilancia de la salud y la reacción a los cambios del inventario. No contiene reglas de negocio: las aplica a través de los agregados y del Domain Service. Sus capacidades son ingerir lecturas sin pérdidas ni duplicados, confirmar detecciones, vigilar dispositivos y gateways, y responder las consultas de salud.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|ProcessSensorReadingCommand|tenantId, reading: SensorReading|ProcessSensorReadingCommandHandler|ReadingDeduplicationStore, DeviceDirectory, SensorFeedRepository, DeviceHealthRepository, IncidentLog, SensingEventPublisher, Clock|TS04, TS06|
+|RecordVehiclePassageCommand|tenantId, reading: SensorReading|RecordVehiclePassageCommandHandler|ReadingDeduplicationStore, DeviceDirectory, SensorFeedRepository, DeviceHealthRepository, IncidentLog, SensingEventPublisher|TS04, TS14|
+|RecordHeartbeatCommand|tenantId, reading: SensorReading|RecordHeartbeatCommandHandler|ReadingDeduplicationStore, DeviceDirectory, DeviceHealthRepository, SensingEventPublisher, Clock|US20, TS10|
+|ConfirmPendingDetectionsCommand|now|ConfirmPendingDetectionsCommandHandler|SensorFeedRepository, SensingEventPublisher, Clock|TS06|
+|DetectOverdueDevicesCommand|now|DetectOverdueDevicesCommandHandler|DeviceHealthRepository, GatewayLinkRepository, HealthEvaluationService, SensingEventPublisher, Clock|TS10, QAS-05|
+|UpdateGatewayLinkCommand|gatewayHardwareId, status, replaySummary|UpdateGatewayLinkCommandHandler|GatewayLinkRepository, SensingEventPublisher, Clock|TS05, QAS-03|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetDeviceHealthQuery|tenantId, parkingLotId|GetDeviceHealthQueryHandler|`List<DeviceHealthView>`|
+|GetSensingIncidentsQuery|tenantId, parkingLotId|GetSensingIncidentsQueryHandler|`List<SensingIncidentView>`|
+|GetDeviceHealthSummaryQuery|tenantId, parkingLotId|GetDeviceHealthSummaryQueryHandler|DeviceHealthSummaryView|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|DeviceRegisteredEventHandler|DeviceRegistered|Crea el `DeviceHealth` con el intervalo de reporte y, si es un gateway, su `GatewayLink`.|
+|DeviceAssignmentChangedEventHandler|SensorAssigned, DeviceReplaced, ParkingLayoutProvided|Invalida la caché del directorio y actualiza el destino y el tiempo mínimo de los `SensorFeed` y `DeviceHealth` afectados. Con `DeviceReplaced`, desactiva el flujo del dispositivo anterior y retira su salud.|
+|DeviceDecommissionedEventHandler|DeviceDecommissioned|Desactiva el `SensorFeed`, retira el `DeviceHealth` (que publica `DeviceFaultDetected` con DECOMMISSIONED) e invalida la caché.|
+
+**Flujos de ejecución**
+
+`ProcessSensorReadingCommandHandler`:
+
+1. Registra el `eventId` en `ReadingDeduplicationStore`; si ya existía, descarta la lectura (TS06, escenario 1).
+2. Resuelve el dispositivo con `DeviceDirectory`. Si no existe o fue dado de baja, registra la incidencia y termina (TS04, escenario 3). Si no tiene destino, registra la incidencia de mapeo y termina (TS04, escenario 4).
+3. Carga o abre el `SensorFeed` y aplica `accept`. Si la lectura está fuera de orden, termina (TS06, escenario 2).
+4. Registra el reporte en `DeviceHealth`, lo que puede publicar `SensorCommunicationRestored` y reiniciar la confirmación del flujo.
+5. Guarda todo en una transacción. Los eventos (`SensorStateChanged` si hubo confirmación) se publican al confirmarla, y recién entonces el listener confirma el mensaje al broker.
+
+`DetectOverdueDevicesCommandHandler`:
+
+1. Obtiene los dispositivos operativos cuyo intervalo de reporte venció.
+2. Para cada uno, carga el `GatewayLink` de su último gateway y obtiene el motivo con `HealthEvaluationService.evaluateOverdue`.
+3. Marca la falla, guarda y publica `DeviceFaultDetected` y, si corresponde, `DeviceFlaggedForMaintenance`. Con una revisión cada 30 s, la falla se informa en 1 min o menos (QAS-05).
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|SensorFeedRepository, DeviceHealthRepository, GatewayLinkRepository|Puertos (Domain Layer)|Ver 5.3.1|Persistencia de los agregados.|
+|DeviceDirectory|Puerto hacia Parking Configuration|resolve(hardwareId): DeviceDirectoryEntry?; evict(hardwareId)|Obtiene el dispositivo, su institución, su destino vigente y el tiempo mínimo de detección.|
+|ReadingDeduplicationStore|Puerto de persistencia|markProcessed(eventId, hardwareId): Boolean|Devuelve falso si el `eventId` ya se había procesado.|
+|IncidentLog|Puerto de persistencia|record(tenantId, hardwareId, type, detail)|Registra incidencias de sensado.|
+|RejectedReadingStore|Puerto de persistencia|store(topic, payload, reason)|Guarda los mensajes inválidos.|
+|SensingEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable.|
+
+### 5.3.4. Infrastructure Layer
+
+La Infrastructure Layer contiene la conexión con el broker, la traducción de los mensajes, la persistencia y la integración con Parking Configuration.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|MqttInboundConfiguration|Configuración de mensajería|—|Spring Integration MQTT, cliente MQTT v5|Conexión TLS con el broker, sesión persistente (sin inicio limpio y con expiración de sesión) y QoS 1, para recibir también lo publicado durante una desconexión (TS05, escenario 3). Usa una suscripción compartida (`$share/sensing/…`) para que cada mensaje lo procese una sola réplica (QAS-04), y confirmación manual tras guardar.|
+|SensorReadingTranslator|Adapter (anti-corruption)|—|Jackson, Bean Validation|Valida el JSON (campos obligatorios, tipos, valores permitidos) y lo traduce a `SensorReading`. Es el único componente que conoce el formato del gateway: otra tecnología de sensado solo requiere otro traductor (CON-16).|
+|SensorFeedRepositoryAdapter, DeviceHealthRepositoryAdapter, GatewayLinkRepositoryAdapter|Repository (implementación)|Repositorios del dominio|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`), para que dos lecturas simultáneas del mismo sensor no se sobrescriban.|
+|JdbcReadingDeduplicationStore|Adapter (persistencia)|ReadingDeduplicationStore|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `processed_readings`; un proceso diario elimina las filas con más de 7 días.|
+|JpaIncidentLog, JpaRejectedReadingStore|Adapter (persistencia)|IncidentLog, RejectedReadingStore|Spring Data JPA|Guardan incidencias y mensajes rechazados.|
+|DeviceDirectoryAdapter|Adapter (anti-corruption)|DeviceDirectory|Llamada en proceso a `ParkingConfigurationFacade`, caché Caffeine|Consulta `resolveDevice` y guarda el resultado en caché; los eventos de Parking Configuration invalidan las entradas afectadas.|
+|SensingEventPublisherAdapter|Adapter (eventos)|SensingEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio; Occupancy los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Entrega de mensajes|Al menos una vez: el broker reentrega todo mensaje no confirmado y el contexto descarta los duplicados por `eventId`. Así se cumple 0 % de lecturas perdidas sin procesar ninguna dos veces (QAS-03, DD-02, DD-03).|
+|Seguridad|Los sensores no se exponen a internet; solo el gateway abre una conexión saliente al broker con credenciales propias y permisos limitados a su prefijo de tópico (CON-05).|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `sensing`. Obtiene el inventario de Parking Configuration mediante su fachada y sus eventos, nunca leyendo sus tablas.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas con datos de una institución. Las consultas de la consola filtran por el tenant del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `sensing` de PostgreSQL, según DD-01.|
+
+### 5.3.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Parking Sensing dentro del contenedor Quadrapp Backend, organizado por capas. Muestra el recorrido de una lectura: el gateway del campus la publica en el broker MQTT; el listener la traduce con la capa anticorrupción y la procesa en los Command Handlers; los repositorios la guardan en el esquema `sensing`; y el publicador entrega la detección al listener de Occupancy. Además aparecen la consola, que consulta la salud de los dispositivos, y Parking Configuration, que provee el directorio de dispositivos y notifica los cambios del inventario.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Gateway del campus | Linux, agente MQTT | Publica las lecturas y las retiene en un búfer local sin conexión. |
+| Broker MQTT | Eclipse Mosquitto | Recibe las lecturas con QoS 1 y las entrega con sesión persistente. |
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Procesa las lecturas, confirma detecciones y vigila la salud de los dispositivos. |
+| Base de datos | PostgreSQL (esquema `sensing`) | Almacena flujos de lecturas, salud, enlaces de gateways, deduplicación e incidencias. |
+
+#### Componentes del módulo Parking Sensing
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| MQTT Inbound Listener | Interface | Recibe lecturas y estado de gateways; confirma tras guardar. | Spring Integration MQTT v5 | MqttInboundListener, MqttInboundConfiguration |
+| Device Health Controller | Interface | Consultas de salud e incidencias. | Spring MVC `@RestController` | DeviceHealthController |
+| Parking Sensing Facade | Interface | Resumen de salud para la consola. | Spring bean | ParkingSensingFacade |
+| Sensing Schedulers | Interface | Confirmación de detecciones y revisión de intervalos. | Spring `@Scheduled` | SensingSchedulers |
+| Configuration Event Listener | Interface | Cambios del inventario y del layout. | `@TransactionalEventListener` | ConfigurationEventListener |
+| Sensing Command Handlers | Application | Procesamiento de lecturas y vigilancia. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
+| Sensing Query Handlers | Application | Consultas de salud e incidencias. | Spring `@Service` | Queries y Query Handlers |
+| Sensing Aggregates | Domain | Reglas de detección y de salud. | Java (dominio puro) | SensorFeed, DeviceHealth, GatewayLink, HealthEvaluationService, Value Objects y enumeraciones |
+| Sensor Reading Translator | Infrastructure | Capa anticorrupción del mensaje del gateway. | Jackson, Bean Validation | SensorReadingTranslator |
+| Sensing Repositories | Infrastructure | Persistencia, deduplicación e incidencias. | Spring Data JPA, JDBC | *RepositoryAdapter, JdbcReadingDeduplicationStore, JpaIncidentLog, JpaRejectedReadingStore |
+| Device Directory Adapter | Infrastructure | Resuelve dispositivos mediante la fachada de Parking Configuration. | Adaptador Java, Caffeine | DeviceDirectoryAdapter |
+| Sensing Event Publisher | Infrastructure | Publica los eventos tras confirmar la transacción. | Eventos de aplicación de Spring | SensingEventPublisherAdapter |
+
+Parking Sensing Component Level Diagram: **ParkingSensingComponentLevelDiagram**
+![Parking Sensing Component Level Diagram](./assets/capitulo-05/ParkingSensingComponentLevelDiagram.png)
+
+### 5.3.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.3.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los tres agregados con sus Value Objects y enumeraciones, el Domain Service, las interfaces de los repositorios y los eventos que publica el contexto. `SensorReading` solo existe en memoria: es el resultado de la capa anticorrupción y no se persiste.
+
+![Parking Sensing Domain Layer Class Diagram](./assets/capitulo-05/ParkingSensingDomainLayerClassDiagram.png)
+
+#### 5.3.7.2. Bounded Context Database Design Diagram
+
+El esquema `sensing` de PostgreSQL contiene una tabla por agregado, que usa el `device_id` como identidad, y tres tablas de soporte: `processed_readings` para la deduplicación por `eventId`, `sensing_incidents` para las incidencias y `rejected_readings` para los mensajes inválidos. No hay claves foráneas hacia otros esquemas: `tenant_id`, `parking_lot_id`, `device_id` y `target_id` son referencias lógicas a IAM y Parking Configuration (CON-02).
+
+![Parking Sensing Database Design Diagram](./assets/capitulo-05/ParkingSensingDatabaseDesignDiagram.png)
+
+---
+
 ## 5.4. Bounded Context: Occupancy
 
 ## 5.5. Bounded Context: Prediction & Advisory
