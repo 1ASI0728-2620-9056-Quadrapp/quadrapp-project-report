@@ -160,7 +160,8 @@ del ABET – EAC - Student Outcome 3.
       <td>
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
-          AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.
+          AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.<br>
+          TP: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
@@ -189,7 +190,8 @@ del ABET – EAC - Student Outcome 3.
       <td>
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
-          AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.
+          AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.<br>
+          TP: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
