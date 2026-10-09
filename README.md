@@ -3508,6 +3508,474 @@ Cada tabla incluye la institución como identificador de aislamiento (DD-09). El
 
 ## 5.2. Bounded Context: Parking Configuration
 
+El Bounded Context Parking Configuration es responsable de **describir la estructura física y operativa de los estacionamientos de cada institución**. Es el dueño de los datos maestros que los demás contextos usan como referencia: estacionamientos, zonas, espacios, accesos vehiculares, inventario de dispositivos y su asociación con espacios o accesos, parámetros de operación, calendario académico y eventos del campus.
+
+Su propósito es publicar un layout versionado y estable, del que Parking Sensing obtiene la asociación entre sensores y espacios, Occupancy la capacidad de cada zona y la aplicación móvil la geometría del mapa. Además, ofrece a Prediction & Advisory el perfil del estacionamiento y el calendario que alimentan los pronósticos. No calcula ocupación, disponibilidad ni pronósticos, y no conoce el estado de los espacios.
+
+Este Bounded Context soporta principalmente:
+
+- US16 — Registrar los estacionamientos de la institución, con nombre único dentro de ella.
+- US17 — Configurar zonas y espacios y publicar la distribución con una nueva versión.
+- US18 y US32 — Registrar, asociar, reemplazar y dar de baja sensores y gateways.
+- US19 — Configurar los accesos vehiculares y habilitarlos para el conteo de flujo solo con sensores direccionales.
+- US35 — Registrar el calendario académico y los eventos del campus, y cancelarlos.
+- US04 — Listar los estacionamientos de la institución con su layout publicado.
+- TS15 — Recibir el alta de una institución (`TenantProvisioned`) para inicializar su calendario.
+
+Las principales responsabilidades del Bounded Context Parking Configuration son:
+
+- Registrar estacionamientos con nombre único por institución y con sus parámetros de operación: umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.
+- Mantener las zonas, los espacios (con etiqueta y posición en el mapa) y los accesos vehiculares de cada estacionamiento.
+- Publicar el layout como una versión inmutable y comunicarlo con `ParkingLayoutProvided`.
+- Mantener el inventario de dispositivos y garantizar que un sensor se asocie a un solo espacio o acceso, y que un espacio tenga un solo sensor activo.
+- Trasladar la asociación de un dispositivo averiado a su reemplazo sin alterar la identidad del espacio, y conservar el historial de asociaciones.
+- Registrar el calendario académico y los eventos del campus, e informar su registro y su cancelación.
+- Responder, mediante su fachada (Open Host Service), las consultas de perfil, layout, calendario y directorio de dispositivos que hacen los demás módulos.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Parking Configuration.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
+| ParkingZone | Domain | Entity. Sector, nivel o bloque que agrupa espacios. | zoneId, name, spaces | addSpace(), hasSpaceLabeled(), capacity() |
+| ParkingSpace | Domain | Entity. Lugar individual para estacionar. | spaceId, label, position | label() |
+| AccessPoint | Domain | Entity. Entrada o salida vehicular con sensores de paso. | accessPointId, name, type, flowCountingEnabled | enableFlowCounting(), countsFlow() |
+| Device | Domain | Aggregate Root. Sensor o gateway registrado en la institución. | deviceId, tenantId, parkingLotId, hardwareId, type, directional, reportInterval, status, currentAssignment, assignmentHistory | register(), assignTo(), releaseAssignment(), decommission(), isActive() |
+| AcademicCalendar | Domain | Aggregate Root. Calendario académico y eventos del campus de una institución. | calendarId, tenantId, periods, campusEvents | initialize(), registerPeriod(), registerCampusEvent(), cancelCampusEvent(), eventsAround() |
+| AcademicPeriod | Domain | Entity. Periodo de clases, exámenes o receso. | periodId, type, range | overlaps() |
+| CampusEvent | Domain | Entity. Actividad de alta afluencia que afecta a un estacionamiento. | campusEventId, name, parkingLotId, window, impact, status | cancel(), isActiveDuring() |
+| OperatingSettings | Domain | Value Object. Parámetros de operación del estacionamiento. | saturationThresholdPct, flowWindowMinutes, minimumDetectionSeconds, accuracyMarginPct | defaults(), isValid() |
+| LayoutVersion | Domain | Value Object. Versión publicada del layout. | value | next(), isPublished() |
+| LayoutSnapshot | Domain | Value Object. Copia inmutable del layout publicado. | parkingLotId, version, publishedAt, zoneCapacities, placements | — |
+| SensorPlacement | Domain | Value Object. Ubicación de un sensor dentro del layout publicado. | deviceId, hardwareId, target | — |
+| AssignmentTarget | Domain | Value Object. Espacio o acceso al que se asocia un dispositivo. | type, targetId | isSpace() |
+| DeviceAssignment | Domain | Value Object. Asociación de un dispositivo con su vigencia. | target, assignedAt, releasedAt | isActive(), releasedAt() |
+| ParkingLotName, SpaceLabel, SpacePosition, HardwareId, ReportInterval, DateRange, TimeWindow | Domain | Value Objects con su validación propia. | value o rango | value(), isValid(), overlaps() |
+| ParkingLotStatus, AccessPointType, DeviceType, DeviceStatus, TargetType, AcademicPeriodType, DemandImpact, CampusEventStatus | Domain | Enumeraciones del contexto. | — | — |
+| DeviceAssignmentService | Domain | Domain Service. Aplica las reglas de asociación que involucran a más de un dispositivo. | — | assign(), coversDirection() |
+| DeviceReplacementService | Domain | Domain Service. Traslada la asociación de un dispositivo a su reemplazo. | — | replace() |
+| LayoutPublicationService | Domain | Domain Service. Arma la versión publicada del layout con las asociaciones vigentes. | — | publish() |
+| ParkingLotRepository, DeviceRepository, AcademicCalendarRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findByTenant() |
+| ParkingLayoutProvided, DeviceRegistered, SensorAssigned, DeviceReplaced, DeviceDecommissioned, CampusEventProvided, CampusEventCancelled | Domain | Domain Events publicados (Published Language). | Ver 5.2.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura. | Dependencies | handle() |
+| TenantProvisionedEventHandler | Application | Event Handler. Inicializa el calendario de una institución nueva. | Dependencies | handle() |
+| ConfigurationEventPublisher | Application | Puerto de salida para publicar eventos. | — | publish() |
+| ParkingLotController, LayoutController, AccessPointController, DeviceInventoryController, AcademicCalendarController | Interface | Controllers REST de la consola de operación y de la aplicación. | Handler dependencies | Ver 5.2.2 |
+| ParkingConfigurationFacade | Interface | Open Host Service en proceso para los demás módulos. | Query Handler dependencies | profileOf(), activeLots(), calendarEventsAround(), layoutOf(), lotsOf(), resolveDevice() |
+| TenantProvisionedListener | Interface | Consumer del evento `TenantProvisioned` de IAM. | Event Handler dependency | on() |
+| *RepositoryAdapter | Infrastructure | Implementan los repositorios sobre el esquema `configuration`. | Persistence dependency | save(), find…() |
+| ConfigurationEventPublisherAdapter | Infrastructure | Publica los eventos de dominio tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.2.1. Domain Layer
+
+La Domain Layer contiene los conceptos y las reglas que describen un estacionamiento y su equipamiento. No depende de HTTP, de la base de datos ni de Spring. Los tres agregados salen del paso 9 del EventStorming (sección 4.2.1): `ParkingLot`, `Device` y `AcademicCalendar`. Se separaron porque cambian por razones y con frecuencias distintas: el layout cambia al reorganizar el estacionamiento, el inventario cambia cada vez que se instala o se reemplaza un sensor, y el calendario cambia cada ciclo.
+
+**Aggregate 1: ParkingLot**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ParkingLot|Aggregate Root|Estacionamiento de una institución. Agrupa sus zonas, espacios y accesos vehiculares, y define sus parámetros de operación y la versión del layout publicado.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|parkingLotId|UUID|Private|Identificador único del estacionamiento.|
+|tenantId|UUID|Private|Referencia externa a la institución propietaria (IAM).|
+|name|ParkingLotName|Private|Nombre del estacionamiento; único dentro de la institución.|
+|address|String|Private|Ubicación de referencia dentro del campus.|
+|status|ParkingLotStatus|Private|DRAFT mientras no tiene layout publicado; PUBLISHED después de la primera publicación.|
+|settings|OperatingSettings|Private|Umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.|
+|layoutVersion|LayoutVersion|Private|Última versión publicada del layout; 0 si aún no se publicó.|
+|zones|`List<ParkingZone>`|Private|Zonas del estacionamiento con sus espacios.|
+|accessPoints|`List<AccessPoint>`|Private|Accesos vehiculares del estacionamiento.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(tenantId: UUID, name: ParkingLotName, address: String, settings: OperatingSettings)|ParkingLot|Public (static)|Crea el estacionamiento en estado DRAFT con la versión 0.|
+|addZone(name: String)|ParkingZone|Public|Agrega una zona; el nombre no puede repetirse dentro del estacionamiento.|
+|addSpace(zoneId: UUID, label: SpaceLabel, position: SpacePosition)|ParkingSpace|Public|Registra un espacio en la zona; rechaza una etiqueta repetida en la misma zona (US17, escenario 3).|
+|configureAccessPoint(name: String, type: AccessPointType)|AccessPoint|Public|Registra un acceso vehicular asociado al estacionamiento (US19, escenario 1).|
+|enableFlowCounting(accessPointId: UUID, directional: Boolean)|Void|Public|Habilita el acceso para el conteo de flujo solo si sus sensores distinguen la dirección (US19, escenarios 2 y 3).|
+|updateSettings(settings: OperatingSettings)|Void|Public|Reemplaza los parámetros de operación validados.|
+|publishLayout(placements: `List<SensorPlacement>`, now: Instant)|LayoutSnapshot|Public|Exige al menos un espacio, incrementa la versión, pasa a PUBLISHED y registra `ParkingLayoutProvided` (US17, escenario 4).|
+|capacity()|Integer|Public|Cantidad total de espacios del estacionamiento.|
+|belongsTo(tenantId: UUID)|Boolean|Public|Indica si el estacionamiento pertenece a la institución dada.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities del agregado ParkingLot**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|ParkingZone|Entity|zoneId: UUID, name: String, spaces: `List<ParkingSpace>`|addSpace(label, position): ParkingSpace; hasSpaceLabeled(label): Boolean; capacity(): Integer|Sector, nivel o bloque. Su capacidad es la cantidad de espacios que agrupa.|
+|ParkingSpace|Entity|spaceId: UUID, label: SpaceLabel, position: SpacePosition|label(): SpaceLabel|Lugar individual. Su identidad (`spaceId`) no cambia aunque se reemplace el sensor que lo vigila.|
+|AccessPoint|Entity|accessPointId: UUID, name: String, type: AccessPointType, flowCountingEnabled: Boolean|enableFlowCounting(directional): Void; countsFlow(): Boolean|Entrada o salida vehicular. Solo alimenta la velocidad de flujo cuando está habilitado.|
+
+**Value Objects y enumeraciones del agregado ParkingLot**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ParkingLotName|Value Object|value: String|Entre 3 y 80 caracteres, sin espacios al inicio ni al final.|
+|SpaceLabel|Value Object|value: String|Etiqueta visible del espacio (por ejemplo, "A01"), de 1 a 10 caracteres.|
+|SpacePosition|Value Object|x: Decimal, y: Decimal|Posición del espacio en el plano del estacionamiento que dibuja la aplicación.|
+|OperatingSettings|Value Object|saturationThresholdPct: Integer, flowWindowMinutes: Integer, minimumDetectionSeconds: Integer, accuracyMarginPct: Integer|Umbral de saturación entre 50 y 100 %; ventana de flujo entre 5 y 60 min; tiempo mínimo de detección entre 3 y 60 s; margen de precisión entre 1 y 30 puntos. `defaults()` entrega 90 %, 15 min, 10 s y 10 puntos.|
+|LayoutVersion|Value Object|value: Integer|Número de versión. `next()` devuelve la siguiente; 0 significa que no hay layout publicado.|
+|LayoutSnapshot|Value Object|parkingLotId, version, publishedAt, zoneCapacities: `Map<UUID, Integer>`, placements: `List<SensorPlacement>`|Copia inmutable del layout publicado. Se guarda para que cada versión se pueda volver a consultar.|
+|SensorPlacement|Value Object|deviceId: UUID, hardwareId: HardwareId, target: AssignmentTarget|Asociación vigente de un sensor al momento de publicar.|
+|ParkingLotStatus|Enumeration|DRAFT, PUBLISHED|Estado del estacionamiento.|
+|AccessPointType|Enumeration|ENTRY, EXIT, ENTRY_EXIT|Sentido del acceso vehicular.|
+
+**Aggregate 2: Device**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Device|Aggregate Root|Sensor de cochera, sensor de paso o gateway registrado en el inventario de la institución. Conserva su asociación vigente y el historial de asociaciones anteriores.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador único del dispositivo en Quadrapp.|
+|tenantId|UUID|Private|Referencia externa a la institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|hardwareId|HardwareId|Private|Identificador técnico que el dispositivo informa en sus lecturas (por ejemplo, `sensor-0342`).|
+|type|DeviceType|Private|SPACE_SENSOR, PASS_SENSOR o GATEWAY.|
+|directional|Boolean|Private|Indica si un sensor de paso distingue la entrada de la salida.|
+|reportInterval|ReportInterval|Private|Tiempo máximo esperado entre dos reportes del dispositivo (US32, escenario 1).|
+|status|DeviceStatus|Private|REGISTERED, ASSIGNED o DECOMMISSIONED.|
+|currentAssignment|DeviceAssignment?|Private|Asociación vigente con un espacio o un acceso, si existe.|
+|assignmentHistory|`List<DeviceAssignment>`|Private|Asociaciones anteriores, que se conservan al reasociar o dar de baja (US18, escenario 3).|
+|registeredAt|Instant|Private|Momento del registro.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(tenantId, parkingLotId, hardwareId, type, directional, reportInterval, now)|Device|Public (static)|Crea el dispositivo en estado REGISTERED y registra `DeviceRegistered`.|
+|assignTo(target: AssignmentTarget, now: Instant)|Void|Public|Asocia el dispositivo a un espacio o acceso, pasa a ASSIGNED y registra `SensorAssigned`. Rechaza un dispositivo dado de baja.|
+|releaseAssignment(now: Instant)|AssignmentTarget?|Public|Cierra la asociación vigente, la mueve al historial y devuelve su destino.|
+|decommission(now: Instant)|Void|Public|Cierra la asociación vigente, pasa a DECOMMISSIONED y registra `DeviceDecommissioned` con el destino que tenía.|
+|isActive()|Boolean|Public|Indica si el dispositivo no fue dado de baja.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado Device**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|HardwareId|Value Object|value: String|Identificador técnico de 3 a 40 caracteres, único en Quadrapp.|
+|ReportInterval|Value Object|seconds: Integer|Entre 10 y 3600 segundos.|
+|AssignmentTarget|Value Object|type: TargetType, targetId: UUID|Espacio o acceso vehicular asociado.|
+|DeviceAssignment|Value Object|target: AssignmentTarget, assignedAt: Instant, releasedAt: Instant?|Asociación con su vigencia. Está activa mientras `releasedAt` sea nulo.|
+|DeviceType|Enumeration|SPACE_SENSOR, PASS_SENSOR, GATEWAY|Tipo de dispositivo.|
+|DeviceStatus|Enumeration|REGISTERED, ASSIGNED, DECOMMISSIONED|Estado en el inventario.|
+|TargetType|Enumeration|SPACE, ACCESS_POINT|Tipo de destino de la asociación.|
+
+**Aggregate 3: AcademicCalendar**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AcademicCalendar|Aggregate Root|Calendario de una institución: periodos de clases, exámenes y receso, y eventos del campus que afectan a un estacionamiento. Hay uno por institución y se crea al recibir `TenantProvisioned`.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|calendarId|UUID|Private|Identificador del calendario.|
+|tenantId|UUID|Private|Institución a la que pertenece (IAM).|
+|periods|`List<AcademicPeriod>`|Private|Periodos académicos registrados.|
+|campusEvents|`List<CampusEvent>`|Private|Eventos del campus programados o cancelados.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|initialize(tenantId: UUID)|AcademicCalendar|Public (static)|Crea el calendario vacío de una institución.|
+|registerPeriod(type: AcademicPeriodType, range: DateRange)|AcademicPeriod|Public|Registra un periodo; rechaza los que se superponen con otro (US35, escenario 1).|
+|registerCampusEvent(name: String, parkingLotId: UUID, window: TimeWindow, impact: DemandImpact)|CampusEvent|Public|Registra un evento del campus y `CampusEventProvided` (US35, escenario 2).|
+|cancelCampusEvent(campusEventId: UUID, now: Instant)|Void|Public|Cancela un evento programado y registra `CampusEventCancelled`, con el que Prediction & Advisory regenera las franjas afectadas (US35, escenario 3).|
+|eventsAround(from: Instant, to: Instant)|`List<CampusEvent>`|Public|Eventos programados que se superponen con el intervalo.|
+|periodOn(date: LocalDate)|AcademicPeriod?|Public|Periodo vigente en una fecha.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities, Value Objects y enumeraciones del agregado AcademicCalendar**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|AcademicPeriod|Entity|periodId: UUID, type: AcademicPeriodType, range: DateRange|Periodo académico. `overlaps(other)` indica si se superpone con otro rango.|
+|CampusEvent|Entity|campusEventId: UUID, name: String, parkingLotId: UUID, window: TimeWindow, impact: DemandImpact, status: CampusEventStatus, cancelledAt: Instant?|Evento de alta afluencia. `cancel(now)` lo cancela una sola vez; `isActiveDuring(from, to)` excluye los cancelados.|
+|DateRange|Value Object|startDate: LocalDate, endDate: LocalDate|Rango de fechas con `endDate` mayor o igual que `startDate`.|
+|TimeWindow|Value Object|startAt: Instant, endAt: Instant|Franja horaria con `endAt` posterior a `startAt`.|
+|AcademicPeriodType|Enumeration|CLASSES, EXAMS, BREAK|Tipo de periodo.|
+|DemandImpact|Enumeration|MODERATE, HIGH|Afluencia esperada del evento; es una variable del modelo de predicción.|
+|CampusEventStatus|Enumeration|SCHEDULED, CANCELLED|Estado del evento.|
+
+**Domain Services**
+
+|Nombre|Categoría|Métodos|Descripción|
+|-|-|-|-|
+|DeviceAssignmentService|Domain Service|assign(device: Device, target: AssignmentTarget, currentOccupant: Device?, now: Instant): Void; coversDirection(passSensors: `List<Device>`): Boolean|Verifica que el tipo del dispositivo coincida con el destino (SPACE_SENSOR con un espacio y PASS_SENSOR con un acceso; un GATEWAY no se asocia), que el sensor no tenga otra asociación vigente y que el espacio no tenga otro sensor activo (US18, escenario 2). `coversDirection` indica si los sensores de un acceso distinguen la dirección.|
+|DeviceReplacementService|Domain Service|replace(current: Device, replacement: Device, now: Instant): Void|Exige que ambos sean del mismo tipo y que el reemplazo no tenga asociación. Da de baja el dispositivo actual, asocia el reemplazo al mismo destino y registra `DeviceReplaced` (US32, escenario 2). Es la única operación que modifica dos agregados en una transacción, porque el espacio no puede quedar sin sensor entre ambos pasos.|
+|LayoutPublicationService|Domain Service|publish(lot: ParkingLot, devices: `List<Device>`, now: Instant): LayoutSnapshot|Reúne las asociaciones vigentes de los dispositivos del estacionamiento y llama a `ParkingLot.publishLayout`.|
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|ParkingLotRepository|save(lot), findById(tenantId, parkingLotId), existsByName(tenantId, name), findByTenant(tenantId), findPublished()|Persistencia de `ParkingLot`.|
+|DeviceRepository|save(device), findById(tenantId, deviceId), findByHardwareId(hardwareId), findActiveByTarget(target), findByParkingLot(tenantId, parkingLotId)|Persistencia de `Device`.|
+|AcademicCalendarRepository|save(calendar), findByTenant(tenantId)|Persistencia de `AcademicCalendar`.|
+
+**Domain Events publicados (Published Language)**
+
+|Evento|Atributos|Consumidores|
+|-|-|-|
+|ParkingLayoutProvided|parkingLotId, tenantId, layoutVersion, zoneCapacities, placements, minimumDetectionSeconds, publishedAt|Parking Sensing (asociaciones y tiempo mínimo) y Occupancy (capacidad por zona).|
+|DeviceRegistered|deviceId, tenantId, parkingLotId, hardwareId, type, reportIntervalSeconds|Parking Sensing, que empieza a vigilar el intervalo de reporte.|
+|SensorAssigned|deviceId, tenantId, target, assignedAt|Parking Sensing.|
+|DeviceReplaced|previousDeviceId, replacementDeviceId, tenantId, target, replacedAt|Parking Sensing.|
+|DeviceDecommissioned|deviceId, tenantId, previousTarget, decommissionedAt|Parking Sensing, que deja de aceptar sus lecturas.|
+|CampusEventProvided|campusEventId, tenantId, parkingLotId, startAt, endAt, impact|Prediction & Advisory.|
+|CampusEventCancelled|campusEventId, tenantId, parkingLotId, startAt, endAt|Prediction & Advisory, que regenera los pronósticos de la franja.|
+
+`ParkingLayoutProvided` y `CampusEventProvided` son los nombres que fija la tabla de eventos de la sección 4.2.1. Ningún evento incluye etiquetas de espacios ni datos de personas.
+
+### Reglas de negocio
+
+1. Todo estacionamiento, dispositivo y calendario pertenece a una institución, y toda operación se hace dentro de la institución del usuario autenticado (CON-08).
+2. El nombre de un estacionamiento es único dentro de la institución (US16, escenario 3).
+3. La etiqueta de un espacio es única dentro de su zona (US17, escenario 3).
+4. Cada publicación del layout crea una nueva versión inmutable; la versión publicada no se modifica (US17, escenario 4).
+5. Un layout sin espacios no se publica.
+6. Un sensor se asocia a un solo espacio o acceso, y un espacio tiene a lo sumo un sensor activo (US18, escenario 2). Un acceso puede tener varios sensores de paso.
+7. Un acceso solo se habilita para el conteo de flujo si tiene al menos un sensor de paso y todos sus sensores distinguen la dirección (US19).
+8. Al reemplazar un dispositivo, el espacio conserva su identidad y su asociación pasa al nuevo dispositivo (US32, escenario 2).
+9. Un dispositivo dado de baja no se vuelve a asociar, y sus asociaciones anteriores se conservan en el historial (US18, escenario 3; US32, escenario 3).
+10. Las asociaciones y los reemplazos rigen de inmediato, sin esperar una nueva publicación; los cambios de zonas y espacios sí requieren publicar.
+11. Los periodos académicos de una institución no se superponen.
+12. Un evento cancelado no se vuelve a programar; para reprogramarlo se registra uno nuevo.
+13. Los parámetros de operación respetan los rangos de `OperatingSettings`.
+14. El contexto no calcula ocupación, disponibilidad ni pronósticos, y no recibe lecturas de sensores.
+
+### 5.2.2. Interface Layer
+
+La Interface Layer expone las capacidades del contexto a la consola web de operación, a la aplicación móvil y a los demás módulos. Recibe solicitudes, valida su forma, las transforma en Commands o Queries, delega en la Application Layer y representa el resultado. La capa de seguridad del backend (Spring Security, DD-08) valida el token antes de que la solicitud llegue al controlador: las operaciones de escritura exigen el rol de administrador (`PARKING_ADMIN`), y las consultas admiten también al operador y, para la lista de estacionamientos y el layout, al conductor. `tenantId` se toma siempre del token, nunca de un parámetro.
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|ParkingLotController|`POST /api/v1/parking-lots`|201 con el estacionamiento creado; 400 si faltan datos; 409 si el nombre ya existe en la institución|US16|
+|ParkingLotController|`GET /api/v1/parking-lots`|200 con los estacionamientos de la institución, su estado y su versión de layout; lista vacía si no hay ninguno|US04|
+|ParkingLotController|`PUT /api/v1/parking-lots/{lotId}/settings`|200 con los parámetros actualizados; 400 si un valor está fuera de rango|US16 (ruta propuesta)|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/zones`|201 con la zona creada; 409 si el nombre se repite|US17, escenario 1|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/zones/{zoneId}/spaces`|201 con el espacio; 409 si la etiqueta ya existe en la zona|US17, escenarios 2 y 3|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/layout/publications`|201 con la nueva versión; 422 si el layout no tiene espacios|US17, escenario 4|
+|LayoutController|`GET /api/v1/parking-lots/{lotId}/layout`|200 con zonas, espacios, accesos y versión, con el encabezado `ETag`; 304 si la versión de la aplicación sigue vigente|US04, TS13|
+|AccessPointController|`POST /api/v1/parking-lots/{lotId}/access-points`|201 con el acceso registrado|US19, escenario 1|
+|AccessPointController|`PUT /api/v1/parking-lots/{lotId}/access-points/{accessPointId}/flow-counting`|200 con el acceso habilitado; 422 si sus sensores no distinguen la dirección|US19, escenarios 2 y 3|
+|DeviceInventoryController|`POST /api/v1/devices`|201 con el dispositivo registrado; 409 si el identificador técnico ya existe|US32, escenario 1|
+|DeviceInventoryController|`GET /api/v1/devices?parkingLotId={lotId}`|200 con el inventario y la asociación vigente de cada dispositivo|US32|
+|DeviceInventoryController|`PUT /api/v1/devices/{deviceId}/assignment`|200 con la asociación; 409 si el sensor o el espacio ya tienen una asociación vigente; 422 si el tipo no coincide con el destino|US18, escenarios 1 y 2|
+|DeviceInventoryController|`POST /api/v1/devices/{deviceId}/replacement`|200 con la asociación trasladada al dispositivo indicado en `replacementDeviceId`|US32, escenario 2|
+|DeviceInventoryController|`POST /api/v1/devices/{deviceId}/decommission`|200; el dispositivo deja de aceptar lecturas y su espacio queda sin sensor operativo|US18, escenario 3; US32, escenario 3|
+|AcademicCalendarController|`POST /api/v1/academic-calendar/periods`|201 con el periodo; 409 si se superpone con otro|US35, escenario 1|
+|AcademicCalendarController|`POST /api/v1/campus-events`|201 con el evento programado|US35, escenario 2|
+|AcademicCalendarController|`POST /api/v1/campus-events/{campusEventId}/cancellation`|200 con el evento cancelado; 409 si ya estaba cancelado|US35, escenario 3|
+|AcademicCalendarController|`GET /api/v1/campus-events?from={from}&to={to}`|200 con los eventos del intervalo|US35|
+
+Respuesta de `GET /api/v1/parking-lots/{lotId}/layout`:
+
+```json
+{
+  "lotId": "5b0e…",
+  "layoutVersion": 4,
+  "publishedAt": "2026-10-05T14:02:11Z",
+  "zones": [
+    { "zoneId": "a1f3…", "name": "Sótano 1", "capacity": 42,
+      "spaces": [ { "spaceId": "c7d2…", "label": "A01", "x": 12.5, "y": 4.0 } ] }
+  ],
+  "accessPoints": [ { "accessPointId": "e9b4…", "name": "Puerta Norte", "type": "ENTRY_EXIT", "flowCountingEnabled": true } ]
+}
+```
+
+La respuesta no incluye el estado de los espacios: el layout (Parking Configuration) y el estado (Occupancy) se entregan por separado, y la aplicación los superpone. Así, una actualización de estado no arrastra la geometría completa.
+
+**Open Host Service: ParkingConfigurationFacade**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ParkingConfigurationFacade|Facade (Open Host Service)|Punto de entrada en proceso para los demás módulos. Devuelve vistas de solo lectura y nunca expone los agregados.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Consumidor|Descripción|
+|-|-|-|-|-|
+|profileOf(tenantId: UUID, parkingLotId: UUID)|ParkingLotProfileView|Public|Prediction & Advisory, Analytics|Umbral de saturación, ventana de flujo y margen de precisión.|
+|activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory|Estacionamientos con layout publicado, con su institución.|
+|calendarEventsAround(tenantId: UUID, from: Instant, to: Instant)|`List<CalendarEventView>`|Public|Prediction & Advisory|Periodos académicos y eventos programados del intervalo.|
+|lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición|Estacionamientos para la pantalla de inicio y la consola.|
+|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición|Layout publicado vigente.|
+|resolveDevice(hardwareId: String)|DeviceDirectoryEntry?|Public|Parking Sensing|Dispositivo, institución, estacionamiento, estado, destino vigente y tiempo mínimo de detección. Responde vacío si el identificador no está registrado.|
+
+**Event Consumer**
+
+|Nombre|Categoría|Evento|Descripción|
+|-|-|-|-|
+|TenantProvisionedListener|Consumer (`@TransactionalEventListener`)|`TenantProvisioned` (IAM)|Envía `InitializeTenantConfigurationCommand` para crear el calendario de la institución nueva (TS15, QAS-08).|
+
+### 5.2.3. Application Layer
+
+La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son registrar y configurar estacionamientos, publicar el layout, gestionar el inventario de dispositivos, mantener el calendario y responder las consultas de los demás módulos.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|RegisterParkingLotCommand|tenantId, name, address, settings|RegisterParkingLotCommandHandler|ParkingLotRepository, ConfigurationEventPublisher|US16|
+|UpdateOperatingSettingsCommand|tenantId, parkingLotId, settings|UpdateOperatingSettingsCommandHandler|ParkingLotRepository|US16|
+|AddZoneCommand|tenantId, parkingLotId, name|AddZoneCommandHandler|ParkingLotRepository|US17|
+|AddSpaceCommand|tenantId, parkingLotId, zoneId, label, position|AddSpaceCommandHandler|ParkingLotRepository|US17|
+|PublishLayoutCommand|tenantId, parkingLotId|PublishLayoutCommandHandler|ParkingLotRepository, DeviceRepository, LayoutPublicationService, ConfigurationEventPublisher, Clock|US17|
+|ConfigureAccessPointCommand|tenantId, parkingLotId, name, type|ConfigureAccessPointCommandHandler|ParkingLotRepository|US19|
+|EnableFlowCountingCommand|tenantId, parkingLotId, accessPointId|EnableFlowCountingCommandHandler|ParkingLotRepository, DeviceRepository, DeviceAssignmentService|US19|
+|RegisterDeviceCommand|tenantId, parkingLotId, hardwareId, type, directional, reportIntervalSeconds|RegisterDeviceCommandHandler|DeviceRepository, ConfigurationEventPublisher, Clock|US32|
+|AssignDeviceCommand|tenantId, deviceId, target|AssignDeviceCommandHandler|DeviceRepository, ParkingLotRepository, DeviceAssignmentService, ConfigurationEventPublisher, Clock|US18|
+|ReplaceDeviceCommand|tenantId, deviceId, replacementDeviceId|ReplaceDeviceCommandHandler|DeviceRepository, DeviceReplacementService, ConfigurationEventPublisher, Clock|US32|
+|DecommissionDeviceCommand|tenantId, deviceId|DecommissionDeviceCommandHandler|DeviceRepository, ConfigurationEventPublisher, Clock|US18, US32|
+|RegisterAcademicPeriodCommand|tenantId, type, startDate, endDate|RegisterAcademicPeriodCommandHandler|AcademicCalendarRepository|US35|
+|RegisterCampusEventCommand|tenantId, parkingLotId, name, startAt, endAt, impact|RegisterCampusEventCommandHandler|AcademicCalendarRepository, ParkingLotRepository, ConfigurationEventPublisher|US35|
+|CancelCampusEventCommand|tenantId, campusEventId|CancelCampusEventCommandHandler|AcademicCalendarRepository, ConfigurationEventPublisher, Clock|US35|
+|InitializeTenantConfigurationCommand|tenantId|InitializeTenantConfigurationCommandHandler|AcademicCalendarRepository|TS15|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetParkingLotsQuery|tenantId|GetParkingLotsQueryHandler|`List<ParkingLotSummaryView>`|
+|GetLayoutQuery|tenantId, parkingLotId|GetLayoutQueryHandler|LayoutView (última versión publicada)|
+|GetDevicesQuery|tenantId, parkingLotId|GetDevicesQueryHandler|`List<DeviceView>`|
+|GetCampusEventsQuery|tenantId, from, to|GetCampusEventsQueryHandler|`List<CalendarEventView>`|
+|GetParkingLotProfileQuery|tenantId, parkingLotId|GetParkingLotProfileQueryHandler|ParkingLotProfileView|
+|ResolveDeviceQuery|hardwareId|ResolveDeviceQueryHandler|DeviceDirectoryEntry?|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|TenantProvisionedEventHandler|`TenantProvisioned` (IAM)|Ejecuta `InitializeTenantConfigurationCommand`. Es idempotente: si el calendario de la institución ya existe, no hace nada.|
+
+**Flujos de ejecución**
+
+`AssignDeviceCommandHandler`:
+
+1. Carga el dispositivo de la institución y verifica que el espacio o acceso de destino exista en uno de sus estacionamientos.
+2. Busca con `DeviceRepository.findActiveByTarget` si el destino ya tiene un sensor activo.
+3. Llama a `DeviceAssignmentService.assign`, que valida el tipo y la exclusividad; si falla, responde 409 o 422.
+4. Guarda el dispositivo y publica `SensorAssigned` después de confirmar la transacción.
+
+`ReplaceDeviceCommandHandler`:
+
+1. Carga el dispositivo actual y el de reemplazo, ambos de la misma institución.
+2. Llama a `DeviceReplacementService.replace` y guarda ambos en la misma transacción.
+3. Publica `DeviceReplaced`. Parking Sensing deja de aceptar lecturas del anterior y vigila al nuevo.
+
+`PublishLayoutCommandHandler`:
+
+1. Carga el estacionamiento y los dispositivos con asociación vigente.
+2. Llama a `LayoutPublicationService.publish`, que incrementa la versión y arma el `LayoutSnapshot`.
+3. Guarda el estacionamiento y la copia de la versión, y publica `ParkingLayoutProvided`.
+
+`CancelCampusEventCommandHandler`:
+
+1. Carga el calendario de la institución y cancela el evento.
+2. Guarda el calendario y publica `CampusEventCancelled` con la franja y el estacionamiento afectados.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|ParkingLotRepository, DeviceRepository, AcademicCalendarRepository|Puertos (Domain Layer)|Ver 5.2.1|Persistencia de los agregados.|
+|ConfigurationEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar asociaciones, publicaciones y cancelaciones.|
+
+### 5.2.4. Infrastructure Layer
+
+La Infrastructure Layer implementa los repositorios y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|ParkingLotRepositoryAdapter|Repository (implementación)|ParkingLotRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `parking_lots`, `parking_zones`, `parking_spaces` y `access_points`, y cada versión publicada en `layout_versions`.|
+|DeviceRepositoryAdapter|Repository (implementación)|DeviceRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `devices` y su historial en `device_assignments`. Los índices únicos parciales impiden dos asociaciones activas para el mismo sensor o el mismo espacio, aun con solicitudes simultáneas.|
+|AcademicCalendarRepositoryAdapter|Repository (implementación)|AcademicCalendarRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `academic_calendars`, `academic_periods` y `campus_events`.|
+|ConfigurationEventPublisherAdapter|Adapter (eventos)|ConfigurationEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio. Los consumidores los reciben con `@TransactionalEventListener` después de confirmar la transacción.|
+|TenantFilterConfiguration|Configuración transversal|—|Filtro de Hibernate|Aplica `tenant_id` del token a toda consulta del esquema (CON-08, DD-09).|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `configuration`. Los demás módulos leen sus datos mediante `ParkingConfigurationFacade` o sus eventos, nunca sus tablas.|
+|Versionado del layout|Cada versión se guarda como JSONB inmutable en `layout_versions`. `GET …/layout` usa la versión como `ETag`, de modo que la aplicación lo descarga solo cuando cambia.|
+|Concurrencia|Las reglas de exclusividad de la asociación se refuerzan con índices únicos parciales en la base de datos, además de la validación del dominio.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas y se toma siempre del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `configuration` de PostgreSQL, según DD-01.|
+
+### 5.2.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Parking Configuration dentro del contenedor Quadrapp Backend, organizado por capas. Como colaboradores aparecen la consola web de operación, la capa de seguridad, el módulo de composición, el publicador de eventos de IAM, los adaptadores de Prediction & Advisory y Parking Sensing que consultan la fachada, los consumidores de sus eventos y la base de datos. Las consultas entre módulos se hacen en proceso, a través de la fachada, y los cambios se comunican con eventos de aplicación de Spring.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Registra y publica la estructura de los estacionamientos, el inventario de dispositivos y el calendario. |
+| Base de datos | PostgreSQL (esquema `configuration`) | Almacena estacionamientos, zonas, espacios, accesos, versiones del layout, dispositivos, asociaciones y calendario. |
+
+#### Componentes del módulo Parking Configuration
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Parking Lot & Layout Controllers | Interface | Estacionamientos, parámetros, zonas, espacios, accesos y publicación del layout. | Spring MVC `@RestController` | ParkingLotController, LayoutController, AccessPointController |
+| Device Inventory Controller | Interface | Registro, asociación, reemplazo y baja de dispositivos. | Spring MVC `@RestController` | DeviceInventoryController |
+| Academic Calendar Controller | Interface | Periodos académicos y eventos del campus. | Spring MVC `@RestController` | AcademicCalendarController |
+| Parking Configuration Facade | Interface | Open Host Service en proceso. | Spring bean | ParkingConfigurationFacade y las vistas `*View` |
+| Tenant Provisioned Listener | Interface | Recibe `TenantProvisioned`. | `@TransactionalEventListener` | TenantProvisionedListener |
+| Configuration Command Handlers | Application | Casos de uso de escritura y el manejador de `TenantProvisioned`. | Spring `@Service` | Commands, Command Handlers y TenantProvisionedEventHandler |
+| Configuration Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
+| Configuration Aggregates | Domain | Mantienen las invariantes de cada agregado. | Java (dominio puro) | ParkingLot, Device, AcademicCalendar, sus entidades, Value Objects y enumeraciones |
+| Configuration Domain Services | Domain | Reglas que involucran a más de un agregado. | Java (dominio puro) | DeviceAssignmentService, DeviceReplacementService, LayoutPublicationService |
+| Configuration Repositories | Infrastructure | Persistencia filtrada por institución. | Spring Data JPA | ParkingLotRepositoryAdapter, DeviceRepositoryAdapter, AcademicCalendarRepositoryAdapter |
+| Configuration Event Publisher | Infrastructure | Publica los eventos tras confirmar la transacción. | Eventos de aplicación de Spring | ConfigurationEventPublisherAdapter |
+
+Parking Configuration Component Level Diagram: **ParkingConfigurationComponentLevelDiagram**
+![Parking Configuration Component Level Diagram](./assets/capitulo-05/ParkingConfigurationComponentLevelDiagram.png)
+
+### 5.2.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.2.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los tres agregados con sus entidades, Value Objects y enumeraciones, los Domain Services, las interfaces de los repositorios y los eventos que publica el contexto. Las composiciones indican qué objetos viven dentro de cada agregado; las dependencias punteadas, qué eventos registra cada uno y qué agregados usan los servicios.
+
+![Parking Configuration Domain Layer Class Diagram](./assets/capitulo-05/ParkingConfigurationDomainLayerClassDiagram.png)
+
+#### 5.2.7.2. Bounded Context Database Design Diagram
+
+El esquema `configuration` de PostgreSQL contiene una tabla por agregado raíz y por cada colección interna. Las claves foráneas unen solo tablas del mismo esquema; `tenant_id` es una referencia lógica a IAM, sin clave foránea (CON-02). Los índices únicos parciales de `device_assignments` aseguran que un sensor y un espacio tengan como máximo una asociación activa, y la restricción de exclusión de `academic_periods` impide superponer periodos.
+
+![Parking Configuration Database Design Diagram](./assets/capitulo-05/ParkingConfigurationDatabaseDesignDiagram.png)
+
+---
+
 ## 5.3. Bounded Context: Parking Sensing
 
 ## 5.4. Bounded Context: Occupancy
