@@ -4445,6 +4445,7 @@ Este Bounded Context soporta principalmente:
 - US36 — Conocer la próxima disponibilidad cuando el estacionamiento está lleno.
 - TS07 — Servicio de predicción de ocupación con modelo principal y respaldo (FALLBACK).
 - TS02 — Es consumido por el módulo de composición (`GET /mobile/home`) para componer la pantalla de inicio.
+- US35 — Regenerar los pronósticos cuando se registra o se cancela un evento del campus.
 
 
 Las principales responsabilidades del Bounded Context Prediction & Advisory son:
@@ -4458,6 +4459,7 @@ Las principales responsabilidades del Bounded Context Prediction & Advisory son:
 - Estimar el rango de minutos hasta la próxima liberación cuando no hay espacios libres, o indicar que no puede estimarse cuando no hay salidas.
 - Publicar el evento `ForecastGenerated` para Analytics y el evento `SaturationPredicted` para Notifications, como Published Language, sin exponer el modelo interno de este contexto.
 - Garantizar que el servidor reciba únicamente el ETA en minutos, nunca coordenadas, y que ese ETA no se almacene.
+- Regenerar los pronósticos de un estacionamiento cuando Parking Configuration registra o cancela un evento del campus que afecta los próximos 60 minutos (`CampusEventProvided` y `CampusEventCancelled`).
 
 ### Class Dictionary
 
@@ -4507,6 +4509,8 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Pre
 | ArrivalAdviceController | Interface | Expone el cálculo de la asesoría de llegada. | Query Handler dependency | requestAdvice() |
 | PredictionAdvisoryFacade | Interface | Fachada (Open Host Service) que usan el módulo de composición y los demás módulos para consultar pronósticos y asesoría en el mismo proceso. | Query Handler dependencies | forecastsOf(), adviceFor(), nextAvailabilityOf() |
 | ForecastScheduler | Interface | Dispara de forma periódica la generación de pronósticos. | Command Handler dependencies | generateForecasts() |
+| CampusEventListener | Interface | Consumer de los eventos `CampusEventProvided` y `CampusEventCancelled` de Parking Configuration. | Event Handler dependency | on() |
+| CampusEventChangedEventHandler | Application | Event Handler que decide si un evento del campus obliga a regenerar los pronósticos. | Dependencies | handle() |
 | ArrivalAdviceRequest | Interface | Representación de la solicitud de asesoría. Solo admite dos campos. | lotId, etaMinutes | — |
 | ForecastResponse | Interface | Representación del pronóstico entregado al cliente. | lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime | — |
 | ArrivalAdviceResponse | Interface | Representación de la asesoría entregada al cliente. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime | — |
@@ -4998,6 +5002,19 @@ Methods
 
 Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
 
+**Consumer 1: CampusEventListener**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|CampusEventListener|Consumer (`@TransactionalEventListener`)|Recibe los eventos del calendario que publica Parking Configuration y los entrega a `CampusEventChangedEventHandler`.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|on(event: CampusEventProvided)|Void|Public|Evento del campus registrado (US35, escenario 2).|
+|on(event: CampusEventCancelled)|Void|Public|Evento del campus cancelado (US35, escenario 3). Corresponde al mensaje de entrada "Evento del campus cancelado" del Bounded Context Canvas.|
+
 **Data Transfer Objects**
 
 |Nombre|Categoría|Atributos|Descripción|
@@ -5020,6 +5037,7 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 |GetArrivalAdviceQuery|Query|tenantId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
 |GetNextAvailabilityQuery|Query|tenantId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
 |GenerateForecastsCommand|Command|parkingLotId: UUID|Generar los pronósticos de un estacionamiento.|
+|CampusEventChanged|Event (entrada)|tenantId: UUID, parkingLotId: UUID, startAt: Instant, endAt: Instant, cancelled: Boolean|Traducción local de `CampusEventProvided` y `CampusEventCancelled`.|
 
 **Query Handlers y Command Handlers**
 
@@ -5030,6 +5048,7 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 |GetArrivalAdviceQueryHandler|Query Handler|handle(query: GetArrivalAdviceQuery): ArrivalAdviceResult|ForecastRepository, ParkingLotSettingsReader, AdvisoryDomainService, Clock|
 |GetNextAvailabilityQueryHandler|Query Handler|handle(query: GetNextAvailabilityQuery): NextAvailabilityResult|ParkingLotSettingsReader, OccupancyReader, AdvisoryDomainService, Clock|
 |GenerateForecastsCommandHandler|Command Handler|handle(command: GenerateForecastsCommand): Void|ParkingLotSettingsReader, OccupancyReader, PredictionModelPort, ForecastDomainService, ForecastRepository, ForecastEventPublisher, Clock|
+|CampusEventChangedEventHandler|Event Handler|handle(event: CampusEventChanged): Void|GenerateForecastsCommandHandler, Clock|
 
 **Flujos de ejecución**
 
@@ -5062,6 +5081,12 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
 3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
 4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
+
+`CampusEventChangedEventHandler`:
+
+1. Compara la franja del evento con el intervalo que cubren los pronósticos vigentes (desde ahora hasta 60 minutos después).
+2. Si se superponen, ejecuta `GenerateForecastsCommand` para el estacionamiento afectado. Los pronósticos anteriores no se modifican, porque son inmutables: los nuevos los reemplazan como los más recientes.
+3. Si la franja empieza después, no hace nada: el evento se considera en la siguiente generación programada, que lee el calendario mediante `calendarEventsAround`.
 
 
 
@@ -5106,7 +5131,7 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |-|-|
 |Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
 |Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
-|Multi-tenancy|`tenantId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
+|Multi-tenancy|`tenant_id` se almacena en `forecasts` como referencia lógica a IAM, sin clave foránea, y se toma siempre del usuario autenticado, nunca de un parámetro.|
 |Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
 
 ### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
@@ -5130,6 +5155,7 @@ El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Qu
 | Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
 | Prediction Advisory Facade | Interface | Punto de entrada de los casos de uso para los controladores REST. | Spring bean | PredictionAdvisoryFacade |
 | Forecast Scheduler | Interface | Dispara la generación periódica. | Spring `@Scheduled` | ForecastScheduler |
+| Campus Event Listener | Interface | Recibe los eventos del campus y solicita la regeneración. | `@TransactionalEventListener` | CampusEventListener, CampusEventChangedEventHandler |
 | Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
 | Command Handlers | Application | Caso de uso de comando: generar pronósticos. | Spring `@Service` | GenerateForecastsCommand y GenerateForecastsCommandHandler |
 | Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
