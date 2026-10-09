@@ -3125,9 +3125,41 @@ El resultado del proceso son siete contextos candidatos, que se resumen en la ta
 
 ### 4.2.3. Domain Message Flows Modeling
 
-Con el objetivo de comprender la comunicación entre los diferentes Bounded Contexts, se modeló el flujo de mensajes del escenario principal del sistema: cuando un conductor solicita una asesoría de llegada. Este modelado permite visualizar cómo interactúan los contextos de Occupancy, Prediction & Advisory y Notifications para brindar una respuesta al usuario.
+Una vez identificados los contextos candidatos, se modeló cómo colaboran para resolver los escenarios principales del negocio. Para ello se elaboraron diagramas de Domain Message Flow, que muestran, para un escenario concreto, los mensajes que intercambian los actores, los bounded contexts y los sistemas externos.
 
-![Domain Message Flows Modeling – Conductor solicita asesoría de llegada](./assets/capitulo-04/domainmessage.png)
+Los diagramas siguen la notación de mensaje y contenido combinados. Los actores se representan con una figura de persona, los bounded contexts con una elipse morada y los sistemas con un círculo punteado. Cada mensaje es una tarjeta de color según su tipo: azul para los comandos, naranja para los eventos y verde para las consultas. La tarjeta indica el nombre del mensaje y sus datos más importantes, y el número en la parte superior, que también aparece sobre la flecha, señala el orden en que ocurre dentro del escenario. Las flechas van del emisor al receptor y respetan las relaciones del Context Map: los eventos fluyen del contexto upstream al downstream, y las consultas, del downstream al upstream.
+
+Se modelaron cinco escenarios, elegidos para que cada bounded context participe en al menos uno.
+
+El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil del estacionamiento, y responde con el evento Asesoría de llegada emitida, que incluye la categoría, la probabilidad, la confianza y la próxima disponibilidad.
+
+![Domain Message Flow: conductor solicita asesoría de llegada](assets/capitulo-04/eventstorming/message-flow-asesoria.png)
+
+*Figura: Domain Message Flow del escenario "Conductor solicita asesoría de llegada". Los números indican el orden de los mensajes.*
+
+En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de baja disponibilidad.
+
+![Domain Message Flow: saturación prevista y alerta al conductor](assets/capitulo-04/eventstorming/message-flow-saturacion.png)
+
+*Figura: Domain Message Flow del escenario "Saturación prevista y alerta al conductor". Los números indican el orden de los mensajes.*
+
+El tercer escenario muestra la falla de un sensor. Parking Sensing detecta que el sensor dejó de reportar dentro de su intervalo y publica el evento Falla de sensor detectada, con el que Occupancy marca el espacio como desconocido. El administrador consulta la salud de los dispositivos desde la consola y reemplaza el dispositivo en Parking Configuration, que publica la nueva asociación entre el sensor y el espacio. Cuando el sensor nuevo publica su primera lectura, Parking Sensing confirma la detección y Occupancy recupera el estado real del espacio.
+
+![Domain Message Flow: falla de un sensor y reemplazo del dispositivo](assets/capitulo-04/eventstorming/message-flow-falla.png)
+
+*Figura: Domain Message Flow del escenario "Falla de un sensor y reemplazo del dispositivo". Los números indican el orden de los mensajes.*
+
+El cuarto escenario describe el flujo de una lectura en operación normal. El gateway del campus publica la lectura mediante MQTT con QoS 1; Parking Sensing consulta a Parking Configuration el espacio asociado al sensor y, tras el tiempo mínimo, publica el evento Detección confirmada. Occupancy actualiza la disponibilidad y la publica tanto para Analytics, que construye el historial, como para la aplicación móvil.
+
+![Domain Message Flow: detección de un vehículo y actualización de la disponibilidad](assets/capitulo-04/eventstorming/message-flow-deteccion.png)
+
+*Figura: Domain Message Flow del escenario "Detección de un vehículo y actualización de la disponibilidad". Los números indican el orden de los mensajes.*
+
+El último escenario muestra la incorporación de una institución. El equipo de Integra Labs la da de alta en IAM, que envía la invitación por el servicio de correo. El administrador acepta la invitación, configura el estacionamiento desde la consola y publica el layout en Parking Configuration, que lo comunica a Parking Sensing, con la asociación entre sensores y espacios, y a Occupancy, con la capacidad de cada zona.
+
+![Domain Message Flow: alta de una institución y publicación del layout](assets/capitulo-04/eventstorming/message-flow-incorporacion.png)
+
+*Figura: Domain Message Flow del escenario "Alta de una institución y publicación del layout". Los números indican el orden de los mensajes.*
 
 ### 4.2.4. Bounded Context Canvases
 
