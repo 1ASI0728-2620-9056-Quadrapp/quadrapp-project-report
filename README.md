@@ -3822,6 +3822,38 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |Multi-tenancy|`institutionId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
 |Tecnología|Monolito modular en Java 21 y Spring Boot 3 sobre MySQL. Domain y Application Layer no dependen de ella.|
 
+### 5.5.5. Bounded Context Software Architecture Component Level Diagrams
+
+El Component Level Diagram descompone el contenedor del Bounded Context en sus componentes: sus responsabilidades, tecnología e interacciones.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Prediction & Advisory Service | Java 21, Spring Boot 3 (módulo del monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
+| Prediction Database | MySQL 8.0.16+ | Almacena la tabla `forecasts`. |
+
+Solo el servicio tiene lógica propia, por lo que es el contenedor que se descompone. En el diagrama también aparecen, únicamente como colaboradores directos, Mobile App, Mobile BFF, Occupancy Service, Parking Configuration Service, Analytics Service, Notifications Service y Prediction Model.
+
+#### Componentes de Prediction & Advisory Service
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Forecast Query Controller | Interface | Recibe consultas de pronóstico y próxima disponibilidad. | Spring MVC `@RestController` | ForecastQueryController, ForecastResponse, NextAvailabilityResponse |
+| Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
+| Prediction Advisory Facade | Interface | API en proceso para el Mobile BFF. | Spring bean | PredictionAdvisoryFacade |
+| Forecast Scheduler | Interface | Dispara la generación y evaluación periódicas. | Spring `@Scheduled` | ForecastScheduler |
+| Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
+| Command Handlers | Application | Casos de uso de comando: generar y evaluar pronósticos. | Spring `@Service` | GenerateForecasts y EvaluateForecasts (Command y Handler) |
+| Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
+| Forecast Domain Service | Domain | Construye pronósticos y estima la saturación. | Java (dominio puro) | ForecastDomainService, ModelPrediction, ParkingLotProfile |
+| Forecast Aggregate | Domain | Mantiene el pronóstico y sus invariantes. | Java (dominio puro) | Forecast, ForecastGenerated, OccupancyPercentage, Probability, Confidence, Saturation, EtaMinutes y las enumeraciones |
+| Forecast Repository Adapter | Infrastructure | Guarda y recupera pronósticos por institución. | Spring Data JPA | ForecastRepositoryAdapter |
+| Occupancy Reader Adapter | Infrastructure | Lee datos de Occupancy. | Adaptador Java (anti-corruption) | OccupancyReaderAdapter |
+| Parking Lot Settings Adapter | Infrastructure | Lee la configuración de Parking Configuration. | Adaptador Java (anti-corruption) | ParkingLotSettingsReaderAdapter |
+| Prediction Model Client | Infrastructure | Invoca al modelo con timeout y cortacircuitos. | Cliente HTTP, Resilience4j | PredictionModelClient |
+| Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
+
 
 
 ## 5.6. Bounded Context: Analytics
