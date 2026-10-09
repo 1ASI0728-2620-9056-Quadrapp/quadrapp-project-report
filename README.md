@@ -1052,7 +1052,7 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Distrito de residencia | Callao |
 | Ocupación y vínculo con la universidad | Estudiante de Derecho, 8.º ciclo |
 | Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
-| Duración | 4 minutos y 13 segundos |
+| Duración | 04:13 min |
 | Inicio | 00:07 min |
 | Captura | <img src="assets/capitulo-02/entrevistamariafernanda1.png" alt="Captura de la entrevista a María Fernanda Tejeda Mena" width="500"/> |
 | Resumen | Estudiante de Derecho que utiliza un auto familiar para asistir a la universidad de lunes a viernes. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que consulta ocasionalmente a sus compañeros o calcula la disponibilidad según el horario y la actividad del campus. En una ocasión tuvo que buscar estacionamiento durante 10 a 15 minutos y llegó tarde a clases. Además, estima que invierte entre 30 y 60 minutos adicionales por semana debido a la incertidumbre sobre encontrar un espacio. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
@@ -1078,9 +1078,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | Gabriel Fernando Gordon Salas |
 | Edad | 21 años |
+| Distrito de residencia | Jesús María |
 | Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
 | Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
-| Duración | 05:17 |
+| Duración | 05:17 min |
+| Inicio | 00:00 min |
 | Captura | <img src="assets/capitulo-02/Entrevista3_GabrielGordon.png" alt="Captura de la entrevista a Gabriel" width="500"/> |
 | Resumen | Estudiante de Ingeniería de Software que llega al campus en el auto de su familia 4 días a la semana, de lunes a jueves. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Antes de salir no cuenta con información sobre el estacionamiento, por lo que lo intuye según el día y la época del ciclo, y a veces consulta al grupo de WhatsApp, cuyas respuestas pueden quedar desactualizadas al llegar. Tras la cola de ingreso y la validación de su credencial, suele tardar unos 10 minutos en encontrar espacio. En una semana de exámenes buscó durante unos 20 minutos, terminó en un estacionamiento particular externo y llegó 15 minutos tarde a su evaluación. Estima perder unas 2 horas semanales entre salir antes y dar vueltas, y califica la importancia del problema con un 8 sobre 10. Considera importante conocer la probabilidad de encontrar espacio a su hora de llegada, idealmente por zona o piso, aunque solo confiaría en la predicción si es precisa. |
 
@@ -1092,9 +1094,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | Mario Grandes |
 | Edad | 26 años |
+| Distrito de residencia | Magdalena del Mar |
 | Ocupación y vínculo con la universidad | Encargado del estacionamiento del campus |
-| Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4](https://youtu.be/Uwh7i71zwv4) |
-| Duración | 2 minutos y 27 segundos |
+| Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4?t=2](https://youtu.be/Uwh7i71zwv4?t=2) |
+| Duración | 02:27 min |
+| Inicio | 00:02 min |
 | Captura | <img src="assets/capitulo-02/entrevista-mario-grandes.png" alt="Captura de la entrevista a Mario Grandes" width="500"/> |
 | Resumen | Encargado del estacionamiento de un campus universitario. Su función principal durante el turno es monitorear el flujo vehicular, supervisar al personal en las tranqueras y resolver los cuellos de botella en las horas punta. Conoce la disponibilidad de espacios por experiencia y mirando los reportes básicos de las tranqueras, que describe como poco confiables porque se actualizan con lentitud. El registro de ingresos lo realiza el personal de seguridad de forma manual y él arma los reportes diarios en una hoja de cálculo al finalizar el día. Relata que el lunes a las 8 de la mañana el estacionamiento estuvo cerca de llenarse: lo detectó revisando cámaras, se comunicó con los vigilantes para desviar vehículos hacia zonas alternas y, aunque la situación fue caótica, evitaron el bloqueo de la vía principal. Identifica como problema recurrente las filas en las tranqueras durante el cambio de hora de las 8 de la mañana, y lo atribuye a la falta de visibilidad en tiempo real sobre qué zonas tienen espacios libres. En el inicio de ciclo, los exámenes y los eventos masivos el flujo se dispara alrededor de un 50 por ciento: se preparan asignando más personal, pero carecen de datos históricos para dimensionar cuántos vehículos llegarán. La semana previa a la entrevista falló la lectora de una tranquera principal y debieron operarla manualmente durante 45 minutos hasta que soporte técnico reinició el sistema. Al preguntarle qué información le haría falta, responde que una plataforma analítica capaz de predecir la demanda y anticipar cuántos vehículos llegarán por hora, para organizar los accesos sin depender de suposiciones. |
 
