@@ -915,9 +915,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | María Fernanda Tejeda Mena |
 | Edad | 20 años |
+| Distrito de residencia | Callao |
 | Ocupación y vínculo con la universidad | Estudiante de Derecho, 8.º ciclo |
-| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/personal/u202318947_upc_edu_pe/_layouts/15/stream.aspx?id=%2Fpersonal%2Fu202318947%5Fupc%5Fedu%5Fpe%2FDocuments%2FVideos%2FClipchamp%2FEntrevista%201%20Segmento%201%20%2D%20Maria%20Fernanda%2FAssets%2Fvideo1517213583%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E3ee3d14a%2Db34c%2D43f6%2Db1b6%2Dfb894789b5f2](https://upcedupe-my.sharepoint.com/personal/u202318947_upc_edu_pe/_layouts/15/stream.aspx?id=%2Fpersonal%2Fu202318947%5Fupc%5Fedu%5Fpe%2FDocuments%2FVideos%2FClipchamp%2FEntrevista%201%20Segmento%201%20%2D%20Maria%20Fernanda%2FAssets%2Fvideo1517213583%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E3ee3d14a%2Db34c%2D43f6%2Db1b6%2Dfb894789b5f2) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
 | Duración | 4 minutos y 13 segundos |
+| Inicio | 00:07 min |
 | Captura | <img src="assets/capitulo-02/entrevistamariafernanda1.png" alt="Captura de la entrevista a María Fernanda Tejeda Mena" width="500"/> |
 | Resumen | Estudiante de Derecho que utiliza un auto familiar para asistir a la universidad de lunes a viernes. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que consulta ocasionalmente a sus compañeros o calcula la disponibilidad según el horario y la actividad del campus. En una ocasión tuvo que buscar estacionamiento durante 10 a 15 minutos y llegó tarde a clases. Además, estima que invierte entre 30 y 60 minutos adicionales por semana debido a la incertidumbre sobre encontrar un espacio. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
 
@@ -3086,15 +3088,23 @@ Las vistas arquitectónicas siguen el modelo C4, que organiza la representación
 
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-Representa el ecosistema general de Quadrapp, identificando los actores y sistemas externos con los que interactúa, así como sus principales relaciones y límites.
+El System Landscape Diagram representa el ecosistema general de Quadrapp: las personas que lo utilizan, los sistemas con los que se relaciona y los límites entre ellos. Su propósito es ubicar a Quadrapp dentro de su entorno antes de detallar su estructura interna.
 
-<img src="assets/capitulo-04/4.3.1-landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
+Dos tipos de usuarios interactúan con el producto. Los conductores de la comunidad educativa consultan la disponibilidad actual, las predicciones y la asesoría de llegada, y reciben alertas. También los administradores de estacionamientos universitarios, que configuran los estacionamientos, monitorean la operación y analizan la demanda.
 
+<img src="assets/capitulo-04/Quadrapp-System-Landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
 
 ### 4.3.2. Software Architecture Context Level Diagrams
 
-<img src="assets/capitulo-04/4.3.2-context-level.png" alt="Universidad Peruana de Ciencias Aplicadas">
+El Context Diagram muestra a Quadrapp como un único sistema y detalla cómo se relaciona con las personas y los sistemas externos que lo rodean, sin describir su estructura interna, que se desarrolla en el diagrama de contenedores.
 
+<img src="assets/capitulo-04/Quadrapp-Context-Diagram.png" alt="Universidad Peruana de Ciencias Aplicadas">
+
+El conductor de la comunidad educativa utiliza Quadrapp para consultar la disponibilidad, revisar las predicciones y obtener la asesoría de llegada. El administrador de estacionamientos universitarios lo emplea para configurar los estacionamientos, supervisar la operación y analizar el historial de ocupación. En ambos casos, el acceso se realiza con un código de un solo uso enviado por el servicio de correo.
+
+La red de sensado del campus envía a Quadrapp las lecturas de ocupación y de paso de vehículos. Los sensores no se comunican directamente con el sistema, pues publican sus lecturas en el gateway del campus, que las transmite mediante MQTT con QoS 1. El proveedor de mensajería push recibe las solicitudes de alertas de Quadrapp para entregarlas a los dispositivos de los conductores.
+
+La aplicación móvil consulta el servicio de mapas desde el propio dispositivo para calcular el tiempo estimado de llegada y Quadrapp recibe ese tiempo expresado en minutos, de modo que la ubicación del conductor no llega a sus servicios.
 
 ### 4.3.3. Software Architecture Container Level Diagrams
 
