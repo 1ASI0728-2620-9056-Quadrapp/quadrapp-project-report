@@ -65,6 +65,9 @@
 | 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del diseño de base de datos y del diagrama de clases de Analytics: descripción de los diagramas en lugar de esquemas en texto y alineación con PostgreSQL. |
 | 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del capítulo VI: wireframes de escritorio de la consola de operación para el inventario de dispositivos y Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
 | 2.18 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización de los enlaces del informe para que muestren su URL, incorporación del anexo de enlaces a los artefactos y de la evidencia de colaboración del segundo hito. |
+| 2.19 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión del capítulo II según la retroalimentación del docente: User Task Matrix con las tareas de cada User Persona y sus subcolumnas de frecuencia e importancia, y registro de entrevistas con el distrito de residencia, la duración unificada y el inicio de la entrevista del segundo segmento. |
+| 2.20 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los Bounded Contexts IAM y Notifications: diccionario de clases del dominio a partir de sus diagramas de clases y alineación de la persistencia con PostgreSQL. |
+| 2.21 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del avance de conclusiones con los resultados del segundo hito. |
 
 # Project Report Collaboration Insights
 
@@ -98,7 +101,7 @@ El informe se elabora de forma colaborativa en el repositorio [https://github.co
 | Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
 | Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
-| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación de la Landing Page UI Design con el diseño de Bejarano Martinez; actualización del Registro de Versiones, del Collaboration Insights, del Student Outcome y de la tabla de contenido; y revisión de coherencia del informe como coordinador del equipo: artefactos del capítulo IV observados en el primer hito, arquitectura y diagramas C4, diagramas de los demás bounded contexts y wireframes de la consola. |
+| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación de la Landing Page UI Design con el diseño de Bejarano Martinez; actualización del Registro de Versiones, del Collaboration Insights, del Student Outcome y de la tabla de contenido; avance de conclusiones; y revisión de coherencia del informe como coordinador del equipo: User Task Matrix y registro de entrevistas observados en el primer hito, artefactos del capítulo IV, arquitectura y diagramas C4, diccionarios y diagramas de los demás bounded contexts, y wireframes de la consola. |
 
 **Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, hasta la integración del segundo hito en `main`, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 25 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.18 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
@@ -1052,7 +1055,7 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Distrito de residencia | Callao |
 | Ocupación y vínculo con la universidad | Estudiante de Derecho, 8.º ciclo |
 | Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202318947_upc_edu_pe/IQBXH2ReWIuZSqn2OJ4tRl5LAegsl_wX8Ii_kqGcVEL3YTk?e=8TtxqV&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
-| Duración | 4 minutos y 13 segundos |
+| Duración | 04:13 min |
 | Inicio | 00:07 min |
 | Captura | <img src="assets/capitulo-02/entrevistamariafernanda1.png" alt="Captura de la entrevista a María Fernanda Tejeda Mena" width="500"/> |
 | Resumen | Estudiante de Derecho que utiliza un auto familiar para asistir a la universidad de lunes a viernes. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Actualmente no cuenta con información precisa sobre la disponibilidad de estacionamientos antes de llegar, por lo que consulta ocasionalmente a sus compañeros o calcula la disponibilidad según el horario y la actividad del campus. En una ocasión tuvo que buscar estacionamiento durante 10 a 15 minutos y llegó tarde a clases. Además, estima que invierte entre 30 y 60 minutos adicionales por semana debido a la incertidumbre sobre encontrar un espacio. Considera importante conocer con anticipación la probabilidad de encontrar estacionamiento para poder planificar mejor su salida. |
@@ -1078,9 +1081,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | Gabriel Fernando Gordon Salas |
 | Edad | 21 años |
+| Distrito de residencia | Jesús María |
 | Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
 | Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
-| Duración | 05:17 |
+| Duración | 05:17 min |
+| Inicio | 00:00 min |
 | Captura | <img src="assets/capitulo-02/Entrevista3_GabrielGordon.png" alt="Captura de la entrevista a Gabriel" width="500"/> |
 | Resumen | Estudiante de Ingeniería de Software que llega al campus en el auto de su familia 4 días a la semana, de lunes a jueves. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Antes de salir no cuenta con información sobre el estacionamiento, por lo que lo intuye según el día y la época del ciclo, y a veces consulta al grupo de WhatsApp, cuyas respuestas pueden quedar desactualizadas al llegar. Tras la cola de ingreso y la validación de su credencial, suele tardar unos 10 minutos en encontrar espacio. En una semana de exámenes buscó durante unos 20 minutos, terminó en un estacionamiento particular externo y llegó 15 minutos tarde a su evaluación. Estima perder unas 2 horas semanales entre salir antes y dar vueltas, y califica la importancia del problema con un 8 sobre 10. Considera importante conocer la probabilidad de encontrar espacio a su hora de llegada, idealmente por zona o piso, aunque solo confiaría en la predicción si es precisa. |
 
@@ -1092,9 +1097,11 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | --- | --- |
 | Nombres y apellidos | Mario Grandes |
 | Edad | 26 años |
+| Distrito de residencia | Magdalena del Mar |
 | Ocupación y vínculo con la universidad | Encargado del estacionamiento del campus |
-| Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4](https://youtu.be/Uwh7i71zwv4) |
-| Duración | 2 minutos y 27 segundos |
+| Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4?t=2](https://youtu.be/Uwh7i71zwv4?t=2) |
+| Duración | 02:27 min |
+| Inicio | 00:02 min |
 | Captura | <img src="assets/capitulo-02/entrevista-mario-grandes.png" alt="Captura de la entrevista a Mario Grandes" width="500"/> |
 | Resumen | Encargado del estacionamiento de un campus universitario. Su función principal durante el turno es monitorear el flujo vehicular, supervisar al personal en las tranqueras y resolver los cuellos de botella en las horas punta. Conoce la disponibilidad de espacios por experiencia y mirando los reportes básicos de las tranqueras, que describe como poco confiables porque se actualizan con lentitud. El registro de ingresos lo realiza el personal de seguridad de forma manual y él arma los reportes diarios en una hoja de cálculo al finalizar el día. Relata que el lunes a las 8 de la mañana el estacionamiento estuvo cerca de llenarse: lo detectó revisando cámaras, se comunicó con los vigilantes para desviar vehículos hacia zonas alternas y, aunque la situación fue caótica, evitaron el bloqueo de la vía principal. Identifica como problema recurrente las filas en las tranqueras durante el cambio de hora de las 8 de la mañana, y lo atribuye a la falta de visibilidad en tiempo real sobre qué zonas tienen espacios libres. En el inicio de ciclo, los exámenes y los eventos masivos el flujo se dispara alrededor de un 50 por ciento: se preparan asignando más personal, pero carecen de datos históricos para dimensionar cuántos vehículos llegarán. La semana previa a la entrevista falló la lectora de una tranquera principal y debieron operarla manualmente durante 45 minutos hasta que soporte técnico reinició el sistema. Al preguntarle qué información le haría falta, responde que una plataforma analítica capaz de predecir la demanda y anticipar cuántos vehículos llegarán por hora, para organizar los accesos sin depender de suposiciones. |
 
@@ -1169,35 +1176,37 @@ Las entrevistas registradas identifican como problema común la falta de informa
 
 
 ### 2.3.2. User Task Matrix
-  
-#### Conductores de la comunidad educativa
 
-| Tarea | Frecuencia | Prioridad | Frustración |
-| ------ | ------ | ------ | ------ |
-| Ingresar a la aplicación con la cuenta institucional | Diario | Muy Alta | Alta |
-| Ver qué estacionamientos del campus están disponibles | Diario | Muy Alta | Media |
-| Conocer cuántos espacios libres hay en este momento | Diario | Muy Alta | Alta |
-| Revisar la ocupación por zonas del estacionamiento | Diario | Alta | Media |
-| Consultar cómo estará la disponibilidad en los próximos minutos | Diario | Muy Alta | Alta |
-| Ver de forma simple si el estacionamiento estará saturado al llegar | Diario | Alta | Media |
-| Recibir una recomendación según el tiempo que me falta para llegar | Diario | Muy Alta | Alta |
-| Actualizar la recomendación si cambia mi tiempo de llegada | Diario | Alta | Media |
-| Recibir notificaciones cuando la disponibilidad se ponga complicada | Diario | Alta | Media |
-| Configurar qué tipo de alertas quiero recibir | Ocasional | Media | Baja |
+El User Task Matrix reúne las tareas que realizan los User Personas de los dos segmentos objetivo para cumplir sus objetivos: **Andrea Santos**, estudiante de Ingeniería de Software de 21 años que llega al campus en su auto todos los días, representa a los conductores de la comunidad educativa, y **Carlos Mendoza**, jefe de Logística y Operaciones del Campus, representa a los administradores de estacionamientos universitarios.
 
-#### Administradores de estacionamientos universitarios
+Las tareas se identificaron en las entrevistas y en el As-is Scenario Mapping, y corresponden a lo que cada persona hace hoy, exista o no una solución de software. La frecuencia se expresa como diaria, semanal, mensual u ocasional, y la importancia, como alta, media o baja. Un guion indica que la persona no realiza la tarea.
 
-| Tarea | Frecuencia | Prioridad | Frustración |
-| ------ | ------ | ------ | ------ |
-| Dar de alta y configurar los estacionamientos del campus | Ocasional | Alta | Media |
-| Definir las zonas y la cantidad de espacios de cada estacionamiento | Ocasional | Alta | Media |
-| Vincular los sensores físicos con cada espacio de parqueo | Ocasional | Alta | Alta |
-| Configurar las entradas y salidas de vehículos | Ocasional | Media | Media |
-| Verificar que los sensores estén funcionando correctamente | Diario | Muy Alta | Alta |
-| Consultar la ocupación actual de los estacionamientos | Diario | Muy Alta | Alta |
-| Revisar el historial de ocupación de periodos anteriores | Semanal | Alta | Media |
-| Identificar los horarios de mayor demanda | Semanal | Alta | Alta |
-| Detectar y revisar inconsistencias entre los sensores y los accesos | Diario | Alta | Alta |
+<table>
+  <thead>
+    <tr><th rowspan="2">Tarea</th><th colspan="2">Andrea Santos (conductora)</th><th colspan="2">Carlos Mendoza (administrador)</th></tr>
+    <tr><th>Frecuencia</th><th>Importancia</th><th>Frecuencia</th><th>Importancia</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Decidir a qué hora salir hacia el campus</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Preguntar a compañeros por WhatsApp si hay espacio</td><td>Diaria</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Elegir a qué estacionamiento o puerta dirigirse</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Esperar en la cola de la tranquera y presentar la credencial</td><td>Diaria</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Buscar un espacio libre recorriendo el estacionamiento</td><td>Diaria</td><td>Alta</td><td>—</td><td>—</td></tr>
+    <tr><td>Avisar al docente o a los compañeros que llegará tarde</td><td>Ocasional</td><td>Media</td><td>—</td><td>—</td></tr>
+    <tr><td>Estimar si el estacionamiento se llenará en las horas punta</td><td>Diaria</td><td>Alta</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Supervisar el flujo vehicular en las horas punta</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Coordinar al personal de las tranqueras y de vigilancia</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Confirmar la ocupación mediante recorridos o cámaras</td><td>—</td><td>—</td><td>Diaria</td><td>Alta</td></tr>
+    <tr><td>Desviar los vehículos hacia zonas alternas cuando un área se llena</td><td>—</td><td>—</td><td>Semanal</td><td>Alta</td></tr>
+    <tr><td>Registrar los ingresos y consolidar el reporte del turno</td><td>—</td><td>—</td><td>Diaria</td><td>Media</td></tr>
+    <tr><td>Preparar la operación para exámenes y eventos del campus</td><td>—</td><td>—</td><td>Mensual</td><td>Alta</td></tr>
+    <tr><td>Informar la ocupación del periodo a la dirección</td><td>—</td><td>—</td><td>Mensual</td><td>Media</td></tr>
+  </tbody>
+</table>
+
+Para Andrea, las tareas más frecuentes e importantes ocurren antes de llegar y en el ingreso: decidir a qué hora salir, elegir a qué estacionamiento dirigirse y buscar un espacio libre. Las realiza todos los días y con información informal o desactualizada, como los mensajes de WhatsApp de sus compañeros. Para Carlos, las tareas de mayor frecuencia e importancia ocurren durante el turno: supervisar el flujo en las horas punta, coordinar al personal de las tranqueras y confirmar la ocupación mediante recorridos o cámaras.
+
+La principal diferencia está en el alcance. Andrea resuelve una decisión individual antes de salir, mientras que Carlos gestiona la operación de todo el estacionamiento y la reporta a la dirección; por eso sus tareas de consolidación y de reporte, aunque menos frecuentes, tienen importancia alta o media. La coincidencia más relevante es que ambos necesitan estimar si el estacionamiento se llenará en las horas punta, y los dos lo hacen hoy por intuición o con datos que se actualizan con lentitud.
 
 ### 2.3.3. Empathy Mapping
 
@@ -3534,6 +3543,30 @@ El Deployment Diagram representa dónde se ejecuta cada contenedor en producció
 
 El contexto IAM (Identity and Access Management) es el servicio transversal que decide quién puede ingresar a Quadrapp y con qué rol. Gestiona las instituciones (tenants), sus dominios de correo habilitados, las cuentas, las invitaciones, el acceso sin contraseña mediante código de un solo uso y las sesiones basadas en tokens. Su dominio es genérico (Security / Compliance) y no gestiona ocupación ni predicción. Sostiene los drivers FD-01, QAD-07, QAD-08, CON-08, CON-09 y CON-17, y las decisiones DD-08 y DD-09. Su contenido corresponde a las historias US01, US02, US03, US30 y US31, y a las historias técnicas TS01 y TS15.
 
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de IAM. Los atributos y métodos de las clases del dominio coinciden con el diagrama de clases de la sección de Code Level Diagrams.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| Tenant | Domain | Aggregate Root. Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación. | id, name, status, createdAt | addDomain(), retireDomain(), activate(), ownsDomain() |
+| EmailDomain | Domain | Entity. Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe). | domain, verification, verifiedAt | — |
+| UserAccount | Domain | Aggregate Root. Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07). | id, tenantId, email, displayName, role, status, terms | assignRole(), acceptTerms(), isParkingAdmin() |
+| Invitation | Domain | Aggregate Root. Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17). | id, tenantId, email, role, status, expiresAt | accept(), expire() |
+| OtpChallenge | Domain | Aggregate Root. Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09). | id, email, codeHash, expiresAt, attempts, consumedAt | verify(), consume() |
+| RefreshToken | Domain | Aggregate Root. Sesión revocable del usuario (US02, US03). | id, userId, tokenHash, expiresAt, revokedAt | revoke(), isActive() |
+| PlatformCredential | Domain | Aggregate Root. Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15). | id, secretHash, status | — |
+| AccessPolicy | Domain | Domain Service. Decide si un correo puede recibir un código y resuelve los permisos de cada rol. | — | canRequestCode(), permissionsOf(), can() |
+| OtpRequestThrottle | Domain | Domain Service. Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo. | — | isAllowed() |
+| Role, Permission, TenantStatus, InvitationStatus | Domain | Enumeraciones del contexto. | — | — |
+| TenantRepository, UserAccountRepository, InvitationRepository, OtpChallengeRepository, RefreshTokenRepository, PlatformCredentialRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
+| RequestOtpHandler, AuthenticateWithOtpHandler, RefreshSessionHandler, CloseSessionHandler | Application | Command Handlers del acceso y la sesión. | Dependencies | handle() |
+| ProvisionTenantHandler, AddEmailDomainHandler, RetireEmailDomainHandler | Application | Command Handlers de instituciones y dominios. | Dependencies | handle() |
+| ValidateSessionHandler, AssignRoleHandler, IssueInvitationHandler, AcceptInvitationHandler | Application | Command y Query Handlers de sesión, roles e invitaciones. | Dependencies | handle() |
+| EmailSender, TokenIssuer, CodeHasher, AuditLog, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.1.3 |
+| AuthController, UserController, TenantController, EmailDomainController, InvitationController, KeyController | Interface | Controllers REST. | Handler dependencies | Ver 5.1.2 |
+| JwtTokenIssuer, EmailGatewayAdapter, HashingCodeHasher, PersistentAuditLog, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.1.4 |
+
 ### 5.1.1. Domain Layer
  
 **Aggregates.**
@@ -3572,6 +3605,194 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa la capa de seguridad del backend para el aislamiento entre instituciones (CON-08).
 4. Los administradores y los operadores se crean solo por invitación; el primer administrador se crea en el alta inicial de la institución (CON-17). Ningún rol administrativo admite autorregistro.
 5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
+
+**Diccionario de clases del dominio**
+
+Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+
+**Aggregate Root: Tenant**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Tenant|Aggregate Root|Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TenantId|Public|Identificador de la institución.|
+|name|String|Public|Nombre de la institución.|
+|status|TenantStatus|Public|ONBOARDING mientras se configura; ACTIVE cuando puede operar.|
+|createdAt|DateTime|Public|Fecha del alta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|addDomain(domain)|EmailDomain|Public|Habilita un dominio; rechaza uno que pertenezca a otra institución (409).|
+|retireDomain(domain)|void|Public|Retira un dominio: impide nuevos registros, pero conserva las cuentas verificadas.|
+|activate()|void|Public|Pasa la institución a ACTIVE.|
+|ownsDomain(domain)|boolean|Public|Indica si el dominio pertenece a la institución.|
+
+**Entity: EmailDomain**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|EmailDomain|Entity|Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|domain|String|Public|Dominio de correo.|
+|verification|VerificationStatus|Public|Estado de la verificación del dominio.|
+|verifiedAt|DateTime|Public|Fecha de la verificación.|
+
+**Aggregate Root: UserAccount**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|UserAccount|Aggregate Root|Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|UserId|Public|Identificador del usuario.|
+|tenantId|TenantId|Public|Institución a la que pertenece.|
+|email|Email|Public|Correo institucional o invitado.|
+|displayName|String|Public|Nombre visible.|
+|role|Role|Public|Rol que define sus permisos.|
+|status|AccountStatus|Public|Estado de la cuenta.|
+|terms|TermsAcceptance|Public|Versión y fecha de aceptación de los términos y la política de privacidad.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|assignRole(role)|void|Public|Cambia el rol de la cuenta; las sesiones previas se revocan.|
+|acceptTerms(version, date)|void|Public|Registra la aceptación de los términos vigentes.|
+|isParkingAdmin()|boolean|Public|Indica si la cuenta tiene el rol PARKING_ADMIN.|
+
+**Aggregate Root: Invitation**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Invitation|Aggregate Root|Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|InvitationId|Public|Identificador de la invitación.|
+|tenantId|TenantId|Public|Institución que invita.|
+|email|Email|Public|Correo invitado.|
+|role|Role|Public|Rol que tendrá la cuenta: PARKING_ADMIN o PARKING_OPERATOR.|
+|status|InvitationStatus|Public|PENDING, ACCEPTED, EXPIRED o REVOKED.|
+|expiresAt|DateTime|Public|Fin de la vigencia.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|accept(now)|UserAccount|Public|Crea la cuenta con el rol asignado; falla si la invitación venció o ya se usó.|
+|expire(now)|void|Public|Marca la invitación como vencida.|
+
+**Aggregate Root: OtpChallenge**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OtpChallenge|Aggregate Root|Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|ChallengeId|Public|Identificador del desafío.|
+|email|Email|Public|Correo que solicitó el código.|
+|codeHash|String|Public|Hash del código; el código nunca se guarda en claro.|
+|expiresAt|DateTime|Public|Fin de la vigencia del código.|
+|attempts|int|Public|Intentos de verificación realizados.|
+|consumedAt|DateTime|Public|Momento en que se usó el código.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|verify(code, now)|boolean|Public|Compara el código con el hash; cuenta el intento y falla si venció o agotó los intentos.|
+|consume()|void|Public|Marca el desafío como usado.|
+
+**Aggregate Root: RefreshToken**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|RefreshToken|Aggregate Root|Sesión revocable del usuario (US02, US03).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TokenId|Public|Identificador del token.|
+|userId|UserId|Public|Usuario de la sesión.|
+|tokenHash|String|Public|Hash del token de refresco.|
+|expiresAt|DateTime|Public|Fin de la vigencia.|
+|revokedAt|DateTime|Public|Momento de la revocación, si la hubo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|revoke(now)|void|Public|Revoca la sesión al cerrar sesión o al cambiar el rol.|
+|isActive(now)|boolean|Public|Indica si el token sigue vigente y no fue revocado.|
+
+**Aggregate Root: PlatformCredential**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|PlatformCredential|Aggregate Root|Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|CredentialId|Public|Identificador de la credencial.|
+|secretHash|String|Public|Hash del secreto.|
+|status|CredentialStatus|Public|Estado de la credencial.|
+
+**Domain Service: AccessPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AccessPolicy|Domain Service|Decide si un correo puede recibir un código y resuelve los permisos de cada rol.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|canRequestCode(email)|AccessDecision|Public|Aplica, en orden, cuenta existente, invitación vigente y dominio habilitado (US01).|
+|permissionsOf(role)|`Set<Permission>`|Public|Devuelve los permisos del rol.|
+|can(role, permission)|boolean|Public|Indica si el rol tiene el permiso.|
+
+**Domain Service: OtpRequestThrottle**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OtpRequestThrottle|Domain Service|Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|isAllowed(email, now)|boolean|Public|Devuelve falso si el correo superó el límite; la API responde 429.|
+
+**Enumeraciones**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|Role|DRIVER, PARKING_OPERATOR, PARKING_ADMIN|Rol del usuario.|
+|Permission|VIEW_AVAILABILITY, RECEIVE_ALERTS, CONFIGURE_PARKING, MONITOR_OPERATION, VIEW_ANALYTICS, MANAGE_USERS, MANAGE_TENANT|Permisos que otorga cada rol.|
+|TenantStatus|ONBOARDING, ACTIVE|Estado de la institución.|
+|InvitationStatus|PENDING, ACCEPTED, EXPIRED, REVOKED|Estado de la invitación.|
 
 ### 5.1.2. Interface Layer
  
@@ -3617,7 +3838,7 @@ La capa de aplicación contiene los casos de uso, que cargan los aggregates, inv
  
 | Componente | Implementa | Detalle |
 |---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02); el motor se define en la sección de implementación. Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `iam` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
 | `JwtTokenIssuer` | `TokenIssuer` | Firma tokens de acceso y de refresco con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`); publica las claves de verificación. |
 | `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción. |
 | `HashingCodeHasher` | `CodeHasher` | Calcula el hash del código de un solo uso y de los tokens guardados. |
@@ -6792,6 +7013,32 @@ Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-0
 
 El contexto Notifications decide a quién avisar, cuándo y por qué canal, y entrega las alertas de baja disponibilidad a los conductores. Recibe las predicciones desde Prediction & Advisory mediante el lenguaje publicado (Published Language) del mapa de contextos y entrega los mensajes por push o por correo a través de capas anticorrupción hacia los proveedores externos de mensajería. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
  
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Notifications. Los atributos y métodos de las clases del dominio coinciden con el diagrama de clases de la sección de Code Level Diagrams.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | id, userId, tenantId, parkingLotId, timeSlot, status, createdAt | pause(), cancel(), covers() |
+| NotificationPreferences | Domain | Aggregate Root. Preferencias del usuario sobre qué alertas recibir y por qué canal (US24). | userId, tenantId, enabled, enabledTypes, enabledChannels, updatedAt | enable(), disable(), allows() |
+| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas. | id, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes | configure(), appliesTo() |
+| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega. | id, userId, tenantId, parkingLotId, type, channel, segment, conditionKey, content, status, createdAt, sentAt | markSent(), markFailed(), skip() |
+| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo o correo. | deviceId, channel, result, errorCode, attemptedAt | — |
+| DeviceRegistration | Domain | Aggregate Root. Token del dispositivo del conductor, destino de las alertas push. | id, userId, token, platform, status, registeredAt | invalidate(), isUsable() |
+| NotificationTemplate | Domain | Aggregate Root. Plantilla de mensaje por tipo de alerta, canal e idioma. | id, alertType, channel, locale, titleTemplate, bodyTemplate | render() |
+| TimeSlot | Domain | Value Object. Franja semanal en la que el conductor suele llegar. | days, start, end | contains() |
+| AlertPolicy | Domain | Domain Service. Decide si corresponde enviar una alerta. | — | shouldAlert() |
+| ChannelPolicy | Domain | Domain Service. Determina por qué canales se envía una alerta. | — | channelsFor() |
+| DeduplicationPolicy | Domain | Domain Service. Evita repetir una alerta para una condición ya notificada (US23, escenario 4). | — | isDuplicate() |
+| AlertType, Channel, RecipientSegment, NotificationStatus, DeviceStatus | Domain | Enumeraciones del contexto. | — | — |
+| SubscriptionRepository, PreferencesRepository, RuleRepository, TemplateRepository, DeviceRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
+| CreateSubscriptionHandler, CancelSubscriptionHandler, UpdatePreferencesHandler, RegisterDeviceHandler, ConfigureNotificationRuleHandler | Application | Command Handlers de suscripciones, preferencias, dispositivos y reglas. | Dependencies | handle() |
+| HandleSaturationPredictedHandler, DispatchNotificationHandler, HandleDeliveryRejectionHandler | Application | Event y Command Handlers del envío de alertas. | Dependencies | handle() |
+| GetNotificationHistoryHandler | Application | Query Handler del historial. | Dependencies | handle() |
+| PushSender, EmailSender, IdentityContext, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
+| SubscriptionController, PreferencesController, DeviceController, RuleController, HistoryController, PredictionEventConsumer | Interface | Controllers REST y consumidor del evento SaturationPredicted. | Handler dependencies | Ver 5.7.2 |
+| PushGatewayAdapter, EmailGatewayAdapter, IdentityContextAdapter, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.7.4 |
+
 ### 5.7.1. Domain Layer
  
 **Aggregates.**
@@ -6824,6 +7071,245 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 5. Un token de dispositivo rechazado por el proveedor se marca inválido y no se vuelve a usar.
 6. No se envían más alertas que las permitidas por la regla del administrador ni se repite una alerta dentro del intervalo mínimo configurado.
 7. Los datos de notificación (token y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
+
+**Diccionario de clases del dominio**
+
+Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+
+**Aggregate Root: NotificationSubscription**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationSubscription|Aggregate Root|Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|SubscriptionId|Public|Identificador de la suscripción.|
+|userId|UserId|Public|Conductor suscrito.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento de interés.|
+|timeSlot|TimeSlot|Public|Días y rango horario en que suele llegar.|
+|status|SubscriptionStatus|Public|ACTIVE, PAUSED o CANCELLED.|
+|createdAt|DateTime|Public|Fecha de creación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|pause()|void|Public|Pausa la suscripción sin eliminarla.|
+|cancel()|void|Public|Da de baja la suscripción; las demás se conservan.|
+|covers(arrivalTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+
+**Aggregate Root: NotificationPreferences**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationPreferences|Aggregate Root|Preferencias del usuario sobre qué alertas recibir y por qué canal (US24).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|userId|UserId|Public|Usuario.|
+|tenantId|TenantId|Public|Institución.|
+|enabled|boolean|Public|Interruptor general de las notificaciones.|
+|enabledTypes|`Set<AlertType>`|Public|Tipos de alerta habilitados.|
+|enabledChannels|`Set<Channel>`|Public|Canales habilitados.|
+|updatedAt|DateTime|Public|Última modificación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|enable()|void|Public|Activa las notificaciones.|
+|disable()|void|Public|Desactiva las notificaciones; la suscripción se conserva.|
+|allows(type, channel)|boolean|Public|Indica si se permite un tipo de alerta por un canal.|
+
+**Aggregate Root: NotificationRule**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|RuleId|Public|Identificador de la regla.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento.|
+|alertType|AlertType|Public|Tipo de alerta regulado.|
+|enabled|boolean|Public|Indica si el tipo está activo.|
+|minIntervalMinutes|int|Public|Minutos mínimos entre dos alertas del mismo tipo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|configure(enabled, interval)|void|Public|Actualiza la regla y registra NotificationRuleConfigured.|
+|appliesTo(parkingLotId, type)|boolean|Public|Indica si la regla aplica a un estacionamiento y tipo.|
+
+**Aggregate Root: Notification**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|NotificationId|Public|Identificador de la notificación.|
+|userId|UserId|Public|Destinatario.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento de la alerta.|
+|type|AlertType|Public|Tipo de alerta.|
+|channel|Channel|Public|PUSH o EMAIL.|
+|segment|RecipientSegment|Public|Segmento destinatario.|
+|conditionKey|ConditionKey|Public|Clave de la condición notificada; evita duplicados.|
+|content|NotificationContent|Public|Título y cuerpo ya renderizados.|
+|status|NotificationStatus|Public|PENDING, SENT, FAILED o SKIPPED.|
+|createdAt|DateTime|Public|Creación.|
+|sentAt|DateTime|Public|Envío exitoso.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|markSent(now)|void|Public|Registra el envío exitoso.|
+|markFailed(reason)|void|Public|Registra la falla del proveedor; puede reintentarse.|
+|skip(reason)|void|Public|Omite el envío (por ejemplo, notificaciones desactivadas).|
+
+**Entity: DeliveryAttempt**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeliveryAttempt|Entity|Intento de entrega de una notificación a un dispositivo o correo.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|DeviceId|Public|Dispositivo destino.|
+|channel|Channel|Public|Canal usado.|
+|result|DeliveryResult|Public|Resultado devuelto por el proveedor.|
+|errorCode|String|Public|Código de error del proveedor, si lo hubo.|
+|attemptedAt|DateTime|Public|Momento del intento.|
+
+**Aggregate Root: DeviceRegistration**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeviceRegistration|Aggregate Root|Token del dispositivo del conductor, destino de las alertas push.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|DeviceId|Public|Identificador del registro.|
+|userId|UserId|Public|Propietario.|
+|token|DeviceToken|Public|Token entregado por el proveedor push.|
+|platform|Platform|Public|ANDROID o IOS.|
+|status|DeviceStatus|Public|VALID o INVALID.|
+|registeredAt|DateTime|Public|Fecha de registro.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|invalidate(now)|void|Public|Marca el token como inválido cuando el proveedor lo rechaza.|
+|isUsable()|boolean|Public|Indica si el token puede recibir alertas.|
+
+**Aggregate Root: NotificationTemplate**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationTemplate|Aggregate Root|Plantilla de mensaje por tipo de alerta, canal e idioma.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TemplateId|Public|Identificador de la plantilla.|
+|alertType|AlertType|Public|Tipo de alerta.|
+|channel|Channel|Public|Canal.|
+|locale|String|Public|es_419 o en_US.|
+|titleTemplate|String|Public|Plantilla del título.|
+|bodyTemplate|String|Public|Plantilla del cuerpo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|render(params)|NotificationContent|Public|Completa la plantilla con los datos de la alerta.|
+
+**Value Object: TimeSlot**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|TimeSlot|Value Object|Franja semanal en la que el conductor suele llegar.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|days|`Set<DayOfWeek>`|Public|Días de la semana.|
+|start|Time|Public|Hora de inicio.|
+|end|Time|Public|Hora de fin.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|contains(dateTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+
+**Domain Service: AlertPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AlertPolicy|Domain Service|Decide si corresponde enviar una alerta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|shouldAlert(preferences, subscription, rule, type, time)|boolean|Public|Evalúa preferencias, suscripción vigente, regla del administrador, tipo y franja horaria.|
+
+**Domain Service: ChannelPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ChannelPolicy|Domain Service|Determina por qué canales se envía una alerta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|channelsFor(preferences, type)|`Set<Channel>`|Public|Devuelve los canales habilitados para el tipo.|
+
+**Domain Service: DeduplicationPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeduplicationPolicy|Domain Service|Evita repetir una alerta para una condición ya notificada (US23, escenario 4).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|isDuplicate(conditionKey, userId)|boolean|Public|Indica si la condición ya se notificó al usuario y sigue activa.|
+
+**Enumeraciones**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|AlertType|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|Tipos de alerta.|
+|Channel|PUSH, EMAIL|Canales de envío.|
+|RecipientSegment|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|Segmento destinatario.|
+|NotificationStatus|PENDING, SENT, FAILED, SKIPPED|Estado de la notificación.|
+|DeviceStatus|VALID, INVALID|Estado del token del dispositivo.|
 
 ### 5.7.2. Interface Layer
  
@@ -6863,7 +7349,7 @@ Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el r
  
 | Componente | Implementa | Detalle |
 |---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `notifications` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
 | `PushGatewayAdapter` | `PushSender` | Capa anticorrupción hacia el proveedor de mensajería push (`PushSent`). Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06). |
 | `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo (`EmailSent`), con timeout y circuit breaker propios. |
 | `IdentityContextAdapter` | `IdentityContext` | Capa anticorrupción que traduce `UserIdentityProvided` (usuario, institución y rol) al modelo local, sin consultar la base de IAM (CON-02). |
@@ -7667,7 +8153,13 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 6. El alcance definido concentra el valor de Quadrapp en informar, predecir y apoyar la gestión del estacionamiento. La solución no administra reservas, cobros ni el control físico de acceso. Además, el tiempo estimado de llegada se calcula en el dispositivo y el servidor recibe únicamente los minutos, lo que reduce el tratamiento de datos de ubicación y mantiene la propuesta alineada con el principio de recopilar solo la información necesaria.
 
-En esta etapa, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar y con una base funcional y arquitectónica para continuar su desarrollo. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
+7. El diseño táctico confirma que la arquitectura de monolito modular sostiene los requisitos sin la complejidad de los microservicios. Cada uno de los siete bounded contexts se documentó con sus capas de dominio, aplicación, interfaz e infraestructura, y se comunica con los demás solo mediante fachadas y eventos publicados, con un esquema de PostgreSQL propio y sin claves foráneas entre esquemas. Las reglas más sensibles del producto quedaron dentro del dominio: la deduplicación y el tiempo mínimo de detección de Parking Sensing, el estado UNKNOWN y la reconciliación de Occupancy, y la heurística de respaldo de Prediction & Advisory.
+
+8. El diseño de la experiencia traduce esas capacidades en interfaces coherentes para ambos segmentos. Las guías de estilo definen una identidad común con contrastes verificados frente a WCAG 2.2; la arquitectura de información organiza la navegación por tipo de usuario; la Landing Page comunica el alcance real del producto; y los wireframes y wireflows cubren la aplicación del conductor y la consola del administrador, tanto en su vista móvil como en la de escritorio.
+
+9. La revisión del primer hito fortaleció la trazabilidad del informe. Rehacer el EventStorming, los contextos candidatos, los message flows, los canvases y el context map con una misma herramienta, y alinear con ellos los diagramas C4 y el diseño táctico, permitió que los nombres de eventos, fachadas y tablas sean los mismos desde el capítulo IV hasta el capítulo VI. Quedan pendientes ampliar las entrevistas del segmento de administradores y validar el diseño con usuarios.
+
+Al cierre del segundo hito, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar, una arquitectura detallada hasta el nivel de clases y tablas, y una propuesta de experiencia de usuario para sus dos segmentos. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
 
 ## Video About-the-Team
 
