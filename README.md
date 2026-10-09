@@ -3831,7 +3831,7 @@ Methods
 |activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory|Estacionamientos con layout publicado, con su institución.|
 |calendarEventsAround(tenantId: UUID, from: Instant, to: Instant)|`List<CalendarEventView>`|Public|Prediction & Advisory|Periodos académicos y eventos programados del intervalo.|
 |lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición|Estacionamientos para la pantalla de inicio y la consola.|
-|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición|Layout publicado vigente.|
+|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición y Occupancy|Layout publicado vigente, con sus zonas, espacios, asociaciones y accesos. Occupancy lo lee al recibir `ParkingLayoutProvided`.|
 |resolveDevice(hardwareId: String)|DeviceDirectoryEntry?|Public|Parking Sensing|Dispositivo, institución, estacionamiento, estado, destino vigente y tiempo mínimo de detección. Responde vacío si el identificador no está registrado.|
 
 **Event Consumer**
@@ -4431,6 +4431,396 @@ El esquema `sensing` de PostgreSQL contiene una tabla por agregado, que usa el `
 ---
 
 ## 5.4. Bounded Context: Occupancy
+
+El Bounded Context Occupancy es responsable de **mantener el estado de negocio de cada espacio y la disponibilidad de cada zona y estacionamiento**. Es la fuente de verdad de la ocupación actual que consultan la aplicación móvil, la consola de operación, Prediction & Advisory y Analytics.
+
+Su propósito es convertir las detecciones confirmadas que entrega Parking Sensing en estados de negocio (libre, ocupado o desconocido), recalcular la disponibilidad con cada cambio, registrar el flujo de ingresos y salidas y reconciliarlo con la detección por espacio. Además, distribuye la ocupación en tiempo casi real mediante un read model en caché y una suscripción. No procesa lecturas de sensores, no decide si un sensor falló y no genera pronósticos.
+
+Este Bounded Context soporta principalmente:
+
+- US05, US06 y US07 — Consultar la disponibilidad actual del estacionamiento y de cada zona, con la antigüedad del dato.
+- US08 — Presentar como desconocido (UNKNOWN) un espacio sin información confiable y excluirlo del conteo de disponibles.
+- TS09 — Exponer el estado consolidado, la suscripción a cambios y la marca de dato desactualizado.
+- TS14 — Registrar el flujo con los sensores de paso y reconciliarlo con la detección por espacio.
+- US29 y TS17 — Aportar la ocupación al monitoreo del turno en la consola.
+
+Las principales responsabilidades del Bounded Context Occupancy son:
+
+- Traducir, en su capa anticorrupción, los eventos de Parking Sensing al estado de negocio del espacio.
+- Mantener cada espacio como FREE, OCCUPIED o UNKNOWN, y registrar el motivo de UNKNOWN.
+- Recalcular la disponibilidad por zona y por estacionamiento con cada cambio de estado, y publicar `OccupancyUpdated`.
+- Registrar los ingresos y salidas de los accesos habilitados para el conteo de flujo, y publicar `EntryExitRecorded`.
+- Reconciliar periódicamente el conteo de accesos con la detección por espacio, que prevalece.
+- Actualizar el read model en Redis y entregar los cambios a los clientes suscritos.
+- Indicar la antigüedad del dato y marcarlo como desactualizado cuando supera el tiempo máximo de vigencia.
+- Responder, mediante su fachada (Open Host Service), las consultas de Prediction & Advisory y del módulo de composición.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Occupancy.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| SpaceOccupancy | Domain | Aggregate Root. Estado de negocio de un espacio. | spaceId, tenantId, parkingLotId, zoneId, status, unknownReason, statusSince, lastDetectedAt, lastEventId | initialize(), applyDetection(), markUnknown(), awaitStableDetection(), relocate(), countsAsFree() |
+| LotOccupancy | Domain | Aggregate Root. Disponibilidad y flujo de un estacionamiento. | parkingLotId, tenantId, layoutVersion, zones, flowAccessPointIds, countedOccupied, consolidatedAt, lastReconciledAt | open(), applyLayout(), recalculate(), recordPassage(), reconcile(), availability(), isStale() |
+| ZoneOccupancy | Domain | Entity. Disponibilidad de una zona. | zoneId, capacity, availability | update() |
+| Availability | Domain | Value Object. Capacidad y espacios libres, ocupados y desconocidos. | capacity, free, occupied, unknown | occupancyRate(), plus() |
+| ZoneCount, VehiclePassage, OccupancySnapshot, ReconciliationResult | Domain | Value Objects con los datos de cada operación. | Ver 5.4.1 | — |
+| ReconciliationPolicy, FreshnessPolicy | Domain | Value Objects con los parámetros de reconciliación y vigencia. | toleranceSpaces, periodMinutes, staleAfterSeconds | — |
+| SpaceStatus, UnknownReason, DetectedPresence, PassageDirection | Domain | Enumeraciones del contexto. | — | — |
+| SpaceOccupancyRepository, LotOccupancyRepository, VehiclePassageRepository, OccupancySnapshotRepository | Domain | Repository. Abstracciones de persistencia. | — | save(), findById(), countByZone(), countBetween(), findBetween() |
+| SpaceMarkedOccupied, SpaceMarkedFree, SpaceMarkedUnknown, AccessCountReconciled | Domain | Domain Events internos del contexto. | Ver 5.4.1 | — |
+| OccupancyUpdated, EntryExitRecorded | Domain | Domain Events publicados (Published Language). | Ver 5.4.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura. | Dependencies | handle() |
+| SensingEventHandler, LayoutProvidedEventHandler, SpaceStatusChangedEventHandler | Application | Event Handlers. | Dependencies | handle() |
+| LayoutReader, AvailabilityReadModel, OccupancyEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.4.3 |
+| OccupancyQueryController | Interface | Controller REST de disponibilidad, espacios y flujo. | Query Handler dependencies | getOccupancy(), getSpaces(), getFlow() |
+| OccupancyRealtimeEndpoint | Interface | Suscripción en tiempo real a un estacionamiento. | Read model dependency | subscribe() |
+| OccupancyFacade | Interface | Open Host Service en proceso. | Query Handler dependencies | currentOccupancy(), freeSpaces(), exitsInWindow(), recentSnapshots(), availabilityOf() |
+| SensingEventListener, LayoutEventListener | Interface | Consumers de los eventos de Parking Sensing y Parking Configuration. | Event Handler dependencies | on() |
+| OccupancySchedulers | Interface | Reconciliación y registro del historial. | Command Handler dependencies | reconcile(), recordSnapshots() |
+| *RepositoryAdapter | Infrastructure | Persistencia en el esquema `occupancy`. | Persistence dependency | save(), find…() |
+| RedisAvailabilityReadModel | Infrastructure | Read model en Redis y difusión entre réplicas. | Redis dependency | write(), read(), broadcast() |
+| ConfigurationLayoutReaderAdapter | Infrastructure | Lee el layout publicado mediante la fachada de Parking Configuration. | Facade dependency | layoutOf() |
+| OccupancyEventPublisherAdapter | Infrastructure | Publica los eventos tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.4.1. Domain Layer
+
+La Domain Layer contiene las reglas del estado de los espacios, de la disponibilidad y del flujo. No depende de Redis, de WebSocket, de la base de datos ni de Spring. Los dos agregados salen del paso 9 del EventStorming (sección 4.2.1): `SpaceOccupancy` y `LotOccupancy`. Se separaron porque cambian con estímulos distintos: un espacio cambia con su detección, y el estacionamiento cambia con el recálculo de sus zonas, con los pasos de vehículos y con la reconciliación. Además, separarlos evita que cada detección bloquee el estacionamiento completo.
+
+**Aggregate 1: SpaceOccupancy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|SpaceOccupancy|Aggregate Root|Estado de negocio de un espacio: libre, ocupado o desconocido. Conserva el motivo cuando es desconocido y el último evento aplicado.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|spaceId|UUID|Private|Identificador del espacio (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento del espacio.|
+|zoneId|UUID|Private|Zona a la que pertenece según el layout vigente.|
+|status|SpaceStatus|Private|FREE, OCCUPIED o UNKNOWN.|
+|unknownReason|UnknownReason?|Private|Motivo del estado UNKNOWN; vacío en los demás estados.|
+|statusSince|Instant|Private|Momento desde el que el espacio tiene su estado actual.|
+|lastDetectedAt|Instant?|Private|Marca de tiempo de la última detección aplicada.|
+|lastEventId|UUID?|Private|Identificador del último evento aplicado.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|initialize(spaceId, tenantId, parkingLotId, zoneId, hasSensor, now)|SpaceOccupancy|Public (static)|Crea el espacio en UNKNOWN, con el motivo NOT_YET_REPORTED si tiene sensor o NO_SENSOR si no lo tiene. Un espacio nuevo nunca empieza libre.|
+|applyDetection(eventId, presence, detectedAt)|Boolean|Public|Ignora el evento si ya fue aplicado o si es anterior a `lastDetectedAt`. En otro caso pasa a FREE u OCCUPIED, también desde UNKNOWN, y registra `SpaceMarkedFree` o `SpaceMarkedOccupied` (US07; US08, escenario 4).|
+|markUnknown(reason, at)|Void|Public|Pasa a UNKNOWN con el motivo indicado y registra `SpaceMarkedUnknown` (US08, escenarios 1 y 2).|
+|awaitStableDetection(at)|Void|Public|Mantiene el espacio en UNKNOWN y cambia el motivo a AWAITING_STABLE_DETECTION cuando el sensor se recupera, hasta la siguiente detección confirmada.|
+|relocate(zoneId)|Void|Public|Cambia la zona del espacio cuando un layout nuevo lo mueve.|
+|countsAsFree()|Boolean|Public|Verdadero solo con FREE. Un espacio UNKNOWN nunca cuenta como libre.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Enumeraciones del agregado SpaceOccupancy**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|SpaceStatus|FREE, OCCUPIED, UNKNOWN|Estado de negocio del espacio.|
+|UnknownReason|NOT_YET_REPORTED, NO_SENSOR, SENSOR_FAULT, GATEWAY_OFFLINE, AWAITING_STABLE_DETECTION|Motivo del estado UNKNOWN, que la consola muestra al operador.|
+|DetectedPresence|FREE, OCCUPIED|Presencia confirmada que llega desde Parking Sensing, ya traducida.|
+
+**Aggregate 2: LotOccupancy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|LotOccupancy|Aggregate Root|Disponibilidad de un estacionamiento y de sus zonas, conteo de flujo y estado de la reconciliación.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|parkingLotId|UUID|Private|Estacionamiento (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución (IAM).|
+|layoutVersion|Integer|Private|Versión del layout con la que se calculan las zonas.|
+|zones|`List<ZoneOccupancy>`|Private|Disponibilidad de cada zona.|
+|flowAccessPointIds|`Set<UUID>`|Private|Accesos habilitados para el conteo de flujo según el layout.|
+|countedOccupied|Integer|Private|Ocupación derivada del conteo de ingresos y salidas desde la última reconciliación.|
+|consolidatedAt|Instant?|Private|Momento del último dato consolidado; define la antigüedad que se informa.|
+|lastReconciledAt|Instant?|Private|Momento de la última reconciliación.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|open(parkingLotId, tenantId)|LotOccupancy|Public (static)|Crea la ocupación del estacionamiento al recibir su primer layout.|
+|applyLayout(layoutVersion, zoneCapacities, flowAccessPointIds)|Void|Public|Actualiza las zonas, su capacidad y los accesos que cuentan flujo.|
+|recalculate(zoneCounts, at)|Void|Public|Reemplaza los conteos de cada zona, actualiza `consolidatedAt` y registra `OccupancyUpdated` (US05, US06).|
+|recordPassage(passage)|Boolean|Public|Si el acceso cuenta flujo, suma o resta en `countedOccupied` y registra `EntryExitRecorded` (TS14, escenario 1). Devuelve falso si el acceso no está habilitado.|
+|reconcile(policy, at)|ReconciliationResult|Public|Compara `countedOccupied` con los espacios ocupados detectados; si la diferencia supera la tolerancia más los espacios desconocidos, la marca como divergente. Ajusta el conteo a la detección y registra `AccessCountReconciled` (TS14, escenarios 2 y 3).|
+|availability()|Availability|Public|Suma la disponibilidad de todas las zonas.|
+|isStale(now, policy)|Boolean|Public|Indica si `consolidatedAt` supera el tiempo máximo de vigencia (TS09, escenario 3).|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities, Value Objects y enumeraciones del agregado LotOccupancy**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ZoneOccupancy|Entity|zoneId: UUID, capacity: Integer, availability: Availability|Disponibilidad de una zona. `update(count)` reemplaza sus conteos.|
+|Availability|Value Object|capacity, free, occupied, unknown: Integer|La suma de los tres estados es igual a la capacidad. `occupancyRate()` devuelve `(capacity − free) / capacity`: un espacio desconocido nunca cuenta como libre, por lo que tampoco reduce la ocupación.|
+|ZoneCount|Value Object|zoneId, free, occupied, unknown: Integer|Conteo de estados de una zona, calculado a partir de los `SpaceOccupancy`.|
+|VehiclePassage|Value Object|eventId, parkingLotId, accessPointId: UUID, direction: PassageDirection, passedAt: Instant|Ingreso o salida de un vehículo, sin datos que lo identifiquen (CON-16).|
+|ReconciliationPolicy|Value Object|toleranceSpaces: Integer, periodMinutes: Integer|Diferencia tolerada (3 espacios por defecto) y frecuencia de la reconciliación (5 min).|
+|ReconciliationResult|Value Object|countedOccupied, detectedOccupied, difference: Integer, divergent: Boolean, reconciledAt: Instant|Resultado de una reconciliación.|
+|FreshnessPolicy|Value Object|staleAfterSeconds: Integer|Tiempo máximo de vigencia del dato consolidado (300 s por defecto).|
+|OccupancySnapshot|Value Object|parkingLotId: UUID, takenAt: Instant, availability: Availability|Foto de la disponibilidad de un minuto, para el historial reciente que consulta Prediction & Advisory.|
+|PassageDirection|Enumeration|IN, OUT|Dirección del paso.|
+
+**Domain Services**
+
+El contexto no necesita Domain Services: cada regla se resuelve dentro de un agregado. El recálculo de la disponibilidad recibe los conteos ya agrupados por zona desde `SpaceOccupancyRepository.countByZone`, de modo que `LotOccupancy` no necesita cargar los espacios.
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|SpaceOccupancyRepository|save(space), findById(spaceId), findByParkingLot(parkingLotId), countByZone(parkingLotId)|Persistencia de `SpaceOccupancy` y conteo por zona y estado.|
+|LotOccupancyRepository|save(lot), findById(parkingLotId), findAll()|Persistencia de `LotOccupancy`.|
+|VehiclePassageRepository|append(passage), countBetween(parkingLotId, direction, from, to)|Registro de los pasos; `append` devuelve falso si el `eventId` ya existía.|
+|OccupancySnapshotRepository|append(snapshot), findBetween(parkingLotId, from, to)|Historial reciente por minuto.|
+
+**Domain Events**
+
+|Evento|Atributos|Alcance y consumidores|
+|-|-|-|
+|SpaceMarkedOccupied, SpaceMarkedFree|spaceId, parkingLotId, zoneId, changedAt|Internos. Disparan el recálculo de la disponibilidad y la notificación a los clientes suscritos.|
+|SpaceMarkedUnknown|spaceId, parkingLotId, zoneId, reason, changedAt|Interno. Mismo uso que los anteriores.|
+|AccessCountReconciled|parkingLotId, result|Interno. Se registra para la consola.|
+|OccupancyUpdated|tenantId, parkingLotId, availability, zones, layoutVersion, consolidatedAt|Published Language. Lo consume Analytics para el historial de ocupación.|
+|EntryExitRecorded|eventId, tenantId, parkingLotId, accessPointId, direction, recordedAt|Published Language. Lo consume Analytics para el flujo histórico.|
+
+`OccupancyUpdated` y `EntryExitRecorded` son los nombres que fija la tabla de eventos de la sección 4.2.1 para "Disponibilidad actualizada" e "Ingreso o salida registrado".
+
+### Reglas de negocio
+
+1. Un espacio UNKNOWN nunca cuenta como libre y se excluye del conteo de disponibles, indicando cuántos hay (US06, escenario 3; US08).
+2. Un espacio nuevo o sin sensor empieza en UNKNOWN; nunca se presume libre.
+3. Un espacio pasa a UNKNOWN cuando Parking Sensing informa una falla, la baja del sensor o la desconexión de su gateway (US08, escenarios 1 y 2).
+4. Un espacio sale de UNKNOWN solo con una detección confirmada; la recuperación del sensor no basta (US08, escenario 4; US20, escenario 4).
+5. Un evento ya aplicado o anterior al último aplicado no cambia el estado del espacio.
+6. Cada cambio de estado de un espacio recalcula la disponibilidad de su zona y de su estacionamiento.
+7. El flujo se cuenta solo con los accesos habilitados para el conteo, es decir, con sensores direccionales (US19).
+8. La detección por espacio prevalece sobre el conteo de accesos: la reconciliación ajusta el conteo y registra la divergencia cuando supera la tolerancia (TS14).
+9. Toda consulta informa la marca de tiempo del dato consolidado; si supera el tiempo máximo de vigencia, se marca como desactualizado (US05, escenario 4; US07, escenario 3; TS09, escenario 3).
+10. El contexto no almacena datos que identifiquen vehículos ni conductores (CON-16).
+11. El contexto no procesa lecturas de sensores, no decide fallas de dispositivos y no genera pronósticos.
+
+### 5.4.2. Interface Layer
+
+La Interface Layer expone la ocupación a la aplicación móvil y a la consola, recibe los eventos de Parking Sensing y Parking Configuration, dispara los procesos programados y ofrece la fachada a los demás módulos. La capa de seguridad del backend (DD-08) valida el token antes de llegar al controlador; las consultas admiten los roles `DRIVER`, `PARKING_OPERATOR` y `PARKING_ADMIN`, siempre dentro de la institución del token.
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/occupancy`|200 con la disponibilidad del estacionamiento y de cada zona, `consolidatedAt` y `stale`|TS09, escenarios 1 y 3; US05; US06|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/spaces/status`|200 con el estado y el motivo de UNKNOWN de cada espacio, para superponerlos al layout|US05, US08|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/flow?windowMinutes={n}`|200 con los ingresos y salidas de la ventana|TS14, US29 (ruta propuesta)|
+
+Respuesta de `GET /api/v1/parking-lots/{lotId}/occupancy`:
+
+```json
+{
+  "lotId": "5b0e…",
+  "capacity": 180,
+  "free": 23,
+  "occupied": 150,
+  "unknown": 7,
+  "occupancyPct": 87.22,
+  "zones": [
+    { "zoneId": "a1f3…", "capacity": 42, "free": 3, "occupied": 37, "unknown": 2 }
+  ],
+  "layoutVersion": 4,
+  "consolidatedAt": "2026-10-09T13:05:14Z",
+  "stale": false,
+  "serverTime": "2026-10-09T13:05:20Z"
+}
+```
+
+**Realtime Endpoint: OccupancyRealtimeEndpoint**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OccupancyRealtimeEndpoint|Endpoint WebSocket (STOMP)|El cliente autenticado se suscribe a `/topic/parking-lots/{lotId}/occupancy` y recibe un mensaje por cada cambio de estado de un espacio y por cada recálculo de la disponibilidad (TS09, escenario 2). La suscripción se autoriza con el mismo token y solo para estacionamientos de su institución.|
+
+**Open Host Service: OccupancyFacade**
+
+|Nombre|Tipo de retorno|Consumidor|Descripción|
+|-|-|-|-|
+|currentOccupancy(parkingLotId: UUID)|OccupancySnapshotView?|Prediction & Advisory|Disponibilidad y porcentaje de ocupación actuales; vacío si no hay un dato consolidado vigente.|
+|freeSpaces(parkingLotId: UUID)|Integer|Prediction & Advisory|Espacios libres; los desconocidos no cuentan.|
+|exitsInWindow(parkingLotId: UUID, windowMinutes: Integer)|Integer|Prediction & Advisory|Salidas registradas en la ventana.|
+|recentSnapshots(parkingLotId: UUID, from: Instant, to: Instant)|`List<OccupancySnapshotView>`|Prediction & Advisory|Historial por minuto del intervalo (hasta 7 días).|
+|availabilityOf(tenantId: UUID, parkingLotId: UUID)|OccupancyView|Módulo de composición|Disponibilidad por zona para la pantalla de inicio y la consola (TS02, TS17).|
+
+**Event Consumers**
+
+|Consumer|Evento recibido|Event Handler|
+|-|-|-|
+|SensingEventListener|SensorStateChanged, DeviceFaultDetected, SensorCommunicationRestored, VehiclePassageDetected (Parking Sensing)|SensingEventHandler|
+|LayoutEventListener|ParkingLayoutProvided (Parking Configuration)|LayoutProvidedEventHandler|
+
+**Procesos programados: OccupancySchedulers**
+
+|Método|Frecuencia|Command|Descripción|
+|-|-|-|-|
+|reconcile()|Cada 5 min|ReconcileAccessCountCommand|Reconcilia el conteo de accesos de cada estacionamiento (TS14, escenario 3).|
+|recordSnapshots()|Cada 1 min|RecordSnapshotCommand|Guarda una foto de la disponibilidad de cada estacionamiento.|
+
+En el despliegue con varias réplicas, cada proceso se ejecuta en una sola réplica a la vez, con un bloqueo en la base de datos (ShedLock).
+
+### 5.4.3. Application Layer
+
+La Application Layer coordina la traducción de los eventos de entrada, la actualización del estado, el recálculo de la disponibilidad y la distribución de los cambios. No contiene reglas de negocio. Sus capacidades son mantener el estado de los espacios, registrar el flujo, reconciliar, distribuir la ocupación y responder las consultas.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|ApplyDetectionCommand|eventId, tenantId, parkingLotId, spaceId, presence, detectedAt|ApplyDetectionCommandHandler|SpaceOccupancyRepository, OccupancyEventPublisher|US05, US07, US08|
+|MarkSpaceUnknownCommand|tenantId, parkingLotId, spaceId, reason, at|MarkSpaceUnknownCommandHandler|SpaceOccupancyRepository, OccupancyEventPublisher|US08|
+|AwaitStableDetectionCommand|spaceId, at|AwaitStableDetectionCommandHandler|SpaceOccupancyRepository|US08, US20|
+|RecordPassageCommand|eventId, tenantId, parkingLotId, accessPointId, direction, passedAt|RecordPassageCommandHandler|LotOccupancyRepository, VehiclePassageRepository, OccupancyEventPublisher|TS14|
+|RecalculateAvailabilityCommand|parkingLotId|RecalculateAvailabilityCommandHandler|SpaceOccupancyRepository, LotOccupancyRepository, AvailabilityReadModel, OccupancyEventPublisher, Clock|US05, US06, TS09|
+|ApplyLayoutCommand|tenantId, parkingLotId, layoutVersion|ApplyLayoutCommandHandler|LayoutReader, SpaceOccupancyRepository, LotOccupancyRepository, Clock|US17|
+|ReconcileAccessCountCommand|now|ReconcileAccessCountCommandHandler|LotOccupancyRepository, OccupancyEventPublisher|TS14|
+|RecordSnapshotCommand|now|RecordSnapshotCommandHandler|LotOccupancyRepository, OccupancySnapshotRepository|TS07 (insumo)|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetOccupancyQuery|tenantId, parkingLotId|GetOccupancyQueryHandler|OccupancyView, leído del read model|
+|GetSpaceStatusesQuery|tenantId, parkingLotId|GetSpaceStatusesQueryHandler|`List<SpaceStatusView>`|
+|GetFlowQuery|tenantId, parkingLotId, windowMinutes|GetFlowQueryHandler|FlowView (ingresos y salidas)|
+|GetRecentSnapshotsQuery|parkingLotId, from, to|GetRecentSnapshotsQueryHandler|`List<OccupancySnapshotView>`|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|SensingEventHandler|SensorStateChanged|Capa anticorrupción: traduce `state` a `DetectedPresence` y ejecuta `ApplyDetectionCommand`.|
+|SensingEventHandler|DeviceFaultDetected|Si el destino es un espacio, ejecuta `MarkSpaceUnknownCommand` con el motivo equivalente: NO_REPORT y CRITICAL_BATTERY pasan a SENSOR_FAULT, GATEWAY_OFFLINE se conserva y DECOMMISSIONED pasa a NO_SENSOR. Si el destino es un acceso, no cambia ningún espacio: ese conteo queda incompleto hasta la siguiente reconciliación.|
+|SensingEventHandler|SensorCommunicationRestored|Ejecuta `AwaitStableDetectionCommand`.|
+|SensingEventHandler|VehiclePassageDetected|Ejecuta `RecordPassageCommand`.|
+|LayoutProvidedEventHandler|ParkingLayoutProvided|Ejecuta `ApplyLayoutCommand`.|
+|SpaceStatusChangedEventHandler|SpaceMarkedOccupied, SpaceMarkedFree, SpaceMarkedUnknown|Notifica el cambio a los clientes suscritos y ejecuta `RecalculateAvailabilityCommand`.|
+
+**Flujos de ejecución**
+
+`ApplyDetectionCommandHandler` y `RecalculateAvailabilityCommandHandler`:
+
+1. Carga el `SpaceOccupancy` y aplica `applyDetection`; si el evento ya fue aplicado o está fuera de orden, termina sin cambios.
+2. Guarda el espacio y, al confirmar la transacción, publica `SpaceMarkedOccupied` o `SpaceMarkedFree`.
+3. `SpaceStatusChangedEventHandler` envía el cambio del espacio a los suscriptores y ejecuta `RecalculateAvailabilityCommand`.
+4. El recálculo obtiene los conteos con `countByZone`, llama a `LotOccupancy.recalculate`, actualiza el read model en Redis y publica `OccupancyUpdated`. Como recalcula desde los espacios guardados, es idempotente: repetirlo no altera el resultado.
+
+`ApplyLayoutCommandHandler`:
+
+1. Obtiene el layout publicado con `LayoutReader` (fachada de Parking Configuration), con sus zonas, sus espacios, las asociaciones y los accesos que cuentan flujo.
+2. Crea en UNKNOWN los espacios nuevos, reubica los que cambiaron de zona y retira los que ya no existen.
+3. Actualiza las zonas y los accesos de `LotOccupancy`, y ejecuta el recálculo.
+
+`ReconcileAccessCountCommandHandler`:
+
+1. Para cada estacionamiento, llama a `reconcile` con la política vigente.
+2. Guarda el resultado; si fue divergente, queda registrado para la consola.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|Repositorios del dominio|Puertos (Domain Layer)|Ver 5.4.1|Persistencia de los agregados, los pasos y el historial.|
+|LayoutReader|Puerto hacia Parking Configuration|layoutOf(tenantId, parkingLotId): LayoutView|Lee el layout publicado vigente.|
+|AvailabilityReadModel|Puerto de lectura y difusión|write(view), read(parkingLotId), broadcast(change)|Mantiene el read model y difunde los cambios a los clientes suscritos.|
+|OccupancyEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para la vigencia y la reconciliación.|
+
+### 5.4.4. Infrastructure Layer
+
+La Infrastructure Layer implementa la persistencia, el read model, la difusión en tiempo real y la integración con Parking Configuration.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|SpaceOccupancyRepositoryAdapter, LotOccupancyRepositoryAdapter|Repository (implementación)|SpaceOccupancyRepository, LotOccupancyRepository|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`). `countByZone` es una consulta agrupada por zona y estado.|
+|JdbcVehiclePassageRepository|Repository (implementación)|VehiclePassageRepository|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `vehicle_passages`; elimina los registros con más de 7 días.|
+|JdbcOccupancySnapshotRepository|Repository (implementación)|OccupancySnapshotRepository|JDBC, PostgreSQL|Guarda una foto por minuto; elimina las de más de 7 días.|
+|RedisAvailabilityReadModel|Adapter (read model)|AvailabilityReadModel|Spring Data Redis, Redis Pub/Sub|Guarda la disponibilidad por estacionamiento y zona y el estado de los espacios. Publica cada cambio en un canal de Redis para que todas las réplicas lo entreguen a sus clientes conectados (QAS-04).|
+|StompRealtimeConfiguration|Configuración de mensajería|—|Spring WebSocket, STOMP|Expone el endpoint de suscripción y entrega a cada cliente los cambios recibidos del canal de Redis.|
+|ConfigurationLayoutReaderAdapter|Adapter (anti-corruption)|LayoutReader|Llamada en proceso a `ParkingConfigurationFacade`|Traduce el layout publicado al modelo de Occupancy.|
+|OccupancyEventPublisherAdapter|Adapter (eventos)|OccupancyEventPublisher|Eventos de aplicación de Spring|Publica los eventos; Analytics los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|CQRS|Las escrituras actualizan PostgreSQL y luego el read model en Redis; las consultas de la aplicación y la consola leen Redis (DD-04). Si Redis no responde, la consulta se resuelve en PostgreSQL y se informa igual la antigüedad del dato (QAS-06).|
+|Frescura|La cadena detección confirmada, guardado, recálculo, Redis y notificación se hace en el mismo proceso, para cumplir 5 s o menos desde la confirmación hasta la aplicación y la consola (QAS-02).|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `occupancy` y en el read model. El historial de largo plazo pertenece a Analytics; aquí solo se conservan 7 días.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas, y las claves de Redis incluyen la institución. Las consultas filtran por el tenant del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `occupancy` de PostgreSQL y Redis, según DD-01 y DD-04.|
+
+### 5.4.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Occupancy dentro del contenedor Quadrapp Backend, organizado por capas. Muestra la entrada de las detecciones desde Parking Sensing y del layout desde Parking Configuration, el recálculo y la publicación de la disponibilidad, el read model en Redis con la suscripción en tiempo real de la aplicación, y las consultas de Prediction & Advisory y del módulo de composición a través de la fachada.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Mantiene el estado de los espacios, la disponibilidad y el flujo. |
+| Base de datos | PostgreSQL (esquema `occupancy`) | Almacena el estado de los espacios y las zonas, los pasos, el historial reciente y las reconciliaciones. |
+| Read model de disponibilidad | Redis | Sirve la disponibilidad a la aplicación y la consola, y difunde los cambios entre réplicas. |
+
+#### Componentes del módulo Occupancy
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Occupancy Query Controller | Interface | Disponibilidad, estado de los espacios y flujo. | Spring MVC `@RestController` | OccupancyQueryController |
+| Occupancy Realtime Endpoint | Interface | Suscripción a los cambios de un estacionamiento. | Spring WebSocket, STOMP | OccupancyRealtimeEndpoint, StompRealtimeConfiguration |
+| Occupancy Facade | Interface | Open Host Service en proceso. | Spring bean | OccupancyFacade y las vistas `*View` |
+| Sensing Event Listener | Interface | Capa anticorrupción de los eventos de Parking Sensing. | `@TransactionalEventListener` | SensingEventListener |
+| Layout Event Listener | Interface | Recibe `ParkingLayoutProvided`. | `@TransactionalEventListener` | LayoutEventListener |
+| Occupancy Schedulers | Interface | Reconciliación e historial por minuto. | Spring `@Scheduled` | OccupancySchedulers |
+| Occupancy Command Handlers | Application | Casos de uso de escritura y Event Handlers. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
+| Occupancy Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
+| Occupancy Aggregates | Domain | Reglas del estado, la disponibilidad y el flujo. | Java (dominio puro) | SpaceOccupancy, LotOccupancy, Value Objects y enumeraciones |
+| Occupancy Repositories | Infrastructure | Persistencia en el esquema `occupancy`. | Spring Data JPA, JDBC | *RepositoryAdapter, JdbcVehiclePassageRepository, JdbcOccupancySnapshotRepository |
+| Availability Read Model | Infrastructure | Read model y difusión entre réplicas. | Spring Data Redis, Pub/Sub | RedisAvailabilityReadModel |
+| Layout Reader Adapter | Infrastructure | Lee el layout publicado. | Adaptador Java | ConfigurationLayoutReaderAdapter |
+| Occupancy Event Publisher | Infrastructure | Publica `OccupancyUpdated` y `EntryExitRecorded`. | Eventos de aplicación de Spring | OccupancyEventPublisherAdapter |
+
+Occupancy Component Level Diagram: **OccupancyComponentLevelDiagram**
+![Occupancy Component Level Diagram](./assets/capitulo-05/OccupancyComponentLevelDiagram.png)
+
+### 5.4.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.4.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los dos agregados con su entidad, Value Objects y enumeraciones, las interfaces de los repositorios y los eventos de dominio. Los eventos `SpaceMarked*` y `AccessCountReconciled` son internos; `OccupancyUpdated` y `EntryExitRecorded` forman el lenguaje publicado hacia Analytics.
+
+![Occupancy Domain Layer Class Diagram](./assets/capitulo-05/OccupancyDomainLayerClassDiagram.png)
+
+#### 5.4.7.2. Bounded Context Database Design Diagram
+
+El esquema `occupancy` de PostgreSQL separa el estado de cada espacio (`space_occupancy`) del estado del estacionamiento (`lot_occupancy` y `zone_occupancy`), igual que los agregados. `vehicle_passages` usa el `eventId` de Parking Sensing como clave para no registrar dos veces un paso, y `occupancy_snapshots` guarda el historial reciente por minuto. No hay claves foráneas hacia otros esquemas: la estructura del estacionamiento se referencia por identificador (CON-02). El read model de Redis no se incluye porque es una proyección que se reconstruye desde estas tablas.
+
+![Occupancy Database Design Diagram](./assets/capitulo-05/OccupancyDatabaseDesignDiagram.png)
+
+---
 
 ## 5.5. Bounded Context: Prediction & Advisory
 
