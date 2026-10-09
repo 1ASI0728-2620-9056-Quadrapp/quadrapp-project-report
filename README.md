@@ -56,14 +56,14 @@
 | 2.7 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación del diseño táctico del Bounded Context Prediction & Advisory, con sus capas y diagramas. |
 | 2.8 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación de los wireframes y wireflows de la aplicación móvil y de la consola de operación. |
 | 2.9 | 2026-10-09 | Becerra Tejeda, Alessandra Nicole | Incorporación del diseño táctico de los Bounded Contexts IAM y Notifications, con sus capas y diagramas, y de sus acciones del segundo hito en el Student Outcome. |
-| 2.10 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción del EventStorming en diez pasos, del Candidate Context Discovery en tres iteraciones y de cinco Domain Message Flows numerados, con el enlace al tablero de diseño estratégico en los anexos. |
-| 2.11 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción de los Bounded Context Canvases y de las tres alternativas de Context Mapping con la misma herramienta del EventStorming. |
-| 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
-| 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
+| 2.10 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los artefactos del primer hito según la retroalimentación del docente: EventStorming en diez pasos, Candidate Context Discovery en tres iteraciones y cinco Domain Message Flows numerados, con el enlace al tablero de diseño estratégico en los anexos. |
+| 2.11 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los Bounded Context Canvases y de las tres alternativas de Context Mapping, unificados en la misma herramienta del EventStorming según la retroalimentación del docente. |
+| 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
+| 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy, y revisión de coherencia de IAM (rol de operador) y de Prediction & Advisory (eventos del campus) con esos contextos. |
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
 | 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser diseñados por Bejarano Martinez, Alvaro Leandro, y del enlace a la Landing Page implementada. |
-| 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del diseño de base de datos y del diagrama de clases de Analytics: reemplazo de los diagramas en texto por la descripción del diagrama y alineación con PostgreSQL. |
-| 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación de los wireframes de escritorio de la consola de operación para el inventario de dispositivos y del Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
+| 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del diseño de base de datos y del diagrama de clases de Analytics: descripción de los diagramas en lugar de esquemas en texto y alineación con PostgreSQL. |
+| 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del capítulo VI: wireframes de escritorio de la consola de operación para el inventario de dispositivos y Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
 
 # Project Report Collaboration Insights
 
@@ -97,7 +97,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
 | Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
-| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
+| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación de la Landing Page UI Design con el diseño de Bejarano Martinez; actualización del Registro de Versiones, del Collaboration Insights, del Student Outcome y de la tabla de contenido; y revisión de coherencia del informe como coordinador del equipo: artefactos del capítulo IV observados en el primer hito, arquitectura y diagramas C4, diagramas de los demás bounded contexts y wireframes de la consola. |
 
 **Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 24 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.17 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
@@ -295,7 +295,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
           AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.<br>
-          TB1: Logré sustentar la reconstrucción del diseño estratégico (EventStorming, contextos candidatos, message flows, canvases y context map) y el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.
+          TB1: Logré sustentar el diseño táctico de Parking Configuration, Parking Sensing y Occupancy y la revisión del diseño estratégico según la retroalimentación del primer hito, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.
         </p>
       </td>
       <td>
@@ -331,7 +331,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
           AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.<br>
-          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y documenté las correcciones del capítulo IV explicando la técnica aplicada en cada paso, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.
+          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y revisé la coherencia entre los capítulos IV y V, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.
         </p>
       </td>
       <td>
