@@ -61,7 +61,7 @@
 | 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
 | 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
-| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
+| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser diseñados por Bejarano Martinez, Alvaro Leandro, y del enlace a la Landing Page implementada. |
 | 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del diseño de base de datos y del diagrama de clases de Analytics: reemplazo de los diagramas en texto por la descripción del diagrama y alineación con PostgreSQL. |
 | 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación de los wireframes de escritorio de la consola de operación para el inventario de dispositivos y del Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
 
@@ -93,13 +93,13 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 
 | Integrante | Secciones elaboradas o corregidas |
 | --- | --- |
-| Bejarano Martinez, Alvaro Leandro | Implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
+| Bejarano Martinez, Alvaro Leandro | Diseño del wireframe y del mock-up de la Landing Page en Figma, incorporados en la sección 6.3, e implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
 | Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
 | Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
 | Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
 
-**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 20 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 24 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.17 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
@@ -279,7 +279,8 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
+          TB1: Logré sustentar el diseño de la Landing Page, explicando cómo su estructura por segmento y sus llamadas a la acción comunican la propuesta de valor de Quadrapp a conductores y a instituciones, y cómo el diseño se llevó a la versión implementada.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
@@ -314,7 +315,8 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
+          TB1: Diseñé el wireframe y el mock-up de la Landing Page y redacté su contenido para comunicar el alcance real del producto (sin reservas, sin pagos y sin rastreo de ubicación) a públicos de distinto perfil, e implementé la primera versión de la página.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
