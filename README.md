@@ -461,8 +461,8 @@ Frente a esta problemática, Quadrapp busca atender inicialmente a conductores d
 Conductores de la comunidad educativa (estudiantes, docentes y personal administrativo) que se trasladen regularmente al campus, y administradores de estacionamientos universitarios responsables de supervisar la ocupación y operación de dichos espacios.
 
 2. ¿Dónde encajaría nuestro producto en la vida o trabajo del usuario?
-    - Conductores: Antes y durante su desplazamiento hacia la universidad, utilizando la aplicación móvil para consultar disponibilidad actual, conocer la probabilidad de encontrar un espacio al momento estimado de llegada, realizar reservas y gestionar su acceso al estacionamiento.
-    - Administradores: Durante la operación diaria del estacionamiento, utilizando un dashboard para supervisar la ocupación, revisar accesos, reservas, comportamiento histórico y períodos de mayor demanda.
+    - Conductores: Antes y durante su desplazamiento hacia la universidad, utilizando la aplicación móvil para consultar disponibilidad actual, conocer la probabilidad de encontrar un espacio al momento estimado de llegada y recibir alertas de baja disponibilidad.
+    - Administradores: Durante la operación diaria del estacionamiento, utilizando un dashboard para supervisar la ocupación, el flujo de ingresos y salidas, el comportamiento histórico y los períodos de mayor demanda.
 
 3. ¿Qué problemas resuelve el producto para el usuario?
     - Incertidumbre sobre la disponibilidad de estacionamientos al momento de llegar al campus.
@@ -1136,23 +1136,51 @@ En esta sección se define el Ubiquitous Language del dominio del proyecto, con 
 
 | Term | Definition |
 | --- | --- |
-| Parking Administrator (Administrador de Estacionamiento) | Persona responsable de supervisar la ocupación y la operación diaria de los estacionamientos de la institución. |
-| Security Guard (Personal de Vigilancia) | Persona encargada de controlar el acceso al estacionamiento y de verificar la credencial institucional de los conductores. |
-| Institutional Credential (Credencial Institucional) | Documento de identificación emitido por la institución que el conductor debe presentar de forma obligatoria para ingresar al estacionamiento. |
+| Institution / Tenant (Institución) | Universidad que contrata Quadrapp. Todos sus datos se aíslan del resto mediante su identificador de institución. |
+| Enabled Email Domain (Dominio de Correo Habilitado) | Dominio de correo de una institución cuyos usuarios pueden acceder a Quadrapp. |
+| Invitation (Invitación) | Acceso de un solo uso que permite a un administrador u operador crear su cuenta. Vence en un plazo definido. |
+| One-Time Code (Código de Acceso) | Código temporal de un solo uso, enviado al correo del usuario, con el que inicia sesión. |
+| Role (Rol) | Conjunto de permisos de un usuario: conductor, administrador de estacionamientos u operador. |
+| Driver (Conductor) | Miembro de la comunidad educativa que llega al campus en vehículo y consulta Quadrapp desde la aplicación móvil. |
+| Parking Administrator (Administrador de Estacionamientos) | Persona responsable de configurar los estacionamientos y de supervisar su ocupación y operación desde la consola. |
+| Operator (Operador) | Personal del turno invitado por el administrador que monitorea la operación del estacionamiento desde la consola. |
 | Parking Lot (Estacionamiento) | Área destinada al aparcamiento de vehículos dentro o junto al campus, administrada por la institución. |
 | Parking Zone (Zona de Estacionamiento) | Sección delimitada de un estacionamiento (nivel, sector o bloque) que agrupa un conjunto de espacios. |
 | Parking Space (Espacio de Estacionamiento) | Lugar individual y delimitado donde puede estacionarse un vehículo. |
 | Parking Capacity (Capacidad de Estacionamiento) | Número total de espacios que tiene un estacionamiento o una zona de estacionamiento. |
-| Access Point (Punto de Acceso) | Lugar por donde los vehículos ingresan o salen del estacionamiento y donde se realiza el control de acceso. |
-| Space Status (Estado del Espacio) | Condición de un espacio de estacionamiento en un momento determinado: libre u ocupado. |
+| Access Point (Acceso Vehicular) | Entrada o salida de vehículos de un estacionamiento, equipada con sensores de paso que registran la dirección. |
+| Layout (Layout del Estacionamiento) | Estructura publicada y versionada de un estacionamiento: zonas, espacios, accesos y asociación de cada sensor. |
+| Device (Dispositivo) | Sensor o gateway registrado en la institución. |
+| Space Sensor (Sensor de Cochera) | Sensor instalado en un espacio que detecta la presencia de un vehículo sin identificarlo. |
+| Pass Sensor (Sensor de Paso) | Sensor instalado en un acceso vehicular que detecta el paso de un vehículo y su dirección. |
+| Campus Gateway (Gateway del Campus) | Equipo del campus que recibe las lecturas de los sensores, las publica hacia la nube y las retiene en un búfer local mientras no hay conexión. |
+| Sensor Reading (Lectura) | Mensaje que publica un sensor con su identificador, el estado detectado, la fecha y hora y un identificador único de evento. |
+| Confirmed Detection (Detección Confirmada) | Cambio de estado de un sensor que se mantuvo durante el tiempo mínimo de detección. |
+| Minimum Detection Time (Tiempo Mínimo de Detección) | Tiempo que un estado debe mantenerse para confirmarse, de modo que los cambios breves no alteren la ocupación. |
+| Report Interval (Intervalo de Reporte) | Tiempo máximo esperado entre dos reportes de un sensor; si vence, se detecta una falla. |
+| Device Fault (Falla de Dispositivo) | Situación en la que un sensor deja de reportar dentro de su intervalo o tiene batería crítica. El dispositivo se marca para mantenimiento. |
+| Space Status (Estado del Espacio) | Condición de un espacio en un momento determinado: libre (FREE), ocupado (OCCUPIED) o desconocido (UNKNOWN). Un espacio desconocido nunca cuenta como libre. |
 | Occupancy (Ocupación) | Cantidad de espacios de estacionamiento ocupados en un momento determinado. |
 | Occupancy Rate (Porcentaje de Ocupación) | Proporción de espacios ocupados respecto a la capacidad total de un estacionamiento o zona. |
 | Availability (Disponibilidad) | Cantidad de espacios de estacionamiento libres en un momento determinado. |
-| Availability Level (Nivel de Disponibilidad) | Categoría (alta, media o baja) que resume qué tan probable es encontrar espacio libre en un estacionamiento o zona. |
-| Historical Occupancy (Ocupación Histórica) | Registro de la ocupación del estacionamiento en fechas y horas pasadas, utilizado para identificar comportamientos recurrentes. |
-| Availability Prediction (Predicción de Disponibilidad) | Estimación de la disponibilidad que habrá en un momento futuro, basada en información actual e histórica. |
+| Entry / Exit Flow (Flujo de Ingresos y Salidas) | Cantidad de vehículos que ingresan y salen de un estacionamiento en una ventana de tiempo, medida con los sensores de paso. |
+| Reconciliation (Reconciliación) | Contraste periódico entre el conteo de accesos y la detección por espacio; prevalece la detección por espacio. |
+| Historical Occupancy (Ocupación Histórica) | Registro de la ocupación del estacionamiento por fecha, hora y zona, utilizado para identificar comportamientos recurrentes. |
+| Academic Calendar (Calendario Académico) | Periodos de clases, exámenes y receso de la institución, que influyen en la demanda. |
+| Campus Event (Evento del Campus) | Actividad con fecha, horario y estacionamiento afectado que altera la demanda habitual. |
+| Forecast (Pronóstico) | Estimación de la ocupación de un estacionamiento para una hora futura, basada en la ocupación actual, el flujo, el historial y el calendario. |
+| Forecast Horizon (Horizonte de Pronóstico) | Anticipación del pronóstico: 15, 30, 45 o 60 minutos. |
+| Confidence Level (Nivel de Confianza) | Grado de confianza de un pronóstico según la cantidad y la calidad de los datos disponibles. |
+| Fallback Heuristic (Heurística de Respaldo) | Estimación basada en promedios históricos que se usa cuando el modelo no está disponible o faltan datos; se publica con confianza baja. |
+| Model Version (Versión del Modelo) | Versión del modelo de pronóstico que generó un resultado, usada para medir su precisión. |
+| Saturation (Saturación) | Situación en la que la ocupación esperada supera el umbral de saturación configurado para el estacionamiento. |
 | Availability Probability (Probabilidad de Disponibilidad) | Posibilidad, expresada como porcentaje, de que el conductor encuentre un espacio libre al momento de su llegada. Es una estimación, no una garantía. |
-| Estimated Time of Arrival (Tiempo Estimado de Llegada) | Momento en que se calcula que el conductor llegará al estacionamiento, según su ubicación y desplazamiento. |
+| Arrival Category (Categoría de Llegada) | Clasificación (HIGH, LIMITED o LOW) de la probabilidad de encontrar espacio en un estacionamiento a la hora estimada de llegada. |
+| Estimated Time of Arrival (Tiempo Estimado de Llegada) | Minutos que faltan para que el conductor llegue al estacionamiento, calculados en su dispositivo. El servidor solo recibe los minutos, nunca la ubicación. |
+| Arrival Advice (Asesoría de Llegada) | Recomendación que recibe el conductor según su tiempo estimado de llegada: categoría, probabilidad, confianza y, si corresponde, la próxima disponibilidad. |
+| Next Availability (Próxima Disponibilidad) | Hora estimada en que volverá a haber espacio cuando es poco probable encontrarlo a la llegada. |
+| Forecast Accuracy (Precisión del Pronóstico) | Grado de acierto de los pronósticos, medido como error absoluto medio por estacionamiento, horizonte y versión del modelo. |
+| Alert Subscription (Suscripción a Alertas) | Franja horaria y estacionamiento sobre los que el conductor quiere recibir alertas de baja disponibilidad. |
 | Peak Hours (Horas Pico) | Períodos de mayor demanda de estacionamiento, generalmente al inicio y al término de las clases. |
 | Demand Pattern (Patrón de Demanda) | Comportamiento recurrente en la cantidad de vehículos que buscan estacionar según el día, la hora o el calendario académico. |
 | Congestion (Congestión) | Acumulación de vehículos dentro o alrededor del campus que dificulta la circulación, la búsqueda de espacio o el acceso. |
@@ -1197,7 +1225,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>EP01</strong></td>
   <td>Acceso e identidad</td>
-  <td>Permitir que estudiantes, docentes y personal administrativo accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura.</td>
+  <td>Permitir que Integra Labs incorpore una institución y que conductores, administradores y operadores accedan con un código de un solo uso enviado a su correo habilitado o invitado, según su rol, y gestionen su sesión de forma segura.</td>
   <td>No aplica</td>
   <td>No aplica</td>
 </tr>
@@ -1286,7 +1314,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US02</strong></td>
   <td>Cerrar sesión</td>
-  <td>Como usuario, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo.</td>
+  <td>Como usuario autenticado, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo.</td>
   <td>
     <strong>Escenario 1: Cierre exitoso.</strong><br>
     Dado que el usuario tiene una sesión activa,<br>
@@ -1307,7 +1335,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US03</strong></td>
   <td>Gestionar sesión expirada</td>
-  <td>Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp.</td>
+  <td>Como usuario autenticado, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp.</td>
   <td>
     <strong>Escenario 1: Sesión expirada.</strong><br>
     Dado que la sesión del usuario ha expirado,<br>
@@ -1328,7 +1356,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US04</strong></td>
   <td>Consultar estacionamientos universitarios</td>
-  <td>Como usuario, quiero visualizar los estacionamientos disponibles dentro de mi universidad para identificar las áreas donde puedo estacionar.</td>
+  <td>Como conductor de la comunidad educativa, quiero visualizar los estacionamientos disponibles dentro de mi universidad para identificar las áreas donde puedo estacionar.</td>
   <td>
     <strong>Escenario 1: Estacionamientos disponibles.</strong><br>
     Dado que existen estacionamientos configurados,<br>
@@ -1349,18 +1377,18 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US05</strong></td>
   <td>Consultar disponibilidad actual</td>
-  <td>Como usuario, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar.</td>
+  <td>Como conductor de la comunidad educativa, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar.</td>
   <td>
     <strong>Escenario 1: Espacios disponibles.</strong><br>
     Dado que existen datos actualizados de los sensores,<br>
     cuando el usuario consulta un estacionamiento,<br>
     entonces el sistema muestra los espacios libres y ocupados.<br><br>
     <strong>Escenario 2: Espacio ocupado.</strong><br>
-    Dado que el servicio de ocupación confirma un espacio como ocupado tras una detección estable,<br>
+    Dado que Parking Sensing confirma la detección de un vehículo en el espacio tras el tiempo mínimo configurado,<br>
     cuando se actualiza la información de disponibilidad,<br>
     entonces el espacio se presenta como ocupado.<br><br>
     <strong>Escenario 3: Espacio libre.</strong><br>
-    Dado que el servicio de ocupación confirma un espacio como libre tras el tiempo mínimo sin detección,<br>
+    Dado que Parking Sensing confirma que el espacio quedó libre tras el tiempo mínimo sin detección,<br>
     cuando se actualiza la información,<br>
     entonces el espacio se presenta como disponible.<br><br>
     <strong>Escenario 4: Antigüedad del dato.</strong><br>
@@ -1374,7 +1402,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US06</strong></td>
   <td>Consultar disponibilidad por zona</td>
-  <td>Como usuario, quiero visualizar la disponibilidad agrupada por zonas para identificar rápidamente dónde existe mayor disponibilidad.</td>
+  <td>Como conductor de la comunidad educativa, quiero visualizar la disponibilidad agrupada por zonas para identificar rápidamente dónde existe mayor disponibilidad.</td>
   <td>
     <strong>Escenario 1: Consulta por zona.</strong><br>
     Dado que un estacionamiento posee varias zonas,<br>
@@ -1395,7 +1423,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US07</strong></td>
   <td>Actualizar disponibilidad</td>
-  <td>Como usuario, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real.</td>
+  <td>Como conductor de la comunidad educativa, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real.</td>
   <td>
     <strong>Escenario 1: Cambio a ocupado.</strong><br>
     Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>
@@ -1416,7 +1444,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US08</strong></td>
   <td>Gestionar estado desconocido</td>
-  <td>Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real.</td>
+  <td>Como conductor de la comunidad educativa, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real.</td>
   <td>
     <strong>Escenario 1: Sensor sin reportar actividad.</strong><br>
     Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>
@@ -1454,7 +1482,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 3: Historial limitado.</strong><br>
     Dado que el estacionamiento no acumula historial suficiente,<br>
     cuando el usuario realiza la consulta,<br>
-    entonces el sistema presenta la estimación de contingencia e informa que su nivel de confianza es bajo.
+    entonces el sistema presenta la heurística de respaldo e informa que su nivel de confianza es bajo.
   </td>
   <td>EP03</td>
 </tr>
@@ -1509,7 +1537,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Datos históricos insuficientes.</strong><br>
     Dado que el estacionamiento no cuenta con suficiente historial de ocupación,<br>
     cuando el usuario consulta la predicción,<br>
-    entonces el sistema presenta la estimación de contingencia e indica que su nivel de confianza es bajo.<br><br>
+    entonces el sistema presenta la heurística de respaldo e indica que su nivel de confianza es bajo.<br><br>
     <strong>Escenario 2: Datos inconsistentes.</strong><br>
     Dado que el historial disponible presenta inconsistencias,<br>
     cuando el sistema genera la predicción,<br>
@@ -1536,7 +1564,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     cuando el conductor solicita la asesoría,<br>
     entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>
     <strong>Escenario 3: Historial limitado.</strong><br>
-    Dado que el pronóstico utilizado proviene de la estimación de contingencia,<br>
+    Dado que el pronóstico utilizado proviene de la heurística de respaldo,<br>
     cuando se genera la asesoría,<br>
     entonces el sistema la entrega e informa que su nivel de confianza es bajo.
   </td>
@@ -1557,7 +1585,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     cuando se actualiza la asesoría,<br>
     entonces el sistema utiliza la predicción correspondiente.<br><br>
     <strong>Escenario 3: Nuevo horizonte con historial limitado.</strong><br>
-    Dado que el nuevo tiempo estimado corresponde a un horizonte cuyo pronóstico proviene de la estimación de contingencia,<br>
+    Dado que el nuevo tiempo estimado corresponde a un horizonte cuyo pronóstico proviene de la heurística de respaldo,<br>
     cuando el sistema recalcula la asesoría,<br>
     entonces el sistema entrega la asesoría recalculada e informa que su nivel de confianza es bajo.
   </td>
@@ -1749,10 +1777,10 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>
     cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>
     entonces el sistema le envía la alerta correspondiente.<br><br>
-    <strong>Escenario 2: Aviso inmediato al consultar la asesoría.</strong><br>
-    Dado que el conductor tiene habilitadas sus notificaciones,<br>
-    cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>
-    entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>
+    <strong>Escenario 2: Acceso a la asesoría desde la alerta.</strong><br>
+    Dado que el conductor recibió una alerta de saturación prevista,<br>
+    cuando la abre en su dispositivo,<br>
+    entonces la aplicación muestra la asesoría de llegada para ese estacionamiento.<br><br>
     <strong>Escenario 3: Notificaciones deshabilitadas.</strong><br>
     Dado que el conductor deshabilitó las notificaciones,<br>
     cuando se prevé la saturación dentro de su franja suscrita,<br>
@@ -1856,7 +1884,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US29</strong></td>
   <td>Monitorear la operación del estacionamiento desde la consola</td>
-  <td>Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos.</td>
+  <td>Como operador del estacionamiento, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos.</td>
   <td>
     <strong>Escenario 1: Estado actual del estacionamiento.</strong><br>
     Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>
@@ -1966,7 +1994,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Precisión del periodo.</strong><br>
     Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>
     cuando el administrador consulta un periodo,<br>
-    entonces el sistema presenta el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>
+    entonces el sistema presenta, por estacionamiento y horizonte, el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>
     <strong>Escenario 2: Evolución por versión del modelo.</strong><br>
     Dado que el modelo de predicción se actualiza periódicamente,<br>
     cuando el administrador compara los periodos disponibles,<br>
@@ -2003,19 +2031,19 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US36</strong></td>
   <td>Estimar el tiempo hasta la próxima disponibilidad</td>
-  <td>Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa.</td>
+  <td>Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando es poco probable encontrarlo a mi llegada, para decidir si espero o busco otra alternativa.</td>
   <td>
-    <strong>Escenario 1: Estacionamiento lleno con salidas registradas.</strong><br>
-    Dado que el estacionamiento no presenta espacios libres y el contador de flujo registra salidas dentro de la ventana configurada,<br>
-    cuando el conductor consulta su disponibilidad,<br>
+    <strong>Escenario 1: Baja probabilidad con salidas registradas.</strong><br>
+    Dado que la asesoría de llegada indica una baja probabilidad de encontrar espacio y se registran salidas dentro de la ventana configurada,<br>
+    cuando el conductor obtiene la asesoría,<br>
     entonces el sistema informa el rango de tiempo estimado para la próxima liberación junto con su nivel de confianza.<br><br>
     <strong>Escenario 2: Sin salidas registradas.</strong><br>
-    Dado que el estacionamiento no presenta espacios libres y no se registran salidas dentro de la ventana configurada,<br>
-    cuando el conductor consulta su disponibilidad,<br>
+    Dado que la asesoría de llegada indica una baja probabilidad de encontrar espacio y no se registran salidas dentro de la ventana configurada,<br>
+    cuando el conductor obtiene la asesoría,<br>
     entonces el sistema informa que no es posible estimar el tiempo de espera.<br><br>
-    <strong>Escenario 3: Estacionamiento con espacios libres.</strong><br>
-    Dado que el estacionamiento presenta espacios libres,<br>
-    cuando el conductor consulta su disponibilidad,<br>
+    <strong>Escenario 3: Probabilidad favorable.</strong><br>
+    Dado que la asesoría de llegada indica que es probable encontrar espacio,<br>
+    cuando el conductor obtiene la asesoría,<br>
     entonces el sistema no presenta la estimación de espera.
   </td>
   <td>EP03</td>
@@ -2056,8 +2084,8 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 <tr>
   <td><strong>TS02</strong></td>
-  <td>Configuración del API Gateway y BFF para la aplicación móvil</td>
-  <td>Como Developer, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de Quadrapp y facilitar la composición de información proveniente de diferentes contextos.</td>
+  <td>Composición de la vista principal de la aplicación móvil</td>
+  <td>Como Developer, quiero exponer un endpoint de composición para la aplicación móvil, para entregar en una sola carga la información que proviene de distintos módulos de Quadrapp.</td>
   <td>
     <strong>Escenario 1: Composición de la vista principal.</strong><br>
     Dado que el cliente móvil cuenta con un token de sesión vigente,<br>
@@ -2065,11 +2093,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     entonces la respuesta es 200 con el layout, la ocupación actual y la asesoría de llegada correspondiente a ese tiempo estimado, en una sola carga.<br><br>
     <strong>Escenario 2: Solicitud sin autenticación.</strong><br>
     Dado que la solicitud proviene de un cliente sin sesión válida,<br>
-    cuando se envía una solicitud al gateway sin token o con un token inválido,<br>
-    entonces la respuesta es 401 y la petición no alcanza a los servicios internos.<br><br>
-    <strong>Escenario 3: Servicio interno no disponible.</strong><br>
-    Dado que uno de los servicios internos supera su tiempo límite de respuesta,<br>
-    cuando uno de los servicios que compone la respuesta no responde dentro del tiempo límite,<br>
+    cuando se envía una solicitud sin token o con un token inválido,<br>
+    entonces la respuesta es 401 y la capa de seguridad del backend la rechaza antes de llegar a los módulos.<br><br>
+    <strong>Escenario 3: Modelo de predicción no disponible.</strong><br>
+    Dado que el modelo de predicción supera su tiempo límite de respuesta,<br>
+    cuando se compone la vista principal,<br>
     entonces la respuesta es 200 con los datos disponibles e indica qué información no pudo obtenerse.
   </td>
   <td>EP01, EP02, EP03</td>
@@ -2078,7 +2106,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>TS03</strong></td>
   <td>Configuración de persistencia y aislamiento de datos por contexto</td>
-  <td>Como Developer, quiero configurar la persistencia de datos de los principales contextos de Quadrapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades.</td>
+  <td>Como Developer, quiero configurar la persistencia de datos de cada bounded context de Quadrapp, para mantener separados los datos de cada contexto según sus responsabilidades.</td>
   <td>
     <strong>Escenario 1: Escritura en el contexto correspondiente.</strong><br>
     Dado que el administrador cuenta con permisos sobre su institución,<br>
@@ -2104,7 +2132,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Mensaje válido consumido.</strong><br>
     Dado que el consumidor mantiene una suscripción activa al tópico del estacionamiento,<br>
     cuando el consumidor recibe del broker un mensaje con identificador de sensor, estado, marca de tiempo e identificador de evento,<br>
-    entonces confirma su recepción al broker, obtiene de Configuración el espacio asociado a ese sensor y traduce el mensaje a un evento de dominio del contexto de ocupación.<br><br>
+    entonces confirma su recepción al broker, obtiene de Configuración el espacio asociado a ese sensor y registra una lectura validada de Parking Sensing.<br><br>
     <strong>Escenario 2: Mensaje con formato inválido.</strong><br>
     Dado que el consumidor recibe un mensaje del tópico suscrito,<br>
     cuando ese mensaje carece de los campos requeridos o presenta un tipo de dato incorrecto,<br>
@@ -2129,7 +2157,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Publicación con confirmación de entrega.</strong><br>
     Dado que el gateway cuenta con credenciales válidas en el broker,<br>
     cuando el gateway publica un mensaje en el tópico del estacionamiento con QoS 1,<br>
-    entonces el broker confirma la recepción y el mensaje queda disponible para el consumidor de ocupación.<br><br>
+    entonces el broker confirma la recepción y el mensaje queda disponible para el consumidor de Parking Sensing.<br><br>
     <strong>Escenario 2: Pérdida de conectividad.</strong><br>
     Dado que el gateway continúa recibiendo lecturas de los sensores,<br>
     cuando pierde la conexión con el broker,<br>
@@ -2144,11 +2172,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 <tr>
   <td><strong>TS06</strong></td>
-  <td>Implementación de procesamiento e idempotencia de eventos de ocupación</td>
+  <td>Implementación del procesamiento e idempotencia de las lecturas de sensores</td>
   <td>Como Developer, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento.</td>
   <td>
     <strong>Escenario 1: Evento duplicado.</strong><br>
-    Dado que el contexto de ocupación conserva los identificadores de los eventos aplicados,<br>
+    Dado que Parking Sensing conserva los identificadores de los eventos aplicados,<br>
     cuando se procesa un evento cuyo identificador ya fue aplicado al mismo espacio,<br>
     entonces el evento se descarta y el estado del espacio no cambia.<br><br>
     <strong>Escenario 2: Evento fuera de orden.</strong><br>
@@ -2183,7 +2211,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 3: Datos históricos insuficientes.</strong><br>
     Dado que el estacionamiento no acumula historial suficiente,<br>
     cuando se solicita su pronóstico,<br>
-    entonces la respuesta es 200 con el resultado del método de respaldo y un nivel de confianza bajo.<br><br>
+    entonces la respuesta es 200 con el resultado de la heurística de respaldo y un nivel de confianza bajo.<br><br>
     <strong>Escenario 4: Tiempo hasta la próxima liberación.</strong><br>
     Dado que el estacionamiento se encuentra sin espacios libres,<br>
     cuando se envía GET /api/v1/forecasts/{lotId}/next-availability,<br>
@@ -2200,7 +2228,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Asesoría de llegada generada.</strong><br>
     Dado que existe un pronóstico vigente para el estacionamiento,<br>
     cuando se envía POST /api/v1/arrival-advices con el identificador del estacionamiento y el tiempo estimado de llegada en minutos,<br>
-    entonces la respuesta es 200 con la probabilidad de encontrar espacio y su categoría.<br><br>
+    entonces la respuesta es 200 con la probabilidad de encontrar espacio, su categoría (HIGH, LIMITED o LOW), el nivel de confianza y, cuando la probabilidad es baja, la próxima disponibilidad estimada.<br><br>
     <strong>Escenario 2: Tiempo de llegada inválido.</strong><br>
     Dado que el cliente calcula el tiempo estimado de llegada en el dispositivo,<br>
     cuando el tiempo estimado enviado es negativo o supera el máximo admitido,<br>
@@ -2357,7 +2385,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     cuando se envía la solicitud de alta con ese dominio,<br>
     entonces la respuesta es 409 e informa el conflicto.
   </td>
-  <td>EP01, EP04</td>
+  <td>EP01</td>
 </tr>
 
 <tr>
@@ -2384,7 +2412,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>TS17</strong></td>
   <td>Composición de la consola de operación</td>
-  <td>Como Developer, quiero disponer de un punto de entrada propio para la consola de operación, para componer en una sola respuesta la información que el personal del estacionamiento necesita durante su turno.</td>
+  <td>Como Developer, quiero exponer un endpoint de composición para la consola de operación, para entregar en una sola respuesta la información que el personal del estacionamiento necesita durante su turno.</td>
   <td>
     <strong>Escenario 1: Composición del estado de operación.</strong><br>
     Dado que la solicitud presenta un token con rol de operación,<br>
@@ -2394,8 +2422,8 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     Dado que la solicitud presenta un token con rol de conductor,<br>
     cuando se envía GET /api/v1/console/overview,<br>
     entonces la respuesta es 403 y no se entrega información de operación.<br><br>
-    <strong>Escenario 3: Servicio de predicción no disponible.</strong><br>
-    Dado que el servicio de predicción no responde dentro del tiempo límite,<br>
+    <strong>Escenario 3: Modelo de predicción no disponible.</strong><br>
+    Dado que el modelo de predicción no responde dentro del tiempo límite,<br>
     cuando se compone la respuesta de la consola,<br>
     entonces la respuesta es 200 con el estado actual e indica que la saturación prevista no está disponible.
   </td>
@@ -2427,24 +2455,24 @@ Este mapa integra los Business Outcomes relacionados con la implementación de u
 
 El Product Backlog reúne las User Stories y las Technical Stories de Quadrapp en una sola lista ordenada según su aporte al valor del negocio. Las primeras posiciones corresponden a la presentación de la propuesta de valor y a las capacidades principales del producto, como la consulta de disponibilidad y la predicción con asesoría de llegada.
 
-Las Technical Stories representan el trabajo necesario para implementar y sostener las funcionalidades. Algunas apoyan una capacidad específica y otras son transversales porque respaldan varias épicas o aplicaciones. Todas se incluyen en el mismo backlog y se ordenan según el valor que permiten entregar.
+Las Technical Stories representan el trabajo necesario para implementar y sostener las funcionalidades. Algunas apoyan una capacidad específica y otras son transversales porque respaldan varias épicas o aplicaciones. Todas se incluyen en el mismo backlog y se ordenan según el valor que permiten entregar. Como el orden responde al valor y no a la secuencia técnica, las dependencias entre elementos, por ejemplo que la consulta de disponibilidad requiere un layout publicado y la autenticación, se resuelven en cada Sprint Planning incorporando primero los elementos habilitantes.
 
 La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El backlog suma **227 Story Points** distribuidos en **53 elementos**.
 
-| # Orden | User Story Id | Título | Descripción | Story Points |
+| # Orden | Story Id | Título | Descripción | Story Points |
 | --- | --- | --- | --- | --- |
 | 1 | US25 | Conocer la propuesta de valor en la Landing Page | Como visitante, quiero conocer qué resuelve Quadrapp desde su sitio web, para evaluar si la solución responde a la necesidad de mi institución o la mía. | 3 |
 | 2 | US26 | Acceder a la aplicación como visitante del segmento conductores | Como visitante del segmento de conductores de la comunidad educativa, quiero entender cómo la aplicación me ayuda a saber si encontraré espacio, para decidir si la instalo en mi dispositivo. | 2 |
 | 3 | US27 | Conocer la propuesta institucional como visitante del segmento administradores | Como visitante del segmento de administradores de estacionamientos universitarios, quiero conocer qué información entrega la consola de operación, para evaluar la adopción de Quadrapp en mi institución. | 2 |
 | 4 | US28 | Consultar los términos y la política de privacidad | Como visitante, quiero consultar los términos y condiciones y la política de privacidad desde la Landing Page, para conocer qué datos personales trata Quadrapp antes de registrarme. | 2 |
-| 5 | US04 | Consultar estacionamientos universitarios | Como usuario, quiero visualizar los estacionamientos disponibles dentro de mi universidad para identificar las áreas donde puedo estacionar. | 2 |
-| 6 | US05 | Consultar disponibilidad actual | Como usuario, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | 5 |
-| 7 | US06 | Consultar disponibilidad por zona | Como usuario, quiero visualizar la disponibilidad agrupada por zonas para identificar rápidamente dónde existe mayor disponibilidad. | 3 |
-| 8 | US07 | Actualizar disponibilidad | Como usuario, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | 3 |
-| 9 | US08 | Gestionar estado desconocido | Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | 3 |
+| 5 | US04 | Consultar estacionamientos universitarios | Como conductor de la comunidad educativa, quiero visualizar los estacionamientos disponibles dentro de mi universidad para identificar las áreas donde puedo estacionar. | 2 |
+| 6 | US05 | Consultar disponibilidad actual | Como conductor de la comunidad educativa, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | 5 |
+| 7 | US06 | Consultar disponibilidad por zona | Como conductor de la comunidad educativa, quiero visualizar la disponibilidad agrupada por zonas para identificar rápidamente dónde existe mayor disponibilidad. | 3 |
+| 8 | US07 | Actualizar disponibilidad | Como conductor de la comunidad educativa, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | 3 |
+| 9 | US08 | Gestionar estado desconocido | Como conductor de la comunidad educativa, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | 3 |
 | 10 | TS05 | Configuración de comunicación MQTT para eventos IoT | Como Developer, quiero configurar MQTT para la comunicación entre el gateway y los servicios de Quadrapp, para transmitir eventos IoT de manera confiable y desacoplada. | 5 |
 | 11 | TS04 | Consumo y validación de los eventos publicados por el gateway | Como Developer, quiero consumir y validar los mensajes que el gateway publica en el broker, para traducir las lecturas de los dispositivos físicos al lenguaje del dominio sin exponer los sensores a Internet. | 8 |
-| 12 | TS06 | Implementación de procesamiento e idempotencia de eventos de ocupación | Como Developer, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento. | 8 |
+| 12 | TS06 | Implementación del procesamiento e idempotencia de las lecturas de sensores | Como Developer, quiero implementar el procesamiento controlado de eventos de sensores, para evitar duplicidades, inconsistencias y cambios incorrectos en el estado de los espacios de estacionamiento. | 8 |
 | 13 | TS09 | Configuración de actualización en tiempo casi real de disponibilidad | Como Developer, quiero implementar mecanismos de actualización periódica y comunicación en tiempo casi real, para que la aplicación pueda mostrar información reciente sobre la ocupación de los estacionamientos. | 5 |
 | 14 | US09 | Consultar predicción de disponibilidad | Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus. | 5 |
 | 15 | US10 | Consultar diferentes horizontes de predicción | Como conductor de la comunidad educativa, quiero consultar predicciones a 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad antes de mi llegada. | 3 |
@@ -2453,7 +2481,7 @@ La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El
 | 18 | US13 | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | 8 |
 | 19 | US14 | Actualizar asesoría según ETA | Como conductor de la comunidad educativa, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista. | 5 |
 | 20 | US15 | Mostrar categoría de disponibilidad esperada | Como conductor de la comunidad educativa, quiero visualizar una categoría simple de disponibilidad esperada para interpretar rápidamente las condiciones del estacionamiento al momento de mi llegada. | 2 |
-| 21 | US36 | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa. | 5 |
+| 21 | US36 | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando es poco probable encontrarlo a mi llegada, para decidir si espero o busco otra alternativa. | 5 |
 | 22 | TS07 | Implementación del modelo de predicción de ocupación | Como Developer, quiero implementar el componente de predicción de disponibilidad utilizando el histórico de ocupación, la velocidad de flujo, el calendario académico y los eventos del campus, para generar pronósticos de disponibilidad futura de los estacionamientos. | 8 |
 | 23 | TS08 | Implementación del servicio de asesoría de llegada | Como Developer, quiero implementar un servicio que combine la predicción de ocupación con el tiempo estimado de llegada del usuario, para generar una categoría de disponibilidad esperada al momento de llegada. | 5 |
 | 24 | US16 | Registrar estacionamiento universitario | Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por Quadrapp. | 3 |
@@ -2465,14 +2493,14 @@ La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El
 | 30 | TS10 | Implementación del monitoreo de salud de dispositivos IoT | Como Developer, quiero implementar el registro y monitoreo del estado de salud de los sensores y gateways, para detectar dispositivos con problemas de conectividad, batería o comunicación. | 5 |
 | 31 | TS14 | Reconciliación del conteo de accesos con la detección por espacio | Como Developer, quiero reconciliar periódicamente el conteo de entradas y salidas con los estados reportados por los sensores de espacio, para mantener coherente la ocupación del estacionamiento y la velocidad de flujo. | 5 |
 | 32 | US35 | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | 3 |
-| 33 | US29 | Monitorear la operación del estacionamiento desde la consola | Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | 5 |
-| 34 | TS17 | Composición de la consola de operación | Como Developer, quiero disponer de un punto de entrada propio para la consola de operación, para componer en una sola respuesta la información que el personal del estacionamiento necesita durante su turno. | 5 |
+| 33 | US29 | Monitorear la operación del estacionamiento desde la consola | Como operador del estacionamiento, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | 5 |
+| 34 | TS17 | Composición de la consola de operación | Como Developer, quiero exponer un endpoint de composición para la consola de operación, para entregar en una sola respuesta la información que el personal del estacionamiento necesita durante su turno. | 5 |
 | 35 | US01 | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | 5 |
-| 36 | US02 | Cerrar sesión | Como usuario, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo. | 1 |
-| 37 | US03 | Gestionar sesión expirada | Como usuario, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp. | 2 |
+| 36 | US02 | Cerrar sesión | Como usuario autenticado, quiero cerrar mi sesión para evitar que otra persona pueda acceder a mi cuenta desde el dispositivo. | 1 |
+| 37 | US03 | Gestionar sesión expirada | Como usuario autenticado, quiero que el sistema controle la expiración de mi sesión para mantener protegido mi acceso a Quadrapp. | 2 |
 | 38 | TS01 | Configuración de autenticación y gestión de sesiones | Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente. | 5 |
-| 39 | TS02 | Configuración del API Gateway y BFF para la aplicación móvil | Como Developer, quiero configurar un punto de entrada para la aplicación móvil, para centralizar el acceso a los servicios de Quadrapp y facilitar la composición de información proveniente de diferentes contextos. | 8 |
-| 40 | TS03 | Configuración de persistencia y aislamiento de datos por contexto | Como Developer, quiero configurar la persistencia de datos de los principales contextos de Quadrapp, para mantener separados los datos de configuración, ocupación, predicción y analítica según sus responsabilidades. | 8 |
+| 39 | TS02 | Composición de la vista principal de la aplicación móvil | Como Developer, quiero exponer un endpoint de composición para la aplicación móvil, para entregar en una sola carga la información que proviene de distintos módulos de Quadrapp. | 8 |
+| 40 | TS03 | Configuración de persistencia y aislamiento de datos por contexto | Como Developer, quiero configurar la persistencia de datos de cada bounded context de Quadrapp, para mantener separados los datos de cada contexto según sus responsabilidades. | 8 |
 | 41 | US30 | Gestionar los dominios de correo habilitados | Como administrador de estacionamientos, quiero gestionar los dominios de correo institucional habilitados para mi universidad para controlar quién puede registrarse en Quadrapp. | 3 |
 | 42 | US31 | Invitar administradores y operadores | Como administrador de estacionamientos, quiero invitar a otros administradores y a los operadores de mi institución para que accedan a la consola con el rol que les corresponde. | 3 |
 | 43 | TS15 | Aprovisionamiento de una institución | Como Developer, quiero disponer de un proceso de aprovisionamiento restringido para dar de alta una institución con sus dominios de correo y su primer administrador, para habilitar el servicio durante el onboarding sin exponer un registro público. | 5 |
@@ -2522,23 +2550,23 @@ De las siete épicas y las treinta y seis User Stories del Capítulo III, se sel
 
 | Epic / User Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
 | --- | --- | --- | --- | --- |
-| **EP01** | Acceso e identidad | Permitir que estudiantes, docentes y personal administrativo accedan al sistema mediante autenticación institucional y gestionen su sesión de forma segura. | No aplica | No aplica |
+| **EP01** | Acceso e identidad | Permitir que Integra Labs incorpore una institución y que conductores, administradores y operadores accedan con un código de un solo uso enviado a su correo habilitado o invitado, según su rol, y gestionen su sesión de forma segura. | No aplica | No aplica |
 | **EP02** | Disponibilidad de estacionamientos | Permitir consultar el estado actual de los estacionamientos universitarios, incluyendo espacios disponibles, ocupados y estados desconocidos por zona. | No aplica | No aplica |
 | **EP03** | Predicción y asesoría de llegada | Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento. | No aplica | No aplica |
 | **EP04** | Gestión e infraestructura de estacionamientos | Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores utilizados para detectar la ocupación. | No aplica | No aplica |
 | **EP05** | Analítica histórica | Permitir que la institución consulte la información histórica de ocupación, los periodos de mayor demanda y la precisión de las predicciones. | No aplica | No aplica |
 | **EP07** | Alertas y notificaciones | Permitir que el conductor se suscriba a las alertas de un estacionamiento y gestione las preferencias con las que desea recibirlas. | No aplica | No aplica |
 | **US01** | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | **Escenario 1: Solicitud del código de verificación.**<br>Dado que el usuario ingresa un correo cuyo dominio pertenece a una universidad registrada,<br>cuando solicita el acceso,<br>entonces el sistema envía un código de un solo uso a ese correo e informa su periodo de vigencia.<br><br>**Escenario 2: Código válido.**<br>Dado que el usuario recibió un código vigente,<br>cuando lo ingresa dentro de su periodo de vigencia,<br>entonces el sistema habilita su sesión con el rol y la universidad que le corresponden.<br><br>**Escenario 3: Código incorrecto o vencido.**<br>Dado que el código ingresado no coincide con el enviado o su vigencia terminó,<br>cuando el usuario intenta continuar,<br>entonces el sistema rechaza el acceso e informa que debe solicitar un nuevo código.<br><br>**Escenario 4: Correo invitado por una institución.**<br>Dado que el correo no pertenece a un dominio habilitado pero cuenta con una invitación vigente o con una cuenta creada previamente,<br>cuando el usuario solicita el acceso,<br>entonces el sistema envía el código y le otorga el rol registrado en su cuenta o invitación.<br><br>**Escenario 5: Correo sin vínculo institucional.**<br>Dado que el correo no pertenece a un dominio habilitado y tampoco tiene invitación ni cuenta previa,<br>cuando el usuario solicita el acceso,<br>entonces el sistema no envía ningún código e informa que el correo no corresponde a una institución habilitada.<br><br>**Escenario 6: Sesión vigente.**<br>Dado que el usuario mantiene una sesión válida,<br>cuando vuelve a utilizar la aplicación,<br>entonces el sistema conserva su acceso sin solicitar un nuevo código. | EP01 |
-| **US05** | Consultar disponibilidad actual | Como usuario, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | **Escenario 1: Espacios disponibles.**<br>Dado que existen datos actualizados de los sensores,<br>cuando el usuario consulta un estacionamiento,<br>entonces el sistema muestra los espacios libres y ocupados.<br><br>**Escenario 2: Espacio ocupado.**<br>Dado que el servicio de ocupación confirma un espacio como ocupado tras una detección estable,<br>cuando se actualiza la información de disponibilidad,<br>entonces el espacio se presenta como ocupado.<br><br>**Escenario 3: Espacio libre.**<br>Dado que el servicio de ocupación confirma un espacio como libre tras el tiempo mínimo sin detección,<br>cuando se actualiza la información,<br>entonces el espacio se presenta como disponible.<br><br>**Escenario 4: Antigüedad del dato.**<br>Dado que cada consulta corresponde a un estado consolidado en un momento determinado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema informa la antigüedad de esa información. | EP02 |
-| **US07** | Actualizar disponibilidad | Como usuario, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | **Escenario 1: Cambio a ocupado.**<br>Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>cuando el evento es procesado,<br>entonces el sistema actualiza el estado del espacio.<br><br>**Escenario 2: Cambio a libre.**<br>Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>cuando el evento es procesado,<br>entonces el sistema refleja el nuevo estado.<br><br>**Escenario 3: Sin cambios de estado.**<br>Dado que los sensores continúan reportando su actividad pero ningún espacio cambia de estado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema conserva el último estado válido e informa la marca de tiempo a la que corresponde. | EP02 |
-| **US08** | Gestionar estado desconocido | Como usuario, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | **Escenario 1: Sensor sin reportar actividad.**<br>Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>cuando deja de reportar su actividad y se supera ese intervalo,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 2: Sensor con batería crítica.**<br>Dado que un sensor informa periódicamente su nivel de batería,<br>cuando el nivel reportado se encuentra por debajo del umbral configurado,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 3: Espacio desconocido.**<br>Dado que un espacio se encuentra en estado UNKNOWN,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema lo presenta como desconocido y lo excluye del conteo de espacios disponibles.<br><br>**Escenario 4: Recuperación del sensor.**<br>Dado que un sensor reanuda el reporte de su actividad,<br>cuando informa una detección estable durante el tiempo mínimo configurado,<br>entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado. | EP02 |
-| **US09** | Consultar predicción de disponibilidad | Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus. | **Escenario 1: Predicción disponible.**<br>Dado que existen datos históricos suficientes,<br>cuando el usuario consulta una predicción,<br>entonces el sistema muestra la disponibilidad estimada.<br><br>**Escenario 2: Origen del pronóstico.**<br>Dado que cada pronóstico se genera con una versión de modelo y un nivel de confianza,<br>cuando el usuario consulta la disponibilidad estimada,<br>entonces el sistema informa el momento de su generación y su nivel de confianza.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el estacionamiento no acumula historial suficiente,<br>cuando el usuario realiza la consulta,<br>entonces el sistema presenta la estimación de contingencia e informa que su nivel de confianza es bajo. | EP03 |
-| **US13** | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | **Escenario 1: Asesoría para la hora de llegada.**<br>Dado que la aplicación calcula en el dispositivo el tiempo estimado de llegada y envía únicamente los minutos,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema entrega la probabilidad de encontrar espacio a esa hora estimada.<br><br>**Escenario 2: Tiempo de llegada inválido.**<br>Dado que el tiempo estimado calculado es negativo o supera el máximo admitido,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el pronóstico utilizado proviene de la estimación de contingencia,<br>cuando se genera la asesoría,<br>entonces el sistema la entrega e informa que su nivel de confianza es bajo. | EP03 |
+| **US05** | Consultar disponibilidad actual | Como conductor de la comunidad educativa, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | **Escenario 1: Espacios disponibles.**<br>Dado que existen datos actualizados de los sensores,<br>cuando el usuario consulta un estacionamiento,<br>entonces el sistema muestra los espacios libres y ocupados.<br><br>**Escenario 2: Espacio ocupado.**<br>Dado que Parking Sensing confirma la detección de un vehículo en el espacio tras el tiempo mínimo configurado,<br>cuando se actualiza la información de disponibilidad,<br>entonces el espacio se presenta como ocupado.<br><br>**Escenario 3: Espacio libre.**<br>Dado que Parking Sensing confirma que el espacio quedó libre tras el tiempo mínimo sin detección,<br>cuando se actualiza la información,<br>entonces el espacio se presenta como disponible.<br><br>**Escenario 4: Antigüedad del dato.**<br>Dado que cada consulta corresponde a un estado consolidado en un momento determinado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema informa la antigüedad de esa información. | EP02 |
+| **US07** | Actualizar disponibilidad | Como conductor de la comunidad educativa, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | **Escenario 1: Cambio a ocupado.**<br>Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>cuando el evento es procesado,<br>entonces el sistema actualiza el estado del espacio.<br><br>**Escenario 2: Cambio a libre.**<br>Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>cuando el evento es procesado,<br>entonces el sistema refleja el nuevo estado.<br><br>**Escenario 3: Sin cambios de estado.**<br>Dado que los sensores continúan reportando su actividad pero ningún espacio cambia de estado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema conserva el último estado válido e informa la marca de tiempo a la que corresponde. | EP02 |
+| **US08** | Gestionar estado desconocido | Como conductor de la comunidad educativa, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | **Escenario 1: Sensor sin reportar actividad.**<br>Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>cuando deja de reportar su actividad y se supera ese intervalo,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 2: Sensor con batería crítica.**<br>Dado que un sensor informa periódicamente su nivel de batería,<br>cuando el nivel reportado se encuentra por debajo del umbral configurado,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 3: Espacio desconocido.**<br>Dado que un espacio se encuentra en estado UNKNOWN,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema lo presenta como desconocido y lo excluye del conteo de espacios disponibles.<br><br>**Escenario 4: Recuperación del sensor.**<br>Dado que un sensor reanuda el reporte de su actividad,<br>cuando informa una detección estable durante el tiempo mínimo configurado,<br>entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado. | EP02 |
+| **US09** | Consultar predicción de disponibilidad | Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus. | **Escenario 1: Predicción disponible.**<br>Dado que existen datos históricos suficientes,<br>cuando el usuario consulta una predicción,<br>entonces el sistema muestra la disponibilidad estimada.<br><br>**Escenario 2: Origen del pronóstico.**<br>Dado que cada pronóstico se genera con una versión de modelo y un nivel de confianza,<br>cuando el usuario consulta la disponibilidad estimada,<br>entonces el sistema informa el momento de su generación y su nivel de confianza.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el estacionamiento no acumula historial suficiente,<br>cuando el usuario realiza la consulta,<br>entonces el sistema presenta la heurística de respaldo e informa que su nivel de confianza es bajo. | EP03 |
+| **US13** | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | **Escenario 1: Asesoría para la hora de llegada.**<br>Dado que la aplicación calcula en el dispositivo el tiempo estimado de llegada y envía únicamente los minutos,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema entrega la probabilidad de encontrar espacio a esa hora estimada.<br><br>**Escenario 2: Tiempo de llegada inválido.**<br>Dado que el tiempo estimado calculado es negativo o supera el máximo admitido,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el pronóstico utilizado proviene de la heurística de respaldo,<br>cuando se genera la asesoría,<br>entonces el sistema la entrega e informa que su nivel de confianza es bajo. | EP03 |
 | **US23** | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | **Escenario 1: Alerta programada por saturación prevista.**<br>Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>entonces el sistema le envía la alerta correspondiente.<br><br>**Escenario 2: Aviso inmediato al consultar la asesoría.**<br>Dado que el conductor tiene habilitadas sus notificaciones,<br>cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>**Escenario 3: Notificaciones deshabilitadas.**<br>Dado que el conductor deshabilitó las notificaciones,<br>cuando se prevé la saturación dentro de su franja suscrita,<br>entonces el sistema conserva la suscripción y omite el envío.<br><br>**Escenario 4: Evitar alertas repetitivas.**<br>Dado que ya se envió una alerta para una condición determinada,<br>cuando la misma condición continúa activa,<br>entonces el sistema evita generar alertas repetitivas innecesarias. | EP07 |
-| **US29** | Monitorear la operación del estacionamiento desde la consola | Como administrador de estacionamientos, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | **Escenario 1: Estado actual del estacionamiento.**<br>Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>cuando consulta el estacionamiento a su cargo,<br>entonces el sistema presenta la capacidad total, los espacios libres, los ocupados, los desconocidos y el flujo de entradas y salidas del periodo.<br><br>**Escenario 2: Aviso de saturación prevista.**<br>Dado que el pronóstico indica que el estacionamiento alcanzará su saturación dentro del horizonte consultado,<br>cuando el operador consulta la consola,<br>entonces el sistema informa el momento previsto de saturación.<br><br>**Escenario 3: Información desactualizada.**<br>Dado que el estacionamiento no recibe eventos dentro del tiempo máximo de vigencia,<br>cuando el operador consulta el estado,<br>entonces el sistema informa la antigüedad del último dato consolidado. | EP02, EP03, EP04 |
-| **US34** | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | **Escenario 1: Precisión del periodo.**<br>Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>cuando el administrador consulta un periodo,<br>entonces el sistema presenta el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>**Escenario 2: Evolución por versión del modelo.**<br>Dado que el modelo de predicción se actualiza periódicamente,<br>cuando el administrador compara los periodos disponibles,<br>entonces el sistema distingue los resultados obtenidos con cada versión del modelo.<br><br>**Escenario 3: Periodo sin comparación posible.**<br>Dado que un periodo no cuenta con pronósticos y ocupación observada suficientes,<br>cuando el administrador lo consulta,<br>entonces el sistema informa que ese periodo no permite calcular la precisión. | EP05 |
+| **US29** | Monitorear la operación del estacionamiento desde la consola | Como operador del estacionamiento, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | **Escenario 1: Estado actual del estacionamiento.**<br>Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>cuando consulta el estacionamiento a su cargo,<br>entonces el sistema presenta la capacidad total, los espacios libres, los ocupados, los desconocidos y el flujo de entradas y salidas del periodo.<br><br>**Escenario 2: Aviso de saturación prevista.**<br>Dado que el pronóstico indica que el estacionamiento alcanzará su saturación dentro del horizonte consultado,<br>cuando el operador consulta la consola,<br>entonces el sistema informa el momento previsto de saturación.<br><br>**Escenario 3: Información desactualizada.**<br>Dado que el estacionamiento no recibe eventos dentro del tiempo máximo de vigencia,<br>cuando el operador consulta el estado,<br>entonces el sistema informa la antigüedad del último dato consolidado. | EP02, EP03, EP04 |
+| **US34** | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | **Escenario 1: Precisión del periodo.**<br>Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>cuando el administrador consulta un periodo,<br>entonces el sistema presenta, por estacionamiento y horizonte, el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>**Escenario 2: Evolución por versión del modelo.**<br>Dado que el modelo de predicción se actualiza periódicamente,<br>cuando el administrador compara los periodos disponibles,<br>entonces el sistema distingue los resultados obtenidos con cada versión del modelo.<br><br>**Escenario 3: Periodo sin comparación posible.**<br>Dado que un periodo no cuenta con pronósticos y ocupación observada suficientes,<br>cuando el administrador lo consulta,<br>entonces el sistema informa que ese periodo no permite calcular la precisión. | EP05 |
 | **US35** | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | **Escenario 1: Registro del calendario académico.**<br>Dado que el administrador dispone del calendario del ciclo,<br>cuando registra sus periodos de clases, exámenes y receso,<br>entonces el sistema los incorpora como insumo de las predicciones de su institución.<br><br>**Escenario 2: Registro de un evento especial.**<br>Dado que el campus realizará un evento de alta afluencia,<br>cuando el administrador lo registra con su fecha, su horario y el estacionamiento afectado,<br>entonces el sistema lo considera al generar los pronósticos de esas franjas.<br><br>**Escenario 3: Cancelación de un evento.**<br>Dado que un evento registrado se cancela,<br>cuando el administrador lo retira,<br>entonces el sistema deja de considerarlo y regenera los pronósticos de las franjas afectadas. | EP03, EP04 |
-| **US36** | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando el estacionamiento está lleno, para decidir si espero o busco otra alternativa. | **Escenario 1: Estacionamiento lleno con salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y el contador de flujo registra salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa el rango de tiempo estimado para la próxima liberación junto con su nivel de confianza.<br><br>**Escenario 2: Sin salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y no se registran salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa que no es posible estimar el tiempo de espera.<br><br>**Escenario 3: Estacionamiento con espacios libres.**<br>Dado que el estacionamiento presenta espacios libres,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema no presenta la estimación de espera. | EP03 |
+| **US36** | Estimar el tiempo hasta la próxima disponibilidad | Como conductor de la comunidad educativa, quiero conocer en cuánto tiempo se espera que se libere un espacio cuando es poco probable encontrarlo a mi llegada, para decidir si espero o busco otra alternativa. | **Escenario 1: Estacionamiento lleno con salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y el contador de flujo registra salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa el rango de tiempo estimado para la próxima liberación junto con su nivel de confianza.<br><br>**Escenario 2: Sin salidas registradas.**<br>Dado que el estacionamiento no presenta espacios libres y no se registran salidas dentro de la ventana configurada,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema informa que no es posible estimar el tiempo de espera.<br><br>**Escenario 3: Estacionamiento con espacios libres.**<br>Dado que el estacionamiento presenta espacios libres,<br>cuando el conductor consulta su disponibilidad,<br>entonces el sistema no presenta la estimación de espera. | EP03 |
 
 
 #### 4.1.2.2. Quality Attribute Scenarios
@@ -2547,13 +2575,13 @@ Se identificaron ocho escenarios de atributos de calidad en primera instancia, a
 
 | ID | Atributo | Fuente | Estímulo | Artefacto | Entorno | Respuesta | Medida |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| QAS-01 | Correctness (precisión de la asesoría) | Conductor de la comunidad educativa | Solicita la asesoría de llegada enviando su tiempo estimado de llegada en minutos | Servicio de asesoría de llegada y servicio de predicción | Operación normal, en horario académico, con historial suficiente | Selecciona el pronóstico del horizonte correspondiente al tiempo estimado, calcula la probabilidad de encontrar espacio y la categoría (HIGH, LIMITED o LOW) e informa el nivel de confianza. Si el historial es insuficiente, usa la estimación de contingencia e informa confianza baja | Al menos 80 % de aciertos en la categoría de disponibilidad frente a la ocupación observada a la hora de llegada, evaluado semanalmente. El error absoluto medio se reporta en puntos porcentuales |
-| QAS-02 | Performance (frescura de la ocupación) | Sensor de un espacio | El espacio cambia de estado y el cambio se mantiene durante el tiempo mínimo configurado | Gateway IoT, broker MQTT y contexto de ocupación | Operación normal, con conexión a la nube | El gateway publica el evento en el broker. El consumidor lo valida, lo traduce a un evento de dominio, actualiza el estado del espacio y lo propaga al read model y a los clientes suscritos | Cambio visible en la app y en la consola en 5 s o menos (percentil 95) desde la confirmación; publicación del gateway al broker en 1 s o menos |
-| QAS-03 | Availability (tolerancia a pérdida de conectividad) | Red del campus o proveedor de conectividad | Se pierde la conexión entre el gateway y el broker | Gateway IoT | Horario académico, incluyendo hora pico | El gateway sigue recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. El consumidor descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad | 0 % de eventos perdidos; reenvío completo en 5 min o menos tras la reconexión; 100 % de las consultas durante la caída informan la antigüedad del dato |
-| QAS-04 | Performance y Scalability | Conductores de la comunidad educativa | Pico de consultas de disponibilidad y asesoría al inicio o término de clases | BFF de la aplicación móvil y read model de ocupación | Hora pico | El BFF compone en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, y los servicios de lectura escalan horizontalmente | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 % |
-| QAS-05 | Reliability (calidad de los datos de sensores) | Sensor de un espacio | Deja de reportar dentro de su intervalo esperado o informa batería por debajo del umbral | Contexto de ocupación y monitoreo de dispositivos | Operación normal | El espacio pasa a UNKNOWN y se excluye del conteo de disponibles. Se registra la incidencia, el dispositivo queda marcado para mantenimiento y la confianza del pronóstico se reduce. El espacio se recupera tras una detección estable | Transición a UNKNOWN en 1 min o menos tras vencer el intervalo; 100 % de los espacios UNKNOWN excluidos del conteo; disponibilidad de datos de ocupación de 95 % o más |
-| QAS-06 | Resilience (degradación controlada) | Servicio interno (predicción) o proveedor externo (correo, mensajería push) | No responde dentro del tiempo límite | BFF móvil, BFF de consola y servicio de notificaciones | Operación normal | Se abre el circuit breaker del servicio afectado. El BFF responde con los datos disponibles e indica qué información no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación | 100 % de las solicitudes respondidas en 3 s o menos, sin error visible al usuario; 0 impacto en la frescura de QAS-02 |
-| QAS-07 | Security | Usuario sin sesión, con rol insuficiente o de otra institución | Solicita un recurso protegido o excede las solicitudes de código de acceso | API Gateway y servicio de identidad | Operación normal | Rechaza la solicitud sin token (401), con rol o institución que no corresponde (403) o por exceso de solicitudes (429), y registra el intento en auditoría | 100 % de los accesos no autorizados rechazados; registro en 1 s o menos; 100 % de las comunicaciones cifradas con TLS |
+| QAS-01 | Correctness (precisión de la asesoría) | Conductor de la comunidad educativa | Solicita la asesoría de llegada enviando su tiempo estimado de llegada en minutos | Servicio de asesoría de llegada y servicio de predicción | Operación normal, en horario académico, con historial suficiente | Selecciona el pronóstico del horizonte correspondiente al tiempo estimado, calcula la probabilidad de encontrar espacio y la categoría (HIGH, LIMITED o LOW) e informa el nivel de confianza. Si el historial es insuficiente, usa la heurística de respaldo e informa confianza baja | Al menos 80 % de aciertos en la categoría de disponibilidad frente a la ocupación observada a la hora de llegada, evaluado semanalmente. El error absoluto medio se reporta en puntos porcentuales |
+| QAS-02 | Performance (frescura de la ocupación) | Sensor de un espacio | El espacio cambia de estado y el cambio se mantiene durante el tiempo mínimo configurado | Gateway del campus, broker MQTT, Parking Sensing y Occupancy | Operación normal, con conexión a la nube | El gateway publica la lectura en el broker. Parking Sensing la valida y confirma la detección; Occupancy actualiza el estado del espacio y lo propaga al read model y a los clientes suscritos | Cambio visible en la app y en la consola en 5 s o menos (percentil 95) desde la confirmación; publicación del gateway al broker en 1 s o menos |
+| QAS-03 | Availability (tolerancia a pérdida de conectividad) | Red del campus o proveedor de conectividad | Se pierde la conexión entre el gateway y el broker | Gateway IoT | Horario académico, incluyendo hora pico | El gateway sigue recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. Parking Sensing descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad | 0 % de eventos perdidos; reenvío completo en 5 min o menos tras la reconexión; 100 % de las consultas durante la caída informan la antigüedad del dato |
+| QAS-04 | Performance y Scalability | Conductores de la comunidad educativa | Pico de consultas de disponibilidad y asesoría al inicio o término de clases | Endpoint de composición de la aplicación móvil y read model de ocupación | Hora pico | El endpoint de composición entrega en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, y el backend escala horizontalmente con réplicas sin estado | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 % |
+| QAS-05 | Reliability (calidad de los datos de sensores) | Sensor de un espacio | Deja de reportar dentro de su intervalo esperado o informa batería por debajo del umbral | Parking Sensing (salud de dispositivos) y Occupancy | Operación normal | El espacio pasa a UNKNOWN y se excluye del conteo de disponibles. Se registra la incidencia, el dispositivo queda marcado para mantenimiento y la confianza del pronóstico se reduce. El espacio se recupera tras una detección estable | Transición a UNKNOWN en 1 min o menos tras vencer el intervalo; 100 % de los espacios UNKNOWN excluidos del conteo; disponibilidad de datos de ocupación de 95 % o más |
+| QAS-06 | Resilience (degradación controlada) | Modelo de predicción o proveedor externo (correo, mensajería push) | No responde dentro del tiempo límite | Endpoints de composición de la app y la consola, y módulo de notificaciones | Operación normal | Se abre el circuit breaker de la integración afectada. El endpoint de composición responde con los datos disponibles e indica qué información no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación | 100 % de las solicitudes respondidas en 3 s o menos, sin error visible al usuario; 0 impacto en la frescura de QAS-02 |
+| QAS-07 | Security | Usuario sin sesión, con rol insuficiente o de otra institución | Solicita un recurso protegido o excede las solicitudes de código de acceso | Capa de seguridad del backend (Spring Security) y módulo IAM | Operación normal | Rechaza la solicitud sin token (401), con rol o institución que no corresponde (403) o por exceso de solicitudes (429), y registra el intento en auditoría | 100 % de los accesos no autorizados rechazados; registro en 1 s o menos; 100 % de las comunicaciones cifradas con TLS |
 | QAS-08 | Modifiability (multi-institución) | Equipo de Integra Labs | Da de alta una nueva universidad con sus dominios de correo y su primer administrador | Proceso de aprovisionamiento de instituciones | Operación normal con instituciones ya activas | Crea la institución, registra sus dominios y emite la invitación de su primer administrador. La institución configura sus estacionamientos, zonas y sensores sin afectar a las demás | Alta en 1 día hábil o menos, sin cambios de código ni interrupción del servicio; aislamiento de datos del 100 % |
 
 #### 4.1.2.3. Constraints
@@ -2565,7 +2593,7 @@ Las cuatro primeras corresponden a la composición y el despliegue de la soluci�
 | Technical Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
 | --- | --- | --- | --- | --- |
 | CON-01 | Solución multicomponente integrada | Como Developer, necesito que la solución esté compuesta por una API REST interna, una aplicación móvil para conductores, una consola web de operación para administradores y una Landing Page, integradas entre sí y con una experiencia de usuario consistente. | **Escenario 1: Redirección desde la Landing Page.**<br>Dado que los cuatro productos están desplegados,<br>cuando el visitante activa la llamada a la acción de su segmento,<br>entonces es dirigido al sitio de descarga de la aplicación móvil o al formulario de contacto institucional.<br><br>**Escenario 2: Consistencia entre productos.**<br>Dado que la aplicación móvil y la consola web consumen la misma API,<br>cuando ambas consultan el mismo estacionamiento,<br>entonces presentan la misma información de ocupación. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-02 | Domain-Driven Design | Como Developer, necesito que el sistema se descomponga en Bounded Contexts, cada uno con su propio modelo y su propia persistencia. | **Escenario 1: Un servicio por contexto.**<br>Dado que el sistema se descompone en Bounded Contexts,<br>cuando se define un servicio,<br>entonces pertenece a un solo contexto y es responsable de su modelo y sus datos.<br><br>**Escenario 2: Integración entre contextos.**<br>Dado que un contexto necesita información de otro,<br>cuando la solicita,<br>entonces la obtiene por su interfaz o por eventos de dominio, sin consultar el modelo de escritura del otro contexto. | EP02, EP03, EP04, EP05 |
+| CON-02 | Domain-Driven Design | Como Developer, necesito que el sistema se descomponga en Bounded Contexts, cada uno con su propio modelo y su propia persistencia. | **Escenario 1: Un módulo por contexto.**<br>Dado que el sistema se descompone en Bounded Contexts,<br>cuando se define un módulo del backend,<br>entonces pertenece a un solo contexto y es dueño de su modelo y de su esquema de base de datos.<br><br>**Escenario 2: Integración entre contextos.**<br>Dado que un contexto necesita información de otro,<br>cuando la solicita,<br>entonces la obtiene por la fachada del otro módulo o por eventos de dominio, sin consultar sus tablas ni su modelo de escritura. | EP02, EP03, EP04, EP05 |
 | CON-03 | Tecnologías open-source | Como Developer, necesito utilizar tecnologías open-source en los distintos niveles de la solución. | **Escenario 1: Componentes de la solución.**<br>Dado que cada componente requiere una tecnología,<br>cuando el equipo la selecciona,<br>entonces cuenta con licencia open-source y queda documentada en el capítulo de implementación.<br><br>**Escenario 2: Servicios de terceros.**<br>Dado que el correo y la mensajería push se contratan como servicios gestionados,<br>cuando se integran,<br>entonces quedan aislados detrás de una capa de integración y pueden reemplazarse sin modificar el dominio. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-04 | Despliegue en la nube | Como Developer, necesito desplegar los servicios de servidor en una plataforma cloud de forma reproducible. | **Escenario 1: Despliegue reproducible.**<br>Dado que los servicios se ejecutan en un proveedor cloud,<br>cuando se despliega una nueva versión,<br>entonces el despliegue se realiza desde la configuración versionada en el repositorio.<br><br>**Escenario 2: Continuidad del sensado.**<br>Dado que los nodos de sensado operan en la red del campus,<br>cuando se actualiza el backend en la nube,<br>entonces la ingesta continúa sin cambios de configuración en el campus. | EP02, EP04 |
 | CON-05 | Ingesta IoT sin exponer los sensores a Internet | Como Developer, necesito que los dispositivos de sensado permanezcan en la red local del campus y que sus lecturas lleguen al backend únicamente a través del componente de ingesta, para reducir su superficie de exposición. | **Escenario 1: Acceso desde fuera de la red del campus.**<br>Dado que los sensores operan en la red local de la institución,<br>cuando se intenta alcanzarlos desde una red externa,<br>entonces no resultan accesibles y no aceptan ninguna instrucción.<br><br>**Escenario 2: Salida de los eventos hacia el backend.**<br>Dado que la comunicación con el backend se concentra en un único componente de la red de sensado,<br>cuando un sensor genera una lectura,<br>entonces alcanza el backend a través de ese componente y nunca mediante una conexión directa del sensor. | EP02, EP04 |
@@ -2576,9 +2604,9 @@ Las cuatro primeras corresponden a la composición y el despliegue de la soluci�
 | CON-10 | Alcance sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya las reservas, los cobros y el reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de la institución. | **Escenario 1: Operación de las barreras.**<br>Dado que la solución no gestiona el ingreso físico de los vehículos,<br>cuando un vehículo accede al estacionamiento,<br>entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>**Escenario 2: Ausencia de transacciones.**<br>Dado que el producto no administra pagos ni reservas de espacios,<br>cuando se consulta cualquiera de sus servicios,<br>entonces no se expone ninguna operación de cobro ni de reserva. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (World Wide Web Consortium, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
 | CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. OpenAPI proporciona una descripción independiente del lenguaje para las interfaces HTTP (OpenAPI Initiative, 2024). | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Angular o Vue, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Angular o Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Angular Material, PrimeNG, PrimeVue o Vuetify, según el framework elegido. | EP02, EP06 |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Vue y Vuetify, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Vuetify, la biblioteca de componentes de Material Design para Vue. | EP02, EP06 |
 | CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS desde una sola base de código (Flutter, s. f.). | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-15 | Software del nodo de sensado | Como Developer, necesito desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas hacia el broker de la red local. | **Escenario 1: Tecnología del nodo.**<br>Dado que los nodos se construyen sobre microcontroladores ESP32,<br>cuando se implementa su software,<br>entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>**Escenario 2: Alcance del software embebido.**<br>Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>cuando el nodo detecta un cambio en su sensor,<br>entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>**Escenario 3: Conservación ante desconexión.**<br>Dado que la red local puede presentar interrupciones,<br>cuando el nodo no logra publicar una lectura,<br>entonces la conserva y la reenvía al restablecerse la conexión. | EP02, EP04 |
+| CON-15 | Software del nodo de sensado | Como Developer, necesito desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas hacia el gateway del campus. | **Escenario 1: Tecnología del nodo.**<br>Dado que los nodos se construyen sobre microcontroladores ESP32,<br>cuando se implementa su software,<br>entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>**Escenario 2: Alcance del software embebido.**<br>Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>cuando el nodo detecta un cambio en su sensor,<br>entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>**Escenario 3: Conservación ante desconexión.**<br>Dado que la red local puede presentar interrupciones,<br>cuando el nodo no logra publicar una lectura,<br>entonces la conserva y la reenvía al restablecerse la conexión. | EP02, EP04 |
 | CON-16 | Detección por sensores sin identificación del vehículo | Como Developer, necesito que la detección de ocupación se realice con sensores de cochera y de paso, sin videovigilancia ni identificación de vehículos, manteniendo el contexto de sensado independiente de la tecnología empleada. | **Escenario 1: Fuentes de detección admitidas.**<br>Dado que el alcance actual contempla sensores registrados en el inventario de dispositivos,<br>cuando se procesa un evento de detección,<br>entonces proviene de un dispositivo registrado y su traducción al lenguaje del dominio ocurre en la capa anticorrupción, de modo que otra tecnología pueda incorporarse sin alterar el modelo de ocupación.<br><br>**Escenario 2: Ausencia de identificación del vehículo.**<br>Dado que los eventos informan presencia y dirección, no identidad,<br>cuando se procesa un evento de ocupación,<br>entonces no se almacena ningún dato que permita identificar al vehículo ni a su conductor. | EP02, EP04 |
 | CON-17 | Acceso restringido a la comunidad de cada institución | Como Developer, necesito restringir el registro a los dominios de correo habilitados por cada institución y reservar la creación de administradores a la invitación, para sostener el modelo B2B y la pertenencia institucional. | **Escenario 1: Dominio no habilitado.**<br>Dado que el dominio del correo no pertenece a ninguna institución registrada y no existe una invitación vigente ni una cuenta autorizada previamente,<br>cuando se solicita el acceso,<br>entonces el sistema no emite ningún código de verificación.<br><br>**Escenario 2: Creación de administradores.**<br>Dado que el rol de administrador no admite autorregistro,<br>cuando se intenta crear una cuenta con ese rol fuera del flujo de invitación o del alta inicial de la institución,<br>entonces la solicitud es rechazada.<br><br>**Escenario 3: Alta de instituciones.**<br>Dado que el alta de una institución no se expone públicamente,<br>cuando se envía la solicitud sin credenciales de plataforma,<br>entonces la respuesta es 403. | EP01, EP04 |
 | CON-18 | Términos y condiciones accesibles desde el pie de página | Como Developer, necesito enlazar los términos y condiciones del servicio desde el pie de página de la Landing Page y de las aplicaciones, para que el usuario conozca las condiciones antes de registrarse. | **Escenario 1: Disponibilidad del documento.**<br>Dado que los términos y condiciones se encuentran publicados,<br>cuando el usuario consulta el pie de página de cualquiera de los productos,<br>entonces accede al documento vigente. | EP06 |
@@ -2590,13 +2618,13 @@ El Architectural Drivers Backlog se construyó de forma iterativa a partir del Q
 | Driver ID | Título de Driver | Descripción | Importancia para Stakeholders | Impacto en Architecture Technical Complexity |
 | --- | --- | --- | --- | --- |
 | FD-02 | Disponibilidad en tiempo casi real (US05, US07) | Consolidar los eventos de los sensores en el estado de cada espacio y distribuirlo a la app y a la consola con su marca de tiempo. | High | High |
-| FD-04 | Predicción de disponibilidad (US09) | Generar pronósticos a 15, 30, 45 y 60 minutos con versión de modelo, nivel de confianza y estimación de contingencia. | High | High |
+| FD-04 | Predicción de disponibilidad (US09) | Generar pronósticos a 15, 30, 45 y 60 minutos con versión de modelo, nivel de confianza y heurística de respaldo. | High | High |
 | FD-05 | Asesoría de llegada según el tiempo estimado (US13) | Combinar el pronóstico con el tiempo estimado de llegada, calculado en el dispositivo, para entregar probabilidad y categoría HIGH, LIMITED o LOW. | High | High |
 | QAD-01 | Precisión de la asesoría (QAS-01) | Lograr al menos 80 % de aciertos en la categoría de disponibilidad. | High | High |
 | QAD-02 | Frescura de la ocupación (QAS-02) | Reflejar los cambios confirmados en la app y la consola en 5 s o menos. | High | High |
 | QAD-03 | Tolerancia a pérdida de conectividad (QAS-03) | Reenviar sin pérdida las lecturas acumuladas en el gateway al reconectarse. | High | High |
 | CON-05 | Ingesta IoT mediante gateway y MQTT | Sensores no expuestos a Internet, publicación con QoS 1 y búfer local en el gateway. | High | High |
-| CON-01 | Solución multicomponente integrada | API REST, app móvil nativa, consola web y Landing Page integradas. | High | High |
+| CON-01 | Solución multicomponente integrada | API REST, app móvil en Flutter, consola web y Landing Page integradas. | High | High |
 | QAD-04 | Desempeño y escalabilidad en hora pico (QAS-04) | Atender hasta 500 consultas concurrentes en 2 s o menos. | High | Medium |
 | QAD-05 | Confiabilidad de los datos de sensores (QAS-05) | Detectar sensores sin señal o con batería crítica y mantener 95 % o más de disponibilidad de datos. | High | Medium |
 | QAD-06 | Degradación controlada ante fallas (QAS-06) | Responder con los datos disponibles cuando un servicio no responde. | High | Medium |
@@ -2612,7 +2640,7 @@ El Architectural Drivers Backlog se construyó de forma iterativa a partir del Q
 | CON-17 | Acceso restringido a la comunidad de cada institución | Registro limitado a dominios habilitados o invitación; los administradores no se autorregistran. | High | Medium |
 | CON-10 | Sin reservas, cobros ni control de acceso | Alcance acotado a información, predicción y gestión; el flujo se cuenta sin identificar vehículos. | High | Low |
 | CON-14 | Aplicación móvil multiplataforma con Flutter | Una sola base de código en Dart y Flutter para Android e iOS, sin tecnologías híbridas. | High | Low |
-| CON-13 | Aplicaciones web y Landing Page con Material Design | Landing Page en HTML5, CSS3 y JavaScript; consola en Angular o Vue con biblioteca Material. | High | Low |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Landing Page en HTML5, CSS3 y JavaScript; consola en Vue con Vuetify (Material Design). | High | Low |
 | CON-02 | Domain-Driven Design | Descomposición en Bounded Contexts con persistencia propia. | Medium | High |
 | QAD-08 | Soporte multi-institución (QAS-08) | Incorporar universidades por configuración, con datos aislados. | Medium | High |
 | FD-07 | Tiempo hasta la próxima disponibilidad (US36) | Estimar el rango de liberación de un espacio con el flujo de salidas y el pronóstico vigente. | Medium | High |
@@ -2636,11 +2664,11 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| Monolito modular | Simple de desplegar y depurar; menor costo operativo. | Escala como una sola unidad; acopla la predicción con las consultas; debilita el aislamiento de contextos y de persistencia. |
-| **Microservicios por Bounded Context con API Gateway y un BFF por cliente (móvil y consola)** | Escala de forma independiente lectura y predicción; se alinea con los contextos y su persistencia propia; los BFF componen la respuesta de cada cliente en una sola carga. | Mayor complejidad operativa; consistencia eventual; requiere observabilidad. |
+| **Monolito modular con un módulo por Bounded Context** | Un solo despliegue y un solo pipeline, adecuados para un equipo de cinco personas; transacciones locales y comunicación en proceso, sin latencia de red ni consistencia eventual entre contextos; los límites de cada módulo permiten extraerlo como servicio si más adelante lo requiere. | Todos los módulos escalan juntos; el aislamiento entre contextos depende de la disciplina del equipo (fachadas, eventos y un esquema por módulo, sin acceso a tablas ajenas). |
+| Microservicios por Bounded Context con API Gateway y un BFF por cliente | Escala y despliega cada contexto de forma independiente. | Siete servicios, siete bases de datos, gateway, BFF y bus de mensajería que operar; consistencia eventual y observabilidad distribuida; costo de infraestructura que excede el alcance del proyecto. |
 | Serverless (FaaS) | Escalado automático y pago por uso. | Los arranques en frío afectan la latencia; poco adecuado para consumidores de mensajería persistentes; dependencia del proveedor. |
 
-**Decisión:** microservicios por Bounded Context (candidatos: identidad y acceso, configuración, ocupación, predicción, analítica y notificaciones), expuestos mediante un API Gateway con un BFF para la aplicación móvil y otro para la consola de operación.
+**Decisión:** monolito modular en Spring Boot con un módulo por Bounded Context: IAM, Parking Configuration, Parking Sensing, Occupancy, Prediction & Advisory, Analytics y Notifications. Cada módulo expone una fachada (Open Host Service) para las consultas de otros módulos y publica sus eventos de dominio como eventos de aplicación de Spring, que los módulos interesados consumen en el mismo proceso. La persistencia es una base de datos PostgreSQL con un esquema por módulo y sin claves foráneas entre esquemas (CON-02). Un módulo de composición expone los endpoints que agregan información para la aplicación móvil y para la consola. La carga de QAS-04 se atiende con réplicas sin estado del backend y con el read model en caché (iteración 4), sin necesidad de escalar cada contexto por separado.
 
 **Iteración 2: Ingesta IoT y resiliencia de conectividad** (Drivers: CON-05, FD-02, QAD-02, QAD-03)
 
@@ -2650,7 +2678,7 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 | Sensores publican por HTTPS directamente a la nube | Arquitectura más simple. | Expone los dispositivos; se pierden lecturas sin conexión; mayor consumo de batería por sensor. |
 | Polling periódico desde la nube | Fácil de implementar. | Datos poco frescos; requiere acceso entrante a la red del campus; no cumple los 5 s. |
 
-**Decisión:** gateway en el campus que publica en un broker MQTT con QoS 1, nivel que establece una entrega de al menos una vez (OASIS, 2019), con búfer local y reenvío al reconectar. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
+**Decisión:** gateway en el campus que publica, mediante una conexión saliente cifrada, en un broker MQTT en la nube con QoS 1, nivel que establece una entrega de al menos una vez (OASIS, 2019), con búfer local y reenvío al reconectar. El campus no expone puertos de entrada. El monitoreo del intervalo de reporte de cada sensor detecta las fallas.
 
 **Iteración 3: Procesamiento de eventos de ocupación** (Drivers: FD-02, FD-03, FD-07, QAD-03, QAD-05)
 
@@ -2660,7 +2688,7 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 | Aplicar cada mensaje tal como llega (último mensaje prevalece) | Muy simple. | Los duplicados y los mensajes fuera de orden corrompen el estado del espacio. |
 | Entrega exactly-once con transacciones distribuidas | Consistencia fuerte. | Alto costo y complejidad; mayor latencia; innecesario para este dominio. |
 
-**Decisión:** procesamiento idempotente con tiempo mínimo de detección, estado UNKNOWN por silencio del sensor o batería crítica, y reconciliación periódica en la que la detección por espacio prevalece sobre el conteo de accesos.
+**Decisión:** procesamiento idempotente con tiempo mínimo de detección, estado UNKNOWN por silencio del sensor o batería crítica, y reconciliación periódica en la que la detección por espacio prevalece sobre el conteo de accesos. Parking Sensing descarta duplicados y lecturas fuera de orden, aplica el tiempo mínimo y detecta las fallas; Occupancy, detrás de su capa anticorrupción, mantiene el estado de cada espacio, el estado UNKNOWN y la reconciliación.
 
 **Iteración 4: Consulta y distribución de la ocupación** (Drivers: FD-02, QAD-02, QAD-04, QAD-03)
 
@@ -2670,17 +2698,17 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 | Consulta directa a la base de datos transaccional | Simple; siempre consistente. | La carga de lectura en hora pico degrada el desempeño. |
 | Materialización batch periódica | Bajo costo de cómputo. | Datos desactualizados; no cumple la frescura de QAS-02. |
 
-**Decisión:** CQRS con read model en caché alimentado por eventos de dominio, suscripción autenticada a los cambios de cada estacionamiento y almacenamiento local en la app del layout con su versión.
+**Decisión:** CQRS con read model en caché alimentado por eventos de dominio, suscripción autenticada mediante WebSocket a los cambios de cada estacionamiento y almacenamiento local en la app del layout con su versión.
 
 **Iteración 5a: Predicción de disponibilidad** (Drivers: FD-04, FD-07, FD-09, FD-10, QAD-01)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **Servicio de predicción desacoplado con modelo de ML supervisado, horizontes de 15, 30, 45 y 60 minutos y método de respaldo** | Aprovecha historial, velocidad de flujo, calendario académico y eventos; se reentrena y se versiona; el respaldo cubre el arranque en frío. | Requiere historial suficiente; hay que registrar versión y confianza de cada pronóstico. |
+| **Servicio de predicción desacoplado con modelo de ML supervisado, horizontes de 15, 30, 45 y 60 minutos y heurística de respaldo** | Aprovecha historial, velocidad de flujo, calendario académico y eventos; se reentrena y se versiona; el respaldo cubre el arranque en frío. | Requiere historial suficiente; hay que registrar versión y confianza de cada pronóstico. |
 | Heurística por promedios históricos por franja horaria | Simple y explicable; funciona con pocos datos. | Menos precisa ante eventos y cambios de demanda. |
 | Series temporales clásicas | Buen ajuste a patrones estacionales. | Incorpora con dificultad variables externas como eventos y flujo. |
 
-**Decisión:** servicio de predicción desacoplado con modelo de ML, con la heurística por promedios históricos como método de respaldo cuando el historial es insuficiente. Cada pronóstico registra su versión de modelo y nivel de confianza, lo que permite medir la precisión por versión.
+**Decisión:** servicio de predicción desacoplado con modelo de ML, con la heurística por promedios históricos como heurística de respaldo cuando el historial es insuficiente. Cada pronóstico registra su versión de modelo y nivel de confianza, lo que permite medir la precisión por versión.
 
 **Iteración 5b: Cálculo del tiempo estimado de llegada** (Drivers: FD-05, CON-07, QAD-01)
 
@@ -2696,21 +2724,21 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **Timeouts, Circuit Breaker y respuesta parcial en los BFF, más una capa anticorrupción hacia los proveedores externos** | Aísla la falla; el usuario recibe los datos disponibles; el dominio no depende del modelo del proveedor. | Requiere configurar umbrales y mostrar qué información no está disponible. |
+| **Timeouts, Circuit Breaker y respuesta parcial en los endpoints de composición, más una capa anticorrupción hacia los proveedores externos** | Aísla la falla; el usuario recibe los datos disponibles; el dominio no depende del modelo del proveedor. | Requiere configurar umbrales y mostrar qué información no está disponible. |
 | Reintentos con backoff | Fácil de implementar. | Aumenta la latencia durante la falla; no garantiza respuesta. |
 | Llamadas síncronas sin protección | Menor esfuerzo inicial. | La falla de un servicio se propaga al usuario. |
 
-**Decisión:** timeouts y circuit breaker en los BFF con respuesta parcial que indica qué información no pudo obtenerse, y capa anticorrupción para el servicio de correo y el proveedor de mensajería push. Los tokens de dispositivo rechazados se marcan como inválidos y no se reintentan.
+**Decisión:** timeouts y circuit breaker en las integraciones con el modelo de predicción y con los proveedores externos, con respuesta parcial en los endpoints de composición que indica qué información no pudo obtenerse, y capa anticorrupción para el servicio de correo y el proveedor de mensajería push. Los tokens de dispositivo rechazados se marcan como inválidos y no se reintentan.
 
 **Iteración 7: Identidad y seguridad** (Drivers: FD-01, QAD-07, CON-07, CON-08, CON-09)
 
 | Pattern | Pro | Con |
 | --- | --- | --- |
-| **Código de un solo uso por correo, tokens JWT con claims de usuario, institución y rol, y RBAC con validación de institución en el API Gateway** | Sin contraseñas que custodiar; sin estado; separa roles de conductor y operador; el claim de institución habilita el aislamiento. | Depende de la entrega del correo; requiere gestionar la renovación y la vigencia de los tokens. |
+| **Código de un solo uso por correo, tokens JWT con claims de usuario, institución y rol, y RBAC con validación de institución en la capa de seguridad del backend** | Sin contraseñas que custodiar; sin estado; separa roles de conductor y operador; el claim de institución habilita el aislamiento. | Depende de la entrega del correo; requiere gestionar la renovación y la vigencia de los tokens. |
 | Federación (OIDC o SAML) con el proveedor de identidad de cada universidad | Reutiliza las credenciales institucionales. | Requiere una integración por institución; no es compatible con un alta en 1 día hábil. |
 | Usuario y contraseña propios con sesiones de servidor | Familiar para el usuario. | Obliga a custodiar contraseñas; menos adecuado para app móvil y escalado horizontal. |
 
-**Decisión:** código de un solo uso enviado al correo institucional o invitado, tokens de acceso y de refresco, RBAC y validación de institución en el API Gateway, límite de solicitudes de código y cifrado TLS en todas las comunicaciones.
+**Decisión:** código de un solo uso enviado al correo institucional o invitado, tokens de acceso y de refresco, RBAC y validación de institución con Spring Security en el backend, límite de solicitudes de código y cifrado TLS en todas las comunicaciones.
 
 **Iteración 8: Soporte multi-institución** (Drivers: QAD-08, CON-08)
 
@@ -2726,14 +2754,14 @@ Las decisiones de diseño se tomaron en ocho iteraciones, siguiendo los stages d
 
 | ID | Decisión | Drivers atendidos |
 | --- | --- | --- |
-| DD-01 | Microservicios por Bounded Context con API Gateway y BFF por cliente | CON-01, CON-02, QAD-04, FD-06 |
+| DD-01 | Monolito modular con un módulo y un esquema de datos por Bounded Context | CON-01, CON-02, QAD-04, FD-06 |
 | DD-02 | Gateway en el campus con MQTT QoS 1 y Store-and-Forward | CON-05, FD-02, QAD-02, QAD-03 |
 | DD-03 | Procesamiento idempotente con tiempo mínimo de detección, estado UNKNOWN y reconciliación | FD-02, FD-03, FD-07, QAD-03, QAD-05 |
 | DD-04 | CQRS con read model en caché, suscripción en tiempo real y caché local en la app | FD-02, QAD-02, QAD-04 |
-| DD-05 | Servicio de predicción con ML, horizontes de 15 a 60 minutos y método de respaldo | FD-04, FD-07, FD-09, FD-10, QAD-01 |
+| DD-05 | Servicio de predicción con ML, horizontes de 15 a 60 minutos y heurística de respaldo | FD-04, FD-07, FD-09, FD-10, QAD-01 |
 | DD-06 | Tiempo estimado de llegada calculado en el dispositivo y enviado en minutos | FD-05, CON-07, QAD-01 |
 | DD-07 | Circuit Breaker, respuesta parcial y capa anticorrupción para proveedores externos | QAD-06, CON-06, FD-08 |
-| DD-08 | Código de un solo uso, JWT, RBAC y validación de institución en el API Gateway | FD-01, QAD-07, CON-08, CON-09 |
+| DD-08 | Código de un solo uso, JWT, RBAC y validación de institución con Spring Security | FD-01, QAD-07, CON-08, CON-09 |
 | DD-09 | Multi-tenancy lógico con aprovisionamiento restringido | QAD-08, CON-08 |
 
 
@@ -2752,7 +2780,7 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Scenario Components: Stimulus Source | Conductor de la comunidad educativa (app móvil). |
 | Scenario Components: Environment | Operación normal, en horario académico, con historial suficiente. |
 | Scenario Components: Artifact (if Known) | Servicio de asesoría de llegada y servicio de predicción. |
-| Scenario Components: Response | El servicio selecciona el pronóstico del horizonte correspondiente al tiempo estimado y devuelve la probabilidad de encontrar espacio, su categoría (HIGH, LIMITED o LOW) y el nivel de confianza. Si el historial es insuficiente, usa la estimación de contingencia e informa confianza baja. |
+| Scenario Components: Response | El servicio selecciona el pronóstico del horizonte correspondiente al tiempo estimado y devuelve la probabilidad de encontrar espacio, su categoría (HIGH, LIMITED o LOW) y el nivel de confianza. Si el historial es insuficiente, usa la heurística de respaldo e informa confianza baja. |
 | Scenario Components: Response Measure | Al menos 80 % de aciertos en la categoría de disponibilidad frente a la ocupación observada a la hora de llegada, evaluado semanalmente. El error absoluto medio se reporta en puntos porcentuales por versión de modelo. |
 | Questions | ¿Cuántas semanas de historial se requieren para alcanzar el 80 %? ¿Con qué umbrales de probabilidad se definen HIGH, LIMITED y LOW? ¿Cuál es el tiempo máximo de llegada admitido? |
 | Issues | Arranque en frío sin historial. Eventos atípicos (feriados, exámenes) con pocos datos. La precisión del tiempo estimado depende del cálculo en el dispositivo. |
@@ -2767,8 +2795,8 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Stimulus | Un espacio cambia de estado y el cambio se mantiene durante el tiempo mínimo configurado. |
 | Scenario Components: Stimulus Source | Sensor instalado en el espacio. |
 | Scenario Components: Environment | Operación normal, con conexión a la nube. |
-| Scenario Components: Artifact (if Known) | Gateway IoT, broker MQTT y contexto de ocupación. |
-| Scenario Components: Response | El gateway publica el evento en el broker. El consumidor lo valida, lo traduce a un evento de dominio, actualiza el estado del espacio, y el read model lo propaga a los clientes suscritos. |
+| Scenario Components: Artifact (if Known) | Gateway del campus, broker MQTT, Parking Sensing y Occupancy. |
+| Scenario Components: Response | El gateway publica la lectura en el broker. Parking Sensing la valida y confirma la detección; Occupancy actualiza el estado del espacio y el read model lo propaga a los clientes suscritos. |
 | Scenario Components: Response Measure | Cambio visible en la app y en la consola en 5 s o menos (percentil 95) desde la confirmación del cambio; publicación del gateway al broker en 1 s o menos. |
 | Questions | ¿Qué tipo de sensor y protocolo de radio se usará entre sensores y gateway? ¿Cuántos sensores atiende cada gateway? ¿Cuál es el tiempo mínimo de detección? |
 | Issues | Falsos positivos y negativos del sensor. Latencia de la red del campus. El tiempo mínimo de detección suma retardo antes de que el cambio se confirme. |
@@ -2784,7 +2812,7 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Scenario Components: Stimulus Source | Red del campus o proveedor de conectividad. |
 | Scenario Components: Environment | Horario académico, incluyendo hora pico. |
 | Scenario Components: Artifact (if Known) | Gateway IoT. |
-| Scenario Components: Response | El gateway continúa recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. El consumidor descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad. |
+| Scenario Components: Response | El gateway continúa recibiendo lecturas, las almacena en su búfer local y las reenvía al restablecerse la conexión. Parking Sensing descarta duplicados y eventos fuera de orden. Mientras dure la caída, los clientes muestran el último estado con su antigüedad. |
 | Scenario Components: Response Measure | 0 % de eventos perdidos; reenvío completo en 5 min o menos tras la reconexión; 100 % de las consultas durante la caída informan la antigüedad del dato. |
 | Questions | ¿Cuántas horas de autonomía debe soportar el gateway? ¿Qué capacidad de almacenamiento local se necesita? |
 | Issues | Orden y duplicación de eventos al reenviar. Recuperación del gateway tras un reinicio inesperado. |
@@ -2799,8 +2827,8 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Stimulus | Pico de consultas de disponibilidad y asesoría al inicio o término de clases. |
 | Scenario Components: Stimulus Source | Conductores de la comunidad educativa. |
 | Scenario Components: Environment | Hora pico de operación. |
-| Scenario Components: Artifact (if Known) | BFF de la aplicación móvil y read model de ocupación. |
-| Scenario Components: Response | El BFF compone en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, sin consultar el modelo de escritura, y los servicios de lectura escalan horizontalmente. |
+| Scenario Components: Artifact (if Known) | Endpoint de composición de la aplicación móvil y read model de ocupación. |
+| Scenario Components: Response | El endpoint de composición entrega en una sola respuesta el layout, la ocupación y la asesoría desde el read model en caché, sin consultar el modelo de escritura. Como el backend no guarda estado de sesión, escala horizontalmente agregando réplicas. |
 | Scenario Components: Response Measure | Hasta 500 consultas concurrentes con tiempo de respuesta de 2 s o menos (percentil 95) y tasa de error menor a 1 %. |
 | Questions | ¿Cuántos conductores activos tendrá el campus piloto? El valor de 500 es un supuesto por validar. |
 | Issues | Los picos coinciden con el inicio de clases. Costo de infraestructura para escalar en hora pico. |
@@ -2815,7 +2843,7 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Stimulus | Un sensor deja de reportar dentro de su intervalo esperado o informa una batería por debajo del umbral. |
 | Scenario Components: Stimulus Source | Sensor de un espacio. |
 | Scenario Components: Environment | Operación normal. |
-| Scenario Components: Artifact (if Known) | Contexto de ocupación y monitoreo de dispositivos. |
+| Scenario Components: Artifact (if Known) | Parking Sensing (salud de dispositivos) y Occupancy. |
 | Scenario Components: Response | El espacio pasa a UNKNOWN y se excluye del conteo de disponibles. Se registra la incidencia, el dispositivo queda marcado para mantenimiento y la confianza del pronóstico se reduce. Cuando el sensor reanuda su reporte y mantiene una detección estable, el espacio vuelve al estado confirmado. |
 | Scenario Components: Response Measure | Transición a UNKNOWN en 1 min o menos tras vencer el intervalo; 100 % de los espacios UNKNOWN excluidos del conteo de disponibles; disponibilidad de datos de ocupación de 95 % o más. |
 | Questions | ¿Cuál es el intervalo de reporte esperado de cada sensor? ¿Qué umbral de batería activa el mantenimiento? |
@@ -2828,11 +2856,11 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Scenario(s) | QAS-06: Degradación controlada ante fallas de servicios |
 | Business Goals | Mantener la información disponible para el conductor y el operador aunque falle un servicio interno o de terceros, sin afectar su confianza. |
 | Relevant Quality Attributes | Resilience, Interoperability |
-| Stimulus | El servicio de predicción, el servicio de correo o el proveedor de mensajería push no responden dentro del tiempo límite. |
-| Scenario Components: Stimulus Source | Servicio interno o proveedor externo. |
+| Stimulus | El modelo de predicción, el servicio de correo o el proveedor de mensajería push no responden dentro del tiempo límite. |
+| Scenario Components: Stimulus Source | Modelo de predicción o proveedor externo. |
 | Scenario Components: Environment | Operación normal. |
-| Scenario Components: Artifact (if Known) | BFF móvil, BFF de consola y servicio de notificaciones. |
-| Scenario Components: Response | Se abre el circuit breaker del servicio afectado. El BFF responde con los datos disponibles e indica cuál no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación, y los tokens de dispositivo rechazados se marcan como inválidos. |
+| Scenario Components: Artifact (if Known) | Endpoints de composición de la app y la consola, y módulo de notificaciones. |
+| Scenario Components: Response | Se abre el circuit breaker de la integración afectada. El endpoint de composición responde con los datos disponibles e indica cuál no pudo obtenerse. La falla del proveedor de notificaciones no bloquea la actualización de ocupación, y los tokens de dispositivo rechazados se marcan como inválidos. |
 | Scenario Components: Response Measure | 100 % de las solicitudes respondidas en 3 s o menos, sin error visible al usuario; 0 impacto en la frescura definida en QAS-02. |
 | Questions | ¿Qué proveedores de correo y de mensajería se usarán, y cuáles son sus cuotas y costos? ¿Qué umbrales abren el circuit breaker? |
 | Issues | Dependencia de terceros para entregar el código de acceso. Retraso en las alertas cuando el proveedor de mensajería falla. |
@@ -2847,7 +2875,7 @@ Al finalizar el Quality Attribute Workshop, las decisiones principales fueron: r
 | Stimulus | Un usuario sin sesión, con un rol que no corresponde o de otra institución solicita un recurso protegido, o un mismo correo excede las solicitudes de código permitidas. |
 | Scenario Components: Stimulus Source | Usuario no autenticado, usuario con rol insuficiente o usuario de otra institución. |
 | Scenario Components: Environment | Operación normal. |
-| Scenario Components: Artifact (if Known) | API Gateway y servicio de identidad. |
+| Scenario Components: Artifact (if Known) | Capa de seguridad del backend (Spring Security) y módulo IAM. |
 | Scenario Components: Response | Rechaza la solicitud sin token (401), con rol o institución que no corresponde (403) o por exceso de solicitudes (429), y registra el intento en auditoría. |
 | Scenario Components: Response Measure | 100 % de los accesos no autorizados rechazados; registro en 1 s o menos; 100 % de las comunicaciones cifradas con TLS. |
 | Questions | ¿Cuál es la vigencia del código de un solo uso y de los tokens? ¿Cuántos intentos se permiten por ventana de tiempo? |
@@ -2877,7 +2905,7 @@ El diseño estratégico utiliza los principios de Domain-Driven Design para deli
 
 El EventStorming se desarrolló en una sesión de trabajo del equipo siguiendo los diez pasos propuestos en el material del curso, a partir del problema, los segmentos y las decisiones del Attribute-Driven Design descritas en las secciones anteriores. El objetivo fue identificar los eventos del dominio de Quadrapp, ordenarlos en el tiempo, reconocer los puntos críticos del proceso y agrupar los agregados resultantes en bounded contexts candidatos.
 
-La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta en [https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA](https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA), enlace que también se registra en los Anexos.
+La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta en [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ), enlace que también se registra en los Anexos.
 
 Por la cantidad de eventos, la línea de tiempo se organizó en tres fases del negocio: la incorporación de la institución y la configuración del estacionamiento, el sensado y la ocupación en tiempo real, y la predicción, la asesoría de llegada y las alertas.
 
@@ -3253,11 +3281,13 @@ En esta sección se comparan distintas formas en las que los Bounded Contexts de
 
 Para ello, se analizan los bounded context Parking Sensing, Occupancy, Prediction & Advisory, Parking Configuration, Notifications, Analytics e IAM, considerando patrones de integración de Domain-Driven Design como Customer/Supplier, Conformist, Shared Kernel, Open Host Service, Published Language y Anti-Corruption Layer.
 
+Los diagramas utilizan la notación de patrones del curso: cada contexto se representa con una elipse; las letras U y D indican el lado upstream y downstream de cada relación; las insignias OHS (Open Host Service), PL (Published Language), CF (Conformist) y ACL (Anti-Corruption Layer) se ubican junto al contexto que aplica el patrón, y SK (Shared Kernel) se ubica sobre la relación entre los dos contextos que comparten el modelo. Las relaciones Customer/Supplier se rotulan como CUS / SUP.
+
 <br>
 
 **Opción 1 – Contextos independientes con relaciones directas:**
 
-![ContextMapping_Option1](./assets/capitulo-04/ContextMapping_Option1.png)
+![Context Mapping, opción 1: contextos independientes con relaciones directas](assets/capitulo-04/context-mapping-opcion-1.png)
 
 La primera alternativa mantiene los siete Bounded Contexts completamente separados y utiliza principalmente relaciones Customer/Supplier para intercambiar la información necesaria.
 
@@ -3273,7 +3303,7 @@ Esta alternativa mantiene límites claros y permite una implementación sencilla
 
 **Opción 2 – Uso de Shared Kernel entre contextos relacionados:**
 
-![ContextMapping_Option2](./assets/capitulo-04/ContextMapping_Option2.png)
+![Context Mapping, opción 2: Shared Kernel entre contextos relacionados](assets/capitulo-04/context-mapping-opcion-2.png)
 
 La segunda alternativa mantiene la misma división en siete Bounded Contexts, pero introduce Shared Kernel entre aquellos que trabajan con conceptos estrechamente relacionados.
 Parking Sensing y Occupancy compartirían una representación mínima de los eventos relacionados con los espacios del estacionamiento. De forma similar, Occupancy y Analytics compartirían conceptos relacionados con la ocupación observada que posteriormente se utiliza para construir el historial.
@@ -3323,39 +3353,47 @@ Prediction & Advisory permanece como el Core Domain de Quadrapp y recibe únicam
 
 ## 4.3. Software Architecture
 
-Las vistas arquitectónicas siguen el modelo C4, que organiza la representación del sistema mediante niveles de abstracción y diagramas complementarios de paisaje y despliegue (Brown, s. f.).
+Las vistas arquitectónicas siguen el modelo C4, que organiza la representación del sistema mediante niveles de abstracción y diagramas complementarios de paisaje y despliegue (Brown, s. f.). Los diagramas se elaboraron con Structurizr a partir de un único modelo, de modo que las personas, los sistemas, los contenedores y los componentes son los mismos en todas las vistas, incluidas las de componentes del capítulo V. En cada elemento se indica su tipo y su tecnología entre corchetes y, en cada relación, el protocolo de comunicación. Los elementos en azul pertenecen a Quadrapp y los grises son sistemas externos.
 
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-El System Landscape Diagram representa el ecosistema general de Quadrapp: las personas que lo utilizan, los sistemas con los que se relaciona y los límites entre ellos. Su propósito es ubicar a Quadrapp dentro de su entorno antes de detallar su estructura interna.
+El System Landscape Diagram ubica a Quadrapp dentro de su ecosistema antes de detallar su estructura interna. Las personas corresponden a los dos segmentos objetivo definidos en la sección 1.3: los conductores de la comunidad educativa, que consultan la disponibilidad, los pronósticos y la asesoría de llegada, y los administradores de estacionamientos universitarios, que incluyen a los administradores y a los operadores de turno de cada universidad. Alrededor del sistema se encuentran los nodos de sensado del campus, el servicio de correo, el proveedor de mensajería push y el servicio de mapas. Quadrapp no depende de un proveedor de identidad externo: su gestión de identidad es propia.
 
-Dos tipos de usuarios interactúan con el producto. Los conductores de la comunidad educativa consultan la disponibilidad actual, las predicciones y la asesoría de llegada, y reciben alertas. También los administradores de estacionamientos universitarios, que configuran los estacionamientos, monitorean la operación y analizan la demanda.
-
-<img src="assets/capitulo-04/Quadrapp-System-Landscape.png" alt="Universidad Peruana de Ciencias Aplicadas">
+![System Landscape diagram de Quadrapp](assets/capitulo-04/c4/c4-landscape.png)
 
 ### 4.3.2. Software Architecture Context Level Diagrams
 
 El Context Diagram muestra a Quadrapp como un único sistema y detalla cómo se relaciona con las personas y los sistemas externos que lo rodean, sin describir su estructura interna, que se desarrolla en el diagrama de contenedores.
 
-<img src="assets/capitulo-04/Quadrapp-Context-Diagram.png" alt="Universidad Peruana de Ciencias Aplicadas">
+![System Context diagram de Quadrapp](assets/capitulo-04/c4/c4-context.png)
 
-El conductor de la comunidad educativa utiliza Quadrapp para consultar la disponibilidad, revisar las predicciones y obtener la asesoría de llegada. El administrador de estacionamientos universitarios lo emplea para configurar los estacionamientos, supervisar la operación y analizar el historial de ocupación. En ambos casos, el acceso se realiza con un código de un solo uso enviado por el servicio de correo.
+El conductor utiliza Quadrapp para consultar la disponibilidad, revisar los pronósticos y obtener la asesoría de llegada, y recibe las alertas de baja disponibilidad a través del proveedor de mensajería push. El administrador de estacionamientos lo emplea para configurar y supervisar la operación de su universidad. En ambos casos, el acceso se realiza con un código de un solo uso que Quadrapp envía mediante el servicio de correo.
 
-La red de sensado del campus envía a Quadrapp las lecturas de ocupación y de paso de vehículos. Los sensores no se comunican directamente con el sistema, pues publican sus lecturas en el gateway del campus, que las transmite mediante MQTT con QoS 1. El proveedor de mensajería push recibe las solicitudes de alertas de Quadrapp para entregarlas a los dispositivos de los conductores.
-
-La aplicación móvil consulta el servicio de mapas desde el propio dispositivo para calcular el tiempo estimado de llegada y Quadrapp recibe ese tiempo expresado en minutos, de modo que la ubicación del conductor no llega a sus servicios.
+Los nodos de sensado del campus publican las lecturas de los sensores de cochera y de paso en la red local; no se comunican directamente con los servicios de Quadrapp, sino a través del gateway del campus, que forma parte de la solución y se detalla en el diagrama de contenedores. El servicio de mapas solo lo consulta la aplicación móvil, desde el dispositivo, para calcular el tiempo estimado de llegada; Quadrapp recibe únicamente ese tiempo expresado en minutos, de acuerdo con CON-07 y la iteración 5b del ADD.
 
 ### 4.3.3. Software Architecture Container Level Diagrams
 
-Descompone Quadrapp en los contenedores que lo conforman y muestra cómo se comunican entre sí. Los clientes son la Landing Page, la aplicación móvil y la consola de operación, que acceden al sistema a través de un único punto de entrada. Cada bounded context se despliega como un servicio con su propia persistencia, según lo establecido en el constraint de Domain-Driven Design, y la caché de lectura sostiene el read model de disponibilidad. Los nodos de sensado publican sus lecturas en el broker de la red local y un consumidor las valida y traduce al lenguaje del dominio antes de que lleguen al servicio de ocupación.
+El Container Diagram descompone Quadrapp en los contenedores que lo conforman, de acuerdo con la decisión de monolito modular de la iteración 1 del ADD (DD-01):
 
-<img src="assets/capitulo-04/4.3.3-container-level.png" alt="Diagrama de contenedores de Quadrapp">
+- **Clientes:** la Landing Page (HTML5, CSS3 y JavaScript), la aplicación móvil del conductor (Flutter) y la consola web de operación de cada universidad (Vue con Vuetify, la biblioteca de Material Design para Vue), que es responsive para usarse también desde el teléfono durante el turno.
+- **Quadrapp Backend:** un único contenedor Spring Boot con un módulo por bounded context (IAM, Parking Configuration, Parking Sensing, Occupancy, Prediction & Advisory, Analytics y Notifications). La seguridad la aplica Spring Security en el propio backend (DD-08) y un módulo de composición entrega las respuestas agregadas para la app y la consola. La app recibe además los cambios de disponibilidad en tiempo real mediante WebSocket.
+- **Ingesta IoT:** los nodos de sensado publican sus lecturas en el gateway del campus, que las reenvía al broker MQTT de la nube por una conexión saliente cifrada con QoS 1 y las retiene en su búfer local mientras no hay conexión (Store-and-Forward). El campus no expone puertos de entrada. El módulo Parking Sensing es el único suscriptor del broker.
+- **Persistencia:** una base de datos PostgreSQL con un esquema por módulo y sin claves foráneas entre esquemas (CON-02), y Redis para el read model de disponibilidad (iteración 4 del ADD).
+- **Servicio del modelo de predicción:** un contenedor interno que infiere la ocupación esperada. Prediction & Advisory lo invoca con timeout y circuit breaker y, si no responde, aplica la heurística de respaldo (DD-05 y DD-07). No lo consumen los clientes, por lo que no forma parte de la API REST pública regida por CON-12.
+
+![Container diagram de Quadrapp](assets/capitulo-04/c4/c4-containers.png)
+
+Dentro del backend, los módulos se comunican de dos formas, según las relaciones del Context Map. Las consultas se resuelven mediante la fachada que cada módulo expone como Open Host Service, por ejemplo, cuando Prediction & Advisory consulta la ocupación actual y el flujo a Occupancy. Los eventos publicados, como `ForecastGenerated` o `SaturationPredicted`, se emiten como eventos de aplicación de Spring y los módulos interesados los consumen después de que el emisor confirma su transacción. El detalle de cada módulo se presenta en los diagramas de componentes del capítulo V.
 
 ### 4.3.4. Software Architecture Deployment Diagrams
 
-Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker permanecen en la red local del campus, sin exposición a Internet, y solo el consumidor de eventos establece la comunicación con la nube. Los servicios de dominio, el punto de entrada y el almacenamiento gestionado se despliegan en el proveedor cloud, mientras que la Landing Page se publica como sitio estático. La aplicación móvil resuelve el tiempo estimado de llegada contra el proveedor de mapas desde el propio dispositivo, de modo que la ubicación del conductor no llega a los servicios de Quadrapp.
+El Deployment Diagram representa dónde se ejecuta cada contenedor en producción:
 
-<img src="assets/capitulo-04/4.3.4-deployment.png" alt="Diagrama de despliegue de Quadrapp">
+- **Dispositivos de los usuarios:** la aplicación móvil se ejecuta en el teléfono del conductor (Android o iOS) y la consola, en el navegador del administrador.
+- **Campus universitario:** los nodos de sensado (ESP32) y el equipo de borde con el gateway permanecen en la red local, que solo abre conexiones salientes hacia el broker MQTT de la nube.
+- **Proveedor cloud:** la Landing Page se publica como sitio estático; el backend se despliega como un servicio web con réplicas sin estado detrás del balanceador del proveedor, lo que atiende la carga de QAS-04; el broker MQTT y el servicio del modelo de predicción se despliegan como contenedores propios, y PostgreSQL y Redis se usan como servicios gestionados.
+
+![Deployment diagram de Quadrapp - Producción](assets/capitulo-04/c4/c4-deployment.png)
 
 ---
 
@@ -3391,7 +3429,7 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 **Reglas de negocio principales.**
 1. Un correo recibe un código solo si su dominio está habilitado, si tiene una invitación vigente o si ya tiene una cuenta; en otro caso no se emite ningún código.
 2. El código tiene vigencia corta, un número máximo de intentos y se almacena únicamente como hash.
-3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa el API Gateway para el aislamiento entre instituciones (CON-08).
+3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa la capa de seguridad del backend para el aislamiento entre instituciones (CON-08).
 4. Los administradores se crean solo por invitación o en el alta inicial de la institución (CON-17).
 5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
 
@@ -3411,9 +3449,9 @@ El contexto expone una API REST documentada con OpenAPI (CON-12). Todas las ruta
 | `EmailDomainController` | `POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}` | 201 o 204; 409 si el dominio pertenece a otra institución | US30 (rutas propuestas) |
 | `InvitationController` | `POST /api/v1/invitations` | 201 con la invitación registrada y enviada | US31 (ruta propuesta) |
 | `InvitationController` | `POST /api/v1/invitations/{invitationId}/accept` | 200 con la cuenta creada; 410 si la invitación venció | US31 (ruta propuesta) |
-| `KeyController` | `GET /.well-known/jwks.json` | 200 con las claves públicas para que el API Gateway valide los tokens | DD-08 (ruta propuesta) |
+| `KeyController` | `GET /.well-known/jwks.json` | 200 con las claves públicas con las que la capa de seguridad valida los tokens | DD-08 (ruta propuesta) |
  
-El API Gateway valida el token, el rol y la institución antes de enrutar la solicitud (DD-08), de modo que IAM no queda en el camino de cada consulta de los demás contextos.
+La capa de seguridad del backend (Spring Security) valida el token, el rol y la institución antes de que la solicitud llegue al controlador (DD-08), de modo que IAM no queda en el camino de cada consulta de los demás módulos.
  
 ### 5.1.3. Application Layer
  
@@ -3449,7 +3487,7 @@ La capa de aplicación contiene los casos de uso, que cargan los aggregates, inv
  
 ### 5.1.6. Bounded Context Software Architecture Component Level Diagrams
  
-El diagrama de componentes descompone el servicio IAM en sus componentes de interfaz, aplicación, dominio e infraestructura y muestra sus relaciones con el API Gateway, el servicio de correo y los demás Bounded Contexts, que reciben la identidad y el contexto autorizado. El IAM es propio de Quadrapp, por lo que no depende de un proveedor de identidad externo. Las flechas indican la dirección de la dependencia.
+El diagrama de componentes descompone el servicio IAM en sus componentes de interfaz, aplicación, dominio e infraestructura y muestra sus relaciones con la capa de seguridad del backend, el servicio de correo y los demás módulos, que reciben la identidad y el contexto autorizado. El IAM es propio de Quadrapp, por lo que no depende de un proveedor de identidad externo. Las flechas indican la dirección de la dependencia.
  
 ![Diagrama de componentes C4 del contexto IAM](assets/capitulo-05/iam/iam_c4_componentes.png)
  
@@ -3486,20 +3524,19 @@ Este Bounded Context soporta principalmente:
 - US13, US14 y US15 — Recibir asesoría de llegada (probabilidad de encontrar espacio, categoría y confianza) a partir del tiempo estimado de llegada (ETA).
 - US36 — Conocer la próxima disponibilidad cuando el estacionamiento está lleno.
 - TS07 — Servicio de predicción de ocupación con modelo principal y respaldo (FALLBACK).
-- TS02 — Es consumido por el BFF móvil (`GET /mobile/home`) para componer la pantalla de inicio.
+- TS02 — Es consumido por el módulo de composición (`GET /mobile/home`) para componer la pantalla de inicio.
 
 
 Las principales responsabilidades del Bounded Context Prediction & Advisory son:
 
 - Generar periódicamente un pronóstico por estacionamiento y por horizonte (15, 30, 45 y 60 minutos).
 - Registrar, para cada pronóstico, la ocupación esperada, la confianza, el método utilizado y la versión del modelo.
-- Aplicar un método de respaldo (FALLBACK) con confianza baja cuando el modelo principal no está disponible o no existe historial suficiente.
+- Aplicar una heurística de respaldo (FALLBACK) con confianza baja cuando el modelo principal no está disponible o no existe historial suficiente.
 - Indicar cuándo se espera que un estacionamiento alcance su umbral de saturación.
 - Informar si un pronóstico está vigente, vencido o faltante, sin depender del reloj del dispositivo.
 - Derivar la asesoría de llegada (probabilidad de espacio, categoría, confianza y horizonte utilizado) a partir del pronóstico vigente y del ETA.
 - Estimar el rango de minutos hasta la próxima liberación cuando no hay espacios libres, o indicar que no puede estimarse cuando no hay salidas.
-- Registrar la ocupación observada cuando llega el momento objetivo de un pronóstico, para vigilar el desempeño del propio modelo.
-- Publicar el evento `ForecastGenerated` para que Analytics y Notifications lo utilicen sin acceder al modelo interno de este contexto.
+- Publicar el evento `ForecastGenerated` para Analytics y el evento `SaturationPredicted` para Notifications, como Published Language, sin exponer el modelo interno de este contexto.
 - Garantizar que el servidor reciba únicamente el ETA en minutos, nunca coordenadas, y que ese ETA no se almacene.
 
 ### Class Dictionary
@@ -3508,56 +3545,54 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Pre
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| Forecast | Domain | Aggregate Root. Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. | forecastId, institutionId, parkingLotId, horizon, generatedAt, targetAt, expectedOccupancy, confidence, method, modelVersion, saturation, observedOccupancy | validUntil(), isExpiredAt(), isFallback(), predictsSaturation(), recordObservation(), absoluteError(), pullDomainEvents() |
-| ForecastGenerated | Domain | Evento de dominio que anuncia que se generó un pronóstico. | forecastId, institutionId, parkingLotId, generatedAt, targetAt, horizonMinutes, modelVersion, expectedOccupancyPct, confidenceLevel, method, saturationExpectedAt | — |
+| Forecast | Domain | Aggregate Root. Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. | forecastId, tenantId, parkingLotId, horizon, generatedAt, targetAt, expectedOccupancy, confidence, method, modelVersion, saturation | validUntil(), isExpiredAt(), isFallback(), predictsSaturation(), pullDomainEvents() |
+| ForecastGenerated | Domain | Evento de dominio que anuncia que se generó un pronóstico. | forecastId, tenantId, parkingLotId, generatedAt, targetAt, horizonMinutes, modelVersion, expectedOccupancyPct, confidenceLevel, method, saturationExpectedAt | — |
 | OccupancyPercentage | Domain | Value Object que representa un porcentaje de ocupación entre 0 % y 100 %. | value | value(), isValid(), isAtOrAbove(), distanceTo() |
 | Probability | Domain | Value Object que representa un valor entre 0 y 1. | value | value(), isValid(), complement() |
 | Confidence | Domain | Value Object que representa qué tan confiable es un pronóstico o una asesoría. | value, level | of(), value(), level(), isLow(), lowerOneLevel() |
 | Saturation | Domain | Value Object que representa el momento en que se espera alcanzar el umbral de saturación. | expectedAt, thresholdPct | expectedAt(), thresholdPct(), minutesFrom() |
 | ModelPrediction | Domain | Value Object con el resultado crudo entregado por el modelo para un horizonte. | horizon, expectedOccupancy, confidenceValue, modelVersion | — |
-| ParkingLotProfile | Domain | Value Object con los datos mínimos del estacionamiento que Prediction & Advisory necesita. | institutionId, parkingLotId, saturationThreshold, flowWindowMinutes | belongsTo() |
+| ParkingLotProfile | Domain | Value Object con los datos mínimos del estacionamiento que Prediction & Advisory necesita. | tenantId, parkingLotId, saturationThreshold, flowWindowMinutes | belongsTo() |
 | EtaMinutes | Domain | Value Object que representa el tiempo estimado de llegada en minutos (0 a 120). | value | value(), isValid(), exceeds() |
 | ArrivalAdvice | Domain | Value Object derivado que resume la asesoría de llegada. No se persiste. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt | isLowConfidence() |
 | NextAvailability | Domain | Value Object derivado con el rango estimado hasta la próxima liberación. No se persiste. | available, minMinutes, maxMinutes, reason | estimated(), notNeeded(), noExits(), isEstimated() |
-| AdvisoryPolicy | Domain | Value Object con los umbrales configurables que se aplican al clasificar probabilidad, confianza y rango. | likelyFrom, uncertainFrom, highConfidenceFrom, mediumConfidenceFrom, fallbackConfidence, rangeSpread | categoryFor(), confidenceLevelFor() |
+| AdvisoryPolicy | Domain | Value Object con los umbrales configurables que se aplican al clasificar probabilidad, confianza y rango. | highFrom, limitedFrom, highConfidenceFrom, mediumConfidenceFrom, fallbackConfidence, rangeSpread | categoryFor(), confidenceLevelFor() |
 | ForecastHorizon | Domain | Enumeración de los horizontes admitidos. | M15, M30, M45, M60 | minutes(), fromMinutes(), smallestCovering() |
 | ForecastMethod | Domain | Enumeración del método con el que se generó un pronóstico. | PRIMARY_MODEL, FALLBACK | — |
 | ConfidenceLevel | Domain | Enumeración del nivel de confianza. | HIGH, MEDIUM, LOW | — |
-| ArrivalCategory | Domain | Enumeración de la categoría de la asesoría de llegada. | LIKELY, UNCERTAIN, UNLIKELY | — |
+| ArrivalCategory | Domain | Enumeración de la categoría de la asesoría de llegada. | HIGH, LIMITED, LOW | — |
 | UnavailabilityReason | Domain | Enumeración del motivo por el que no se entrega un rango de próxima disponibilidad. | HAS_FREE_SPACES, NO_EXITS | — |
-| ForecastRepository | Domain | Abstracción para almacenar y consultar pronósticos. | — | save(), findById(), findLatest(), findLatestByLot(), findPendingEvaluation() |
-| ForecastDomainService | Domain | Construye pronósticos a partir del resultado del modelo o del método de respaldo y estima la saturación. | policy | assembleFromModel(), assembleFallback(), estimateSaturation() |
+| ForecastRepository | Domain | Abstracción para almacenar y consultar pronósticos. | — | save(), findById(), findLatest(), findLatestByLot() |
+| ForecastDomainService | Domain | Construye pronósticos a partir del resultado del modelo o de la heurística de respaldo y estima la saturación. | policy | assembleFromModel(), assembleFallback(), estimateSaturation() |
 | AdvisoryDomainService | Domain | Selecciona el pronóstico adecuado, deriva la asesoría de llegada y estima la próxima disponibilidad. | policy | adviseArrival(), selectForecast(), estimateNextAvailability() |
-| GetForecastQuery | Application | Solicitud para consultar el pronóstico de un estacionamiento y un horizonte. | institutionId, parkingLotId, horizon | — |
+| GetForecastQuery | Application | Solicitud para consultar el pronóstico de un estacionamiento y un horizonte. | tenantId, parkingLotId, horizon | — |
 | GetForecastQueryHandler | Application | Coordina la consulta de un pronóstico y determina si está vigente o vencido. | Dependencies | handle() |
-| GetForecastsQuery | Application | Solicitud para consultar los pronósticos de todos los horizontes de un estacionamiento. | institutionId, parkingLotId | — |
+| GetForecastsQuery | Application | Solicitud para consultar los pronósticos de todos los horizontes de un estacionamiento. | tenantId, parkingLotId | — |
 | GetForecastsQueryHandler | Application | Coordina la consulta de los cuatro horizontes marcando los faltantes y vencidos. | Dependencies | handle() |
-| GetArrivalAdviceQuery | Application | Solicitud para calcular la asesoría de llegada. | institutionId, parkingLotId, eta | — |
+| GetArrivalAdviceQuery | Application | Solicitud para calcular la asesoría de llegada. | tenantId, parkingLotId, eta | — |
 | GetArrivalAdviceQueryHandler | Application | Coordina el cálculo de la asesoría de llegada sin persistir el ETA. | Dependencies | handle() |
-| GetNextAvailabilityQuery | Application | Solicitud para estimar la próxima disponibilidad de un estacionamiento. | institutionId, parkingLotId | — |
+| GetNextAvailabilityQuery | Application | Solicitud para estimar la próxima disponibilidad de un estacionamiento. | tenantId, parkingLotId | — |
 | GetNextAvailabilityQueryHandler | Application | Coordina la estimación de la próxima disponibilidad. | Dependencies | handle() |
 | GenerateForecastsCommand | Application | Instrucción para generar los pronósticos de un estacionamiento. | parkingLotId | — |
-| GenerateForecastsCommandHandler | Application | Coordina la generación de pronósticos con el modelo o con el método de respaldo. | Dependencies | handle() |
-| EvaluateForecastsCommand | Application | Instrucción para registrar la ocupación observada de los pronósticos cuyo momento objetivo ya pasó. | asOf | — |
-| EvaluateForecastsCommandHandler | Application | Coordina el registro de la ocupación observada. | Dependencies | handle() |
+| GenerateForecastsCommandHandler | Application | Coordina la generación de pronósticos con el modelo o con la heurística de respaldo. | Dependencies | handle() |
 | ForecastResult | Application | Resultado de la consulta de un pronóstico. | forecast, status, serverTime | — |
 | ForecastSetResult | Application | Resultado de la consulta de todos los horizontes. | parkingLotId, items, serverTime | — |
 | ArrivalAdviceResult | Application | Resultado del cálculo de la asesoría de llegada. | advice, serverTime | — |
 | NextAvailabilityResult | Application | Resultado de la estimación de próxima disponibilidad. | availability, serverTime | — |
-| OccupancyReader | Application | Puerto de salida hacia Occupancy. | — | currentOccupancy(), freeSpaces(), exitsInWindow(), observedOccupancyAt(), recentSnapshots() |
+| OccupancyReader | Application | Puerto de salida hacia Occupancy. | — | currentOccupancy(), freeSpaces(), exitsInWindow(), recentSnapshots() |
 | ParkingLotSettingsReader | Application | Puerto de salida hacia Parking Configuration. | — | profileOf(), activeLots(), calendarEventsAround() |
 | PredictionModelPort | Application | Puerto de salida hacia el modelo de predicción. | — | predict() |
 | ForecastEventPublisher | Application | Puerto de salida para publicar eventos de dominio. | — | publish() |
 | ForecastQueryController | Interface | Expone la consulta de pronósticos y de próxima disponibilidad. | Query Handler dependencies | getForecast(), getNextAvailability() |
 | ArrivalAdviceController | Interface | Expone el cálculo de la asesoría de llegada. | Query Handler dependency | requestAdvice() |
-| PredictionAdvisoryFacade | Interface | API pública del módulo para otros módulos del monolito, en particular el BFF móvil. | Query Handler dependencies | forecastsOf(), adviceFor(), nextAvailabilityOf() |
-| ForecastScheduler | Interface | Dispara de forma periódica la generación y la evaluación de pronósticos. | Command Handler dependencies | generateForecasts(), evaluateForecasts() |
+| PredictionAdvisoryFacade | Interface | Fachada (Open Host Service) que usan el módulo de composición y los demás módulos para consultar pronósticos y asesoría en el mismo proceso. | Query Handler dependencies | forecastsOf(), adviceFor(), nextAvailabilityOf() |
+| ForecastScheduler | Interface | Dispara de forma periódica la generación de pronósticos. | Command Handler dependencies | generateForecasts() |
 | ArrivalAdviceRequest | Interface | Representación de la solicitud de asesoría. Solo admite dos campos. | lotId, etaMinutes | — |
 | ForecastResponse | Interface | Representación del pronóstico entregado al cliente. | lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime | — |
 | ArrivalAdviceResponse | Interface | Representación de la asesoría entregada al cliente. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime | — |
 | NextAvailabilityResponse | Interface | Representación de la próxima disponibilidad entregada al cliente. | available, minMinutes, maxMinutes, reason, serverTime | — |
-| ForecastRepositoryAdapter | Infrastructure | Implementa la persistencia de pronósticos sobre la tabla `forecasts`. | Persistence dependency | save(), findById(), findLatest(), findLatestByLot(), findPendingEvaluation() |
-| OccupancyReaderAdapter | Infrastructure | Encapsula el acceso a la información que publica Occupancy. | Integration dependency | currentOccupancy(), freeSpaces(), exitsInWindow(), observedOccupancyAt(), recentSnapshots() |
+| ForecastRepositoryAdapter | Infrastructure | Implementa la persistencia de pronósticos sobre la tabla `prediction.forecasts`. | Persistence dependency | save(), findById(), findLatest(), findLatestByLot() |
+| OccupancyReaderAdapter | Infrastructure | Capa anticorrupción que consulta la fachada de Occupancy. | Integration dependency | currentOccupancy(), freeSpaces(), exitsInWindow(), recentSnapshots() |
 | ParkingLotSettingsReaderAdapter | Infrastructure | Encapsula el acceso a la configuración del estacionamiento. | Integration dependency | profileOf(), activeLots(), calendarEventsAround() |
 | PredictionModelClient | Infrastructure | Encapsula la comunicación con el modelo de predicción. | Model dependency, timeout | predict() |
 | ForecastEventPublisherAdapter | Infrastructure | Encapsula el mecanismo técnico de publicación de `ForecastGenerated`. | Messaging dependency | publish() |
@@ -3573,24 +3608,23 @@ La Domain Layer contiene los conceptos, reglas y abstracciones de negocio que pe
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|Forecast|Aggregate Root|Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. Conserva el método, la versión del modelo y la confianza con que se generó y, cuando llega su momento objetivo, la ocupación observada.|
+|Forecast|Aggregate Root|Representa el pronóstico de ocupación de un estacionamiento para un horizonte determinado. Conserva el método, la versión del modelo y la confianza con que se generó.|
 
 Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
 |forecastId|UUID|Private|Identificador único del pronóstico.|
-|institutionId|UUID|Private|Referencia externa a la institución propietaria de la información (IAM).|
+|tenantId|UUID|Private|Referencia externa a la institución propietaria de la información (IAM).|
 |parkingLotId|UUID|Private|Referencia externa al estacionamiento pronosticado (Parking Configuration).|
 |horizon|ForecastHorizon|Private|Horizonte del pronóstico: 15, 30, 45 o 60 minutos.|
 |generatedAt|Instant|Private|Momento en que se generó el pronóstico.|
 |targetAt|Instant|Private|Momento futuro para el que se estima la ocupación; es `generatedAt` más el horizonte.|
 |expectedOccupancy|OccupancyPercentage|Private|Porcentaje de ocupación esperado en `targetAt`.|
 |confidence|Confidence|Private|Valor y nivel de confianza del pronóstico.|
-|method|ForecastMethod|Private|Indica si se generó con el modelo principal o con el método de respaldo.|
+|method|ForecastMethod|Private|Indica si se generó con el modelo principal o con la heurística de respaldo.|
 |modelVersion|String|Private|Versión del modelo o identificador de la política de respaldo.|
 |saturation|Saturation?|Private|Momento esperado de saturación, cuando el pronóstico lo anticipa.|
-|observedOccupancy|OccupancyPercentage?|Private|Ocupación realmente observada en `targetAt`; se registra una sola vez.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
@@ -3599,27 +3633,24 @@ Methods
 |-|-|-|-|
 |validUntil()|Instant|Public|Momento hasta el cual el pronóstico es vigente; coincide con `targetAt`.|
 |isExpiredAt(now: Instant)|Boolean|Public|Indica si el pronóstico ya no es vigente en el instante dado.|
-|isFallback()|Boolean|Public|Indica si se generó con el método de respaldo.|
+|isFallback()|Boolean|Public|Indica si se generó con la heurística de respaldo.|
 |predictsSaturation()|Boolean|Public|Indica si anticipa que se alcanzará el umbral de saturación.|
-|hasObservation()|Boolean|Public|Indica si ya se registró la ocupación observada.|
-|recordObservation(observed: OccupancyPercentage, now: Instant)|Void|Public|Registra la ocupación observada, solo si `targetAt` ya ocurrió y no hay una observación previa.|
-|absoluteError()|Decimal?|Public|Diferencia absoluta, en puntos porcentuales, entre la ocupación esperada y la observada; no existe sin observación.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos de dominio pendientes.|
 
-Una vez generado, un pronóstico no cambia su ocupación esperada, su confianza, su método ni su versión; la única modificación permitida es registrar, una vez, la ocupación observada. `institutionId` y `parkingLotId` no hacen que Institution ni ParkingLot pertenezcan al agregado.
+Una vez generado, un pronóstico es inmutable: no cambia su ocupación esperada, su confianza, su método ni su versión. La precisión del modelo no se calcula en este contexto, sino en Analytics, que compara cada pronóstico con la ocupación observada. `tenantId` y `parkingLotId` son referencias a otros contextos y no hacen que Tenant ni ParkingLot pertenezcan al agregado.
 
 **Domain Event: ForecastGenerated**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|ForecastGenerated|Domain Event|Anuncia que se generó un pronóstico. Lo consumen Analytics (para su `ForecastSnapshot`) y Notifications (para decidir alertas de saturación). No incluye ningún dato del conductor.|
+|ForecastGenerated|Domain Event|Anuncia que se generó un pronóstico. Lo consume Analytics para su `ForecastSnapshot`. Cuando el pronóstico prevé saturación se publica además `SaturationPredicted` (parkingLotId, tenantId, horizonMinutes, saturationExpectedAt), que consume Notifications. Ninguno incluye datos del conductor.|
 
 Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
 |forecastId|UUID|Private|Identificador del pronóstico generado.|
-|institutionId|UUID|Private|Institución a la que pertenece el pronóstico.|
+|tenantId|UUID|Private|Institución a la que pertenece el pronóstico.|
 |parkingLotId|UUID|Private|Estacionamiento sobre el que se realizó la predicción.|
 |generatedAt|Instant|Private|Momento en que se generó.|
 |targetAt|Instant|Private|Momento futuro para el que se estimó la ocupación.|
@@ -3740,7 +3771,7 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|institutionId|UUID|Private|Institución propietaria del estacionamiento.|
+|tenantId|UUID|Private|Institución propietaria del estacionamiento.|
 |parkingLotId|UUID|Private|Identificador del estacionamiento.|
 |saturationThreshold|OccupancyPercentage|Private|Umbral a partir del cual se considera saturado.|
 |flowWindowMinutes|Integer|Private|Ventana, en minutos, para medir el flujo de salidas.|
@@ -3749,7 +3780,7 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|belongsTo(institutionId: UUID)|Boolean|Public|Indica si el estacionamiento pertenece a la institución dada.|
+|belongsTo(tenantId: UUID)|Boolean|Public|Indica si el estacionamiento pertenece a la institución dada.|
 
 **Value Object: EtaMinutes**
 
@@ -3783,7 +3814,7 @@ Attributes
 |-|-|-|-|
 |etaMinutes|EtaMinutes|Private|ETA con el que se calculó la asesoría.|
 |probabilityOfSpace|Probability|Private|Probabilidad de encontrar al menos un espacio libre al llegar.|
-|category|ArrivalCategory|Private|Categoría derivada de la probabilidad: LIKELY, UNCERTAIN o UNLIKELY.|
+|category|ArrivalCategory|Private|Categoría derivada de la probabilidad: HIGH, LIMITED o LOW.|
 |confidence|Confidence|Private|Confianza de la asesoría.|
 |horizonUsed|ForecastHorizon|Private|Horizonte del pronóstico utilizado.|
 |generatedAt|Instant|Private|Momento en que se generó el pronóstico utilizado (permite mostrar la antigüedad del dato).|
@@ -3828,8 +3859,8 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|likelyFrom|Probability|Private|Probabilidad mínima para la categoría LIKELY.|
-|uncertainFrom|Probability|Private|Probabilidad mínima para UNCERTAIN; por debajo es UNLIKELY.|
+|highFrom|Probability|Private|Probabilidad mínima para la categoría HIGH.|
+|limitedFrom|Probability|Private|Probabilidad mínima para LIMITED; por debajo es LOW.|
 |highConfidenceFrom|Probability|Private|Confianza mínima para el nivel HIGH.|
 |mediumConfidenceFrom|Probability|Private|Confianza mínima para el nivel MEDIUM; por debajo es LOW.|
 |fallbackConfidence|Probability|Private|Confianza asignada a los pronósticos de respaldo (siempre menor que `mediumConfidenceFrom`).|
@@ -3842,7 +3873,7 @@ Methods
 |categoryFor(probability: Probability)|ArrivalCategory|Public|Devuelve la categoría que corresponde a una probabilidad.|
 |confidenceLevelFor(value: Probability)|ConfidenceLevel|Public|Devuelve el nivel de confianza que corresponde a un valor.|
 
-Los valores iniciales de `AdvisoryPolicy` se calibran con los datos del piloto (TS07); el modelo solo exige `uncertainFrom` < `likelyFrom` y `mediumConfidenceFrom` < `highConfidenceFrom`.
+Los valores iniciales de `AdvisoryPolicy` se calibran con los datos del piloto (TS07); el modelo solo exige `limitedFrom` < `highFrom` y `mediumConfidenceFrom` < `highConfidenceFrom`.
 
 **Enumerations**
 
@@ -3851,7 +3882,7 @@ Los valores iniciales de `AdvisoryPolicy` se calibran con los datos del piloto (
 |ForecastHorizon|Enumeration|M15, M30, M45, M60|Horizontes admitidos para un pronóstico.|
 |ForecastMethod|Enumeration|PRIMARY_MODEL, FALLBACK|Método con el que se generó un pronóstico.|
 |ConfidenceLevel|Enumeration|HIGH, MEDIUM, LOW|Nivel cualitativo de confianza.|
-|ArrivalCategory|Enumeration|LIKELY, UNCERTAIN, UNLIKELY|Categoría de la asesoría de llegada: LIKELY (es probable encontrar espacio), UNCERTAIN (es incierto), UNLIKELY (es poco probable).|
+|ArrivalCategory|Enumeration|HIGH, LIMITED, LOW|Categoría de la asesoría de llegada: HIGH (es probable encontrar espacio), LIMITED (la disponibilidad será limitada), LOW (es poco probable).|
 |UnavailabilityReason|Enumeration|HAS_FREE_SPACES, NO_EXITS|Motivo por el que no se entrega un rango: HAS_FREE_SPACES (hay espacios libres) o NO_EXITS (lleno y sin salidas recientes).|
 
 Methods de `ForecastHorizon`
@@ -3872,17 +3903,16 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|save(forecast: Forecast)|Void|Public|Guarda un pronóstico nuevo o actualiza su ocupación observada.|
-|findById(institutionId: UUID, forecastId: UUID)|Forecast?|Public|Recupera un pronóstico dentro de la institución indicada.|
-|findLatest(institutionId: UUID, parkingLotId: UUID, horizon: ForecastHorizon)|Forecast?|Public|Pronóstico más reciente de un estacionamiento para un horizonte.|
-|findLatestByLot(institutionId: UUID, parkingLotId: UUID)|`List<Forecast>`|Public|Pronósticos más recientes de un estacionamiento, uno por horizonte.|
-|findPendingEvaluation(targetUntil: Instant)|`List<Forecast>`|Public|Pronósticos cuyo `targetAt` ya ocurrió y aún no tienen ocupación observada. Lo usa un proceso del sistema, no una solicitud de usuario.|
+|save(forecast: Forecast)|Void|Public|Guarda un pronóstico nuevo.|
+|findById(tenantId: UUID, forecastId: UUID)|Forecast?|Public|Recupera un pronóstico dentro de la institución indicada.|
+|findLatest(tenantId: UUID, parkingLotId: UUID, horizon: ForecastHorizon)|Forecast?|Public|Pronóstico más reciente de un estacionamiento para un horizonte.|
+|findLatestByLot(tenantId: UUID, parkingLotId: UUID)|`List<Forecast>`|Public|Pronósticos más recientes de un estacionamiento, uno por horizonte.|
 
 **Domain Service: ForecastDomainService**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|ForecastDomainService|Domain Service|Construye pronósticos válidos a partir del resultado del modelo o del método de respaldo y estima el momento de saturación. No invoca al modelo ni accede a la base de datos.|
+|ForecastDomainService|Domain Service|Construye pronósticos válidos a partir del resultado del modelo o de la heurística de respaldo y estima el momento de saturación. No invoca al modelo ni accede a la base de datos.|
 
 Attributes
 
@@ -3922,19 +3952,19 @@ Methods
 
 1. Todo `Forecast` pertenece a una institución identificada y a un estacionamiento.
 2. El horizonte solo puede ser 15, 30, 45 o 60 minutos, y `targetAt` es `generatedAt` más el horizonte.
-3. La ocupación esperada y la observada están entre 0 % y 100 %; el valor de confianza, entre 0 y 1.
+3. La ocupación esperada está entre 0 % y 100 %; el valor de confianza, entre 0 y 1.
 4. Todo pronóstico conserva su método y la versión del modelo, también cuando se generó con el respaldo.
 5. Un pronóstico FALLBACK tiene siempre nivel de confianza LOW.
 6. Si el modelo no está disponible, no responde a tiempo, omite un horizonte o no hay historial suficiente, se genera el pronóstico con el método FALLBACK, que asume que la ocupación esperada es la actual.
 7. Si no existe una lectura de ocupación utilizable, no se genera ningún pronóstico; el contexto no inventa un valor.
 8. Un pronóstico es vigente hasta su `targetAt` (`validUntil`). Uno vencido se devuelve marcado, junto con la hora del servidor, y no se usa para la asesoría.
 9. Un horizonte para el que nunca se generó un pronóstico se informa como faltante.
-10. Un pronóstico no cambia una vez generado; solo se registra, una vez y cuando `targetAt` ya ocurrió, la ocupación observada.
+10. Un pronóstico no cambia una vez generado.
 11. La saturación esperada solo existe cuando el pronóstico anticipa alcanzar el umbral del estacionamiento, y su momento está entre `generatedAt` y `targetAt`.
 12. El ETA es un entero entre 0 y 120 minutos.
 13. La asesoría usa el menor horizonte vigente que cubre el ETA. Si el ETA supera 60 minutos, o solo hay un horizonte menor que el ETA, usa el más cercano y baja un nivel la confianza.
 14. La probabilidad de espacio es 1 mientras la ocupación esperada no supere el umbral de saturación y baja linealmente hasta 0 al 100 %. La categoría sale de `AdvisoryPolicy`.
-15. Con un pronóstico FALLBACK la asesoría tiene confianza LOW y su categoría nunca es más optimista que UNCERTAIN.
+15. Con un pronóstico FALLBACK la asesoría tiene confianza LOW y su categoría nunca es más optimista que LIMITED.
 16. La próxima disponibilidad solo se estima cuando no hay espacios libres; un espacio sin dato (UNKNOWN) nunca cuenta como libre.
 17. Si el estacionamiento está lleno y no hubo salidas en la ventana de flujo, se informa NO_EXITS y no se estima. Si las hubo, el rango se calcula como `ventana / salidas`, ampliado por `rangeSpread`, con un mínimo de 1 minuto.
 18. La asesoría y la próxima disponibilidad se calculan en cada solicitud y no se persisten.
@@ -3945,7 +3975,7 @@ Methods
 ### 5.5.2. Interface Layer
 
 
-La Interface Layer expone las capacidades del Bounded Context a la aplicación móvil, al BFF móvil y a los procesos programados. Recibe solicitudes, valida su forma, las transforma en Queries o Commands, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La institución se obtiene siempre del token validado por IAM, nunca de un parámetro; un estacionamiento de otra institución se responde como no encontrado.
+La Interface Layer expone las capacidades del Bounded Context a la aplicación móvil, al módulo de composición y a los procesos programados. Recibe solicitudes, valida su forma, las transforma en Queries o Commands, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La institución se obtiene siempre del token validado por IAM, nunca de un parámetro; un estacionamiento de otra institución se responde como no encontrado.
 
 **Controller 1: ForecastQueryController**
 
@@ -4008,7 +4038,7 @@ Solicitud y respuesta:
 ```json
 { "lotId": "7c1f2b0e-5a3d-4c61-9f0e-2b6a1d8e4c10", "etaMinutes": 20 }
 
-{ "etaMinutes": 20, "probabilityOfSpace": 0.64, "category": "UNCERTAIN",
+{ "etaMinutes": 20, "probabilityOfSpace": 0.64, "category": "LIMITED",
   "confidence": { "value": 0.55, "level": "MEDIUM" }, "horizonUsed": 30,
   "generatedAt": "2026-03-10T13:41:05.120Z", "serverTime": "2026-03-10T13:44:12.400Z" }
 ```
@@ -4024,28 +4054,27 @@ Solicitud y respuesta:
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|PredictionAdvisoryFacade|Facade|API en proceso del módulo para el BFF móvil (TS02).|
+|PredictionAdvisoryFacade|Facade|Fachada en proceso que usan el módulo de composición (TS02) y los demás módulos.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|forecastsOf(institutionId: UUID, parkingLotId: UUID)|ForecastSetResult|Public|Estado de los cuatro horizontes.|
-|adviceFor(institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes)|ArrivalAdviceResult?|Public|Asesoría; ninguna si no hay pronóstico vigente o ETA.|
-|nextAvailabilityOf(institutionId: UUID, parkingLotId: UUID)|NextAvailabilityResult|Public|Próxima disponibilidad.|
+|forecastsOf(tenantId: UUID, parkingLotId: UUID)|ForecastSetResult|Public|Estado de los cuatro horizontes.|
+|adviceFor(tenantId: UUID, parkingLotId: UUID, eta: EtaMinutes)|ArrivalAdviceResult?|Public|Asesoría; ninguna si no hay pronóstico vigente o ETA.|
+|nextAvailabilityOf(tenantId: UUID, parkingLotId: UUID)|NextAvailabilityResult|Public|Próxima disponibilidad.|
 
 **Scheduler 1: ForecastScheduler**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|ForecastScheduler|Scheduler|Dispara la generación y la evaluación periódicas de pronósticos.|
+|ForecastScheduler|Scheduler|Dispara la generación periódica de pronósticos.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
 |generateForecasts()|Void|Public|Envía un `GenerateForecastsCommand` por estacionamiento activo.|
-|evaluateForecasts()|Void|Public|Envía un `EvaluateForecastsCommand`.|
 
 Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
 
@@ -4060,18 +4089,17 @@ Cada estacionamiento se procesa de forma aislada: un fallo se registra y no deti
 
 ### 5.5.3. Application Layer
 
-La Application Layer coordina los casos de uso de Prediction & Advisory: orquesta el dominio, el repositorio y los puertos hacia otros Bounded Contexts, sin detalles de persistencia, integración ni ejecución del modelo. Sus capacidades son consultar pronósticos (con faltantes y vencidos), calcular la asesoría de llegada, estimar la próxima disponibilidad, generar pronósticos, registrar la ocupación observada y publicar `ForecastGenerated`.
+La Application Layer coordina los casos de uso de Prediction & Advisory: orquesta el dominio, el repositorio y los puertos hacia otros Bounded Contexts, sin detalles de persistencia, integración ni ejecución del modelo. Sus capacidades son consultar pronósticos (con faltantes y vencidos), calcular la asesoría de llegada, estimar la próxima disponibilidad, generar pronósticos y publicar `ForecastGenerated` y `SaturationPredicted`.
 
 **Queries y Commands**
 
 |Nombre|Categoría|Atributos|Descripción|
 |-|-|-|-|
-|GetForecastQuery|Query|institutionId: UUID, parkingLotId: UUID, horizon: ForecastHorizon|Pronóstico más reciente de un horizonte.|
-|GetForecastsQuery|Query|institutionId: UUID, parkingLotId: UUID|Pronósticos de los cuatro horizontes.|
-|GetArrivalAdviceQuery|Query|institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
-|GetNextAvailabilityQuery|Query|institutionId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
+|GetForecastQuery|Query|tenantId: UUID, parkingLotId: UUID, horizon: ForecastHorizon|Pronóstico más reciente de un horizonte.|
+|GetForecastsQuery|Query|tenantId: UUID, parkingLotId: UUID|Pronósticos de los cuatro horizontes.|
+|GetArrivalAdviceQuery|Query|tenantId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
+|GetNextAvailabilityQuery|Query|tenantId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
 |GenerateForecastsCommand|Command|parkingLotId: UUID|Generar los pronósticos de un estacionamiento.|
-|EvaluateForecastsCommand|Command|asOf: Instant|Registrar la ocupación observada de los pronósticos vencidos.|
 
 **Query Handlers y Command Handlers**
 
@@ -4082,7 +4110,6 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 |GetArrivalAdviceQueryHandler|Query Handler|handle(query: GetArrivalAdviceQuery): ArrivalAdviceResult|ForecastRepository, ParkingLotSettingsReader, AdvisoryDomainService, Clock|
 |GetNextAvailabilityQueryHandler|Query Handler|handle(query: GetNextAvailabilityQuery): NextAvailabilityResult|ParkingLotSettingsReader, OccupancyReader, AdvisoryDomainService, Clock|
 |GenerateForecastsCommandHandler|Command Handler|handle(command: GenerateForecastsCommand): Void|ParkingLotSettingsReader, OccupancyReader, PredictionModelPort, ForecastDomainService, ForecastRepository, ForecastEventPublisher, Clock|
-|EvaluateForecastsCommandHandler|Command Handler|handle(command: EvaluateForecastsCommand): Void|ForecastRepository, OccupancyReader, Clock|
 
 **Flujos de ejecución**
 
@@ -4114,12 +4141,8 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 1. Obtiene el `ParkingLotProfile` y la ocupación actual; sin lectura utilizable, termina sin generar pronósticos.
 2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
 3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
-4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated`.
+4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
 
-`EvaluateForecastsCommandHandler`:
-
-1. Recupera los pronósticos con `targetAt` anterior o igual a `asOf` y sin ocupación observada.
-2. Obtiene de Occupancy la ocupación observada de cada uno; si existe, la registra en el agregado y lo persiste. Si no existe, el pronóstico sigue pendiente.
 
 
 **Resultados de aplicación**
@@ -4137,9 +4160,9 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 
 |Nombre|Categoría|Operaciones|Descripción|
 |-|-|-|-|
-|ForecastRepository|Puerto (Domain Layer)|save, findById, findLatest, findLatestByLot, findPendingEvaluation|Guardar y recuperar pronósticos.|
-|OccupancyReader|Puerto hacia Occupancy|currentOccupancy(parkingLotId), freeSpaces(parkingLotId), exitsInWindow(parkingLotId, windowMinutes), observedOccupancyAt(parkingLotId, instant), recentSnapshots(parkingLotId, from, to)|Leer datos de ocupación.|
-|ParkingLotSettingsReader|Puerto hacia Parking Configuration|profileOf(institutionId, parkingLotId), activeLots(), calendarEventsAround(institutionId, from, to)|Leer la configuración necesaria.|
+|ForecastRepository|Puerto (Domain Layer)|save, findById, findLatest, findLatestByLot|Guardar y recuperar pronósticos.|
+|OccupancyReader|Puerto hacia Occupancy|currentOccupancy(parkingLotId), freeSpaces(parkingLotId), exitsInWindow(parkingLotId, windowMinutes), recentSnapshots(parkingLotId, from, to)|Leer datos de ocupación.|
+|ParkingLotSettingsReader|Puerto hacia Parking Configuration|profileOf(tenantId, parkingLotId), activeLots(), calendarEventsAround(tenantId, from, to)|Leer la configuración necesaria.|
 |PredictionModelPort|Puerto hacia el modelo|`predict(features): List<ModelPrediction>`|Obtener predicciones por horizonte.|
 |ForecastEventPublisher|Puerto de eventos|publish(events)|Publicar eventos de dominio.|
 
@@ -4150,11 +4173,11 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 
 |Nombre|Categoría|Implementa|Tecnología|Descripción|
 |-|-|-|-|-|
-|ForecastRepositoryAdapter|Repository (implementación)|ForecastRepository|Spring Data JPA, MySQL|Guarda y recupera pronósticos en la tabla `forecasts`.|
-|OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|API pública del módulo Occupancy|Lee los datos de ocupación.|
-|ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|API pública del módulo Parking Configuration|Lee la configuración del estacionamiento.|
+|ForecastRepositoryAdapter|Repository (implementación)|ForecastRepository|Spring Data JPA, PostgreSQL|Guarda y recupera pronósticos en la tabla `forecasts`.|
+|OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|Llamada en proceso a la fachada de Occupancy|Lee los datos de ocupación.|
+|ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|Llamada en proceso a la fachada de Parking Configuration (Open Host Service)|Lee la configuración del estacionamiento.|
 |PredictionModelClient|Adapter (cliente del modelo)|PredictionModelPort|Cliente HTTP, Resilience4j|Invoca al modelo y traduce su respuesta a `ModelPrediction`.|
-|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring|Publica `ForecastGenerated` tras confirmar la transacción.|
+|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring|Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción.|
 
 
 **Consideraciones**
@@ -4163,10 +4186,10 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |-|-|
 |Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
 |Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
-|Multi-tenancy|`institutionId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
-|Tecnología|Monolito modular en Java 21 y Spring Boot 3 sobre MySQL. Domain y Application Layer no dependen de ella.|
+|Multi-tenancy|`tenantId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
 
-### 5.5.5. Bounded Context Software Architecture Component Level Diagrams
+### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
 
 El Component Level Diagram descompone el contenedor del Bounded Context en sus componentes: sus responsabilidades, tecnología e interacciones.
 
@@ -4174,21 +4197,21 @@ El Component Level Diagram descompone el contenedor del Bounded Context en sus c
 
 | Container | Tecnología | Responsabilidad |
 |---|---|---|
-| Prediction & Advisory Service | Java 21, Spring Boot 3 (módulo del monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
-| Prediction Database | MySQL 8.0.16+ | Almacena la tabla `forecasts`. |
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
+| Base de datos | PostgreSQL (esquema `prediction`) | Almacena la tabla `forecasts`. |
 
-Solo el servicio tiene lógica propia, por lo que es el contenedor que se descompone. En el diagrama también aparecen, únicamente como colaboradores directos, Mobile App, Mobile BFF, Occupancy Service, Parking Configuration Service, Analytics Service, Notifications Service y Prediction Model.
+El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Quadrapp Backend. Como colaboradores aparecen la aplicación móvil, el módulo de composición, los módulos Occupancy, Parking Configuration, Analytics y Notifications, la base de datos y el contenedor del modelo de predicción. Las consultas a otros módulos se hacen en proceso, a través de sus fachadas, y los eventos se publican como eventos de aplicación de Spring.
 
-#### Componentes de Prediction & Advisory Service
+#### Componentes del módulo Prediction & Advisory
 
 | Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
 |---|---|---|---|---|
 | Forecast Query Controller | Interface | Recibe consultas de pronóstico y próxima disponibilidad. | Spring MVC `@RestController` | ForecastQueryController, ForecastResponse, NextAvailabilityResponse |
 | Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
-| Prediction Advisory Facade | Interface | API en proceso para el Mobile BFF. | Spring bean | PredictionAdvisoryFacade |
-| Forecast Scheduler | Interface | Dispara la generación y evaluación periódicas. | Spring `@Scheduled` | ForecastScheduler |
+| Prediction Advisory Facade | Interface | Punto de entrada de los casos de uso para los controladores REST. | Spring bean | PredictionAdvisoryFacade |
+| Forecast Scheduler | Interface | Dispara la generación periódica. | Spring `@Scheduled` | ForecastScheduler |
 | Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
-| Command Handlers | Application | Casos de uso de comando: generar y evaluar pronósticos. | Spring `@Service` | GenerateForecasts y EvaluateForecasts (Command y Handler) |
+| Command Handlers | Application | Caso de uso de comando: generar pronósticos. | Spring `@Service` | GenerateForecastsCommand y GenerateForecastsCommandHandler |
 | Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
 | Forecast Domain Service | Domain | Construye pronósticos y estima la saturación. | Java (dominio puro) | ForecastDomainService, ModelPrediction, ParkingLotProfile |
 | Forecast Aggregate | Domain | Mantiene el pronóstico y sus invariantes. | Java (dominio puro) | Forecast, ForecastGenerated, OccupancyPercentage, Probability, Confidence, Saturation, EtaMinutes y las enumeraciones |
@@ -4196,24 +4219,24 @@ Solo el servicio tiene lógica propia, por lo que es el contenedor que se descom
 | Occupancy Reader Adapter | Infrastructure | Lee datos de Occupancy. | Adaptador Java (anti-corruption) | OccupancyReaderAdapter |
 | Parking Lot Settings Adapter | Infrastructure | Lee la configuración de Parking Configuration. | Adaptador Java (anti-corruption) | ParkingLotSettingsReaderAdapter |
 | Prediction Model Client | Infrastructure | Invoca al modelo con timeout y cortacircuitos. | Cliente HTTP, Resilience4j | PredictionModelClient |
-| Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
+| Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
 
 Prediction & Advisory Component Level Diagram: **PredictionAdvisoryComponentLevelDiagram**
 ![Prediction & Advisory Component Level Diagram](./assets/capitulo-05/PredictionAdvisoryComponentLevelDiagram.png)
 
 
-## 5.5.6. Bounded Context Software Architecture Code Level Diagrams
+### 5.5.7. Bounded Context Software Architecture Code Level Diagrams
 
 Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
 
-### 5.5.6.1. Bounded Context Domain Layer Class Diagrams
+#### 5.5.7.1. Bounded Context Domain Layer Class Diagrams
 
 El diagrama muestra atributos y métodos con visibilidad UML (+ público, - privado, # protegido); cada relación lleva nombre, dirección y multiplicidad. Tiene dos paquetes: el lado productor (`Forecast` y lo que lo compone) y el lado consumidor (`ArrivalAdvice`, `NextAvailability` y sus servicios), derivado y nunca persistido.
 
 |Categoría|Clases|
 |-|-|
 |Aggregate Root|Forecast|
-|Domain Event|ForecastGenerated|
+|Domain Event|ForecastGenerated, SaturationPredicted|
 |Value Objects|OccupancyPercentage, Probability, Confidence, Saturation, ModelPrediction, ParkingLotProfile, EtaMinutes, ArrivalAdvice, NextAvailability, AdvisoryPolicy|
 |Enumerations|ForecastHorizon, ForecastMethod, ConfidenceLevel, ArrivalCategory, UnavailabilityReason|
 |Repository Interface|ForecastRepository|
@@ -4225,54 +4248,49 @@ Institution, ParkingLot, Sensor, HistoricalOccupancy y ForecastSnapshot no apare
 
 **PredictionAdvisoryDomainLayerClassDiagram**
 
-![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDomainLayerClassDiagram.png)
+![Prediction & Advisory Domain Layer Class Diagram](./assets/capitulo-05/PredictionAdvisoryDomainLayerClassDiagramComplete.png)
 
-### 5.5.6.2. Bounded Context Database Design Diagram
+#### 5.5.7.2. Bounded Context Database Design Diagram
 
-Prediction & Advisory es dueño de una sola tabla, `forecasts`; la asesoría y la próxima disponibilidad no tienen tabla porque se derivan en cada solicitud. Las tablas de otros contextos aparecen solo como referencia.
+Prediction & Advisory es dueño de una sola tabla, `forecasts`, en el esquema `prediction` de PostgreSQL; la asesoría y la próxima disponibilidad no tienen tabla porque se derivan en cada solicitud. No tiene claves foráneas hacia los esquemas de otros contextos.
 
 **Tabla `forecasts`**
 
 |Columna|Tipo|Nulo|Atributo de `Forecast`|Descripción|
 |-|-|-|-|-|
-|id|BIGINT AUTO_INCREMENT|No|forecastId|Clave primaria.|
-|lot_id|BIGINT|No|parkingLotId|Estacionamiento (FK a `parking_lots`). `institutionId` se obtiene de `parking_lots.institution_id`.|
-|horizon_min|TINYINT UNSIGNED|No|horizon|Horizonte en minutos: 15, 30, 45 o 60.|
-|generated_at|DATETIME(3)|No|generatedAt|Momento en que se generó.|
-|target_at|DATETIME(3)|No|targetAt|Momento objetivo; también es `validUntil` (no se almacena).|
-|expected_occupancy_pct|DECIMAL(5,2)|No|expectedOccupancy|Ocupación esperada, entre 0 y 100.|
-|confidence|DECIMAL(4,3)|No|confidence.value|Valor de confianza, entre 0 y 1.|
-|confidence_level|ENUM('HIGH','MEDIUM','LOW')|No|confidence.level|Nivel de confianza.|
-|method|ENUM('PRIMARY_MODEL','FALLBACK')|No|method|Método con el que se generó.|
+|id|UUID|No|forecastId|Clave primaria.|
+|tenant_id|UUID|No|tenantId|Institución dueña del dato (CON-08).|
+|parking_lot_id|UUID|No|parkingLotId|Estacionamiento; referencia lógica a Parking Configuration, sin clave foránea (CON-02).|
+|horizon_min|SMALLINT|No|horizon|Horizonte en minutos: 15, 30, 45 o 60.|
+|generated_at|TIMESTAMPTZ|No|generatedAt|Momento en que se generó.|
+|target_at|TIMESTAMPTZ|No|targetAt|Momento objetivo; también es `validUntil` (no se almacena).|
+|expected_occupancy_pct|NUMERIC(5,2)|No|expectedOccupancy|Ocupación esperada, entre 0 y 100.|
+|confidence|NUMERIC(4,3)|No|confidence.value|Valor de confianza, entre 0 y 1.|
+|confidence_level|VARCHAR(10)|No|confidence.level|Nivel de confianza: HIGH, MEDIUM o LOW (restricción CHECK).|
+|method|VARCHAR(20)|No|method|Método con el que se generó: PRIMARY_MODEL o FALLBACK (restricción CHECK).|
 |model_version|VARCHAR(40)|No|modelVersion|Versión del modelo o de la política de respaldo.|
-|saturation_expected_at|DATETIME(3)|Sí|saturation.expectedAt|Momento esperado de saturación.|
-|observed_occupancy_pct|DECIMAL(5,2)|Sí|observedOccupancy|Ocupación observada en `target_at`.|
-|abs_error|DECIMAL(5,2), generada almacenada|Sí|absoluteError()|Error absoluto; solo lectura.|
+|saturation_expected_at|TIMESTAMPTZ|Sí|saturation.expectedAt|Momento esperado de saturación.|
 
 **Restricciones e índices**
 
 |Elemento|Definición|Regla que respalda|
 |-|-|-|
-|`uq_forecasts_lot_horizon_time`|UNIQUE (lot_id, horizon_min, generated_at)|Evita duplicados; acelera la búsqueda del más reciente.|
-|`idx_forecasts_lot_target`|INDEX (lot_id, target_at)|Consultas por estacionamiento y momento objetivo.|
-|`fk_forecasts_lot`|FOREIGN KEY (lot_id) → `parking_lots(id)` ON DELETE CASCADE|Los pronósticos no sobreviven a su estacionamiento.|
+|`uq_forecasts_lot_horizon_time`|UNIQUE (parking_lot_id, horizon_min, generated_at)|Evita duplicados; acelera la búsqueda del más reciente.|
+|`idx_forecasts_tenant_lot_target`|INDEX (tenant_id, parking_lot_id, target_at)|Consultas por institución, estacionamiento y momento objetivo.|
 |`chk_forecasts_horizon`|horizon_min IN (15, 30, 45, 60)|Regla 2.|
 |`chk_forecasts_expected`|expected_occupancy_pct BETWEEN 0 AND 100|Regla 3.|
-|`chk_forecasts_observed`|observed_occupancy_pct IS NULL OR BETWEEN 0 AND 100|Regla 3.|
 |`chk_forecasts_confidence`|confidence BETWEEN 0 AND 1|Regla 3.|
 |`chk_forecasts_fallback`|`method <> 'FALLBACK' OR confidence_level = 'LOW'`|Regla 5.|
 
 **Relaciones con otras tablas**
 
-- `parking_lots` (Parking Configuration) 1 — N `forecasts`: clave foránea `fk_forecasts_lot`.
-- `forecasts` 0..1 — N `notifications` (Notifications): clave foránea `fk_notifications_forecast`.
-- `occupancy_snapshots` y `calendar_events` son insumos del modelo: se leen por los puertos y no tienen FK hacia `forecasts`.
+- `forecasts` no tiene claves foráneas hacia tablas de otros contextos (CON-02). `parking_lot_id` e `tenant_id` son referencias lógicas a Parking Configuration e IAM.
+- La ocupación y el calendario no se leen de tablas ajenas: se obtienen mediante los puertos `OccupancyReader` y `ParkingLotSettingsReader`, que llaman a las fachadas de Occupancy y de Parking Configuration dentro del mismo proceso.
 
 **Consideraciones de diseño**
 
-- **Aislamiento.** La tabla no tiene `institution_id`; toda consulta filtra por institución a través de `parking_lots`.
-- **Columnas de evaluación.** `observed_occupancy_pct` y `abs_error` son solo para vigilar el modelo de este contexto; Analytics calcula la precisión con su propio `ForecastSnapshot`.
-- **FK desde `notifications`.** `fk_notifications_forecast` no define `ON DELETE` (se comporta como RESTRICT), por lo que borrar un estacionamiento puede ser rechazado si una alerta referencia uno de sus pronósticos. Como `notifications.forecast_id` admite nulos, se recomienda `ON DELETE SET NULL`; es un cambio en Notifications y debe acordarse con ese contexto.
+- **Aislamiento.** Cada fila incluye `tenant_id` y toda consulta filtra por institución (CON-08).
+- **Alertas.** Notifications no referencia la tabla `forecasts`: recibe la información que necesita en el evento `SaturationPredicted`.
 - **Crecimiento.** Hasta cuatro filas por estacionamiento en cada ejecución; conviene definir una política de depuración.
 
 **DIAGRAMA — Prediction & Advisory Database Design Diagram:**
@@ -4293,7 +4311,7 @@ Este Bounded Context soporta principalmente:
 - US34 — Consultar la precisión de las predicciones.
 - TS11 — Implementación de procesamiento histórico para analítica de ocupación.
 
-Analytics no determina el estado actual de un espacio ni procesa directamente las señales provenientes de los sensores. Estas responsabilidades pertenecen a Occupancy & Parking Sensing. Tampoco genera los pronósticos de disponibilidad, responsabilidad que pertenece a Prediction & Advisory.
+Analytics no determina el estado actual de un espacio ni procesa directamente las señales provenientes de los sensores. Estas responsabilidades pertenecen a Occupancy y a Parking Sensing. Tampoco genera los pronósticos de disponibilidad, responsabilidad que pertenece a Prediction & Advisory.
 
 Las principales responsabilidades del Bounded Context Analytics son:
 
@@ -4319,18 +4337,18 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Ana
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |------------------ |-------|---------|-----------------|-----------------|
-| `HistoricalOccupancy` | Domain | Representa la información histórica de ocupación observada para un estacionamiento o zona durante un periodo. | `historicalOccupancyId`, `institutionId`, `parkingLotId`, `zoneId`, `periodStart`, `periodEnd`, `occupancyRate`, `entryCount`, `exitCount` | `belongsToPeriod()`, `belongsToZone()` |
+| `HistoricalOccupancy` | Domain | Representa la información histórica de ocupación observada para un estacionamiento o zona durante un periodo. | `historicalOccupancyId`, `tenantId`, `parkingLotId`, `zoneId`, `periodStart`, `periodEnd`, `occupancyRate`, `entryCount`, `exitCount` | `belongsToPeriod()`, `belongsToZone()` |
 | `OccupancyRate` | Domain | Value Object que representa el porcentaje de ocupación observado. | `value` | `value()`, `isValid()` |
 | `PeakHour` | Domain | Value Object que representa un periodo identificado como uno de los momentos de mayor ocupación. | `periodStart`, `periodEnd`, `occupancyRate` | — |
 | `DemandPattern` | Domain | Value Object que representa un comportamiento recurrente identificado a partir de información histórica. | `period`, `occupancyRate` | — |
-| `PredictionAccuracy` | Domain | Value Object que representa las métricas obtenidas al comparar predicciones con ocupación observada. | `meanAbsoluteError`, `withinMarginPercentage`, `modelVersion` | — |
+| `PredictionAccuracy` | Domain | Value Object que representa las métricas obtenidas al comparar predicciones con ocupación observada. | `meanAbsoluteError`, `withinMarginPercentage`, `horizonMinutes`, `modelVersion` | — |
 | `HistoricalOccupancyRepository` | Domain | Abstracción para almacenar y consultar información histórica de ocupación. | — | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
 | `AnalyticsDomainService` | Domain | Ejecuta operaciones que requieren analizar múltiples registros históricos o comparar ocupación observada y pronósticos. | — | `identifyPeakHours()`, `identifyDemandPatterns()`, `calculatePredictionAccuracy()` |
-| `GetHistoricalOccupancyQuery` | Application | Representa una solicitud para consultar información histórica. | `institutionId`, `parkingLotId`, `zoneId`, `startDate`, `endDate` | — |
+| `GetHistoricalOccupancyQuery` | Application | Representa una solicitud para consultar información histórica. | `tenantId`, `parkingLotId`, `zoneId`, `startDate`, `endDate` | — |
 | `GetHistoricalOccupancyQueryHandler` | Application | Coordina la consulta del historial de ocupación. | Dependencies | `handle()` |
-| `GetPeakHoursQuery` | Application | Representa una solicitud para identificar los periodos de mayor ocupación. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPeakHoursQuery` | Application | Representa una solicitud para identificar los periodos de mayor ocupación. | `tenantId`, `parkingLotId`, `startDate`, `endDate` | — |
 | `GetPeakHoursQueryHandler` | Application | Obtiene los registros históricos y coordina la identificación de horas pico. | Dependencies | `handle()` |
-| `GetPredictionAccuracyQuery` | Application | Representa una solicitud para evaluar la precisión de las predicciones en un periodo. | `institutionId`, `parkingLotId`, `startDate`, `endDate` | — |
+| `GetPredictionAccuracyQuery` | Application | Representa una solicitud para evaluar la precisión de las predicciones en un periodo. | `tenantId`, `parkingLotId`, `startDate`, `endDate` | — |
 | `GetPredictionAccuracyQueryHandler` | Application | Coordina la comparación entre predicciones y ocupación observada. | Dependencies | `handle()` |
 | `OccupancyEventHandler` | Application | Procesa la información recibida desde Occupancy para actualizar las proyecciones históricas. | Dependencies | `handle()` |
 | `ForecastGeneratedEventHandler` | Application | Procesa los pronósticos recibidos desde Prediction & Advisory para permitir posteriormente su evaluación. | Dependencies | `handle()` |
@@ -4338,11 +4356,11 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Ana
 | `OccupancyEventConsumer` | Interface | Recibe los eventos provenientes de Occupancy. | Handler dependency | `consume()` |
 | `ForecastGeneratedEventConsumer` | Interface | Recibe los eventos `ForecastGenerated` provenientes de Prediction & Advisory. | Handler dependency | `consume()` |
 | `HistoricalOccupancyRepositoryAdapter` | Infrastructure | Implementa la persistencia del historial de ocupación. | Persistence dependency | `save()`, `findByPeriod()`, `findByPeriodAndZone()` |
-| `ForecastHistoryRepositoryAdapter` | Infrastructure | Mantiene la información de los pronósticos requerida para evaluar su precisión. | Persistence dependency | `save()`, `findByPeriod()` |
+| `ForecastSnapshotRepositoryAdapter` | Infrastructure | Mantiene la información de los pronósticos requerida para evaluar su precisión. | Persistence dependency | `save()`, `findByPeriod()` |
 | `OccupancyIntegrationAdapter` | Infrastructure | Encapsula el mecanismo técnico utilizado para recibir información desde Occupancy. | Integration dependency | `receive()` |
 | `PredictionIntegrationAdapter` | Infrastructure | Encapsula la integración utilizada para recibir `ForecastGenerated`. | Integration dependency | `receive()` |
 
-Los identificadores `institutionId`, `parkingLotId` y `zoneId` representan referencias externas. Analytics no administra el ciclo de vida de instituciones, estacionamientos o zonas.
+Los identificadores `tenantId`, `parkingLotId` y `zoneId` representan referencias externas. Analytics no administra el ciclo de vida de instituciones, estacionamientos o zonas.
 
 ### 5.6.1. Domain Layer
 
@@ -4354,7 +4372,7 @@ El principal Aggregate Root es `HistoricalOccupancy`. Además, el dominio mantie
 
 `ForecastSnapshot` representa una instantánea de un pronóstico previamente generado por Prediction & Advisory. Analytics no genera ni modifica dicho pronóstico; únicamente conserva los valores necesarios para contrastarlo posteriormente con la ocupación observada. Esta separación es coherente con el Context Mapping, donde Analytics consume `ForecastGenerated` para evaluar las estimaciones.
 
-Los identificadores `institutionId`, `parkingLotIdv` y `zoneId` actúan únicamente como referencias externas hacia conceptos administrados por otros Bounded Contexts. Analytics no administra instituciones, estacionamientos, zonas, espacios ni sensores.
+Los identificadores `tenantId`, `parkingLotId` y `zoneId` actúan únicamente como referencias externas hacia conceptos administrados por otros Bounded Contexts. Analytics no administra instituciones, estacionamientos, zonas, espacios ni sensores.
 
 
 #### HistoricalOccupancy:
@@ -4365,7 +4383,7 @@ Los identificadores `institutionId`, `parkingLotIdv` y `zoneId` actúan únicame
 
 **Atributos:**
 - historicalOccupancyId: UUID — Identificador único del registro histórico.
-- institutionId: UUID — Referencia externa a la institución propietaria de la información.
+- tenantId: UUID — Referencia externa a la institución propietaria de la información.
 - parkingLotId: UUID — Referencia externa al estacionamiento al que corresponde el registro.
 - zoneId: UUID? — Referencia externa a una zona cuando la información ha sido desagregada por zona.
 - periodStart: Instant — Momento inicial del periodo representado.
@@ -4380,7 +4398,7 @@ Los identificadores `institutionId`, `parkingLotIdv` y `zoneId` actúan únicame
 - hasValidPeriod() — Comprueba que el inicio del periodo no sea posterior al final.
 - hasFlowData() — Indica si el registro dispone de información de entradas o salidas.
 
-institutionId, parkingLotId y zoneId no convierten a Institution, Parking Lot o Parking Zone en elementos pertenecientes al agregado. Sus ciclos de vida son administrados fuera de Analytics.
+tenantId, parkingLotId y zoneId no convierten a Institution, Parking Lot o Parking Zone en elementos pertenecientes al agregado. Sus ciclos de vida son administrados fuera de Analytics.
 
 
 #### OccupancyRate
@@ -4407,7 +4425,7 @@ OccupancyRate no representa la disponibilidad actual del estacionamiento. Su uti
 
 **Atributos:**
 - forecastId: UUID — Identificador del pronóstico recibido.
-- institutionId: UUID — Institución a la que pertenece el pronóstico.
+- tenantId: UUID — Institución a la que pertenece el pronóstico.
 - parkingLotId: UUID — Estacionamiento sobre el cual fue realizada la predicción.
 - generatedAt: Instant — Momento en que fue generado el pronóstico.
 - targetAt: Instant — Momento futuro para el cual fue realizada la estimación.
@@ -4482,8 +4500,8 @@ Cuando no existen pronósticos y datos de ocupación observada suficientes para 
 
 **Operaciones:**
 - save(historicalOccupancy)
-- findByPeriod(institutionId, parkingLotId, startDate, endDate)
-- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+- findByPeriod(tenantId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(tenantId, parkingLotId, zoneId, startDate, endDate)
 
 Todas las consultas deben respetar la institución a la que pertenece la información.
 
@@ -4496,8 +4514,8 @@ Todas las consultas deben respetar la institución a la que pertenece la informa
 
 **Operaciones:**
 - save(forecastSnapshot)
-- findByPeriod(institutionId, parkingLotId, startDate, endDate)
-- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+- findByPeriod(tenantId, parkingLotId, startDate, endDate)
+- findByModelVersion(tenantId, parkingLotId, modelVersion, startDate, endDate)
 
 Analytics utiliza este repositorio para acceder a su propia representación histórica del pronóstico y no para consultar directamente la persistencia interna de Prediction & Advisory.
 
@@ -4696,7 +4714,7 @@ Los principales flujos de aplicación considerados son:
 GetHistoricalOccupancyQuery representa una solicitud para consultar la información histórica de ocupación correspondiente a un estacionamiento dentro de un periodo determinado.
 
 **Atributos:**
-- institutionId: UUID
+- tenantId: UUID
 - parkingLotId: UUID
 - zoneId: UUID?
 - startDate: Instant
@@ -4724,7 +4742,7 @@ El manejador realiza la siguiente secuencia:
 GetPeakHoursQuery representa una solicitud para identificar los periodos con mayor nivel de ocupación dentro de un intervalo determinado.
 
 **Atributos:**
-- institutionId: UUID
+- tenantId: UUID
 - parkingLotId: UUID
 - zoneId: UUID?
 - startDate: Instant
@@ -4754,7 +4772,7 @@ La determinación de qué periodos representan los mayores niveles de ocupación
 GetDemandPatternsQuery representa una solicitud para analizar el comportamiento recurrente de la ocupación dentro de un periodo.
 
 **Atributos:**
-- institutionId: UUID
+- tenantId: UUID
 - parkingLotId: UUID
 - zoneId: UUID?
 - startDate: Instant
@@ -4783,7 +4801,7 @@ El manejador no define por sí mismo qué constituye un patrón de demanda. Su r
 GetPredictionAccuracyQuery representa una solicitud para evaluar la precisión de los pronósticos generados durante un periodo determinado.
 
 **Atributos:**
-- institutionId: UUID
+- tenantId: UUID
 - parkingLotId: UUID
 - startDate: Instant
 - endDate: Instant
@@ -4907,8 +4925,8 @@ HistoricalOccupancyRepository es utilizado por Application Layer para almacenar 
 
 Las operaciones utilizadas principalmente son:
 - save(historicalOccupancy)
-- findByPeriod(institutionId, parkingLotId, startDate, endDate)
-- findByPeriodAndZone(institutionId, parkingLotId, zoneId, startDate, endDate)
+- findByPeriod(tenantId, parkingLotId, startDate, endDate)
+- findByPeriodAndZone(tenantId, parkingLotId, zoneId, startDate, endDate)
 
 La Application Layer depende de esta abstracción y no de una implementación concreta de persistencia.
 
@@ -4918,8 +4936,8 @@ ForecastSnapshotRepository permite almacenar y recuperar los pronósticos conser
 
 Las operaciones principales son:
 - save(forecastSnapshot)
-- findByPeriod(institutionId, parkingLotId, startDate, endDate)
-- findByModelVersion(institutionId, parkingLotId, modelVersion, startDate, endDate)
+- findByPeriod(tenantId, parkingLotId, startDate, endDate)
+- findByModelVersion(tenantId, parkingLotId, modelVersion, startDate, endDate)
 
 La Application Layer utiliza esta abstracción para obtener la información necesaria durante la evaluación de precisión.
 No accede directamente a la persistencia de Prediction & Advisory.
@@ -5056,7 +5074,7 @@ Esta representación pertenece exclusivamente a Analytics y no reemplaza la info
 Analytics mantiene su propia persistencia y no debe acceder directamente a las bases de datos internas de otros Bounded Contexts.
 
 Por esta razón:
-- `institutionId` se mantiene como referencia externa;
+- `tenantId` se mantiene como referencia externa;
 - `parkingLotId` se mantiene como referencia externa;
 - `zoneId` se mantiene como referencia externa;
 - Analytics no crea ni administra objetos Institution;
@@ -5072,7 +5090,7 @@ La comunicación con Occupancy y Prediction & Advisory debe realizarse mediante 
 **Consideraciones de multi-tenancy:**
 La infraestructura de Analytics debe preservar el aislamiento de la información perteneciente a cada institución.
 
-Por ello, todos los registros históricos y pronósticos conservados deben estar asociados con un institutionId.
+Por ello, todos los registros históricos y pronósticos conservados deben estar asociados con un tenantId.
 
 Las consultas de infraestructura deben incluir este identificador dentro de sus criterios de acceso para evitar que información correspondiente a una institución sea recuperada como parte de las operaciones de otra.
 
@@ -5091,7 +5109,7 @@ La arquitectura de Quadrapp exige que los servicios utilicen tecnologías open-s
 
 Por esta razón, clases como:
 - `HistoricalOccupancyRepositoryAdapter`
-- `ForecastSnapshotRepositoryAdapterv
+- `ForecastSnapshotRepositoryAdapter`
 - `OccupancyIntegrationAdapter`
 - `PredictionIntegrationAdapter`
 
@@ -5099,7 +5117,7 @@ representan responsabilidades técnicas y no una dependencia hacia un producto p
 
 La selección definitiva del motor de persistencia, ORM y mecanismo de mensajería deberá respetar estas interfaces sin introducir cambios en el Domain Layer o en los casos de uso definidos en Application Layer.
 
-### 5.6.5. Bounded Context Software Architecture Component Level Diagrams
+### 5.6.6. Bounded Context Software Architecture Component Level Diagrams
 
 El Component Level Diagram del Bounded Context Analytics muestra los principales componentes internos encargados de procesar consultas, recibir eventos de otros contextos y gestionar la información histórica utilizada para el análisis.
 
@@ -5113,70 +5131,16 @@ Los componentes principales son:
 - Occupancy Integration y Prediction & Advisory Integration, que permiten integrar Analytics con los otros Bounded Contexts sin acoplar sus modelos internos.
 - Analytics Data Storage, donde se conserva la información histórica y los datos de pronósticos necesarios para los análisis.
 
-El flujo principal comienza cuando un administrador realiza una consulta desde la consola. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
+El flujo principal comienza cuando un administrador realiza una consulta desde la consola web, a través del módulo de composición. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
 
-Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory ingresan mediante sus respectivos componentes de integración y consumidores, para luego ser procesados por Analytics Application.
-
-El flujo puede representarse de la siguiente manera:
-
-```text
-
-                          Admin Web Console
-                                 |
-                                 v
-                         Console BFF / Gateway
-                                 |
-                                 v
-                    +---------------------------+
-                    |      Analytics Service    |
-                    |                           |
-                    |    Analytics Query API    |
-                    |             |             |
-                    |             v             |
-                    |   Analytics Application   |
-                    |             |             |
-                    |             v             |
-                    |      Analytics Domain     |
-                    |             |             |
-                    |             v             |
-                    |   Analytics Persistence   |
-                    +-------------|-------------+
-                                  |
-                                  v
-                       Analytics Data Storage
-
-
-Occupancy
-    |
-    v
-Occupancy Integration
-    |
-    v
-Occupancy Event Consumer
-    |
-    v
-Analytics Application
-
-
-Prediction & Advisory
-    |
-    v
-Prediction & Advisory Integration
-    |
-    v
-Forecast Generated Event Consumer
-    |
-    v
-Analytics Application
-
-```
+Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory llegan como eventos de aplicación de Spring dentro del mismo backend. Los consumidores (`@TransactionalEventListener`) los reciben después de que el módulo emisor confirma su transacción, y los componentes de integración los traducen al modelo de Analytics antes de procesarlos en Analytics Application, de acuerdo con la relación Conformist del Context Map.
 
 De esta manera, Analytics mantiene sus responsabilidades y su persistencia separadas de los demás Bounded Contexts.
 
 **Analytics Component Level Diagram:**
 ![AnalyticsComponentLevelDiagram](./assets/capitulo-05/AnalyticsComponentLevelDiagram.png)
 
-### 5.6.6. Bounded Context Software Architecture Code Level Diagrams
+### 5.6.7. Bounded Context Software Architecture Code Level Diagrams
 
 Los Code Level Diagrams proporcionan una representación más detallada de la estructura orientada a la implementación del Bounded Context Analytics.
 
@@ -5186,7 +5150,7 @@ Para Analytics, el Code Level se representa mediante:
 
 Ambos diagramas mantienen la consistencia con la separación por capas definida anteriormente y con las responsabilidades propias del Bounded Context.
 
-#### 5.6.6.1. Bounded Context Domain Layer Class Diagrams
+#### 5.6.7.1. Bounded Context Domain Layer Class Diagrams
 
 El Domain Layer Class Diagram representa la estructura orientada a la implementación del modelo de dominio de Analytics.
 
@@ -5214,8 +5178,8 @@ El diagrama debe incluir los siguientes elementos:
 Las principales relaciones que deben representarse son:
 - `HistoricalOccupancy` compone exactamente un `OccupancyRate`.
 - `ForecastSnapshot` compone exactamente un `OccupancyRate` para representar el porcentaje de ocupación pronosticado.
-- `HistoricalOccupancy` mantiene referencias externas mediante `institutionId`, `parkingLotId` y, cuando corresponda, `zoneId`.
-- `ForecastSnapshot` mantiene referencias externas mediante `institutionId` y `parkingLotId`.
+- `HistoricalOccupancy` mantiene referencias externas mediante `tenantId`, `parkingLotId` y, cuando corresponda, `zoneId`.
+- `ForecastSnapshot` mantiene referencias externas mediante `tenantId` y `parkingLotId`.
 - `HistoricalOccupancyRepository` persiste y recupera objetos `HistoricalOccupancy`.
 - `ForecastSnapshotRepository` persiste y recupera objetos `ForecastSnapshot`.
 - `AnalyticsDomainService` analiza uno o más registros `HistoricalOccupancy`.
@@ -5280,7 +5244,7 @@ Sus identificadores o datos mínimos pueden mantenerse como referencias externas
 ![AnalyticsDomainLayerClassDiagram](./assets/capitulo-05/AnalyticsDomainLayerClassDiagram.png)
 
 
-#### 5.6.6.2. Bounded Context Database Design Diagram
+#### 5.6.7.2. Bounded Context Database Design Diagram
 
 El Database Design Diagram representa la estructura de persistencia propia del Bounded Context Analytics. Su objetivo es mostrar cómo se almacena la información histórica de ocupación y los pronósticos necesarios para realizar consultas analíticas y evaluar posteriormente su precisión.
 
@@ -5297,7 +5261,7 @@ Esta tabla almacena los registros históricos utilizados para analizar el compor
 | Column | Type | Constraint | Description |
 |---|---|---|---|
 | `historical_occupancy_id` | UUID | PRIMARY KEY | Identificador único del registro histórico. |
-| `institution_id` | UUID | NOT NULL | Referencia externa a la institución propietaria de la información. |
+| `tenant_id` | UUID | NOT NULL | Referencia externa a la institución propietaria de la información. |
 | `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
 | `zone_id` | UUID | NULL | Referencia externa a una zona específica cuando corresponda. |
 | `period_start` | TIMESTAMP | NOT NULL | Inicio del periodo representado. |
@@ -5322,7 +5286,7 @@ Esta tabla conserva una representación histórica de los pronósticos generados
 | Column | Type | Constraint | Description |
 |---|---|---|---|
 | `forecast_id` | UUID | PRIMARY KEY | Identificador del pronóstico recibido. |
-| `institution_id` | UUID | NOT NULL | Referencia externa a la institución. |
+| `tenant_id` | UUID | NOT NULL | Referencia externa a la institución. |
 | `parking_lot_id` | UUID | NOT NULL | Referencia externa al estacionamiento. |
 | `generated_at` | TIMESTAMP | NOT NULL | Momento en el que se generó el pronóstico. |
 | `target_at` | TIMESTAMP | NOT NULL | Momento futuro para el cual se realizó la estimación. |
@@ -5365,7 +5329,7 @@ PredictionAccuracy
 
 Los siguientes identificadores se mantienen como referencias externas:
 
-- `institution_id`
+- `tenant_id`
 - `parking_lot_id`
 - `zone_id`
 
@@ -5384,7 +5348,7 @@ Estos elementos continúan siendo administrados por sus respectivos Bounded Cont
 Todos los registros almacenados por Analytics deben mantener el identificador de la institución correspondiente. Este valor permite limitar las consultas y evitar que la información histórica de una institución sea utilizada dentro del contexto de otra.
 
 La persistencia debe permitir realizar consultas utilizando principalmente:
-- `institution_id`
+- `tenant_id`
 - `parking_lot_id`
 - `zone_id`, cuando corresponda
 - rango temporal
@@ -5402,7 +5366,7 @@ Conceptualmente, la persistencia del Bounded Context queda organizada de la sigu
         │ analytics_historical_occupancy  │
         │─────────────────────────────────│
         │ PK historical_occupancy_id      │
-        │    institution_id               │
+        │    tenant_id               │
         │    parking_lot_id               │
         │    zone_id                      │
         │    period_start                 │
@@ -5418,7 +5382,7 @@ Conceptualmente, la persistencia del Bounded Context queda organizada de la sigu
         │ analytics_forecast_snapshots    │
         │─────────────────────────────────│
         │ PK forecast_id                  │
-        │    institution_id               │
+        │    tenant_id               │
         │    parking_lot_id               │
         │    generated_at                 │
         │    target_at                    │
@@ -5441,7 +5405,7 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 El contexto Notifications decide a quién avisar, cuándo y por qué canal, y entrega las alertas de baja disponibilidad a los conductores. Recibe las predicciones desde Prediction & Advisory mediante el lenguaje publicado (Published Language) del mapa de contextos y entrega los mensajes por push o por correo a través de capas anticorrupción hacia los proveedores externos de mensajería. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
  
-### 5.2.1. Domain Layer
+### 5.7.1. Domain Layer
  
 **Aggregates.**
  
@@ -5458,21 +5422,23 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 - `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
 - `ChannelPolicy`: determina el canal de envío según la preferencia del usuario ("el canal depende de la preferencia del usuario").
 - `DeduplicationPolicy`: impide enviar una nueva alerta cuando ya se envió una para la misma condición y esa condición sigue activa (US23, escenario 4).
+
 **Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `EmailSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`.
  
-**Domain Events consumidos.** `SaturationPredicted` y `ForecastChanged`, publicados por Prediction & Advisory, y `UserIdentityProvided`, entregado por IAM. Los nombres deben coincidir con los publicados por esos contextos.
+**Domain Events consumidos.** `SaturationPredicted`, publicado por Prediction & Advisory como Published Language, y `UserIdentityProvided`, entregado por IAM. Los nombres deben coincidir con los publicados por esos contextos.
  
 **Repositories.** `SubscriptionRepository`, `PreferencesRepository`, `RuleRepository`, `TemplateRepository`, `DeviceRepository`, `NotificationRepository`.
  
 **Reglas de negocio principales.**
 1. Si la saturación se prevé dentro de una franja con suscripción vigente y el usuario tiene las notificaciones habilitadas, se envía la alerta (US23, escenario 1).
-2. Si el pronóstico cambia (`ForecastChanged`) y la asesoría de llegada pasa a categoría LOW para un conductor con notificaciones habilitadas, se envía el aviso inmediato para su hora estimada de llegada (US23, escenario 2).
+2. Al abrir una alerta, el conductor accede a la asesoría de llegada del estacionamiento; Notifications no conoce el tiempo estimado de llegada ni la ubicación del conductor (US23, escenario 2; CON-07).
 3. Con notificaciones deshabilitadas se conserva la suscripción y se omite el envío (US23, escenario 3).
 4. No se generan alertas repetidas para una condición ya notificada (US23, escenario 4).
 5. Un token de dispositivo rechazado por el proveedor se marca inválido y no se vuelve a usar.
 6. No se envían más alertas que las permitidas por la regla del administrador ni se repite una alerta dentro del intervalo mínimo configurado.
 7. Los datos de notificación (token y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
-#### 5.2.2. Interface Layer
+
+### 5.7.2. Interface Layer
  
 | Controller o consumidor | Endpoint o evento | Resultado | Origen |
 |---|---|---|---|
@@ -5484,11 +5450,11 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 | `DeviceController` | `POST /api/v1/notification-devices` | 201 y registro del dispositivo como destino de alertas | US33, escenario 2 (ruta propuesta) |
 | `RuleController` | `PUT /api/v1/notification-rules` y `GET /api/v1/notification-rules` | `NotificationRuleConfigured`: 200 con la regla guardada; 403 si el rol no es administrativo | Canvas (rutas propuestas) |
 | `HistoryController` | `GET /api/v1/notifications` | `NotificationHistoryProvided`: 200 con el historial de notificaciones del usuario | Canvas (ruta propuesta) |
-| `PredictionEventConsumer` | Eventos `SaturationPredicted` y `ForecastChanged` | Evalúa las suscripciones afectadas y el aviso inmediato cuando la categoría es LOW | Mapa de contextos, US23 |
+| `PredictionEventConsumer` | Evento `SaturationPredicted` | Evalúa las suscripciones afectadas | Mapa de contextos, US23 |
  
-Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el rol se toman del token validado por el API Gateway (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
+Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el rol se toman del token validado por la capa de seguridad del backend (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
  
-### 5.2.3. Application Layer
+### 5.7.3. Application Layer
  
 | Command / Event handler | Caso de uso | Historias |
 |---|---|---|
@@ -5499,7 +5465,6 @@ Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el r
 | `ConfigureNotificationRuleHandler` | Guarda la regla de alerta de un estacionamiento y publica `NotificationRuleConfigured` | Canvas |
 | `GetNotificationHistoryHandler` | Devuelve el historial de notificaciones del usuario (`NotificationHistoryProvided`) | Canvas |
 | `HandleSaturationPredictedHandler` | Localiza suscripciones con franja afectada, aplica `AlertPolicy`, `ChannelPolicy` y `DeduplicationPolicy` y crea las notificaciones | US23 |
-| `HandleForecastChangedHandler` | Genera el aviso inmediato cuando el nuevo pronóstico deja la llegada en categoría LOW | US23 |
 | `DispatchNotificationHandler` | Envía una notificación pendiente por el canal elegido (push a los dispositivos válidos o correo), registra el resultado y publica `UserNotificationDelivered` | US23, TS12 |
 | `HandleDeliveryRejectionHandler` | Marca el token como inválido cuando el proveedor lo rechaza y evita reintentos | TS12, DD-07 |
  
@@ -5507,7 +5472,7 @@ Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el r
  
 **Tolerancia a fallas.** El envío se ejecuta de forma independiente de la actualización de ocupación. Si un proveedor no responde dentro del tiempo límite, se abre su circuit breaker y las notificaciones pendientes se registran como fallidas, sin afectar la frescura de la ocupación definida en QAS-02 (QAS-06).
  
-### 5.2.4. Infrastructure Layer
+### 5.7.4. Infrastructure Layer
  
 | Componente | Implementa | Detalle |
 |---|---|---|
@@ -5515,23 +5480,23 @@ Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el r
 | `PushGatewayAdapter` | `PushSender` | Capa anticorrupción hacia el proveedor de mensajería push (`PushSent`). Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06). |
 | `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo (`EmailSent`), con timeout y circuit breaker propios. |
 | `IdentityContextAdapter` | `IdentityContext` | Capa anticorrupción que traduce `UserIdentityProvided` (usuario, institución y rol) al modelo local, sin consultar la base de IAM (CON-02). |
-| Consumidores de eventos | Adaptadores de entrada | Suscripciones a los eventos de Prediction & Advisory con procesamiento idempotente, para tolerar entregas duplicadas. |
+| Consumidores de eventos | Adaptadores de entrada | `@TransactionalEventListener` sobre los eventos de Prediction & Advisory; la deduplicación por condición evita alertas repetidas. |
 | `EventPublisherAdapter` | `DomainEventPublisher` | Publica los eventos propios del contexto. |
 | Programador de reintentos | Transversal | Reintenta únicamente las notificaciones fallidas por indisponibilidad del proveedor, nunca los tokens marcados como inválidos. |
  
-### 5.2.6. Bounded Context Software Architecture Component Level Diagrams
+### 5.7.6. Bounded Context Software Architecture Component Level Diagrams
  
 El diagrama muestra los componentes internos del servicio Notifications, su integración por eventos con Prediction & Advisory, la identidad recibida desde IAM y su comunicación con el proveedor de mensajería push y el servicio de correo a través de capas anticorrupción.
  
 ![Diagrama de componentes C4 del contexto Notifications](assets/capitulo-05/notificaciones/notif_c4_componentes.png)
  
-### 5.2.7. Bounded Context Software Architecture Code Level Diagrams
+### 5.7.7. Bounded Context Software Architecture Code Level Diagrams
  
-#### 5.2.7.1. Bounded Context Domain Layer Class Diagrams
+#### 5.7.7.1. Bounded Context Domain Layer Class Diagrams
  
 ![Diagrama de clases de la capa de dominio del contexto Notifications](assets/capitulo-05/notificaciones/notif_clases.png)
  
-#### 5.2.7.2. Bounded Context Database Design Diagram
+#### 5.7.7.2. Bounded Context Database Design Diagram
  
 Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02).
  
@@ -5545,7 +5510,7 @@ Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores d
 
 ## 6.1. Style Guidelines
 
-Las Style Guidelines establecen los criterios visuales y de interacción que dan coherencia a los cuatro productos de Quadrapp: la Landing Page, la aplicación móvil del conductor, la consola de operación de cada universidad y la consola de administración de plataforma de Integra Labs. Se definieron a partir de los diseños de interfaz elaborados por el equipo de frontend y se alinean con los constraints CON-11 (accesibilidad e internacionalización) y CON-13 (Material Design), con la privacidad de la ubicación (CON-07) y con la propuesta de valor del producto: informar con claridad y honestidad cuánta confianza merece cada dato.
+Las Style Guidelines establecen los criterios visuales y de interacción que dan coherencia a los tres productos de Quadrapp: la Landing Page, la aplicación móvil del conductor y la consola web de operación de cada universidad. Se definieron a partir de los diseños de interfaz elaborados por el equipo de frontend y se alinean con los constraints CON-11 (accesibilidad e internacionalización) y CON-13 (Material Design), con la privacidad de la ubicación (CON-07) y con la propuesta de valor del producto: informar con claridad y honestidad cuánta confianza merece cada dato.
 
 ### 6.1.1. General Style Guidelines
 
@@ -5560,7 +5525,7 @@ Las Style Guidelines establecen los criterios visuales y de interacción que dan
 | Primario (marca) | <img src="assets/capitulo-06/colores/087F83.png" width="28" alt="#087F83"> | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
 | Primario oscuro | <img src="assets/capitulo-06/colores/052B39.png" width="28" alt="#052B39"> | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
 | Superficie oscura | <img src="assets/capitulo-06/colores/073B4C.png" width="28" alt="#073B4C"> | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
-| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola de plataforma |
+| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola web de operación |
 | Acento suave | <img src="assets/capitulo-06/colores/DDF3F1.png" width="28" alt="#DDF3F1"> | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
 | Fondo de pantalla | <img src="assets/capitulo-06/colores/F3F7F6.png" width="28" alt="#F3F7F6"> | `#F3F7F6` | Fondo general de las aplicaciones |
 | Superficie | <img src="assets/capitulo-06/colores/FFFFFF.png" width="28" alt="#FFFFFF"> | `#FFFFFF` | Tarjetas, formularios, modales |
@@ -5629,14 +5594,13 @@ Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a
 
 ### 6.1.2. Web, Mobile & Devices Style Guidelines
 
-La solución se compone de cuatro productos con contextos de uso distintos. Esta sección precisa cómo se aplican las guías generales en cada uno.
+La solución se compone de tres productos con contextos de uso distintos. Esta sección precisa cómo se aplican las guías generales en cada uno.
 
 | Producto | Dispositivo principal | Usuario | Patrón de diseño |
 |---|---|---|---|
 | Landing Page | Navegador web (escritorio y móvil) | Visitante: conductor o institución | Página de desplazamiento vertical con secciones, llamadas a la acción por segmento y formulario de contacto |
 | Aplicación móvil del conductor | Teléfono (Android e iOS, Flutter) | Conductor de la comunidad educativa | Navegación inferior de cuatro destinos |
-| Consola de operación | Navegador web y pantalla móvil de turno | Administrador de estacionamientos universitarios | Navegación inferior de cinco destinos en móvil; panel con barra lateral en escritorio |
-| Consola de administración de plataforma | Navegador web de escritorio | Equipo de Integra Labs | Barra lateral oscura fija con tres secciones y contenido en tarjetas y tablas |
+| Consola web de operación | Navegador web de escritorio y, durante el turno, del teléfono (responsive) | Administrador de estacionamientos universitarios (roles de administrador y operador) | Panel con barra lateral oscura en escritorio; navegación inferior de cinco destinos en la vista móvil |
 
 **Aplicación móvil del conductor.**
 - *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta.
@@ -5648,17 +5612,13 @@ La solución se compone de cuatro productos con contextos de uso distintos. Esta
 - *Estados transversales.* Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
 - *Interacción.* Objetivos táctiles de al menos 44 × 44 px, acciones principales en la mitad inferior de la pantalla y un único botón primario por vista.
 
-**Consola de operación (administradores de cada universidad).**
-- *Navegación.* Cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más. Un selector de campus en el encabezado oscuro indica el ámbito institucional.
+**Consola web de operación (administradores y operadores de cada universidad).**
+- *Navegación.* En escritorio, barra lateral oscura fija con las secciones Inicio, Zonas, Accesos y dispositivos, Analítica y Administración, y contenido en tarjetas de indicadores y tablas con filtros. En la vista móvil, cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más. Un selector de campus en el encabezado indica el ámbito institucional (CON-08).
+- *Roles.* El administrador accede a todas las secciones; el operador accede al monitoreo del turno (inicio, zonas, accesos y alertas) y no ve las acciones de configuración.
 - *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos.
 - *Gestión de la distribución.* Plano esquemático por zonas, edición mediante hojas inferiores ("Añadir zona", "Añadir espacio"), borrador con número de versión y publicación con una confirmación que resume los cambios. Las acciones con impacto (deshabilitar un espacio) exigen un diálogo de confirmación con botón rojo.
-- *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways en modo lectura, gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
+- *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways, registro, reemplazo y baja de dispositivos (US32), gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
 - *Administración.* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
-
-**Consola de administración de plataforma (Integra Labs).**
-- *Estructura.* Barra lateral oscura de ancho fijo con tres secciones (Dashboard general, Universidades, Sensores y gateways), identificación del ámbito global y del usuario en la parte inferior. El contenido usa una cuadrícula de tarjetas de indicadores y tablas con filtros, búsqueda y paginación.
-- *Flujos.* Alta de universidad en tres pasos (datos y dominios, primer administrador, crear e invitar) con validaciones en línea (por ejemplo, dominio duplicado) que bloquean el envío hasta resolver el conflicto; inventario global de dispositivos con salud, última comunicación y batería; gestión de un dispositivo con registro, reemplazo y baja.
-- *Principio de ámbito.* Cada pantalla indica explícitamente si trabaja en el ámbito global de plataforma o en el de una universidad, para respaldar el aislamiento de datos (CON-08).
 
 **Landing Page.**
 - *Estructura.* Encabezado con navegación (Cómo funciona, Conductores, Instituciones, Privacidad, Nosotros, FAQ) y botón de contacto; sección principal con titular, subtítulo y llamadas a la acción para conductores e instituciones; franja de beneficios; secciones por segmento con maqueta del producto; sección de señales de la predicción; privacidad por diseño; beneficios; presentación de Integra Labs; formulario de contacto institucional; preguntas frecuentes; y pie de página con enlaces a términos y política de privacidad (CON-18).
@@ -6120,7 +6080,7 @@ La Landing Page permite recorrer las secciones informativas sin abandonar el sit
 
 ### 6.4.1. Applications Wireframes
 
-Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene tres tipos de usuario con vistas distintas: el **conductor** y el **administrador de universidad**, ambos en la aplicación móvil, y el **administrador de plataforma** (personal de Integra Labs), en una consola web.
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador que se presentan a continuación corresponden a esa vista móvil de la consola.
 
 
 #### VISTA CONDUCTOR (APP MÓVIL)
@@ -6161,7 +6121,7 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Alertas y preferencias](./assets/capitulo-06/wireframes/Alertas%20y%20preferencias.png)
 
-#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, VISTA MÓVIL)
 
 **Inicio de operación**: pantalla principal del turno. Resume el estado operativo del estacionamiento y da acceso rápido a las tareas de operación.  
 
@@ -6191,33 +6151,6 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Más · campus y equipo](./assets/capitulo-06/wireframes/Más%20·%20campus%20y%20equipo.png)
 
-#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
-
-**Dashboard general**: vista inicial de la consola. Resume el estado de la plataforma: universidades registradas y dispositivos IoT.  
-
-![Wireframe - Dashboard general](./assets/capitulo-06/wireframes/01%20·%20Dashboard%20general.png)
-
-**Universidades**: listado de las universidades que usan Quadrapp, con acceso a su detalle y al alta de nuevas.  
-
-![Wireframe - Universidades](./assets/capitulo-06/wireframes/02%20·%20Universidades.png)
-
-**Alta de universidad**: formulario para registrar una nueva universidad en la plataforma.  
-
-![Wireframe - Alta de universidad](./assets/capitulo-06/wireframes/03%20·%20Alta%20de%20universidad.png)
-
-**Universidad Central**: detalle de una universidad (en el ejemplo, Universidad Central): sus datos, dominios y estacionamientos.  
-
-![Wireframe - Universidad Central](./assets/capitulo-06/wireframes/04%20·%20Universidad%20Central.png)
-
-**Inventario IoT global**: inventario de todos los dispositivos IoT de la plataforma, con su estado y la universidad a la que están asignados.  
-
-![Wireframe - Inventario IoT global](./assets/capitulo-06/wireframes/05%20·%20Inventario%20IoT%20global.png)
-
-**Gestión de dispositivo · G-03**: detalle de un dispositivo (en el ejemplo, G-03) con las acciones de reasignarlo o darlo de baja.  
-
-![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/06%20·%20Gestión%20de%20dispositivo%20·%20G-03.png)
-
-
 ### 6.4.2. Applications Wireflow Diagrams
 
 Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan diez diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
@@ -6240,7 +6173,7 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ![Wireflow 4 - Alertas por franja horaria](./assets/capitulo-06/wireflows/Wireflow%204%20·%20Alertas%20por%20franja%20horaria.png)
 
-#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, VISTA MÓVIL)
 
 **Wireflow 5 · Operación de turno**: Desde Inicio de operación, el administrador revisa Estacionamientos y zonas y entra a la Gestión de zonas y layout.  
 
@@ -6258,19 +6191,7 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
 
-#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
-
-**Wireflow 9 · Universidades**: Desde el Dashboard general, el administrador entra al listado de Universidades, registra una nueva en Alta de universidad y consulta el detalle de una universidad.  
-
-![Wireflow 9 - Universidades](./assets/capitulo-06/wireflows/Wireflow%209%20·%20Universidades.png)
-
-**Wireflow 10 · Dispositivos IoT**: Desde el Inventario IoT global se registra un dispositivo o se abre su gestión, desde donde puede reasignarse o darse de baja.  
-
-![Wireflow 10 - Dispositivos IoT](./assets/capitulo-06/wireflows/Wireflow%2010%20·%20Dispositivos%20IoT.png)
-
-
-
-# Conclusiones
+---
 
 ## Avance de conclusiones
 
@@ -6340,11 +6261,11 @@ World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 
 
 ## Tablero de diseño estratégico
 
-El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows, los Bounded Context Canvases y el Context Map elegido se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
+El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows, los Bounded Context Canvases y las alternativas de Context Map se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
 
 | Artefacto | Enlace |
 | --- | --- |
-| Strategic-Level Domain-Driven Design (Excalidraw) | [https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA](https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA) |
+| Strategic-Level Domain-Driven Design (Excalidraw) | [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
 
 ## Videos de Exposiciones
 
