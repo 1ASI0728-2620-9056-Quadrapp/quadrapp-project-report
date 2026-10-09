@@ -61,7 +61,9 @@
 | 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
 | 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
-| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
+| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser diseñados por Bejarano Martinez, Alvaro Leandro, y del enlace a la Landing Page implementada. |
+| 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del diseño de base de datos y del diagrama de clases de Analytics: reemplazo de los diagramas en texto por la descripción del diagrama y alineación con PostgreSQL. |
+| 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación de los wireframes de escritorio de la consola de operación para el inventario de dispositivos y del Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
 
 # Project Report Collaboration Insights
 
@@ -91,13 +93,13 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 
 | Integrante | Secciones elaboradas o corregidas |
 | --- | --- |
-| Bejarano Martinez, Alvaro Leandro | Implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
+| Bejarano Martinez, Alvaro Leandro | Diseño del wireframe y del mock-up de la Landing Page en Figma, incorporados en la sección 6.3, e implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
 | Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
 | Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
 | Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
 
-**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 20 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 24 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.17 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
@@ -277,7 +279,8 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
+          TB1: Logré sustentar el diseño de la Landing Page, explicando cómo su estructura por segmento y sus llamadas a la acción comunican la propuesta de valor de Quadrapp a conductores y a instituciones, y cómo el diseño se llevó a la versión implementada.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
@@ -312,7 +315,8 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
+          TB1: Diseñé el wireframe y el mock-up de la Landing Page y redacté su contenido para comunicar el alcance real del producto (sin reservas, sin pagos y sin rastreo de ubicación) a públicos de distinto perfil, e implementé la primera versión de la página.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
@@ -6611,7 +6615,7 @@ Ambos diagramas mantienen la consistencia con la separación por capas definida 
 
 El Domain Layer Class Diagram representa la estructura orientada a la implementación del modelo de dominio de Analytics.
 
-El diagrama debe incluir los siguientes elementos:
+El diagrama incluye los siguientes elementos:
 
 **Aggregate Roots**
 - HistoricalOccupancy
@@ -6632,7 +6636,7 @@ El diagrama debe incluir los siguientes elementos:
 
 <br>
 
-Las principales relaciones que deben representarse son:
+Las principales relaciones son:
 - `HistoricalOccupancy` compone exactamente un `OccupancyRate`.
 - `ForecastSnapshot` compone exactamente un `OccupancyRate` para representar el porcentaje de ocupación pronosticado.
 - `HistoricalOccupancy` mantiene referencias externas mediante `tenantId`, `parkingLotId` y, cuando corresponda, `zoneId`.
@@ -6649,43 +6653,14 @@ Las principales relaciones que deben representarse son:
 
 <br>
 
-El diagrama debe utilizar las convenciones de visibilidad UML:
+El diagrama usa las convenciones de visibilidad de UML:
 - (+) para miembros públicos
 - (-) para miembros privados
 - (#) para miembros protegidos cuando corresponda
 
 <br>
 
-Una referencia conceptual de las relaciones y multiplicidades es:
-
-```text
-
-HistoricalOccupancy "1" *-- "1" OccupancyRate
-
-ForecastSnapshot "1" *-- "1" OccupancyRate
-
-PeakHour "1" *-- "1" OccupancyRate
-
-DemandPattern "1" *-- "1" OccupancyRate
-
-HistoricalOccupancyRepository ..> HistoricalOccupancy : persists
-
-ForecastSnapshotRepository ..> ForecastSnapshot : persists
-
-AnalyticsDomainService ..> HistoricalOccupancy : analyzes
-
-AnalyticsDomainService ..> ForecastSnapshot : compares
-
-AnalyticsDomainService ..> PeakHour : produces
-
-AnalyticsDomainService ..> DemandPattern : identifies
-
-AnalyticsDomainService ..> PredictionAccuracy : calculates
-
-```
-<br>
-
-Los siguientes conceptos no deben aparecer como clases de dominio propias dentro de Analytics:
+Los siguientes conceptos no son clases del dominio de Analytics:
 
 - Institution
 - ParkingLot
@@ -6762,22 +6737,7 @@ Las principales restricciones lógicas son:
 
 Las tablas no requieren una clave foránea directa entre sí. La comparación entre un pronóstico y la ocupación observada se realiza utilizando el contexto del estacionamiento y el periodo temporal correspondiente.
 
-Conceptualmente:
-
-```text
-analytics_forecast_snapshots
-        |
-        | parking_lot_id
-        | target_at
-        v
-analytics_historical_occupancy
-        |
-        | ocupación prevista
-        | vs.
-        | ocupación observada
-        v
-PredictionAccuracy
-```
+El pronóstico guardado en `analytics_forecast_snapshots` se compara con el registro de `analytics_historical_occupancy` del mismo estacionamiento cuyo periodo contiene su `target_at`; de esa comparación entre la ocupación prevista y la observada se obtiene `PredictionAccuracy`.
 
 `PredictionAccuracy` no necesita una tabla propia, ya que representa un resultado calculado a partir de los pronósticos almacenados y los registros de ocupación observada.
 
@@ -6812,45 +6772,9 @@ La persistencia debe permitir realizar consultas utilizando principalmente:
 - `model_version`, para análisis de precisión.
 
 
-**Diseño lógico:**
+**Tecnología:**
 
-Conceptualmente, la persistencia del Bounded Context queda organizada de la siguiente manera:
-
-```text
-                     ANALYTICS
-
-        ┌─────────────────────────────────┐
-        │ analytics_historical_occupancy  │
-        │─────────────────────────────────│
-        │ PK historical_occupancy_id      │
-        │    tenant_id               │
-        │    parking_lot_id               │
-        │    zone_id                      │
-        │    period_start                 │
-        │    period_end                   │
-        │    granularity                  │
-        │    occupancy_rate               │
-        │    entry_count                  │
-        │    exit_count                   │
-        └─────────────────────────────────┘
-
-
-        ┌─────────────────────────────────┐
-        │ analytics_forecast_snapshots    │
-        │─────────────────────────────────│
-        │ PK forecast_id                  │
-        │    tenant_id               │
-        │    parking_lot_id               │
-        │    generated_at                 │
-        │    target_at                    │
-        │    horizon_minutes              │
-        │    model_version                │
-        │    predicted_occupancy_rate     │
-        └─────────────────────────────────┘
-```
-
-
-El diseño se mantiene independiente de un motor de base de datos específico. La tecnología de persistencia podrá definirse posteriormente sin modificar las responsabilidades del Domain Layer ni de la Application Layer.
+Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-01, sin claves foráneas hacia los esquemas de otros módulos (CON-02). Las capas de dominio y de aplicación no dependen de esta tecnología: acceden a los datos únicamente mediante los repositorios `HistoricalOccupancyRepository` y `ForecastSnapshotRepository`.
 
 <br>
 
@@ -7364,7 +7288,7 @@ Los Header Tags organizan semánticamente el contenido de la Landing Page y perm
 
 Un ejemplo de jerarquía para Quadrapp sería:
 
-```text
+```html
 <h1>Anticipa la disponibilidad antes de llegar al campus</h1>
 
 <h2>Estacionamientos universitarios con información actual y predicciones de disponibilidad</h2>
@@ -7389,7 +7313,7 @@ Define la codificación de caracteres utilizada por la Landing Page.
 
 Permite que la página se adapte correctamente a diferentes tamaños de pantalla.
 
-```text
+```html
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1.0"
@@ -7402,7 +7326,7 @@ Permite que la página se adapte correctamente a diferentes tamaños de pantalla
 
 La Landing Page es contenido público y puede ser indexada por motores de búsqueda.
 
-```text
+```html
 <meta name="robots" content="index, follow" />
 ```
 
@@ -7428,7 +7352,7 @@ La consola administrativa de Quadrapp es una aplicación destinada al personal a
 
 **Meta Description:**
 
-```text
+```html
 <meta
   name="description"
   content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
@@ -7458,7 +7382,7 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 
 `<title>Quadrapp | Consulta la disponibilidad antes de llegar</title>`
 
-```text
+```html
 <meta
   name="description"
   content="Consulta la disponibilidad actual de los estacionamientos de tu universidad, revisa predicciones y conoce las condiciones esperadas antes de llegar al campus."
@@ -7466,7 +7390,7 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 ```
 
 
-```text
+```html
 <meta
   name="keywords"
   content="Quadrapp, estacionamiento universitario, disponibilidad de estacionamiento, app de estacionamiento, predicción de disponibilidad, parking universitario"
@@ -7580,7 +7504,7 @@ El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin ca
 
 ### 6.4.1. Applications Wireframes
 
-Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador que se presentan a continuación corresponden a esa vista móvil de la consola.
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
 
 
 #### VISTA CONDUCTOR (APP MÓVIL)
@@ -7651,9 +7575,31 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Más · campus y equipo](./assets/capitulo-06/wireframes/Más%20·%20campus%20y%20equipo.png)
 
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, ESCRITORIO)
+
+**Inventario de dispositivos**: lista los sensores y gateways de la institución con su zona, sede, tipo, asociación, salud, última comunicación y batería, y permite filtrarlos por zona, sede, estacionamiento, tipo y salud (US20, US32).  
+
+![Wireframe - Inventario de dispositivos](./assets/capitulo-06/wireframes/Inventario%20de%20dispositivos.png)
+
+**Gestión de dispositivo · G-03**: reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
+
+![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/Gestión%20de%20dispositivo%20·%20G-03.png)
+
+**Registrar dispositivo**: ventana para registrar un sensor o gateway con su número de serie, tipo, estacionamiento, asociación, dirección (en los sensores de paso) e intervalo de reporte esperado (US19, US32). La institución se muestra fija: el administrador solo registra dispositivos de su universidad.  
+
+![Wireframe - Registrar dispositivo](./assets/capitulo-06/wireframes/Registrar%20dispositivo.png)
+
+**Reasignar G-03**: ventana para cambiar el estacionamiento asociado a un dispositivo. Advierte que los espacios que queden sin lectura pasan a UNKNOWN y no se cuentan como libres (US08, US18).  
+
+![Wireframe - Reasignar G-03](./assets/capitulo-06/wireframes/Reasignar%20G-03.png)
+
+**Dar de baja G-03**: ventana para retirar un dispositivo sin reemplazarlo. Exige un motivo y escribir el identificador para confirmar, y conserva el historial (US32).  
+
+![Wireframe - Dar de baja G-03](./assets/capitulo-06/wireframes/Dar%20de%20baja%20G-03.png)
+
 ### 6.4.2. Applications Wireflow Diagrams
 
-Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan ocho diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
+Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan nueve diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
 
 #### VISTA CONDUCTOR (APP MÓVIL)
 
@@ -7690,6 +7636,12 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 **Wireflow 8 · Calendario, dominios y equipo**: Desde Más · campus y equipo, el administrador crea un evento de calendario, añade un dominio institucional o invita a un nuevo integrante al equipo.  
 
 ![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, ESCRITORIO)
+
+**Wireflow 9 · Dispositivos de la institución**: Desde el Inventario de dispositivos, el administrador registra un dispositivo nuevo o abre la Gestión de un dispositivo; desde ahí lo reasigna a otro estacionamiento o lo da de baja.  
+
+![Wireflow 9 - Dispositivos de la institución](./assets/capitulo-06/wireflows/Wireflow%209%20·%20Dispositivos%20de%20la%20institución.png)
 
 ---
 
