@@ -3410,8 +3410,8 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 | Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
 |---|---|---|---|
 | Tenant | `Tenant` | `EmailDomain` (entidad), `TenantStatus` (ONBOARDING, ACTIVE) | Representa a una institución y sus dominios habilitados. Un dominio solo puede pertenecer a una institución (conflicto 409). Retirar un dominio impide nuevos registros pero conserva las cuentas ya verificadas. |
-| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_ADMIN, INSTITUTION_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
-| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol asignado fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez. |
+| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_OPERATOR, PARKING_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
+| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol PARKING_ADMIN o PARKING_OPERATOR, también fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez (US31). |
 | OtpChallenge | `OtpChallenge` | `OneTimeCode` (guardado como hash), `AttemptCounter` | Desafío de acceso por código de un solo uso. Expira, agota intentos y se consume al usarse. |
 | Session | `RefreshToken` | `TokenClaims` (usuario, institución, rol) | Sesión revocable. El cierre de sesión revoca el token de refresco asociado. |
 | PlatformCredential | `PlatformCredential` | `CredentialStatus` | Credencial del equipo de plataforma, distinta de la cuenta de un usuario, que autoriza el alta de instituciones (TS15). |
@@ -3420,6 +3420,15 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 - `AccessPolicy`: decide si un correo puede recibir un código. Aplica, en orden, las reglas de cuenta existente, invitación vigente y dominio habilitado (US01, escenarios 1, 4 y 5).
 - `AccessPolicy` también resuelve los permisos de cada rol (`permissionsOf`, `can`), con lo que "los permisos se asignan por rol".
 - `OtpRequestThrottle`: determina si un correo superó el número de solicitudes permitidas en la ventana configurada (respuesta 429, CON-09).
+
+**Roles y permisos.** Los roles corresponden a los dos segmentos objetivo: el conductor usa la aplicación móvil, y el administrador y el operador comparten la consola web de operación con permisos distintos.
+
+| Rol | Usuarios | Permisos principales | Historias |
+|---|---|---|---|
+| `DRIVER` | Conductores de la comunidad educativa | Consultar estacionamientos, disponibilidad, pronósticos y asesoría de llegada; gestionar sus alertas y preferencias. | US04 a US15, US23, US24, US33, US36 |
+| `PARKING_OPERATOR` | Operadores de puerta y supervisores de turno | Monitorear el turno, la salud de los dispositivos y las incidencias. No configura estacionamientos ni dispositivos, ni gestiona cuentas. | US20, US29 |
+| `PARKING_ADMIN` | Administradores de estacionamientos | Los permisos del operador y, además, configurar estacionamientos, dispositivos y calendario; gestionar los dominios de correo; invitar administradores y operadores; consultar la analítica y definir reglas de alerta. | US16 a US22, US30 a US32, US34, US35 |
+
 **Mensajes de entrada (canvas).** `SignInRequested`, `SessionValidated` y `RoleAssignmentRequested`, enviados desde la app móvil y el Admin Dashboard.
  
 **Domain Events publicados.** `AccessGranted`, `AccessDenied`, `UserIdentityProvided`, `AuthorizedContextProvided`, `SessionRevoked`, `RoleAssigned`, `TenantProvisioned`, `EmailDomainEnabled`, `EmailDomainRetired`, `InvitationIssued`, `InvitationAccepted` y `UserAccountCreated`. `UserIdentityProvided` y `AuthorizedContextProvided` son el lenguaje publicado hacia los demás contextos: entregan usuario, institución, rol y permisos autorizados, y viajan como claims del token.
@@ -3430,7 +3439,7 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 1. Un correo recibe un código solo si su dominio está habilitado, si tiene una invitación vigente o si ya tiene una cuenta; en otro caso no se emite ningún código.
 2. El código tiene vigencia corta, un número máximo de intentos y se almacena únicamente como hash.
 3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa la capa de seguridad del backend para el aislamiento entre instituciones (CON-08).
-4. Los administradores se crean solo por invitación o en el alta inicial de la institución (CON-17).
+4. Los administradores y los operadores se crean solo por invitación; el primer administrador se crea en el alta inicial de la institución (CON-17). Ningún rol administrativo admite autorregistro.
 5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
 
 ### 5.1.2. Interface Layer
@@ -3444,7 +3453,7 @@ El contexto expone una API REST documentada con OpenAPI (CON-12). Todas las ruta
 | `AuthController` | `POST /api/v1/auth/refresh` | 200 con nuevo token de acceso; 401 si el token de refresco venció | TS01 |
 | `AuthController` | `POST /api/v1/auth/logout` | 204 y revocación del token de refresco | US02 (ruta propuesta) |
 | `AuthController` | `GET /api/v1/auth/session` | `SessionValidated`: 200 con usuario, institución, rol y permisos vigentes; 401 si la sesión no es válida | Canvas (ruta propuesta) |
-| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no es administrador institucional | Canvas, US31 (ruta propuesta) |
+| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no tiene el rol PARKING_ADMIN | Canvas, US31 (ruta propuesta) |
 | `TenantController` | `POST /api/v1/tenants` | 201 con la institución y la invitación de su primer administrador; 403 sin credenciales de plataforma; 409 si el dominio ya existe | TS15 |
 | `EmailDomainController` | `POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}` | 201 o 204; 409 si el dominio pertenece a otra institución | US30 (rutas propuestas) |
 | `InvitationController` | `POST /api/v1/invitations` | 201 con la invitación registrada y enviada | US31 (ruta propuesta) |
@@ -3508,9 +3517,1310 @@ Cada tabla incluye la institución como identificador de aislamiento (DD-09). El
 
 ## 5.2. Bounded Context: Parking Configuration
 
+El Bounded Context Parking Configuration es responsable de **describir la estructura física y operativa de los estacionamientos de cada institución**. Es el dueño de los datos maestros que los demás contextos usan como referencia: estacionamientos, zonas, espacios, accesos vehiculares, inventario de dispositivos y su asociación con espacios o accesos, parámetros de operación, calendario académico y eventos del campus.
+
+Su propósito es publicar un layout versionado y estable, del que Parking Sensing obtiene la asociación entre sensores y espacios, Occupancy la capacidad de cada zona y la aplicación móvil la geometría del mapa. Además, ofrece a Prediction & Advisory el perfil del estacionamiento y el calendario que alimentan los pronósticos. No calcula ocupación, disponibilidad ni pronósticos, y no conoce el estado de los espacios.
+
+Este Bounded Context soporta principalmente:
+
+- US16 — Registrar los estacionamientos de la institución, con nombre único dentro de ella.
+- US17 — Configurar zonas y espacios y publicar la distribución con una nueva versión.
+- US18 y US32 — Registrar, asociar, reemplazar y dar de baja sensores y gateways.
+- US19 — Configurar los accesos vehiculares y habilitarlos para el conteo de flujo solo con sensores direccionales.
+- US35 — Registrar el calendario académico y los eventos del campus, y cancelarlos.
+- US04 — Listar los estacionamientos de la institución con su layout publicado.
+- TS15 — Recibir el alta de una institución (`TenantProvisioned`) para inicializar su calendario.
+
+Las principales responsabilidades del Bounded Context Parking Configuration son:
+
+- Registrar estacionamientos con nombre único por institución y con sus parámetros de operación: umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.
+- Mantener las zonas, los espacios (con etiqueta y posición en el mapa) y los accesos vehiculares de cada estacionamiento.
+- Publicar el layout como una versión inmutable y comunicarlo con `ParkingLayoutProvided`.
+- Mantener el inventario de dispositivos y garantizar que un sensor se asocie a un solo espacio o acceso, y que un espacio tenga un solo sensor activo.
+- Trasladar la asociación de un dispositivo averiado a su reemplazo sin alterar la identidad del espacio, y conservar el historial de asociaciones.
+- Registrar el calendario académico y los eventos del campus, e informar su registro y su cancelación.
+- Responder, mediante su fachada (Open Host Service), las consultas de perfil, layout, calendario y directorio de dispositivos que hacen los demás módulos.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Parking Configuration.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
+| ParkingZone | Domain | Entity. Sector, nivel o bloque que agrupa espacios. | zoneId, name, spaces | addSpace(), hasSpaceLabeled(), capacity() |
+| ParkingSpace | Domain | Entity. Lugar individual para estacionar. | spaceId, label, position | label() |
+| AccessPoint | Domain | Entity. Entrada o salida vehicular con sensores de paso. | accessPointId, name, type, flowCountingEnabled | enableFlowCounting(), countsFlow() |
+| Device | Domain | Aggregate Root. Sensor o gateway registrado en la institución. | deviceId, tenantId, parkingLotId, hardwareId, type, directional, reportInterval, status, currentAssignment, assignmentHistory | register(), assignTo(), releaseAssignment(), decommission(), isActive() |
+| AcademicCalendar | Domain | Aggregate Root. Calendario académico y eventos del campus de una institución. | calendarId, tenantId, periods, campusEvents | initialize(), registerPeriod(), registerCampusEvent(), cancelCampusEvent(), eventsAround() |
+| AcademicPeriod | Domain | Entity. Periodo de clases, exámenes o receso. | periodId, type, range | overlaps() |
+| CampusEvent | Domain | Entity. Actividad de alta afluencia que afecta a un estacionamiento. | campusEventId, name, parkingLotId, window, impact, status | cancel(), isActiveDuring() |
+| OperatingSettings | Domain | Value Object. Parámetros de operación del estacionamiento. | saturationThresholdPct, flowWindowMinutes, minimumDetectionSeconds, accuracyMarginPct | defaults(), isValid() |
+| LayoutVersion | Domain | Value Object. Versión publicada del layout. | value | next(), isPublished() |
+| LayoutSnapshot | Domain | Value Object. Copia inmutable del layout publicado. | parkingLotId, version, publishedAt, zoneCapacities, placements | — |
+| SensorPlacement | Domain | Value Object. Ubicación de un sensor dentro del layout publicado. | deviceId, hardwareId, target | — |
+| AssignmentTarget | Domain | Value Object. Espacio o acceso al que se asocia un dispositivo. | type, targetId | isSpace() |
+| DeviceAssignment | Domain | Value Object. Asociación de un dispositivo con su vigencia. | target, assignedAt, releasedAt | isActive(), releasedAt() |
+| ParkingLotName, SpaceLabel, SpacePosition, HardwareId, ReportInterval, DateRange, TimeWindow | Domain | Value Objects con su validación propia. | value o rango | value(), isValid(), overlaps() |
+| ParkingLotStatus, AccessPointType, DeviceType, DeviceStatus, TargetType, AcademicPeriodType, DemandImpact, CampusEventStatus | Domain | Enumeraciones del contexto. | — | — |
+| DeviceAssignmentService | Domain | Domain Service. Aplica las reglas de asociación que involucran a más de un dispositivo. | — | assign(), coversDirection() |
+| DeviceReplacementService | Domain | Domain Service. Traslada la asociación de un dispositivo a su reemplazo. | — | replace() |
+| LayoutPublicationService | Domain | Domain Service. Arma la versión publicada del layout con las asociaciones vigentes. | — | publish() |
+| ParkingLotRepository, DeviceRepository, AcademicCalendarRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findByTenant() |
+| ParkingLayoutProvided, DeviceRegistered, SensorAssigned, DeviceReplaced, DeviceDecommissioned, CampusEventProvided, CampusEventCancelled | Domain | Domain Events publicados (Published Language). | Ver 5.2.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura. | Dependencies | handle() |
+| TenantProvisionedEventHandler | Application | Event Handler. Inicializa el calendario de una institución nueva. | Dependencies | handle() |
+| ConfigurationEventPublisher | Application | Puerto de salida para publicar eventos. | — | publish() |
+| ParkingLotController, LayoutController, AccessPointController, DeviceInventoryController, AcademicCalendarController | Interface | Controllers REST de la consola de operación y de la aplicación. | Handler dependencies | Ver 5.2.2 |
+| ParkingConfigurationFacade | Interface | Open Host Service en proceso para los demás módulos. | Query Handler dependencies | profileOf(), activeLots(), calendarEventsAround(), layoutOf(), lotsOf(), resolveDevice() |
+| TenantProvisionedListener | Interface | Consumer del evento `TenantProvisioned` de IAM. | Event Handler dependency | on() |
+| *RepositoryAdapter | Infrastructure | Implementan los repositorios sobre el esquema `configuration`. | Persistence dependency | save(), find…() |
+| ConfigurationEventPublisherAdapter | Infrastructure | Publica los eventos de dominio tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.2.1. Domain Layer
+
+La Domain Layer contiene los conceptos y las reglas que describen un estacionamiento y su equipamiento. No depende de HTTP, de la base de datos ni de Spring. Los tres agregados salen del paso 9 del EventStorming (sección 4.2.1): `ParkingLot`, `Device` y `AcademicCalendar`. Se separaron porque cambian por razones y con frecuencias distintas: el layout cambia al reorganizar el estacionamiento, el inventario cambia cada vez que se instala o se reemplaza un sensor, y el calendario cambia cada ciclo.
+
+**Aggregate 1: ParkingLot**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ParkingLot|Aggregate Root|Estacionamiento de una institución. Agrupa sus zonas, espacios y accesos vehiculares, y define sus parámetros de operación y la versión del layout publicado.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|parkingLotId|UUID|Private|Identificador único del estacionamiento.|
+|tenantId|UUID|Private|Referencia externa a la institución propietaria (IAM).|
+|name|ParkingLotName|Private|Nombre del estacionamiento; único dentro de la institución.|
+|address|String|Private|Ubicación de referencia dentro del campus.|
+|status|ParkingLotStatus|Private|DRAFT mientras no tiene layout publicado; PUBLISHED después de la primera publicación.|
+|settings|OperatingSettings|Private|Umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.|
+|layoutVersion|LayoutVersion|Private|Última versión publicada del layout; 0 si aún no se publicó.|
+|zones|`List<ParkingZone>`|Private|Zonas del estacionamiento con sus espacios.|
+|accessPoints|`List<AccessPoint>`|Private|Accesos vehiculares del estacionamiento.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(tenantId: UUID, name: ParkingLotName, address: String, settings: OperatingSettings)|ParkingLot|Public (static)|Crea el estacionamiento en estado DRAFT con la versión 0.|
+|addZone(name: String)|ParkingZone|Public|Agrega una zona; el nombre no puede repetirse dentro del estacionamiento.|
+|addSpace(zoneId: UUID, label: SpaceLabel, position: SpacePosition)|ParkingSpace|Public|Registra un espacio en la zona; rechaza una etiqueta repetida en la misma zona (US17, escenario 3).|
+|configureAccessPoint(name: String, type: AccessPointType)|AccessPoint|Public|Registra un acceso vehicular asociado al estacionamiento (US19, escenario 1).|
+|enableFlowCounting(accessPointId: UUID, directional: Boolean)|Void|Public|Habilita el acceso para el conteo de flujo solo si sus sensores distinguen la dirección (US19, escenarios 2 y 3).|
+|updateSettings(settings: OperatingSettings)|Void|Public|Reemplaza los parámetros de operación validados.|
+|publishLayout(placements: `List<SensorPlacement>`, now: Instant)|LayoutSnapshot|Public|Exige al menos un espacio, incrementa la versión, pasa a PUBLISHED y registra `ParkingLayoutProvided` (US17, escenario 4).|
+|capacity()|Integer|Public|Cantidad total de espacios del estacionamiento.|
+|belongsTo(tenantId: UUID)|Boolean|Public|Indica si el estacionamiento pertenece a la institución dada.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities del agregado ParkingLot**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|ParkingZone|Entity|zoneId: UUID, name: String, spaces: `List<ParkingSpace>`|addSpace(label, position): ParkingSpace; hasSpaceLabeled(label): Boolean; capacity(): Integer|Sector, nivel o bloque. Su capacidad es la cantidad de espacios que agrupa.|
+|ParkingSpace|Entity|spaceId: UUID, label: SpaceLabel, position: SpacePosition|label(): SpaceLabel|Lugar individual. Su identidad (`spaceId`) no cambia aunque se reemplace el sensor que lo vigila.|
+|AccessPoint|Entity|accessPointId: UUID, name: String, type: AccessPointType, flowCountingEnabled: Boolean|enableFlowCounting(directional): Void; countsFlow(): Boolean|Entrada o salida vehicular. Solo alimenta la velocidad de flujo cuando está habilitado.|
+
+**Value Objects y enumeraciones del agregado ParkingLot**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ParkingLotName|Value Object|value: String|Entre 3 y 80 caracteres, sin espacios al inicio ni al final.|
+|SpaceLabel|Value Object|value: String|Etiqueta visible del espacio (por ejemplo, "A01"), de 1 a 10 caracteres.|
+|SpacePosition|Value Object|x: Decimal, y: Decimal|Posición del espacio en el plano del estacionamiento que dibuja la aplicación.|
+|OperatingSettings|Value Object|saturationThresholdPct: Integer, flowWindowMinutes: Integer, minimumDetectionSeconds: Integer, accuracyMarginPct: Integer|Umbral de saturación entre 50 y 100 %; ventana de flujo entre 5 y 60 min; tiempo mínimo de detección entre 3 y 60 s; margen de precisión entre 1 y 30 puntos. `defaults()` entrega 90 %, 15 min, 10 s y 10 puntos.|
+|LayoutVersion|Value Object|value: Integer|Número de versión. `next()` devuelve la siguiente; 0 significa que no hay layout publicado.|
+|LayoutSnapshot|Value Object|parkingLotId, version, publishedAt, zoneCapacities: `Map<UUID, Integer>`, placements: `List<SensorPlacement>`|Copia inmutable del layout publicado. Se guarda para que cada versión se pueda volver a consultar.|
+|SensorPlacement|Value Object|deviceId: UUID, hardwareId: HardwareId, target: AssignmentTarget|Asociación vigente de un sensor al momento de publicar.|
+|ParkingLotStatus|Enumeration|DRAFT, PUBLISHED|Estado del estacionamiento.|
+|AccessPointType|Enumeration|ENTRY, EXIT, ENTRY_EXIT|Sentido del acceso vehicular.|
+
+**Aggregate 2: Device**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Device|Aggregate Root|Sensor de cochera, sensor de paso o gateway registrado en el inventario de la institución. Conserva su asociación vigente y el historial de asociaciones anteriores.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador único del dispositivo en Quadrapp.|
+|tenantId|UUID|Private|Referencia externa a la institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|hardwareId|HardwareId|Private|Identificador técnico que el dispositivo informa en sus lecturas (por ejemplo, `sensor-0342`).|
+|type|DeviceType|Private|SPACE_SENSOR, PASS_SENSOR o GATEWAY.|
+|directional|Boolean|Private|Indica si un sensor de paso distingue la entrada de la salida.|
+|reportInterval|ReportInterval|Private|Tiempo máximo esperado entre dos reportes del dispositivo (US32, escenario 1).|
+|status|DeviceStatus|Private|REGISTERED, ASSIGNED o DECOMMISSIONED.|
+|currentAssignment|DeviceAssignment?|Private|Asociación vigente con un espacio o un acceso, si existe.|
+|assignmentHistory|`List<DeviceAssignment>`|Private|Asociaciones anteriores, que se conservan al reasociar o dar de baja (US18, escenario 3).|
+|registeredAt|Instant|Private|Momento del registro.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(tenantId, parkingLotId, hardwareId, type, directional, reportInterval, now)|Device|Public (static)|Crea el dispositivo en estado REGISTERED y registra `DeviceRegistered`.|
+|assignTo(target: AssignmentTarget, now: Instant)|Void|Public|Asocia el dispositivo a un espacio o acceso, pasa a ASSIGNED y registra `SensorAssigned`. Rechaza un dispositivo dado de baja.|
+|releaseAssignment(now: Instant)|AssignmentTarget?|Public|Cierra la asociación vigente, la mueve al historial y devuelve su destino.|
+|decommission(now: Instant)|Void|Public|Cierra la asociación vigente, pasa a DECOMMISSIONED y registra `DeviceDecommissioned` con el destino que tenía.|
+|isActive()|Boolean|Public|Indica si el dispositivo no fue dado de baja.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado Device**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|HardwareId|Value Object|value: String|Identificador técnico de 3 a 40 caracteres, único en Quadrapp.|
+|ReportInterval|Value Object|seconds: Integer|Entre 10 y 3600 segundos.|
+|AssignmentTarget|Value Object|type: TargetType, targetId: UUID|Espacio o acceso vehicular asociado.|
+|DeviceAssignment|Value Object|target: AssignmentTarget, assignedAt: Instant, releasedAt: Instant?|Asociación con su vigencia. Está activa mientras `releasedAt` sea nulo.|
+|DeviceType|Enumeration|SPACE_SENSOR, PASS_SENSOR, GATEWAY|Tipo de dispositivo.|
+|DeviceStatus|Enumeration|REGISTERED, ASSIGNED, DECOMMISSIONED|Estado en el inventario.|
+|TargetType|Enumeration|SPACE, ACCESS_POINT|Tipo de destino de la asociación.|
+
+**Aggregate 3: AcademicCalendar**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AcademicCalendar|Aggregate Root|Calendario de una institución: periodos de clases, exámenes y receso, y eventos del campus que afectan a un estacionamiento. Hay uno por institución y se crea al recibir `TenantProvisioned`.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|calendarId|UUID|Private|Identificador del calendario.|
+|tenantId|UUID|Private|Institución a la que pertenece (IAM).|
+|periods|`List<AcademicPeriod>`|Private|Periodos académicos registrados.|
+|campusEvents|`List<CampusEvent>`|Private|Eventos del campus programados o cancelados.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|initialize(tenantId: UUID)|AcademicCalendar|Public (static)|Crea el calendario vacío de una institución.|
+|registerPeriod(type: AcademicPeriodType, range: DateRange)|AcademicPeriod|Public|Registra un periodo; rechaza los que se superponen con otro (US35, escenario 1).|
+|registerCampusEvent(name: String, parkingLotId: UUID, window: TimeWindow, impact: DemandImpact)|CampusEvent|Public|Registra un evento del campus y `CampusEventProvided` (US35, escenario 2).|
+|cancelCampusEvent(campusEventId: UUID, now: Instant)|Void|Public|Cancela un evento programado y registra `CampusEventCancelled`, con el que Prediction & Advisory regenera las franjas afectadas (US35, escenario 3).|
+|eventsAround(from: Instant, to: Instant)|`List<CampusEvent>`|Public|Eventos programados que se superponen con el intervalo.|
+|periodOn(date: LocalDate)|AcademicPeriod?|Public|Periodo vigente en una fecha.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities, Value Objects y enumeraciones del agregado AcademicCalendar**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|AcademicPeriod|Entity|periodId: UUID, type: AcademicPeriodType, range: DateRange|Periodo académico. `overlaps(other)` indica si se superpone con otro rango.|
+|CampusEvent|Entity|campusEventId: UUID, name: String, parkingLotId: UUID, window: TimeWindow, impact: DemandImpact, status: CampusEventStatus, cancelledAt: Instant?|Evento de alta afluencia. `cancel(now)` lo cancela una sola vez; `isActiveDuring(from, to)` excluye los cancelados.|
+|DateRange|Value Object|startDate: LocalDate, endDate: LocalDate|Rango de fechas con `endDate` mayor o igual que `startDate`.|
+|TimeWindow|Value Object|startAt: Instant, endAt: Instant|Franja horaria con `endAt` posterior a `startAt`.|
+|AcademicPeriodType|Enumeration|CLASSES, EXAMS, BREAK|Tipo de periodo.|
+|DemandImpact|Enumeration|MODERATE, HIGH|Afluencia esperada del evento; es una variable del modelo de predicción.|
+|CampusEventStatus|Enumeration|SCHEDULED, CANCELLED|Estado del evento.|
+
+**Domain Services**
+
+|Nombre|Categoría|Métodos|Descripción|
+|-|-|-|-|
+|DeviceAssignmentService|Domain Service|assign(device: Device, target: AssignmentTarget, currentOccupant: Device?, now: Instant): Void; coversDirection(passSensors: `List<Device>`): Boolean|Verifica que el tipo del dispositivo coincida con el destino (SPACE_SENSOR con un espacio y PASS_SENSOR con un acceso; un GATEWAY no se asocia), que el sensor no tenga otra asociación vigente y que el espacio no tenga otro sensor activo (US18, escenario 2). `coversDirection` indica si los sensores de un acceso distinguen la dirección.|
+|DeviceReplacementService|Domain Service|replace(current: Device, replacement: Device, now: Instant): Void|Exige que ambos sean del mismo tipo y que el reemplazo no tenga asociación. Da de baja el dispositivo actual, asocia el reemplazo al mismo destino y registra `DeviceReplaced` (US32, escenario 2). Es la única operación que modifica dos agregados en una transacción, porque el espacio no puede quedar sin sensor entre ambos pasos.|
+|LayoutPublicationService|Domain Service|publish(lot: ParkingLot, devices: `List<Device>`, now: Instant): LayoutSnapshot|Reúne las asociaciones vigentes de los dispositivos del estacionamiento y llama a `ParkingLot.publishLayout`.|
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|ParkingLotRepository|save(lot), findById(tenantId, parkingLotId), existsByName(tenantId, name), findByTenant(tenantId), findPublished()|Persistencia de `ParkingLot`.|
+|DeviceRepository|save(device), findById(tenantId, deviceId), findByHardwareId(hardwareId), findActiveByTarget(target), findByParkingLot(tenantId, parkingLotId)|Persistencia de `Device`.|
+|AcademicCalendarRepository|save(calendar), findByTenant(tenantId)|Persistencia de `AcademicCalendar`.|
+
+**Domain Events publicados (Published Language)**
+
+|Evento|Atributos|Consumidores|
+|-|-|-|
+|ParkingLayoutProvided|parkingLotId, tenantId, layoutVersion, zoneCapacities, placements, minimumDetectionSeconds, publishedAt|Parking Sensing (asociaciones y tiempo mínimo) y Occupancy (capacidad por zona).|
+|DeviceRegistered|deviceId, tenantId, parkingLotId, hardwareId, type, reportIntervalSeconds|Parking Sensing, que empieza a vigilar el intervalo de reporte.|
+|SensorAssigned|deviceId, tenantId, target, assignedAt|Parking Sensing.|
+|DeviceReplaced|previousDeviceId, replacementDeviceId, tenantId, target, replacedAt|Parking Sensing.|
+|DeviceDecommissioned|deviceId, tenantId, previousTarget, decommissionedAt|Parking Sensing, que deja de aceptar sus lecturas.|
+|CampusEventProvided|campusEventId, tenantId, parkingLotId, startAt, endAt, impact|Prediction & Advisory.|
+|CampusEventCancelled|campusEventId, tenantId, parkingLotId, startAt, endAt|Prediction & Advisory, que regenera los pronósticos de la franja.|
+
+`ParkingLayoutProvided` y `CampusEventProvided` son los nombres que fija la tabla de eventos de la sección 4.2.1. Ningún evento incluye etiquetas de espacios ni datos de personas.
+
+### Reglas de negocio
+
+1. Todo estacionamiento, dispositivo y calendario pertenece a una institución, y toda operación se hace dentro de la institución del usuario autenticado (CON-08).
+2. El nombre de un estacionamiento es único dentro de la institución (US16, escenario 3).
+3. La etiqueta de un espacio es única dentro de su zona (US17, escenario 3).
+4. Cada publicación del layout crea una nueva versión inmutable; la versión publicada no se modifica (US17, escenario 4).
+5. Un layout sin espacios no se publica.
+6. Un sensor se asocia a un solo espacio o acceso, y un espacio tiene a lo sumo un sensor activo (US18, escenario 2). Un acceso puede tener varios sensores de paso.
+7. Un acceso solo se habilita para el conteo de flujo si tiene al menos un sensor de paso y todos sus sensores distinguen la dirección (US19).
+8. Al reemplazar un dispositivo, el espacio conserva su identidad y su asociación pasa al nuevo dispositivo (US32, escenario 2).
+9. Un dispositivo dado de baja no se vuelve a asociar, y sus asociaciones anteriores se conservan en el historial (US18, escenario 3; US32, escenario 3).
+10. Las asociaciones y los reemplazos rigen de inmediato, sin esperar una nueva publicación; los cambios de zonas y espacios sí requieren publicar.
+11. Los periodos académicos de una institución no se superponen.
+12. Un evento cancelado no se vuelve a programar; para reprogramarlo se registra uno nuevo.
+13. Los parámetros de operación respetan los rangos de `OperatingSettings`.
+14. El contexto no calcula ocupación, disponibilidad ni pronósticos, y no recibe lecturas de sensores.
+
+### 5.2.2. Interface Layer
+
+La Interface Layer expone las capacidades del contexto a la consola web de operación, a la aplicación móvil y a los demás módulos. Recibe solicitudes, valida su forma, las transforma en Commands o Queries, delega en la Application Layer y representa el resultado. La capa de seguridad del backend (Spring Security, DD-08) valida el token antes de que la solicitud llegue al controlador: las operaciones de escritura exigen el rol de administrador (`PARKING_ADMIN`), y las consultas admiten también al operador (`PARKING_OPERATOR`) y, para la lista de estacionamientos y el layout, al conductor (`DRIVER`). `tenantId` se toma siempre del token, nunca de un parámetro.
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|ParkingLotController|`POST /api/v1/parking-lots`|201 con el estacionamiento creado; 400 si faltan datos; 409 si el nombre ya existe en la institución|US16|
+|ParkingLotController|`GET /api/v1/parking-lots`|200 con los estacionamientos de la institución, su estado y su versión de layout; lista vacía si no hay ninguno|US04|
+|ParkingLotController|`PUT /api/v1/parking-lots/{lotId}/settings`|200 con los parámetros actualizados; 400 si un valor está fuera de rango|US16 (ruta propuesta)|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/zones`|201 con la zona creada; 409 si el nombre se repite|US17, escenario 1|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/zones/{zoneId}/spaces`|201 con el espacio; 409 si la etiqueta ya existe en la zona|US17, escenarios 2 y 3|
+|LayoutController|`POST /api/v1/parking-lots/{lotId}/layout/publications`|201 con la nueva versión; 422 si el layout no tiene espacios|US17, escenario 4|
+|LayoutController|`GET /api/v1/parking-lots/{lotId}/layout`|200 con zonas, espacios, accesos y versión, con el encabezado `ETag`; 304 si la versión de la aplicación sigue vigente|US04, TS13|
+|AccessPointController|`POST /api/v1/parking-lots/{lotId}/access-points`|201 con el acceso registrado|US19, escenario 1|
+|AccessPointController|`PUT /api/v1/parking-lots/{lotId}/access-points/{accessPointId}/flow-counting`|200 con el acceso habilitado; 422 si sus sensores no distinguen la dirección|US19, escenarios 2 y 3|
+|DeviceInventoryController|`POST /api/v1/devices`|201 con el dispositivo registrado; 409 si el identificador técnico ya existe|US32, escenario 1|
+|DeviceInventoryController|`GET /api/v1/devices?parkingLotId={lotId}`|200 con el inventario y la asociación vigente de cada dispositivo|US32|
+|DeviceInventoryController|`PUT /api/v1/devices/{deviceId}/assignment`|200 con la asociación; 409 si el sensor o el espacio ya tienen una asociación vigente; 422 si el tipo no coincide con el destino|US18, escenarios 1 y 2|
+|DeviceInventoryController|`POST /api/v1/devices/{deviceId}/replacement`|200 con la asociación trasladada al dispositivo indicado en `replacementDeviceId`|US32, escenario 2|
+|DeviceInventoryController|`POST /api/v1/devices/{deviceId}/decommission`|200; el dispositivo deja de aceptar lecturas y su espacio queda sin sensor operativo|US18, escenario 3; US32, escenario 3|
+|AcademicCalendarController|`POST /api/v1/academic-calendar/periods`|201 con el periodo; 409 si se superpone con otro|US35, escenario 1|
+|AcademicCalendarController|`POST /api/v1/campus-events`|201 con el evento programado|US35, escenario 2|
+|AcademicCalendarController|`POST /api/v1/campus-events/{campusEventId}/cancellation`|200 con el evento cancelado; 409 si ya estaba cancelado|US35, escenario 3|
+|AcademicCalendarController|`GET /api/v1/campus-events?from={from}&to={to}`|200 con los eventos del intervalo|US35|
+
+Respuesta de `GET /api/v1/parking-lots/{lotId}/layout`:
+
+```json
+{
+  "lotId": "5b0e…",
+  "layoutVersion": 4,
+  "publishedAt": "2026-10-05T14:02:11Z",
+  "zones": [
+    { "zoneId": "a1f3…", "name": "Sótano 1", "capacity": 42,
+      "spaces": [ { "spaceId": "c7d2…", "label": "A01", "x": 12.5, "y": 4.0 } ] }
+  ],
+  "accessPoints": [ { "accessPointId": "e9b4…", "name": "Puerta Norte", "type": "ENTRY_EXIT", "flowCountingEnabled": true } ]
+}
+```
+
+La respuesta no incluye el estado de los espacios: el layout (Parking Configuration) y el estado (Occupancy) se entregan por separado, y la aplicación los superpone. Así, una actualización de estado no arrastra la geometría completa.
+
+**Open Host Service: ParkingConfigurationFacade**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ParkingConfigurationFacade|Facade (Open Host Service)|Punto de entrada en proceso para los demás módulos. Devuelve vistas de solo lectura y nunca expone los agregados.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Consumidor|Descripción|
+|-|-|-|-|-|
+|profileOf(tenantId: UUID, parkingLotId: UUID)|ParkingLotProfileView|Public|Prediction & Advisory, Analytics|Umbral de saturación, ventana de flujo y margen de precisión.|
+|activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory|Estacionamientos con layout publicado, con su institución.|
+|calendarEventsAround(tenantId: UUID, from: Instant, to: Instant)|`List<CalendarEventView>`|Public|Prediction & Advisory|Periodos académicos y eventos programados del intervalo.|
+|lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición|Estacionamientos para la pantalla de inicio y la consola.|
+|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición y Occupancy|Layout publicado vigente, con sus zonas, espacios, asociaciones y accesos. Occupancy lo lee al recibir `ParkingLayoutProvided`.|
+|resolveDevice(hardwareId: String)|DeviceDirectoryEntry?|Public|Parking Sensing|Dispositivo, institución, estacionamiento, estado, destino vigente y tiempo mínimo de detección. Responde vacío si el identificador no está registrado.|
+
+**Event Consumer**
+
+|Nombre|Categoría|Evento|Descripción|
+|-|-|-|-|
+|TenantProvisionedListener|Consumer (`@TransactionalEventListener`)|`TenantProvisioned` (IAM)|Envía `InitializeTenantConfigurationCommand` para crear el calendario de la institución nueva (TS15, QAS-08).|
+
+### 5.2.3. Application Layer
+
+La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son registrar y configurar estacionamientos, publicar el layout, gestionar el inventario de dispositivos, mantener el calendario y responder las consultas de los demás módulos.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|RegisterParkingLotCommand|tenantId, name, address, settings|RegisterParkingLotCommandHandler|ParkingLotRepository, ConfigurationEventPublisher|US16|
+|UpdateOperatingSettingsCommand|tenantId, parkingLotId, settings|UpdateOperatingSettingsCommandHandler|ParkingLotRepository|US16|
+|AddZoneCommand|tenantId, parkingLotId, name|AddZoneCommandHandler|ParkingLotRepository|US17|
+|AddSpaceCommand|tenantId, parkingLotId, zoneId, label, position|AddSpaceCommandHandler|ParkingLotRepository|US17|
+|PublishLayoutCommand|tenantId, parkingLotId|PublishLayoutCommandHandler|ParkingLotRepository, DeviceRepository, LayoutPublicationService, ConfigurationEventPublisher, Clock|US17|
+|ConfigureAccessPointCommand|tenantId, parkingLotId, name, type|ConfigureAccessPointCommandHandler|ParkingLotRepository|US19|
+|EnableFlowCountingCommand|tenantId, parkingLotId, accessPointId|EnableFlowCountingCommandHandler|ParkingLotRepository, DeviceRepository, DeviceAssignmentService|US19|
+|RegisterDeviceCommand|tenantId, parkingLotId, hardwareId, type, directional, reportIntervalSeconds|RegisterDeviceCommandHandler|DeviceRepository, ConfigurationEventPublisher, Clock|US32|
+|AssignDeviceCommand|tenantId, deviceId, target|AssignDeviceCommandHandler|DeviceRepository, ParkingLotRepository, DeviceAssignmentService, ConfigurationEventPublisher, Clock|US18|
+|ReplaceDeviceCommand|tenantId, deviceId, replacementDeviceId|ReplaceDeviceCommandHandler|DeviceRepository, DeviceReplacementService, ConfigurationEventPublisher, Clock|US32|
+|DecommissionDeviceCommand|tenantId, deviceId|DecommissionDeviceCommandHandler|DeviceRepository, ConfigurationEventPublisher, Clock|US18, US32|
+|RegisterAcademicPeriodCommand|tenantId, type, startDate, endDate|RegisterAcademicPeriodCommandHandler|AcademicCalendarRepository|US35|
+|RegisterCampusEventCommand|tenantId, parkingLotId, name, startAt, endAt, impact|RegisterCampusEventCommandHandler|AcademicCalendarRepository, ParkingLotRepository, ConfigurationEventPublisher|US35|
+|CancelCampusEventCommand|tenantId, campusEventId|CancelCampusEventCommandHandler|AcademicCalendarRepository, ConfigurationEventPublisher, Clock|US35|
+|InitializeTenantConfigurationCommand|tenantId|InitializeTenantConfigurationCommandHandler|AcademicCalendarRepository|TS15|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetParkingLotsQuery|tenantId|GetParkingLotsQueryHandler|`List<ParkingLotSummaryView>`|
+|GetLayoutQuery|tenantId, parkingLotId|GetLayoutQueryHandler|LayoutView (última versión publicada)|
+|GetDevicesQuery|tenantId, parkingLotId|GetDevicesQueryHandler|`List<DeviceView>`|
+|GetCampusEventsQuery|tenantId, from, to|GetCampusEventsQueryHandler|`List<CalendarEventView>`|
+|GetParkingLotProfileQuery|tenantId, parkingLotId|GetParkingLotProfileQueryHandler|ParkingLotProfileView|
+|ResolveDeviceQuery|hardwareId|ResolveDeviceQueryHandler|DeviceDirectoryEntry?|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|TenantProvisionedEventHandler|`TenantProvisioned` (IAM)|Ejecuta `InitializeTenantConfigurationCommand`. Es idempotente: si el calendario de la institución ya existe, no hace nada.|
+
+**Flujos de ejecución**
+
+`AssignDeviceCommandHandler`:
+
+1. Carga el dispositivo de la institución y verifica que el espacio o acceso de destino exista en uno de sus estacionamientos.
+2. Busca con `DeviceRepository.findActiveByTarget` si el destino ya tiene un sensor activo.
+3. Llama a `DeviceAssignmentService.assign`, que valida el tipo y la exclusividad; si falla, responde 409 o 422.
+4. Guarda el dispositivo y publica `SensorAssigned` después de confirmar la transacción.
+
+`ReplaceDeviceCommandHandler`:
+
+1. Carga el dispositivo actual y el de reemplazo, ambos de la misma institución.
+2. Llama a `DeviceReplacementService.replace` y guarda ambos en la misma transacción.
+3. Publica `DeviceReplaced`. Parking Sensing deja de aceptar lecturas del anterior y vigila al nuevo.
+
+`PublishLayoutCommandHandler`:
+
+1. Carga el estacionamiento y los dispositivos con asociación vigente.
+2. Llama a `LayoutPublicationService.publish`, que incrementa la versión y arma el `LayoutSnapshot`.
+3. Guarda el estacionamiento y la copia de la versión, y publica `ParkingLayoutProvided`.
+
+`CancelCampusEventCommandHandler`:
+
+1. Carga el calendario de la institución y cancela el evento.
+2. Guarda el calendario y publica `CampusEventCancelled` con la franja y el estacionamiento afectados.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|ParkingLotRepository, DeviceRepository, AcademicCalendarRepository|Puertos (Domain Layer)|Ver 5.2.1|Persistencia de los agregados.|
+|ConfigurationEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar asociaciones, publicaciones y cancelaciones.|
+
+### 5.2.4. Infrastructure Layer
+
+La Infrastructure Layer implementa los repositorios y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|ParkingLotRepositoryAdapter|Repository (implementación)|ParkingLotRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `parking_lots`, `parking_zones`, `parking_spaces` y `access_points`, y cada versión publicada en `layout_versions`.|
+|DeviceRepositoryAdapter|Repository (implementación)|DeviceRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `devices` y su historial en `device_assignments`. Los índices únicos parciales impiden dos asociaciones activas para el mismo sensor o el mismo espacio, aun con solicitudes simultáneas.|
+|AcademicCalendarRepositoryAdapter|Repository (implementación)|AcademicCalendarRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `academic_calendars`, `academic_periods` y `campus_events`.|
+|ConfigurationEventPublisherAdapter|Adapter (eventos)|ConfigurationEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio. Los consumidores los reciben con `@TransactionalEventListener` después de confirmar la transacción.|
+|TenantFilterConfiguration|Configuración transversal|—|Filtro de Hibernate|Aplica `tenant_id` del token a toda consulta del esquema (CON-08, DD-09).|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `configuration`. Los demás módulos leen sus datos mediante `ParkingConfigurationFacade` o sus eventos, nunca sus tablas.|
+|Versionado del layout|Cada versión se guarda como JSONB inmutable en `layout_versions`. `GET …/layout` usa la versión como `ETag`, de modo que la aplicación lo descarga solo cuando cambia.|
+|Concurrencia|Las reglas de exclusividad de la asociación se refuerzan con índices únicos parciales en la base de datos, además de la validación del dominio.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas y se toma siempre del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `configuration` de PostgreSQL, según DD-01.|
+
+### 5.2.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Parking Configuration dentro del contenedor Quadrapp Backend, organizado por capas. Como colaboradores aparecen la consola web de operación, la capa de seguridad, el módulo de composición, el publicador de eventos de IAM, los adaptadores de Prediction & Advisory y Parking Sensing que consultan la fachada, los consumidores de sus eventos y la base de datos. Las consultas entre módulos se hacen en proceso, a través de la fachada, y los cambios se comunican con eventos de aplicación de Spring.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Registra y publica la estructura de los estacionamientos, el inventario de dispositivos y el calendario. |
+| Base de datos | PostgreSQL (esquema `configuration`) | Almacena estacionamientos, zonas, espacios, accesos, versiones del layout, dispositivos, asociaciones y calendario. |
+
+#### Componentes del módulo Parking Configuration
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Parking Lot & Layout Controllers | Interface | Estacionamientos, parámetros, zonas, espacios, accesos y publicación del layout. | Spring MVC `@RestController` | ParkingLotController, LayoutController, AccessPointController |
+| Device Inventory Controller | Interface | Registro, asociación, reemplazo y baja de dispositivos. | Spring MVC `@RestController` | DeviceInventoryController |
+| Academic Calendar Controller | Interface | Periodos académicos y eventos del campus. | Spring MVC `@RestController` | AcademicCalendarController |
+| Parking Configuration Facade | Interface | Open Host Service en proceso. | Spring bean | ParkingConfigurationFacade y las vistas `*View` |
+| Tenant Provisioned Listener | Interface | Recibe `TenantProvisioned`. | `@TransactionalEventListener` | TenantProvisionedListener |
+| Configuration Command Handlers | Application | Casos de uso de escritura y el manejador de `TenantProvisioned`. | Spring `@Service` | Commands, Command Handlers y TenantProvisionedEventHandler |
+| Configuration Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
+| Configuration Aggregates | Domain | Mantienen las invariantes de cada agregado. | Java (dominio puro) | ParkingLot, Device, AcademicCalendar, sus entidades, Value Objects y enumeraciones |
+| Configuration Domain Services | Domain | Reglas que involucran a más de un agregado. | Java (dominio puro) | DeviceAssignmentService, DeviceReplacementService, LayoutPublicationService |
+| Configuration Repositories | Infrastructure | Persistencia filtrada por institución. | Spring Data JPA | ParkingLotRepositoryAdapter, DeviceRepositoryAdapter, AcademicCalendarRepositoryAdapter |
+| Configuration Event Publisher | Infrastructure | Publica los eventos tras confirmar la transacción. | Eventos de aplicación de Spring | ConfigurationEventPublisherAdapter |
+
+Parking Configuration Component Level Diagram: **ParkingConfigurationComponentLevelDiagram**
+![Parking Configuration Component Level Diagram](./assets/capitulo-05/ParkingConfigurationComponentLevelDiagram.png)
+
+### 5.2.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.2.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los tres agregados con sus entidades, Value Objects y enumeraciones, los Domain Services, las interfaces de los repositorios y los eventos que publica el contexto. Las composiciones indican qué objetos viven dentro de cada agregado; las dependencias punteadas, qué eventos registra cada uno y qué agregados usan los servicios.
+
+![Parking Configuration Domain Layer Class Diagram](./assets/capitulo-05/ParkingConfigurationDomainLayerClassDiagram.png)
+
+#### 5.2.7.2. Bounded Context Database Design Diagram
+
+El esquema `configuration` de PostgreSQL contiene una tabla por agregado raíz y por cada colección interna. Las claves foráneas unen solo tablas del mismo esquema; `tenant_id` es una referencia lógica a IAM, sin clave foránea (CON-02). Los índices únicos parciales de `device_assignments` aseguran que un sensor y un espacio tengan como máximo una asociación activa, y la restricción de exclusión de `academic_periods` impide superponer periodos.
+
+![Parking Configuration Database Design Diagram](./assets/capitulo-05/ParkingConfigurationDatabaseDesignDiagram.png)
+
+---
+
 ## 5.3. Bounded Context: Parking Sensing
 
+El Bounded Context Parking Sensing es responsable de **traducir la telemetría de los sensores de cochera y de paso en detecciones confiables**. Es la frontera entre el mundo técnico del IoT (lectura, identificador técnico, batería, señal, intervalo de reporte) y el lenguaje del negocio que usa Occupancy. Por eso cumple el rol de gateway context y actúa como capa anticorrupción del sistema.
+
+Su propósito es recibir las lecturas que el gateway del campus publica en el broker MQTT, descartar las duplicadas o fuera de orden, confirmar cada cambio de estado tras el tiempo mínimo de detección y vigilar la salud de cada dispositivo. Entrega a Occupancy solo las detecciones confirmadas, los pasos de vehículos y las fallas. No conoce el estado de negocio del espacio (libre, ocupado o desconocido), que pertenece a Occupancy, ni las etiquetas visibles de los espacios, que pertenecen a Parking Configuration.
+
+Este Bounded Context soporta principalmente:
+
+- TS04 — Consumir y validar los mensajes que el gateway publica en el broker.
+- TS05 — Recibir con QoS 1 y sesión persistente, sin perder los mensajes publicados durante una desconexión.
+- TS06 — Descartar lecturas duplicadas o fuera de orden y confirmar los cambios tras el tiempo mínimo.
+- TS10 y US20 — Vigilar la salud de los dispositivos, detectar fallas y registrar su recuperación.
+- US05 y US07 — Aportar las detecciones confirmadas con las que Occupancy actualiza la disponibilidad.
+
+Las principales responsabilidades del Bounded Context Parking Sensing son:
+
+- Suscribirse al broker MQTT y confirmar cada mensaje solo después de procesarlo y guardarlo.
+- Validar el formato de cada mensaje y apartar los inválidos en un registro de mensajes rechazados.
+- Resolver el dispositivo mediante la fachada de Parking Configuration y registrar una incidencia si no está registrado o no tiene espacio asociado.
+- Aplicar cada lectura una sola vez (por `eventId`) y en orden (por la marca de tiempo del dispositivo).
+- Confirmar el cambio de estado de un espacio cuando se mantiene el tiempo mínimo de detección, y descartar los cambios breves.
+- Publicar los pasos de vehículos con su dirección.
+- Detectar los dispositivos sin reporte dentro de su intervalo o con batería crítica, marcarlos para mantenimiento y detectar su recuperación.
+- Distinguir la falla de un sensor de la desconexión de su gateway.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Parking Sensing.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| SensorFeed | Domain | Aggregate Root. Flujo de lecturas de un sensor de cochera o de paso. | deviceId, tenantId, parkingLotId, hardwareId, kind, targetId, confirmedState, pending, lastReadingAt, minimumDetection, active | open(), accept(), confirmIfStable(), recordPassage(), retarget(), resetConfirmation(), deactivate() |
+| DeviceHealth | Domain | Aggregate Root. Salud de un dispositivo: último reporte, batería, señal y falla. | deviceId, tenantId, parkingLotId, deviceType, targetId, reportInterval, lastSeenAt, battery, signal, lastGatewayId, status, faultReason, maintenanceRequired | monitor(), recordReport(), isOverdue(), markFault(), retarget(), retire() |
+| GatewayLink | Domain | Aggregate Root. Conexión de un gateway del campus con el broker. | gatewayId, tenantId, parkingLotId, hardwareId, status, connectedSince, disconnectedAt, lastReplay | register(), connect(), disconnect(), registerReplay(), isOffline() |
+| SensorReading | Domain | Value Object. Lectura normalizada por la capa anticorrupción. | eventId, hardwareId, kind, state, direction, readingAt, battery, signal, gatewayHardwareId | isOlderThan() |
+| PendingDetection | Domain | Value Object. Cambio de estado que aún no cumple el tiempo mínimo. | state, since | isStableAt() |
+| MinimumDetectionTime, ReportInterval, BatteryLevel, SignalStrength, HealthPolicy, ReplaySummary | Domain | Value Objects con su validación propia. | valor o rango | hasElapsed(), deadlineAfter(), isCriticalBelow() |
+| FeedKind, ReadingKind, DetectionState, PassDirection, ReadingOutcome, MonitoredDeviceType, HealthStatus, FaultReason, LinkStatus | Domain | Enumeraciones del contexto. | — | — |
+| HealthEvaluationService | Domain | Domain Service. Decide el motivo de una falla considerando el estado del gateway. | — | evaluateOverdue() |
+| SensorFeedRepository, DeviceHealthRepository, GatewayLinkRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findByDeviceId(), findOverdue() |
+| SensorStateChanged, VehiclePassageDetected, DeviceFaultDetected, SensorCommunicationRestored, DeviceFlaggedForMaintenance, BufferedReadingsReceived | Domain | Domain Events publicados (Published Language). | Ver 5.3.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de procesamiento y vigilancia. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Consultas de salud e incidencias. | Dependencies | handle() |
+| Device*EventHandler | Application | Event Handlers de los cambios del inventario. | Dependencies | handle() |
+| DeviceDirectory, ReadingDeduplicationStore, IncidentLog, RejectedReadingStore, SensingEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.3.3 |
+| MqttInboundListener | Interface | Consumer MQTT de lecturas y estado de gateways. | Command Handler dependencies | onReading(), onGatewayStatus() |
+| DeviceHealthController | Interface | Controller REST de salud e incidencias. | Query Handler dependencies | getHealth(), getIncidents() |
+| ParkingSensingFacade | Interface | Open Host Service en proceso para el módulo de composición. | Query Handler dependency | healthSummaryOf() |
+| SensingSchedulers | Interface | Procesos programados de confirmación y vigilancia. | Command Handler dependencies | confirmPendingDetections(), detectOverdueDevices() |
+| ConfigurationEventListener | Interface | Consumer de los eventos de Parking Configuration. | Event Handler dependencies | on() |
+| SensorReadingTranslator | Infrastructure | Capa anticorrupción: traduce el JSON del gateway a `SensorReading`. | Validator | translate() |
+| *RepositoryAdapter, JdbcReadingDeduplicationStore, JpaIncidentLog, JpaRejectedReadingStore | Infrastructure | Persistencia en el esquema `sensing`. | Persistence dependency | save(), find…(), markProcessed() |
+| DeviceDirectoryAdapter | Infrastructure | Implementa `DeviceDirectory` sobre la fachada de Parking Configuration, con caché. | Facade dependency | resolve(), evict() |
+| SensingEventPublisherAdapter | Infrastructure | Publica los eventos de dominio tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.3.1. Domain Layer
+
+La Domain Layer contiene las reglas que convierten lecturas en detecciones y reportes en estados de salud. No depende de MQTT, de JSON, de la base de datos ni de Spring. Los tres agregados salen del paso 9 del EventStorming (sección 4.2.1): `SensorFeed`, `DeviceHealth` y `GatewayLink`. Se separaron porque cada uno avanza con un estímulo distinto: las lecturas de un sensor, el paso del tiempo frente a su intervalo de reporte y la conexión del gateway.
+
+**Aggregate 1: SensorFeed**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|SensorFeed|Aggregate Root|Flujo de lecturas de un sensor. En un sensor de cochera, confirma los cambios de estado que se mantienen el tiempo mínimo; en un sensor de paso, registra cada paso con su dirección. Su identidad es el `deviceId` del dispositivo.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador del dispositivo (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución a la que pertenece el sensor (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|hardwareId|String|Private|Identificador técnico que informa el sensor.|
+|kind|FeedKind|Private|SPACE para un sensor de cochera; PASS para un sensor de paso.|
+|targetId|UUID|Private|Espacio o acceso asociado, como identificador opaco. El contexto no conoce su etiqueta.|
+|confirmedState|DetectionState?|Private|Último estado confirmado; vacío hasta la primera confirmación o tras una recuperación.|
+|pending|PendingDetection?|Private|Cambio en espera de cumplir el tiempo mínimo.|
+|lastReadingAt|Instant|Private|Marca de tiempo del dispositivo de la última lectura aplicada.|
+|minimumDetection|MinimumDetectionTime|Private|Tiempo mínimo de detección del estacionamiento, recibido en `ParkingLayoutProvided`.|
+|active|Boolean|Private|Falso cuando el dispositivo fue dado de baja o reemplazado.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|open(deviceId, tenantId, parkingLotId, hardwareId, kind, targetId, minimumDetection)|SensorFeed|Public (static)|Crea el flujo con la primera lectura de un dispositivo asociado.|
+|accept(reading: SensorReading)|ReadingOutcome|Public|Descarta una lectura anterior a `lastReadingAt` (OUT_OF_ORDER, TS06, escenario 2). Si el estado coincide con el confirmado, descarta el cambio pendiente (BRIEF_CHANGE_DISCARDED) o no hace nada (UNCHANGED). Si difiere, abre o mantiene el cambio pendiente (PENDING); si ese cambio ya cumplió el tiempo mínimo según las marcas del dispositivo, lo confirma (CONFIRMED).|
+|confirmIfStable(now: Instant)|Boolean|Public|Confirma el cambio pendiente cuando cumplió el tiempo mínimo sin una lectura contraria y registra `SensorStateChanged` (TS06, escenarios 3 y 4).|
+|recordPassage(reading: SensorReading)|ReadingOutcome|Public|En un sensor de paso, aplica el orden y registra `VehiclePassageDetected` con la dirección (PASSAGE_RECORDED).|
+|retarget(targetId: UUID, minimumDetection: MinimumDetectionTime)|Void|Public|Actualiza el destino o el tiempo mínimo cuando cambian el layout o la asociación.|
+|resetConfirmation()|Void|Public|Vacía el estado confirmado para que la siguiente detección estable se informe aunque repita el estado anterior (US20, escenario 4).|
+|deactivate()|Void|Public|Deja de aceptar lecturas del dispositivo (US32, escenario 3).|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado SensorFeed**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|SensorReading|Value Object|eventId: UUID, hardwareId: String, kind: ReadingKind, state: DetectionState?, direction: PassDirection?, readingAt: Instant, battery: BatteryLevel?, signal: SignalStrength?, gatewayHardwareId: String|Lectura ya validada y traducida por la capa anticorrupción. Una lectura SPACE trae estado; una PASS trae dirección; una HEARTBEAT solo trae batería y señal.|
+|PendingDetection|Value Object|state: DetectionState, since: Instant|Cambio en espera. `isStableAt(now, minimum)` indica si cumplió el tiempo mínimo.|
+|MinimumDetectionTime|Value Object|seconds: Integer|Entre 3 y 60 segundos. `hasElapsed(from, to)` compara dos instantes.|
+|FeedKind|Enumeration|SPACE, PASS|Tipo de flujo.|
+|ReadingKind|Enumeration|SPACE, PASS, HEARTBEAT|Tipo de lectura.|
+|DetectionState|Enumeration|FREE, OCCUPIED|Presencia detectada. No incluye UNKNOWN: ese estado es de negocio y lo decide Occupancy.|
+|PassDirection|Enumeration|IN, OUT|Dirección del paso.|
+|ReadingOutcome|Enumeration|PENDING, CONFIRMED, UNCHANGED, BRIEF_CHANGE_DISCARDED, OUT_OF_ORDER, PASSAGE_RECORDED|Resultado de aplicar una lectura.|
+
+**Aggregate 2: DeviceHealth**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeviceHealth|Aggregate Root|Salud de un dispositivo registrado. Se crea al recibir `DeviceRegistered`, de modo que también falla un dispositivo que nunca llegó a reportar.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|UUID|Private|Identificador del dispositivo.|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento donde está instalado.|
+|deviceType|MonitoredDeviceType|Private|SPACE_SENSOR, PASS_SENSOR o GATEWAY.|
+|targetId|UUID?|Private|Espacio o acceso asociado, que se informa en las fallas.|
+|reportInterval|ReportInterval|Private|Intervalo de reporte esperado, recibido en `DeviceRegistered`.|
+|lastSeenAt|Instant?|Private|Último reporte recibido (lectura o heartbeat).|
+|battery|BatteryLevel?|Private|Último nivel de batería informado.|
+|signal|SignalStrength?|Private|Última intensidad de señal informada.|
+|lastGatewayId|UUID?|Private|Gateway por el que llegó el último reporte.|
+|status|HealthStatus|Private|OPERATIONAL, FAULT o RETIRED.|
+|faultReason|FaultReason?|Private|Motivo de la falla vigente.|
+|faultDetectedAt|Instant?|Private|Momento en que se detectó la falla.|
+|maintenanceRequired|Boolean|Private|Indica si el dispositivo quedó marcado para mantenimiento.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|monitor(deviceId, tenantId, parkingLotId, deviceType, reportInterval, now)|DeviceHealth|Public (static)|Empieza a vigilar un dispositivo; el plazo del primer reporte corre desde el registro.|
+|recordReport(at, battery, signal, gatewayId, policy)|Void|Public|Registra la última comunicación (US20, escenario 1). Con batería bajo el umbral, marca la falla CRITICAL_BATTERY (TS10, escenario 3). Si estaba en falla y la batería es válida, vuelve a OPERATIONAL y registra `SensorCommunicationRestored` (US20, escenario 3).|
+|isOverdue(now: Instant)|Boolean|Public|Indica si venció el intervalo de reporte desde el último reporte.|
+|markFault(reason: FaultReason, now: Instant)|Void|Public|Pasa a FAULT y registra `DeviceFaultDetected`. Con NO_REPORT o CRITICAL_BATTERY, además marca el dispositivo para mantenimiento y registra `DeviceFlaggedForMaintenance`.|
+|retarget(targetId: UUID)|Void|Public|Actualiza el destino informado en las fallas.|
+|retire(now: Instant)|Void|Public|Pasa a RETIRED y registra `DeviceFaultDetected` con el motivo DECOMMISSIONED, para que el espacio deje de contar con ese sensor.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado DeviceHealth**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ReportInterval|Value Object|seconds: Integer|`deadlineAfter(lastSeenAt)` devuelve el instante en que vence el reporte.|
+|BatteryLevel|Value Object|percent: Integer|Entre 0 y 100. `isCriticalBelow(thresholdPct)` compara con el umbral.|
+|SignalStrength|Value Object|rssiDbm: Integer|Intensidad de la señal en dBm; se muestra en la consola y no decide fallas.|
+|HealthPolicy|Value Object|criticalBatteryPct: Integer, checkPeriodSeconds: Integer|Umbral de batería crítica (15 % por defecto) y frecuencia de revisión (30 s), que permite detectar la falla en 1 min o menos (QAS-05).|
+|MonitoredDeviceType|Enumeration|SPACE_SENSOR, PASS_SENSOR, GATEWAY|Tipo de dispositivo vigilado.|
+|HealthStatus|Enumeration|OPERATIONAL, FAULT, RETIRED|Estado de salud.|
+|FaultReason|Enumeration|NO_REPORT, CRITICAL_BATTERY, GATEWAY_OFFLINE, DECOMMISSIONED|Motivo de la falla.|
+
+**Aggregate 3: GatewayLink**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|GatewayLink|Aggregate Root|Conexión de un gateway del campus con el broker. Permite distinguir un sensor dañado de un sensor que no reporta porque su gateway perdió la conexión.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|gatewayId|UUID|Private|Identificador del gateway (dispositivo de tipo GATEWAY).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento al que atiende.|
+|hardwareId|String|Private|Identificador técnico del gateway.|
+|status|LinkStatus|Private|CONNECTED o DISCONNECTED.|
+|connectedSince|Instant?|Private|Inicio de la conexión vigente.|
+|disconnectedAt|Instant?|Private|Momento de la última desconexión.|
+|lastReplay|ReplaySummary?|Private|Resumen del último reenvío de lecturas retenidas.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|register(gatewayId, tenantId, parkingLotId, hardwareId)|GatewayLink|Public (static)|Crea el enlace al recibir `DeviceRegistered` de un gateway.|
+|connect(at: Instant)|Void|Public|Pasa a CONNECTED.|
+|disconnect(at: Instant)|Void|Public|Pasa a DISCONNECTED; se dispara con el mensaje de última voluntad (Last Will) que el broker publica cuando el gateway se desconecta.|
+|registerReplay(summary: ReplaySummary)|Void|Public|Registra el reenvío de lecturas retenidas y `BufferedReadingsReceived` (QAS-03).|
+|isOffline()|Boolean|Public|Indica si el gateway está desconectado.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Value Objects y enumeraciones del agregado GatewayLink**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ReplaySummary|Value Object|readingCount: Integer, oldestReadingAt: Instant, receivedAt: Instant|Cantidad y antigüedad de las lecturas retenidas que reenvió el gateway.|
+|LinkStatus|Enumeration|CONNECTED, DISCONNECTED|Estado de la conexión.|
+
+**Domain Services**
+
+|Nombre|Categoría|Métodos|Descripción|
+|-|-|-|-|
+|HealthEvaluationService|Domain Service|evaluateOverdue(health: DeviceHealth, gateway: GatewayLink?, now: Instant): FaultReason?|Si el dispositivo venció su intervalo y su último gateway está desconectado, devuelve GATEWAY_OFFLINE: el espacio pasa a desconocido, pero el sensor no se marca para mantenimiento. Si el gateway está conectado, devuelve NO_REPORT. Si el intervalo no venció, no devuelve nada.|
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|SensorFeedRepository|save(feed), findByDeviceId(deviceId), findPendingConfirmation()|Persistencia de `SensorFeed`.|
+|DeviceHealthRepository|save(health), findByDeviceId(deviceId), findOverdue(now), findByParkingLot(tenantId, parkingLotId)|Persistencia de `DeviceHealth`.|
+|GatewayLinkRepository|save(link), findById(gatewayId), findByHardwareId(hardwareId)|Persistencia de `GatewayLink`.|
+
+**Domain Events publicados (Published Language)**
+
+|Evento|Atributos|Consumidor|
+|-|-|-|
+|SensorStateChanged|eventId, deviceId, tenantId, parkingLotId, spaceId, state (FREE u OCCUPIED), detectedAt|Occupancy, que actualiza el estado del espacio.|
+|VehiclePassageDetected|eventId, deviceId, tenantId, parkingLotId, accessPointId, direction (IN u OUT), detectedAt|Occupancy, que registra el ingreso o la salida.|
+|DeviceFaultDetected|deviceId, tenantId, parkingLotId, targetId, reason, detectedAt|Occupancy, que marca el espacio como desconocido (UNKNOWN).|
+|SensorCommunicationRestored|deviceId, tenantId, parkingLotId, targetId, restoredAt|Occupancy y la consola. El espacio deja de ser desconocido con la siguiente `SensorStateChanged`, no con este evento.|
+|DeviceFlaggedForMaintenance|deviceId, tenantId, parkingLotId, reason, flaggedAt|Consola de operación, mediante la fachada.|
+|BufferedReadingsReceived|gatewayId, tenantId, parkingLotId, readingCount, oldestReadingAt|Consola de operación, mediante la fachada.|
+
+`SensorStateChanged` y `DeviceFaultDetected` son los nombres que fija la tabla de eventos de la sección 4.2.1 para "Detección confirmada" y "Falla de sensor detectada". `SensorStateChanged` conserva el `eventId` de la lectura que confirmó el cambio, de modo que Occupancy también puede descartar duplicados.
+
+### Reglas de negocio
+
+1. Solo se procesan lecturas de dispositivos registrados y no dados de baja; las demás se descartan y generan una incidencia (TS04, escenario 3; US32, escenario 3).
+2. Una lectura de un sensor sin espacio ni acceso asociado no genera eventos de dominio y registra una incidencia de mapeo (TS04, escenario 4).
+3. Un mensaje con formato inválido se aparta en el registro de rechazados y no genera eventos (TS04, escenario 2).
+4. Cada lectura se aplica una sola vez según su `eventId` (TS06, escenario 1).
+5. Una lectura con marca de tiempo anterior a la última aplicada del mismo sensor se descarta (TS06, escenario 2).
+6. Un cambio de estado se confirma solo si se mantiene durante el tiempo mínimo de detección; un cambio más breve se descarta sin emitir eventos (TS06, escenarios 3 y 4).
+7. El contexto informa presencia y dirección, nunca la identidad del vehículo ni de su conductor (CON-16).
+8. Un dispositivo sin reporte dentro de su intervalo o con batería bajo el umbral pasa a falla y se marca para mantenimiento (TS10, QAS-05).
+9. Si el dispositivo no reporta porque su gateway está desconectado, se informa GATEWAY_OFFLINE y no se marca para mantenimiento.
+10. Un dispositivo en falla se recupera con un reporte válido; el espacio deja de ser desconocido solo con la siguiente detección estable (US20, escenarios 3 y 4).
+11. Las lecturas que el gateway retuvo durante una desconexión se procesan con las mismas reglas de orden y duplicidad (QAS-03).
+12. El contexto no calcula ocupación ni disponibilidad, y no decide el estado UNKNOWN de un espacio.
+
+### 5.3.2. Interface Layer
+
+La Interface Layer recibe las lecturas del broker MQTT, atiende las consultas de la consola, dispara los procesos programados y escucha los cambios del inventario. Valida la forma de cada entrada, la transforma en Commands o Queries y delega en la Application Layer. No contiene reglas de negocio.
+
+**Consumer 1: MqttInboundListener**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|MqttInboundListener|Consumer (MQTT)|Recibe las lecturas y el estado de los gateways. Confirma cada mensaje al broker solo después de que su transacción se guardó, por lo que un fallo provoca la reentrega y no la pérdida (TS05).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|translator|SensorReadingTranslator|Private|Capa anticorrupción que valida y traduce el mensaje.|
+|commandHandlers|Sensing Command Handlers|Private|Casos de uso de procesamiento.|
+|rejectedStore|RejectedReadingStore|Private|Registro de mensajes inválidos.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|onReading(topic: String, payload: Bytes)|Void|Public|Tópico `quadrapp/{tenantId}/{gatewayId}/readings`. Traduce el mensaje y envía `ProcessSensorReadingCommand`, `RecordVehiclePassageCommand` o `RecordHeartbeatCommand` según su tipo; si es inválido, lo guarda como rechazado y lo confirma.|
+|onGatewayStatus(topic: String, payload: Bytes)|Void|Public|Tópico `quadrapp/{tenantId}/{gatewayId}/status`. Envía `UpdateGatewayLinkCommand` con la conexión, la desconexión (Last Will) o el resumen del reenvío.|
+
+Mensaje de lectura que publica el gateway:
+
+```json
+{
+  "eventId": "8f0d5c0e-3b1a-4d7e-9a35-2f8b1c7e4a10",
+  "sensorId": "sensor-0342",
+  "kind": "SPACE",
+  "state": "OCCUPIED",
+  "ts": "2026-10-09T13:05:12.200Z",
+  "battery": 82,
+  "rssi": -71
+}
+```
+
+El mensaje no contiene etiquetas de espacios ni datos de vehículos (CON-15, CON-16). El `tenantId` del tópico es confiable porque el broker solo permite a cada gateway publicar bajo su propio prefijo; aun así, si no coincide con la institución del dispositivo, el mensaje se descarta con una incidencia TENANT_MISMATCH (CON-08).
+
+**Controller 1: DeviceHealthController**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|DeviceHealthController|`GET /api/v1/devices/health?parkingLotId={lotId}`|200 con el estado, el nivel de batería, la señal, la última comunicación, el motivo de falla y la marca de mantenimiento de cada dispositivo|TS10, escenario 1; US20|
+|DeviceHealthController|`GET /api/v1/sensing/incidents?parkingLotId={lotId}`|200 con las incidencias abiertas (dispositivo desconocido, sensor sin asociación o institución inconsistente)|TS04 (ruta propuesta)|
+
+Ambas rutas exigen el rol `PARKING_ADMIN` o `PARKING_OPERATOR`. `tenantId` se toma del token.
+
+**Open Host Service: ParkingSensingFacade**
+
+|Nombre|Tipo de retorno|Consumidor|Descripción|
+|-|-|-|-|
+|healthSummaryOf(tenantId: UUID, parkingLotId: UUID)|DeviceHealthSummaryView|Módulo de composición (`GET /console/overview`, TS17)|Cantidad de dispositivos operativos, en falla y marcados para mantenimiento, y gateways desconectados.|
+
+**Procesos programados: SensingSchedulers**
+
+|Método|Frecuencia|Command|Descripción|
+|-|-|-|-|
+|confirmPendingDetections()|Cada 1 s|ConfirmPendingDetectionsCommand|Confirma los cambios pendientes que cumplieron el tiempo mínimo sin una lectura contraria.|
+|detectOverdueDevices()|Cada 30 s|DetectOverdueDevicesCommand|Revisa los intervalos de reporte vencidos (QAS-05).|
+
+En el despliegue con varias réplicas, cada proceso se ejecuta en una sola réplica a la vez, con un bloqueo en la base de datos (ShedLock).
+
+**Event Consumer: ConfigurationEventListener**
+
+|Evento recibido (Parking Configuration)|Event Handler|
+|-|-|
+|DeviceRegistered|DeviceRegisteredEventHandler|
+|SensorAssigned, DeviceReplaced, ParkingLayoutProvided|DeviceAssignmentChangedEventHandler|
+|DeviceDecommissioned|DeviceDecommissionedEventHandler|
+
+### 5.3.3. Application Layer
+
+La Application Layer coordina el procesamiento de lecturas, la vigilancia de la salud y la reacción a los cambios del inventario. No contiene reglas de negocio: las aplica a través de los agregados y del Domain Service. Sus capacidades son ingerir lecturas sin pérdidas ni duplicados, confirmar detecciones, vigilar dispositivos y gateways, y responder las consultas de salud.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|ProcessSensorReadingCommand|tenantId, reading: SensorReading|ProcessSensorReadingCommandHandler|ReadingDeduplicationStore, DeviceDirectory, SensorFeedRepository, DeviceHealthRepository, IncidentLog, SensingEventPublisher, Clock|TS04, TS06|
+|RecordVehiclePassageCommand|tenantId, reading: SensorReading|RecordVehiclePassageCommandHandler|ReadingDeduplicationStore, DeviceDirectory, SensorFeedRepository, DeviceHealthRepository, IncidentLog, SensingEventPublisher|TS04, TS14|
+|RecordHeartbeatCommand|tenantId, reading: SensorReading|RecordHeartbeatCommandHandler|ReadingDeduplicationStore, DeviceDirectory, DeviceHealthRepository, SensingEventPublisher, Clock|US20, TS10|
+|ConfirmPendingDetectionsCommand|now|ConfirmPendingDetectionsCommandHandler|SensorFeedRepository, SensingEventPublisher, Clock|TS06|
+|DetectOverdueDevicesCommand|now|DetectOverdueDevicesCommandHandler|DeviceHealthRepository, GatewayLinkRepository, HealthEvaluationService, SensingEventPublisher, Clock|TS10, QAS-05|
+|UpdateGatewayLinkCommand|gatewayHardwareId, status, replaySummary|UpdateGatewayLinkCommandHandler|GatewayLinkRepository, SensingEventPublisher, Clock|TS05, QAS-03|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetDeviceHealthQuery|tenantId, parkingLotId|GetDeviceHealthQueryHandler|`List<DeviceHealthView>`|
+|GetSensingIncidentsQuery|tenantId, parkingLotId|GetSensingIncidentsQueryHandler|`List<SensingIncidentView>`|
+|GetDeviceHealthSummaryQuery|tenantId, parkingLotId|GetDeviceHealthSummaryQueryHandler|DeviceHealthSummaryView|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|DeviceRegisteredEventHandler|DeviceRegistered|Crea el `DeviceHealth` con el intervalo de reporte y, si es un gateway, su `GatewayLink`.|
+|DeviceAssignmentChangedEventHandler|SensorAssigned, DeviceReplaced, ParkingLayoutProvided|Invalida la caché del directorio y actualiza el destino y el tiempo mínimo de los `SensorFeed` y `DeviceHealth` afectados. Con `DeviceReplaced`, desactiva el flujo del dispositivo anterior y retira su salud.|
+|DeviceDecommissionedEventHandler|DeviceDecommissioned|Desactiva el `SensorFeed`, retira el `DeviceHealth` (que publica `DeviceFaultDetected` con DECOMMISSIONED) e invalida la caché.|
+
+**Flujos de ejecución**
+
+`ProcessSensorReadingCommandHandler`:
+
+1. Registra el `eventId` en `ReadingDeduplicationStore`; si ya existía, descarta la lectura (TS06, escenario 1).
+2. Resuelve el dispositivo con `DeviceDirectory`. Si no existe o fue dado de baja, registra la incidencia y termina (TS04, escenario 3). Si no tiene destino, registra la incidencia de mapeo y termina (TS04, escenario 4).
+3. Carga o abre el `SensorFeed` y aplica `accept`. Si la lectura está fuera de orden, termina (TS06, escenario 2).
+4. Registra el reporte en `DeviceHealth`, lo que puede publicar `SensorCommunicationRestored` y reiniciar la confirmación del flujo.
+5. Guarda todo en una transacción. Los eventos (`SensorStateChanged` si hubo confirmación) se publican al confirmarla, y recién entonces el listener confirma el mensaje al broker.
+
+`DetectOverdueDevicesCommandHandler`:
+
+1. Obtiene los dispositivos operativos cuyo intervalo de reporte venció.
+2. Para cada uno, carga el `GatewayLink` de su último gateway y obtiene el motivo con `HealthEvaluationService.evaluateOverdue`.
+3. Marca la falla, guarda y publica `DeviceFaultDetected` y, si corresponde, `DeviceFlaggedForMaintenance`. Con una revisión cada 30 s, la falla se informa en 1 min o menos (QAS-05).
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|SensorFeedRepository, DeviceHealthRepository, GatewayLinkRepository|Puertos (Domain Layer)|Ver 5.3.1|Persistencia de los agregados.|
+|DeviceDirectory|Puerto hacia Parking Configuration|resolve(hardwareId): DeviceDirectoryEntry?; evict(hardwareId)|Obtiene el dispositivo, su institución, su destino vigente y el tiempo mínimo de detección.|
+|ReadingDeduplicationStore|Puerto de persistencia|markProcessed(eventId, hardwareId): Boolean|Devuelve falso si el `eventId` ya se había procesado.|
+|IncidentLog|Puerto de persistencia|record(tenantId, hardwareId, type, detail)|Registra incidencias de sensado.|
+|RejectedReadingStore|Puerto de persistencia|store(topic, payload, reason)|Guarda los mensajes inválidos.|
+|SensingEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable.|
+
+### 5.3.4. Infrastructure Layer
+
+La Infrastructure Layer contiene la conexión con el broker, la traducción de los mensajes, la persistencia y la integración con Parking Configuration.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|MqttInboundConfiguration|Configuración de mensajería|—|Spring Integration MQTT, cliente MQTT v5|Conexión TLS con el broker, sesión persistente (sin inicio limpio y con expiración de sesión) y QoS 1, para recibir también lo publicado durante una desconexión (TS05, escenario 3). Usa una suscripción compartida (`$share/sensing/…`) para que cada mensaje lo procese una sola réplica (QAS-04), y confirmación manual tras guardar.|
+|SensorReadingTranslator|Adapter (anti-corruption)|—|Jackson, Bean Validation|Valida el JSON (campos obligatorios, tipos, valores permitidos) y lo traduce a `SensorReading`. Es el único componente que conoce el formato del gateway: otra tecnología de sensado solo requiere otro traductor (CON-16).|
+|SensorFeedRepositoryAdapter, DeviceHealthRepositoryAdapter, GatewayLinkRepositoryAdapter|Repository (implementación)|Repositorios del dominio|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`), para que dos lecturas simultáneas del mismo sensor no se sobrescriban.|
+|JdbcReadingDeduplicationStore|Adapter (persistencia)|ReadingDeduplicationStore|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `processed_readings`; un proceso diario elimina las filas con más de 7 días.|
+|JpaIncidentLog, JpaRejectedReadingStore|Adapter (persistencia)|IncidentLog, RejectedReadingStore|Spring Data JPA|Guardan incidencias y mensajes rechazados.|
+|DeviceDirectoryAdapter|Adapter (anti-corruption)|DeviceDirectory|Llamada en proceso a `ParkingConfigurationFacade`, caché Caffeine|Consulta `resolveDevice` y guarda el resultado en caché; los eventos de Parking Configuration invalidan las entradas afectadas.|
+|SensingEventPublisherAdapter|Adapter (eventos)|SensingEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio; Occupancy los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Entrega de mensajes|Al menos una vez: el broker reentrega todo mensaje no confirmado y el contexto descarta los duplicados por `eventId`. Así se cumple 0 % de lecturas perdidas sin procesar ninguna dos veces (QAS-03, DD-02, DD-03).|
+|Seguridad|Los sensores no se exponen a internet; solo el gateway abre una conexión saliente al broker con credenciales propias y permisos limitados a su prefijo de tópico (CON-05).|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `sensing`. Obtiene el inventario de Parking Configuration mediante su fachada y sus eventos, nunca leyendo sus tablas.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas con datos de una institución. Las consultas de la consola filtran por el tenant del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `sensing` de PostgreSQL, según DD-01.|
+
+### 5.3.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Parking Sensing dentro del contenedor Quadrapp Backend, organizado por capas. Muestra el recorrido de una lectura: el gateway del campus la publica en el broker MQTT; el listener la traduce con la capa anticorrupción y la procesa en los Command Handlers; los repositorios la guardan en el esquema `sensing`; y el publicador entrega la detección al listener de Occupancy. Además aparecen la consola, que consulta la salud de los dispositivos, y Parking Configuration, que provee el directorio de dispositivos y notifica los cambios del inventario.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Gateway del campus | Linux, agente MQTT | Publica las lecturas y las retiene en un búfer local sin conexión. |
+| Broker MQTT | Eclipse Mosquitto | Recibe las lecturas con QoS 1 y las entrega con sesión persistente. |
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Procesa las lecturas, confirma detecciones y vigila la salud de los dispositivos. |
+| Base de datos | PostgreSQL (esquema `sensing`) | Almacena flujos de lecturas, salud, enlaces de gateways, deduplicación e incidencias. |
+
+#### Componentes del módulo Parking Sensing
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| MQTT Inbound Listener | Interface | Recibe lecturas y estado de gateways; confirma tras guardar. | Spring Integration MQTT v5 | MqttInboundListener, MqttInboundConfiguration |
+| Device Health Controller | Interface | Consultas de salud e incidencias. | Spring MVC `@RestController` | DeviceHealthController |
+| Parking Sensing Facade | Interface | Resumen de salud para la consola. | Spring bean | ParkingSensingFacade |
+| Sensing Schedulers | Interface | Confirmación de detecciones y revisión de intervalos. | Spring `@Scheduled` | SensingSchedulers |
+| Configuration Event Listener | Interface | Cambios del inventario y del layout. | `@TransactionalEventListener` | ConfigurationEventListener |
+| Sensing Command Handlers | Application | Procesamiento de lecturas y vigilancia. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
+| Sensing Query Handlers | Application | Consultas de salud e incidencias. | Spring `@Service` | Queries y Query Handlers |
+| Sensing Aggregates | Domain | Reglas de detección y de salud. | Java (dominio puro) | SensorFeed, DeviceHealth, GatewayLink, HealthEvaluationService, Value Objects y enumeraciones |
+| Sensor Reading Translator | Infrastructure | Capa anticorrupción del mensaje del gateway. | Jackson, Bean Validation | SensorReadingTranslator |
+| Sensing Repositories | Infrastructure | Persistencia, deduplicación e incidencias. | Spring Data JPA, JDBC | *RepositoryAdapter, JdbcReadingDeduplicationStore, JpaIncidentLog, JpaRejectedReadingStore |
+| Device Directory Adapter | Infrastructure | Resuelve dispositivos mediante la fachada de Parking Configuration. | Adaptador Java, Caffeine | DeviceDirectoryAdapter |
+| Sensing Event Publisher | Infrastructure | Publica los eventos tras confirmar la transacción. | Eventos de aplicación de Spring | SensingEventPublisherAdapter |
+
+Parking Sensing Component Level Diagram: **ParkingSensingComponentLevelDiagram**
+![Parking Sensing Component Level Diagram](./assets/capitulo-05/ParkingSensingComponentLevelDiagram.png)
+
+### 5.3.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.3.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los tres agregados con sus Value Objects y enumeraciones, el Domain Service, las interfaces de los repositorios y los eventos que publica el contexto. `SensorReading` solo existe en memoria: es el resultado de la capa anticorrupción y no se persiste.
+
+![Parking Sensing Domain Layer Class Diagram](./assets/capitulo-05/ParkingSensingDomainLayerClassDiagram.png)
+
+#### 5.3.7.2. Bounded Context Database Design Diagram
+
+El esquema `sensing` de PostgreSQL contiene una tabla por agregado, que usa el `device_id` como identidad, y tres tablas de soporte: `processed_readings` para la deduplicación por `eventId`, `sensing_incidents` para las incidencias y `rejected_readings` para los mensajes inválidos. No hay claves foráneas hacia otros esquemas: `tenant_id`, `parking_lot_id`, `device_id` y `target_id` son referencias lógicas a IAM y Parking Configuration (CON-02).
+
+![Parking Sensing Database Design Diagram](./assets/capitulo-05/ParkingSensingDatabaseDesignDiagram.png)
+
+---
+
 ## 5.4. Bounded Context: Occupancy
+
+El Bounded Context Occupancy es responsable de **mantener el estado de negocio de cada espacio y la disponibilidad de cada zona y estacionamiento**. Es la fuente de verdad de la ocupación actual que consultan la aplicación móvil, la consola de operación, Prediction & Advisory y Analytics.
+
+Su propósito es convertir las detecciones confirmadas que entrega Parking Sensing en estados de negocio (libre, ocupado o desconocido), recalcular la disponibilidad con cada cambio, registrar el flujo de ingresos y salidas y reconciliarlo con la detección por espacio. Además, distribuye la ocupación en tiempo casi real mediante un read model en caché y una suscripción. No procesa lecturas de sensores, no decide si un sensor falló y no genera pronósticos.
+
+Este Bounded Context soporta principalmente:
+
+- US05, US06 y US07 — Consultar la disponibilidad actual del estacionamiento y de cada zona, con la antigüedad del dato.
+- US08 — Presentar como desconocido (UNKNOWN) un espacio sin información confiable y excluirlo del conteo de disponibles.
+- TS09 — Exponer el estado consolidado, la suscripción a cambios y la marca de dato desactualizado.
+- TS14 — Registrar el flujo con los sensores de paso y reconciliarlo con la detección por espacio.
+- US29 y TS17 — Aportar la ocupación al monitoreo del turno en la consola.
+
+Las principales responsabilidades del Bounded Context Occupancy son:
+
+- Traducir, en su capa anticorrupción, los eventos de Parking Sensing al estado de negocio del espacio.
+- Mantener cada espacio como FREE, OCCUPIED o UNKNOWN, y registrar el motivo de UNKNOWN.
+- Recalcular la disponibilidad por zona y por estacionamiento con cada cambio de estado, y publicar `OccupancyUpdated`.
+- Registrar los ingresos y salidas de los accesos habilitados para el conteo de flujo, y publicar `EntryExitRecorded`.
+- Reconciliar periódicamente el conteo de accesos con la detección por espacio, que prevalece.
+- Actualizar el read model en Redis y entregar los cambios a los clientes suscritos.
+- Indicar la antigüedad del dato y marcarlo como desactualizado cuando supera el tiempo máximo de vigencia.
+- Responder, mediante su fachada (Open Host Service), las consultas de Prediction & Advisory y del módulo de composición.
+
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Occupancy.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| SpaceOccupancy | Domain | Aggregate Root. Estado de negocio de un espacio. | spaceId, tenantId, parkingLotId, zoneId, status, unknownReason, statusSince, lastDetectedAt, lastEventId | initialize(), applyDetection(), markUnknown(), awaitStableDetection(), relocate(), countsAsFree() |
+| LotOccupancy | Domain | Aggregate Root. Disponibilidad y flujo de un estacionamiento. | parkingLotId, tenantId, layoutVersion, zones, flowAccessPointIds, countedOccupied, consolidatedAt, lastReconciledAt | open(), applyLayout(), recalculate(), recordPassage(), reconcile(), availability(), isStale() |
+| ZoneOccupancy | Domain | Entity. Disponibilidad de una zona. | zoneId, capacity, availability | update() |
+| Availability | Domain | Value Object. Capacidad y espacios libres, ocupados y desconocidos. | capacity, free, occupied, unknown | occupancyRate(), plus() |
+| ZoneCount, VehiclePassage, OccupancySnapshot, ReconciliationResult | Domain | Value Objects con los datos de cada operación. | Ver 5.4.1 | — |
+| ReconciliationPolicy, FreshnessPolicy | Domain | Value Objects con los parámetros de reconciliación y vigencia. | toleranceSpaces, periodMinutes, staleAfterSeconds | — |
+| SpaceStatus, UnknownReason, DetectedPresence, PassageDirection | Domain | Enumeraciones del contexto. | — | — |
+| SpaceOccupancyRepository, LotOccupancyRepository, VehiclePassageRepository, OccupancySnapshotRepository | Domain | Repository. Abstracciones de persistencia. | — | save(), findById(), countByZone(), countBetween(), findBetween() |
+| SpaceMarkedOccupied, SpaceMarkedFree, SpaceMarkedUnknown, AccessCountReconciled | Domain | Domain Events internos del contexto. | Ver 5.4.1 | — |
+| OccupancyUpdated, EntryExitRecorded | Domain | Domain Events publicados (Published Language). | Ver 5.4.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura. | Dependencies | handle() |
+| SensingEventHandler, LayoutProvidedEventHandler, SpaceStatusChangedEventHandler | Application | Event Handlers. | Dependencies | handle() |
+| LayoutReader, AvailabilityReadModel, OccupancyEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.4.3 |
+| OccupancyQueryController | Interface | Controller REST de disponibilidad, espacios y flujo. | Query Handler dependencies | getOccupancy(), getSpaces(), getFlow() |
+| OccupancyRealtimeEndpoint | Interface | Suscripción en tiempo real a un estacionamiento. | Read model dependency | subscribe() |
+| OccupancyFacade | Interface | Open Host Service en proceso. | Query Handler dependencies | currentOccupancy(), freeSpaces(), exitsInWindow(), recentSnapshots(), availabilityOf() |
+| SensingEventListener, LayoutEventListener | Interface | Consumers de los eventos de Parking Sensing y Parking Configuration. | Event Handler dependencies | on() |
+| OccupancySchedulers | Interface | Reconciliación y registro del historial. | Command Handler dependencies | reconcile(), recordSnapshots() |
+| *RepositoryAdapter | Infrastructure | Persistencia en el esquema `occupancy`. | Persistence dependency | save(), find…() |
+| RedisAvailabilityReadModel | Infrastructure | Read model en Redis y difusión entre réplicas. | Redis dependency | write(), read(), broadcast() |
+| ConfigurationLayoutReaderAdapter | Infrastructure | Lee el layout publicado mediante la fachada de Parking Configuration. | Facade dependency | layoutOf() |
+| OccupancyEventPublisherAdapter | Infrastructure | Publica los eventos tras confirmar la transacción. | Messaging dependency | publish() |
+
+### 5.4.1. Domain Layer
+
+La Domain Layer contiene las reglas del estado de los espacios, de la disponibilidad y del flujo. No depende de Redis, de WebSocket, de la base de datos ni de Spring. Los dos agregados salen del paso 9 del EventStorming (sección 4.2.1): `SpaceOccupancy` y `LotOccupancy`. Se separaron porque cambian con estímulos distintos: un espacio cambia con su detección, y el estacionamiento cambia con el recálculo de sus zonas, con los pasos de vehículos y con la reconciliación. Además, separarlos evita que cada detección bloquee el estacionamiento completo.
+
+**Aggregate 1: SpaceOccupancy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|SpaceOccupancy|Aggregate Root|Estado de negocio de un espacio: libre, ocupado o desconocido. Conserva el motivo cuando es desconocido y el último evento aplicado.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|spaceId|UUID|Private|Identificador del espacio (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento del espacio.|
+|zoneId|UUID|Private|Zona a la que pertenece según el layout vigente.|
+|status|SpaceStatus|Private|FREE, OCCUPIED o UNKNOWN.|
+|unknownReason|UnknownReason?|Private|Motivo del estado UNKNOWN; vacío en los demás estados.|
+|statusSince|Instant|Private|Momento desde el que el espacio tiene su estado actual.|
+|lastDetectedAt|Instant?|Private|Marca de tiempo de la última detección aplicada.|
+|lastEventId|UUID?|Private|Identificador del último evento aplicado.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|initialize(spaceId, tenantId, parkingLotId, zoneId, hasSensor, now)|SpaceOccupancy|Public (static)|Crea el espacio en UNKNOWN, con el motivo NOT_YET_REPORTED si tiene sensor o NO_SENSOR si no lo tiene. Un espacio nuevo nunca empieza libre.|
+|applyDetection(eventId, presence, detectedAt)|Boolean|Public|Ignora el evento si ya fue aplicado o si es anterior a `lastDetectedAt`. En otro caso pasa a FREE u OCCUPIED, también desde UNKNOWN, y registra `SpaceMarkedFree` o `SpaceMarkedOccupied` (US07; US08, escenario 4).|
+|markUnknown(reason, at)|Void|Public|Pasa a UNKNOWN con el motivo indicado y registra `SpaceMarkedUnknown` (US08, escenarios 1 y 2).|
+|awaitStableDetection(at)|Void|Public|Mantiene el espacio en UNKNOWN y cambia el motivo a AWAITING_STABLE_DETECTION cuando el sensor se recupera, hasta la siguiente detección confirmada.|
+|relocate(zoneId)|Void|Public|Cambia la zona del espacio cuando un layout nuevo lo mueve.|
+|countsAsFree()|Boolean|Public|Verdadero solo con FREE. Un espacio UNKNOWN nunca cuenta como libre.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Enumeraciones del agregado SpaceOccupancy**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|SpaceStatus|FREE, OCCUPIED, UNKNOWN|Estado de negocio del espacio.|
+|UnknownReason|NOT_YET_REPORTED, NO_SENSOR, SENSOR_FAULT, GATEWAY_OFFLINE, AWAITING_STABLE_DETECTION|Motivo del estado UNKNOWN, que la consola muestra al operador.|
+|DetectedPresence|FREE, OCCUPIED|Presencia confirmada que llega desde Parking Sensing, ya traducida.|
+
+**Aggregate 2: LotOccupancy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|LotOccupancy|Aggregate Root|Disponibilidad de un estacionamiento y de sus zonas, conteo de flujo y estado de la reconciliación.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|parkingLotId|UUID|Private|Estacionamiento (referencia lógica a Parking Configuration).|
+|tenantId|UUID|Private|Institución (IAM).|
+|layoutVersion|Integer|Private|Versión del layout con la que se calculan las zonas.|
+|zones|`List<ZoneOccupancy>`|Private|Disponibilidad de cada zona.|
+|flowAccessPointIds|`Set<UUID>`|Private|Accesos habilitados para el conteo de flujo según el layout.|
+|countedOccupied|Integer|Private|Ocupación derivada del conteo de ingresos y salidas desde la última reconciliación.|
+|consolidatedAt|Instant?|Private|Momento del último dato consolidado; define la antigüedad que se informa.|
+|lastReconciledAt|Instant?|Private|Momento de la última reconciliación.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|open(parkingLotId, tenantId)|LotOccupancy|Public (static)|Crea la ocupación del estacionamiento al recibir su primer layout.|
+|applyLayout(layoutVersion, zoneCapacities, flowAccessPointIds)|Void|Public|Actualiza las zonas, su capacidad y los accesos que cuentan flujo.|
+|recalculate(zoneCounts, at)|Void|Public|Reemplaza los conteos de cada zona, actualiza `consolidatedAt` y registra `OccupancyUpdated` (US05, US06).|
+|recordPassage(passage)|Boolean|Public|Si el acceso cuenta flujo, suma o resta en `countedOccupied` y registra `EntryExitRecorded` (TS14, escenario 1). Devuelve falso si el acceso no está habilitado.|
+|reconcile(policy, at)|ReconciliationResult|Public|Compara `countedOccupied` con los espacios ocupados detectados; si la diferencia supera la tolerancia más los espacios desconocidos, la marca como divergente. Ajusta el conteo a la detección y registra `AccessCountReconciled` (TS14, escenarios 2 y 3).|
+|availability()|Availability|Public|Suma la disponibilidad de todas las zonas.|
+|isStale(now, policy)|Boolean|Public|Indica si `consolidatedAt` supera el tiempo máximo de vigencia (TS09, escenario 3).|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
+
+**Entities, Value Objects y enumeraciones del agregado LotOccupancy**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|ZoneOccupancy|Entity|zoneId: UUID, capacity: Integer, availability: Availability|Disponibilidad de una zona. `update(count)` reemplaza sus conteos.|
+|Availability|Value Object|capacity, free, occupied, unknown: Integer|La suma de los tres estados es igual a la capacidad. `occupancyRate()` devuelve `(capacity − free) / capacity`: un espacio desconocido nunca cuenta como libre, por lo que tampoco reduce la ocupación.|
+|ZoneCount|Value Object|zoneId, free, occupied, unknown: Integer|Conteo de estados de una zona, calculado a partir de los `SpaceOccupancy`.|
+|VehiclePassage|Value Object|eventId, parkingLotId, accessPointId: UUID, direction: PassageDirection, passedAt: Instant|Ingreso o salida de un vehículo, sin datos que lo identifiquen (CON-16).|
+|ReconciliationPolicy|Value Object|toleranceSpaces: Integer, periodMinutes: Integer|Diferencia tolerada (3 espacios por defecto) y frecuencia de la reconciliación (5 min).|
+|ReconciliationResult|Value Object|countedOccupied, detectedOccupied, difference: Integer, divergent: Boolean, reconciledAt: Instant|Resultado de una reconciliación.|
+|FreshnessPolicy|Value Object|staleAfterSeconds: Integer|Tiempo máximo de vigencia del dato consolidado (300 s por defecto).|
+|OccupancySnapshot|Value Object|parkingLotId: UUID, takenAt: Instant, availability: Availability|Foto de la disponibilidad de un minuto, para el historial reciente que consulta Prediction & Advisory.|
+|PassageDirection|Enumeration|IN, OUT|Dirección del paso.|
+
+**Domain Services**
+
+El contexto no necesita Domain Services: cada regla se resuelve dentro de un agregado. El recálculo de la disponibilidad recibe los conteos ya agrupados por zona desde `SpaceOccupancyRepository.countByZone`, de modo que `LotOccupancy` no necesita cargar los espacios.
+
+**Repositories (interfaces del dominio)**
+
+|Nombre|Operaciones|Descripción|
+|-|-|-|
+|SpaceOccupancyRepository|save(space), findById(spaceId), findByParkingLot(parkingLotId), countByZone(parkingLotId)|Persistencia de `SpaceOccupancy` y conteo por zona y estado.|
+|LotOccupancyRepository|save(lot), findById(parkingLotId), findAll()|Persistencia de `LotOccupancy`.|
+|VehiclePassageRepository|append(passage), countBetween(parkingLotId, direction, from, to)|Registro de los pasos; `append` devuelve falso si el `eventId` ya existía.|
+|OccupancySnapshotRepository|append(snapshot), findBetween(parkingLotId, from, to)|Historial reciente por minuto.|
+
+**Domain Events**
+
+|Evento|Atributos|Alcance y consumidores|
+|-|-|-|
+|SpaceMarkedOccupied, SpaceMarkedFree|spaceId, parkingLotId, zoneId, changedAt|Internos. Disparan el recálculo de la disponibilidad y la notificación a los clientes suscritos.|
+|SpaceMarkedUnknown|spaceId, parkingLotId, zoneId, reason, changedAt|Interno. Mismo uso que los anteriores.|
+|AccessCountReconciled|parkingLotId, result|Interno. Se registra para la consola.|
+|OccupancyUpdated|tenantId, parkingLotId, availability, zones, layoutVersion, consolidatedAt|Published Language. Lo consume Analytics para el historial de ocupación.|
+|EntryExitRecorded|eventId, tenantId, parkingLotId, accessPointId, direction, recordedAt|Published Language. Lo consume Analytics para el flujo histórico.|
+
+`OccupancyUpdated` y `EntryExitRecorded` son los nombres que fija la tabla de eventos de la sección 4.2.1 para "Disponibilidad actualizada" e "Ingreso o salida registrado".
+
+### Reglas de negocio
+
+1. Un espacio UNKNOWN nunca cuenta como libre y se excluye del conteo de disponibles, indicando cuántos hay (US06, escenario 3; US08).
+2. Un espacio nuevo o sin sensor empieza en UNKNOWN; nunca se presume libre.
+3. Un espacio pasa a UNKNOWN cuando Parking Sensing informa una falla, la baja del sensor o la desconexión de su gateway (US08, escenarios 1 y 2).
+4. Un espacio sale de UNKNOWN solo con una detección confirmada; la recuperación del sensor no basta (US08, escenario 4; US20, escenario 4).
+5. Un evento ya aplicado o anterior al último aplicado no cambia el estado del espacio.
+6. Cada cambio de estado de un espacio recalcula la disponibilidad de su zona y de su estacionamiento.
+7. El flujo se cuenta solo con los accesos habilitados para el conteo, es decir, con sensores direccionales (US19).
+8. La detección por espacio prevalece sobre el conteo de accesos: la reconciliación ajusta el conteo y registra la divergencia cuando supera la tolerancia (TS14).
+9. Toda consulta informa la marca de tiempo del dato consolidado; si supera el tiempo máximo de vigencia, se marca como desactualizado (US05, escenario 4; US07, escenario 3; TS09, escenario 3).
+10. El contexto no almacena datos que identifiquen vehículos ni conductores (CON-16).
+11. El contexto no procesa lecturas de sensores, no decide fallas de dispositivos y no genera pronósticos.
+
+### 5.4.2. Interface Layer
+
+La Interface Layer expone la ocupación a la aplicación móvil y a la consola, recibe los eventos de Parking Sensing y Parking Configuration, dispara los procesos programados y ofrece la fachada a los demás módulos. La capa de seguridad del backend (DD-08) valida el token antes de llegar al controlador; las consultas admiten los roles `DRIVER`, `PARKING_OPERATOR` y `PARKING_ADMIN`, siempre dentro de la institución del token.
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/occupancy`|200 con la disponibilidad del estacionamiento y de cada zona, `consolidatedAt` y `stale`|TS09, escenarios 1 y 3; US05; US06|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/spaces/status`|200 con el estado y el motivo de UNKNOWN de cada espacio, para superponerlos al layout|US05, US08|
+|OccupancyQueryController|`GET /api/v1/parking-lots/{lotId}/flow?windowMinutes={n}`|200 con los ingresos y salidas de la ventana|TS14, US29 (ruta propuesta)|
+
+Respuesta de `GET /api/v1/parking-lots/{lotId}/occupancy`:
+
+```json
+{
+  "lotId": "5b0e…",
+  "capacity": 180,
+  "free": 23,
+  "occupied": 150,
+  "unknown": 7,
+  "occupancyPct": 87.22,
+  "zones": [
+    { "zoneId": "a1f3…", "capacity": 42, "free": 3, "occupied": 37, "unknown": 2 }
+  ],
+  "layoutVersion": 4,
+  "consolidatedAt": "2026-10-09T13:05:14Z",
+  "stale": false,
+  "serverTime": "2026-10-09T13:05:20Z"
+}
+```
+
+**Realtime Endpoint: OccupancyRealtimeEndpoint**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OccupancyRealtimeEndpoint|Endpoint WebSocket (STOMP)|El cliente autenticado se suscribe a `/topic/parking-lots/{lotId}/occupancy` y recibe un mensaje por cada cambio de estado de un espacio y por cada recálculo de la disponibilidad (TS09, escenario 2). La suscripción se autoriza con el mismo token y solo para estacionamientos de su institución.|
+
+**Open Host Service: OccupancyFacade**
+
+|Nombre|Tipo de retorno|Consumidor|Descripción|
+|-|-|-|-|
+|currentOccupancy(parkingLotId: UUID)|OccupancySnapshotView?|Prediction & Advisory|Disponibilidad y porcentaje de ocupación actuales; vacío si no hay un dato consolidado vigente.|
+|freeSpaces(parkingLotId: UUID)|Integer|Prediction & Advisory|Espacios libres; los desconocidos no cuentan.|
+|exitsInWindow(parkingLotId: UUID, windowMinutes: Integer)|Integer|Prediction & Advisory|Salidas registradas en la ventana.|
+|recentSnapshots(parkingLotId: UUID, from: Instant, to: Instant)|`List<OccupancySnapshotView>`|Prediction & Advisory|Historial por minuto del intervalo (hasta 7 días).|
+|availabilityOf(tenantId: UUID, parkingLotId: UUID)|OccupancyView|Módulo de composición|Disponibilidad por zona para la pantalla de inicio y la consola (TS02, TS17).|
+
+**Event Consumers**
+
+|Consumer|Evento recibido|Event Handler|
+|-|-|-|
+|SensingEventListener|SensorStateChanged, DeviceFaultDetected, SensorCommunicationRestored, VehiclePassageDetected (Parking Sensing)|SensingEventHandler|
+|LayoutEventListener|ParkingLayoutProvided (Parking Configuration)|LayoutProvidedEventHandler|
+
+**Procesos programados: OccupancySchedulers**
+
+|Método|Frecuencia|Command|Descripción|
+|-|-|-|-|
+|reconcile()|Cada 5 min|ReconcileAccessCountCommand|Reconcilia el conteo de accesos de cada estacionamiento (TS14, escenario 3).|
+|recordSnapshots()|Cada 1 min|RecordSnapshotCommand|Guarda una foto de la disponibilidad de cada estacionamiento.|
+
+En el despliegue con varias réplicas, cada proceso se ejecuta en una sola réplica a la vez, con un bloqueo en la base de datos (ShedLock).
+
+### 5.4.3. Application Layer
+
+La Application Layer coordina la traducción de los eventos de entrada, la actualización del estado, el recálculo de la disponibilidad y la distribución de los cambios. No contiene reglas de negocio. Sus capacidades son mantener el estado de los espacios, registrar el flujo, reconciliar, distribuir la ocupación y responder las consultas.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|ApplyDetectionCommand|eventId, tenantId, parkingLotId, spaceId, presence, detectedAt|ApplyDetectionCommandHandler|SpaceOccupancyRepository, OccupancyEventPublisher|US05, US07, US08|
+|MarkSpaceUnknownCommand|tenantId, parkingLotId, spaceId, reason, at|MarkSpaceUnknownCommandHandler|SpaceOccupancyRepository, OccupancyEventPublisher|US08|
+|AwaitStableDetectionCommand|spaceId, at|AwaitStableDetectionCommandHandler|SpaceOccupancyRepository|US08, US20|
+|RecordPassageCommand|eventId, tenantId, parkingLotId, accessPointId, direction, passedAt|RecordPassageCommandHandler|LotOccupancyRepository, VehiclePassageRepository, OccupancyEventPublisher|TS14|
+|RecalculateAvailabilityCommand|parkingLotId|RecalculateAvailabilityCommandHandler|SpaceOccupancyRepository, LotOccupancyRepository, AvailabilityReadModel, OccupancyEventPublisher, Clock|US05, US06, TS09|
+|ApplyLayoutCommand|tenantId, parkingLotId, layoutVersion|ApplyLayoutCommandHandler|LayoutReader, SpaceOccupancyRepository, LotOccupancyRepository, Clock|US17|
+|ReconcileAccessCountCommand|now|ReconcileAccessCountCommandHandler|LotOccupancyRepository, OccupancyEventPublisher|TS14|
+|RecordSnapshotCommand|now|RecordSnapshotCommandHandler|LotOccupancyRepository, OccupancySnapshotRepository|TS07 (insumo)|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetOccupancyQuery|tenantId, parkingLotId|GetOccupancyQueryHandler|OccupancyView, leído del read model|
+|GetSpaceStatusesQuery|tenantId, parkingLotId|GetSpaceStatusesQueryHandler|`List<SpaceStatusView>`|
+|GetFlowQuery|tenantId, parkingLotId, windowMinutes|GetFlowQueryHandler|FlowView (ingresos y salidas)|
+|GetRecentSnapshotsQuery|parkingLotId, from, to|GetRecentSnapshotsQueryHandler|`List<OccupancySnapshotView>`|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|SensingEventHandler|SensorStateChanged|Capa anticorrupción: traduce `state` a `DetectedPresence` y ejecuta `ApplyDetectionCommand`.|
+|SensingEventHandler|DeviceFaultDetected|Si el destino es un espacio, ejecuta `MarkSpaceUnknownCommand` con el motivo equivalente: NO_REPORT y CRITICAL_BATTERY pasan a SENSOR_FAULT, GATEWAY_OFFLINE se conserva y DECOMMISSIONED pasa a NO_SENSOR. Si el destino es un acceso, no cambia ningún espacio: ese conteo queda incompleto hasta la siguiente reconciliación.|
+|SensingEventHandler|SensorCommunicationRestored|Ejecuta `AwaitStableDetectionCommand`.|
+|SensingEventHandler|VehiclePassageDetected|Ejecuta `RecordPassageCommand`.|
+|LayoutProvidedEventHandler|ParkingLayoutProvided|Ejecuta `ApplyLayoutCommand`.|
+|SpaceStatusChangedEventHandler|SpaceMarkedOccupied, SpaceMarkedFree, SpaceMarkedUnknown|Notifica el cambio a los clientes suscritos y ejecuta `RecalculateAvailabilityCommand`.|
+
+**Flujos de ejecución**
+
+`ApplyDetectionCommandHandler` y `RecalculateAvailabilityCommandHandler`:
+
+1. Carga el `SpaceOccupancy` y aplica `applyDetection`; si el evento ya fue aplicado o está fuera de orden, termina sin cambios.
+2. Guarda el espacio y, al confirmar la transacción, publica `SpaceMarkedOccupied` o `SpaceMarkedFree`.
+3. `SpaceStatusChangedEventHandler` envía el cambio del espacio a los suscriptores y ejecuta `RecalculateAvailabilityCommand`.
+4. El recálculo obtiene los conteos con `countByZone`, llama a `LotOccupancy.recalculate`, actualiza el read model en Redis y publica `OccupancyUpdated`. Como recalcula desde los espacios guardados, es idempotente: repetirlo no altera el resultado.
+
+`ApplyLayoutCommandHandler`:
+
+1. Obtiene el layout publicado con `LayoutReader` (fachada de Parking Configuration), con sus zonas, sus espacios, las asociaciones y los accesos que cuentan flujo.
+2. Crea en UNKNOWN los espacios nuevos, reubica los que cambiaron de zona y retira los que ya no existen.
+3. Actualiza las zonas y los accesos de `LotOccupancy`, y ejecuta el recálculo.
+
+`ReconcileAccessCountCommandHandler`:
+
+1. Para cada estacionamiento, llama a `reconcile` con la política vigente.
+2. Guarda el resultado; si fue divergente, queda registrado para la consola.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|Repositorios del dominio|Puertos (Domain Layer)|Ver 5.4.1|Persistencia de los agregados, los pasos y el historial.|
+|LayoutReader|Puerto hacia Parking Configuration|layoutOf(tenantId, parkingLotId): LayoutView|Lee el layout publicado vigente.|
+|AvailabilityReadModel|Puerto de lectura y difusión|write(view), read(parkingLotId), broadcast(change)|Mantiene el read model y difunde los cambios a los clientes suscritos.|
+|OccupancyEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para la vigencia y la reconciliación.|
+
+### 5.4.4. Infrastructure Layer
+
+La Infrastructure Layer implementa la persistencia, el read model, la difusión en tiempo real y la integración con Parking Configuration.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|SpaceOccupancyRepositoryAdapter, LotOccupancyRepositoryAdapter|Repository (implementación)|SpaceOccupancyRepository, LotOccupancyRepository|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`). `countByZone` es una consulta agrupada por zona y estado.|
+|JdbcVehiclePassageRepository|Repository (implementación)|VehiclePassageRepository|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `vehicle_passages`; elimina los registros con más de 7 días.|
+|JdbcOccupancySnapshotRepository|Repository (implementación)|OccupancySnapshotRepository|JDBC, PostgreSQL|Guarda una foto por minuto; elimina las de más de 7 días.|
+|RedisAvailabilityReadModel|Adapter (read model)|AvailabilityReadModel|Spring Data Redis, Redis Pub/Sub|Guarda la disponibilidad por estacionamiento y zona y el estado de los espacios. Publica cada cambio en un canal de Redis para que todas las réplicas lo entreguen a sus clientes conectados (QAS-04).|
+|StompRealtimeConfiguration|Configuración de mensajería|—|Spring WebSocket, STOMP|Expone el endpoint de suscripción y entrega a cada cliente los cambios recibidos del canal de Redis.|
+|ConfigurationLayoutReaderAdapter|Adapter (anti-corruption)|LayoutReader|Llamada en proceso a `ParkingConfigurationFacade`|Traduce el layout publicado al modelo de Occupancy.|
+|OccupancyEventPublisherAdapter|Adapter (eventos)|OccupancyEventPublisher|Eventos de aplicación de Spring|Publica los eventos; Analytics los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|CQRS|Las escrituras actualizan PostgreSQL y luego el read model en Redis; las consultas de la aplicación y la consola leen Redis (DD-04). Si Redis no responde, la consulta se resuelve en PostgreSQL y se informa igual la antigüedad del dato (QAS-06).|
+|Frescura|La cadena detección confirmada, guardado, recálculo, Redis y notificación se hace en el mismo proceso, para cumplir 5 s o menos desde la confirmación hasta la aplicación y la consola (QAS-02).|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `occupancy` y en el read model. El historial de largo plazo pertenece a Analytics; aquí solo se conservan 7 días.|
+|Multi-tenancy|`tenant_id` se guarda en todas las tablas, y las claves de Redis incluyen la institución. Las consultas filtran por el tenant del token.|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `occupancy` de PostgreSQL y Redis, según DD-01 y DD-04.|
+
+### 5.4.6. Bounded Context Software Architecture Component Level Diagrams
+
+El diagrama descompone el módulo Occupancy dentro del contenedor Quadrapp Backend, organizado por capas. Muestra la entrada de las detecciones desde Parking Sensing y del layout desde Parking Configuration, el recálculo y la publicación de la disponibilidad, el read model en Redis con la suscripción en tiempo real de la aplicación, y las consultas de Prediction & Advisory y del módulo de composición a través de la fachada.
+
+#### Containers considerados
+
+| Container | Tecnología | Responsabilidad |
+|---|---|---|
+| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Mantiene el estado de los espacios, la disponibilidad y el flujo. |
+| Base de datos | PostgreSQL (esquema `occupancy`) | Almacena el estado de los espacios y las zonas, los pasos, el historial reciente y las reconciliaciones. |
+| Read model de disponibilidad | Redis | Sirve la disponibilidad a la aplicación y la consola, y difunde los cambios entre réplicas. |
+
+#### Componentes del módulo Occupancy
+
+| Componente | Capa | Responsabilidad | Tecnología | Clases que lo componen |
+|---|---|---|---|---|
+| Occupancy Query Controller | Interface | Disponibilidad, estado de los espacios y flujo. | Spring MVC `@RestController` | OccupancyQueryController |
+| Occupancy Realtime Endpoint | Interface | Suscripción a los cambios de un estacionamiento. | Spring WebSocket, STOMP | OccupancyRealtimeEndpoint, StompRealtimeConfiguration |
+| Occupancy Facade | Interface | Open Host Service en proceso. | Spring bean | OccupancyFacade y las vistas `*View` |
+| Sensing Event Listener | Interface | Capa anticorrupción de los eventos de Parking Sensing. | `@TransactionalEventListener` | SensingEventListener |
+| Layout Event Listener | Interface | Recibe `ParkingLayoutProvided`. | `@TransactionalEventListener` | LayoutEventListener |
+| Occupancy Schedulers | Interface | Reconciliación e historial por minuto. | Spring `@Scheduled` | OccupancySchedulers |
+| Occupancy Command Handlers | Application | Casos de uso de escritura y Event Handlers. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
+| Occupancy Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
+| Occupancy Aggregates | Domain | Reglas del estado, la disponibilidad y el flujo. | Java (dominio puro) | SpaceOccupancy, LotOccupancy, Value Objects y enumeraciones |
+| Occupancy Repositories | Infrastructure | Persistencia en el esquema `occupancy`. | Spring Data JPA, JDBC | *RepositoryAdapter, JdbcVehiclePassageRepository, JdbcOccupancySnapshotRepository |
+| Availability Read Model | Infrastructure | Read model y difusión entre réplicas. | Spring Data Redis, Pub/Sub | RedisAvailabilityReadModel |
+| Layout Reader Adapter | Infrastructure | Lee el layout publicado. | Adaptador Java | ConfigurationLayoutReaderAdapter |
+| Occupancy Event Publisher | Infrastructure | Publica `OccupancyUpdated` y `EntryExitRecorded`. | Eventos de aplicación de Spring | OccupancyEventPublisherAdapter |
+
+Occupancy Component Level Diagram: **OccupancyComponentLevelDiagram**
+![Occupancy Component Level Diagram](./assets/capitulo-05/OccupancyComponentLevelDiagram.png)
+
+### 5.4.7. Bounded Context Software Architecture Code Level Diagrams
+
+Los Code Level Diagrams detallan la implementación del Bounded Context: el **Domain Layer Class Diagram** y el **Database Design Diagram**.
+
+#### 5.4.7.1. Bounded Context Domain Layer Class Diagrams
+
+El diagrama presenta los dos agregados con su entidad, Value Objects y enumeraciones, las interfaces de los repositorios y los eventos de dominio. Los eventos `SpaceMarked*` y `AccessCountReconciled` son internos; `OccupancyUpdated` y `EntryExitRecorded` forman el lenguaje publicado hacia Analytics.
+
+![Occupancy Domain Layer Class Diagram](./assets/capitulo-05/OccupancyDomainLayerClassDiagram.png)
+
+#### 5.4.7.2. Bounded Context Database Design Diagram
+
+El esquema `occupancy` de PostgreSQL separa el estado de cada espacio (`space_occupancy`) del estado del estacionamiento (`lot_occupancy` y `zone_occupancy`), igual que los agregados. `vehicle_passages` usa el `eventId` de Parking Sensing como clave para no registrar dos veces un paso, y `occupancy_snapshots` guarda el historial reciente por minuto. No hay claves foráneas hacia otros esquemas: la estructura del estacionamiento se referencia por identificador (CON-02). El read model de Redis no se incluye porque es una proyección que se reconstruye desde estas tablas.
+
+![Occupancy Database Design Diagram](./assets/capitulo-05/OccupancyDatabaseDesignDiagram.png)
+
+---
 
 ## 5.5. Bounded Context: Prediction & Advisory
 
@@ -3525,6 +4835,7 @@ Este Bounded Context soporta principalmente:
 - US36 — Conocer la próxima disponibilidad cuando el estacionamiento está lleno.
 - TS07 — Servicio de predicción de ocupación con modelo principal y respaldo (FALLBACK).
 - TS02 — Es consumido por el módulo de composición (`GET /mobile/home`) para componer la pantalla de inicio.
+- US35 — Regenerar los pronósticos cuando se registra o se cancela un evento del campus.
 
 
 Las principales responsabilidades del Bounded Context Prediction & Advisory son:
@@ -3538,6 +4849,7 @@ Las principales responsabilidades del Bounded Context Prediction & Advisory son:
 - Estimar el rango de minutos hasta la próxima liberación cuando no hay espacios libres, o indicar que no puede estimarse cuando no hay salidas.
 - Publicar el evento `ForecastGenerated` para Analytics y el evento `SaturationPredicted` para Notifications, como Published Language, sin exponer el modelo interno de este contexto.
 - Garantizar que el servidor reciba únicamente el ETA en minutos, nunca coordenadas, y que ese ETA no se almacene.
+- Regenerar los pronósticos de un estacionamiento cuando Parking Configuration registra o cancela un evento del campus que afecta los próximos 60 minutos (`CampusEventProvided` y `CampusEventCancelled`).
 
 ### Class Dictionary
 
@@ -3587,6 +4899,8 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Pre
 | ArrivalAdviceController | Interface | Expone el cálculo de la asesoría de llegada. | Query Handler dependency | requestAdvice() |
 | PredictionAdvisoryFacade | Interface | Fachada (Open Host Service) que usan el módulo de composición y los demás módulos para consultar pronósticos y asesoría en el mismo proceso. | Query Handler dependencies | forecastsOf(), adviceFor(), nextAvailabilityOf() |
 | ForecastScheduler | Interface | Dispara de forma periódica la generación de pronósticos. | Command Handler dependencies | generateForecasts() |
+| CampusEventListener | Interface | Consumer de los eventos `CampusEventProvided` y `CampusEventCancelled` de Parking Configuration. | Event Handler dependency | on() |
+| CampusEventChangedEventHandler | Application | Event Handler que decide si un evento del campus obliga a regenerar los pronósticos. | Dependencies | handle() |
 | ArrivalAdviceRequest | Interface | Representación de la solicitud de asesoría. Solo admite dos campos. | lotId, etaMinutes | — |
 | ForecastResponse | Interface | Representación del pronóstico entregado al cliente. | lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime | — |
 | ArrivalAdviceResponse | Interface | Representación de la asesoría entregada al cliente. | etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime | — |
@@ -4078,6 +5392,19 @@ Methods
 
 Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
 
+**Consumer 1: CampusEventListener**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|CampusEventListener|Consumer (`@TransactionalEventListener`)|Recibe los eventos del calendario que publica Parking Configuration y los entrega a `CampusEventChangedEventHandler`.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|on(event: CampusEventProvided)|Void|Public|Evento del campus registrado (US35, escenario 2).|
+|on(event: CampusEventCancelled)|Void|Public|Evento del campus cancelado (US35, escenario 3). Corresponde al mensaje de entrada "Evento del campus cancelado" del Bounded Context Canvas.|
+
 **Data Transfer Objects**
 
 |Nombre|Categoría|Atributos|Descripción|
@@ -4100,6 +5427,7 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 |GetArrivalAdviceQuery|Query|tenantId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
 |GetNextAvailabilityQuery|Query|tenantId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
 |GenerateForecastsCommand|Command|parkingLotId: UUID|Generar los pronósticos de un estacionamiento.|
+|CampusEventChanged|Event (entrada)|tenantId: UUID, parkingLotId: UUID, startAt: Instant, endAt: Instant, cancelled: Boolean|Traducción local de `CampusEventProvided` y `CampusEventCancelled`.|
 
 **Query Handlers y Command Handlers**
 
@@ -4110,6 +5438,7 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 |GetArrivalAdviceQueryHandler|Query Handler|handle(query: GetArrivalAdviceQuery): ArrivalAdviceResult|ForecastRepository, ParkingLotSettingsReader, AdvisoryDomainService, Clock|
 |GetNextAvailabilityQueryHandler|Query Handler|handle(query: GetNextAvailabilityQuery): NextAvailabilityResult|ParkingLotSettingsReader, OccupancyReader, AdvisoryDomainService, Clock|
 |GenerateForecastsCommandHandler|Command Handler|handle(command: GenerateForecastsCommand): Void|ParkingLotSettingsReader, OccupancyReader, PredictionModelPort, ForecastDomainService, ForecastRepository, ForecastEventPublisher, Clock|
+|CampusEventChangedEventHandler|Event Handler|handle(event: CampusEventChanged): Void|GenerateForecastsCommandHandler, Clock|
 
 **Flujos de ejecución**
 
@@ -4142,6 +5471,12 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
 3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
 4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
+
+`CampusEventChangedEventHandler`:
+
+1. Compara la franja del evento con el intervalo que cubren los pronósticos vigentes (desde ahora hasta 60 minutos después).
+2. Si se superponen, ejecuta `GenerateForecastsCommand` para el estacionamiento afectado. Los pronósticos anteriores no se modifican, porque son inmutables: los nuevos los reemplazan como los más recientes.
+3. Si la franja empieza después, no hace nada: el evento se considera en la siguiente generación programada, que lee el calendario mediante `calendarEventsAround`.
 
 
 
@@ -4186,7 +5521,7 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |-|-|
 |Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
 |Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
-|Multi-tenancy|`tenantId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
+|Multi-tenancy|`tenant_id` se almacena en `forecasts` como referencia lógica a IAM, sin clave foránea, y se toma siempre del usuario autenticado, nunca de un parámetro.|
 |Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
 
 ### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
@@ -4210,6 +5545,7 @@ El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Qu
 | Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
 | Prediction Advisory Facade | Interface | Punto de entrada de los casos de uso para los controladores REST. | Spring bean | PredictionAdvisoryFacade |
 | Forecast Scheduler | Interface | Dispara la generación periódica. | Spring `@Scheduled` | ForecastScheduler |
+| Campus Event Listener | Interface | Recibe los eventos del campus y solicita la regeneración. | `@TransactionalEventListener` | CampusEventListener, CampusEventChangedEventHandler |
 | Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
 | Command Handlers | Application | Caso de uso de comando: generar pronósticos. | Spring `@Service` | GenerateForecastsCommand y GenerateForecastsCommandHandler |
 | Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
@@ -5414,9 +6750,9 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 | NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja. Darse de baja conserva las demás suscripciones. |
 | NotificationPreferences | `NotificationPreferences` | `AlertType` (LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST), `Channel` | Preferencias del usuario: notificaciones activas o no, tipos de alerta y canales habilitados. Desactivarlas conserva la suscripción pero omite el envío. |
 | DeviceRegistration | `DeviceRegistration` | `DeviceToken`, `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
-| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador (institucional o de estacionamiento) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
+| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
 | NotificationTemplate | `NotificationTemplate` | `AlertType`, `Channel`, `Locale` (es_419, en_US) | Plantilla del mensaje por tipo de alerta, canal e idioma. |
-| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_ADMINS, INSTITUTION_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
+| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
  
 **Domain Services.**
 - `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
