@@ -5776,7 +5776,55 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ### 6.4.2. Applications Wireflow Diagrams
 
----
+Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan diez diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
+
+#### VISTA CONDUCTOR (APP MÓVIL)
+
+**Wireflow 1 · Acceso, ingreso y cierre de sesión**: Parte de Acceso institucional, continúa con la Verificación OTP y llega a Inicio y asesoría de llegada; desde ahí, la ventana Cuenta permite cerrar sesión y volver al acceso.  
+
+![Wireflow 1 - Acceso, ingreso y cierre de sesión](./assets/capitulo-06/wireflows/Wireflow%201%20·%20Acceso,%20ingreso%20y%20cierre%20de%20sesión.png)
+
+**Wireflow 2 · Disponibilidad al llegar**: Desde el Inicio, el conductor indica en cuántos minutos llega (¿Cuándo llegas?), consulta las Predicciones por horizonte y abre el Detalle de predicción de un horizonte.  
+
+![Wireflow 2 - Disponibilidad al llegar](./assets/capitulo-06/wireflows/Wireflow%202%20·%20Disponibilidad%20al%20llegar.png)
+
+**Wireflow 3 · Sede y zonas**: Desde el Inicio el conductor elige la sede (Elegir sede) y recorre el Detalle por zonas hasta el Detalle de una zona, en su vista de mapa o de lista.  
+
+![Wireflow 3 - Sede y zonas](./assets/capitulo-06/wireflows/Wireflow%203%20·%20Sede%20y%20zonas.png)
+
+**Wireflow 4 · Alertas por franja horaria**: En Alertas y preferencias, el conductor agrega una Nueva franja horaria y regresa a la pantalla con la franja ya configurada.  
+
+![Wireflow 4 - Alertas por franja horaria](./assets/capitulo-06/wireflows/Wireflow%204%20·%20Alertas%20por%20franja%20horaria.png)
+
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+
+**Wireflow 5 · Operación de turno**: Desde Inicio de operación, el administrador revisa Estacionamientos y zonas y entra a la Gestión de zonas y layout.  
+
+![Wireflow 5 - Operación de turno](./assets/capitulo-06/wireflows/Wireflow%205%20·%20Operación%20de%20turno.png)
+
+**Wireflow 6 · Editar y publicar el layout**: Desde la Gestión de zonas y layout se añaden zonas y espacios, se deshabilitan espacios y se publica el layout tras una confirmación.  
+
+![Wireflow 6 - Editar y publicar el layout](./assets/capitulo-06/wireflows/Wireflow%206%20·%20Editar%20y%20publicar%20el%20layout.png)
+
+**Wireflow 7 · Accesos, dispositivos y analítica**: Muestra tres recorridos: editar la configuración desde Accesos y configuración, reportar un problema desde Salud de dispositivos y exportar un reporte desde Analítica y precisión.  
+
+![Wireflow 7 - Accesos, dispositivos y analítica](./assets/capitulo-06/wireflows/Wireflow%207%20·%20Accesos,%20dispositivos%20y%20analítica.png)
+
+**Wireflow 8 · Calendario, dominios y equipo**: Desde Más · campus y equipo, el administrador crea un evento de calendario, añade un dominio institucional o invita a un nuevo integrante al equipo.  
+
+![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+
+**Wireflow 9 · Universidades**: Desde el Dashboard general, el administrador entra al listado de Universidades, registra una nueva en Alta de universidad y consulta el detalle de una universidad.  
+
+![Wireflow 9 - Universidades](./assets/capitulo-06/wireflows/Wireflow%209%20·%20Universidades.png)
+
+**Wireflow 10 · Dispositivos IoT**: Desde el Inventario IoT global se registra un dispositivo o se abre su gestión, desde donde puede reasignarse o darse de baja.  
+
+![Wireflow 10 - Dispositivos IoT](./assets/capitulo-06/wireflows/Wireflow%2010%20·%20Dispositivos%20IoT.png)
+
+
 
 # Conclusiones
 
