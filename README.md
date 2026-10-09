@@ -3219,8 +3219,7 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Pre
 | ForecastEventPublisherAdapter | Infrastructure | Encapsula el mecanismo técnico de publicación de `ForecastGenerated`. | Messaging dependency | publish() |
 
 
-## 5.5.1. Domain Layer
-
+### 5.5.1. Domain Layer
 
 
 La Domain Layer contiene los conceptos, reglas y abstracciones de negocio que permiten generar, interpretar y usar los pronósticos de ocupación. No depende de HTTP, bases de datos, mensajería, del modelo de predicción concreto ni de frameworks.
@@ -3599,7 +3598,7 @@ Methods
 20. Todo acceso se realiza dentro de la institución del usuario autenticado.
 21. El contexto no modifica el estado de Occupancy, no procesa señales de sensores y no calcula las métricas de precisión que muestra Analytics.
 
-## 5.5.2. Interface Layer
+### 5.5.2. Interface Layer
 
 
 La Interface Layer expone las capacidades del Bounded Context a la aplicación móvil, al BFF móvil y a los procesos programados. Recibe solicitudes, valida su forma, las transforma en Queries o Commands, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La institución se obtiene siempre del token validado por IAM, nunca de un parámetro; un estacionamiento de otra institución se responde como no encontrado.
@@ -3714,6 +3713,114 @@ Cada estacionamiento se procesa de forma aislada: un fallo se registra y no deti
 |ForecastResponse|Response DTO|lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime|Pronóstico entregado al cliente.|
 |ArrivalAdviceResponse|Response DTO|etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime|Asesoría entregada al cliente.|
 |NextAvailabilityResponse|Response DTO|available, minMinutes, maxMinutes, reason, serverTime|Próxima disponibilidad entregada al cliente.|
+
+### 5.5.3. Application Layer
+
+La Application Layer coordina los casos de uso de Prediction & Advisory: orquesta el dominio, el repositorio y los puertos hacia otros Bounded Contexts, sin detalles de persistencia, integración ni ejecución del modelo. Sus capacidades son consultar pronósticos (con faltantes y vencidos), calcular la asesoría de llegada, estimar la próxima disponibilidad, generar pronósticos, registrar la ocupación observada y publicar `ForecastGenerated`.
+
+**Queries y Commands**
+
+|Nombre|Categoría|Atributos|Descripción|
+|-|-|-|-|
+|GetForecastQuery|Query|institutionId: UUID, parkingLotId: UUID, horizon: ForecastHorizon|Pronóstico más reciente de un horizonte.|
+|GetForecastsQuery|Query|institutionId: UUID, parkingLotId: UUID|Pronósticos de los cuatro horizontes.|
+|GetArrivalAdviceQuery|Query|institutionId: UUID, parkingLotId: UUID, eta: EtaMinutes|Asesoría de llegada para un ETA.|
+|GetNextAvailabilityQuery|Query|institutionId: UUID, parkingLotId: UUID|Próxima disponibilidad del estacionamiento.|
+|GenerateForecastsCommand|Command|parkingLotId: UUID|Generar los pronósticos de un estacionamiento.|
+|EvaluateForecastsCommand|Command|asOf: Instant|Registrar la ocupación observada de los pronósticos vencidos.|
+
+**Query Handlers y Command Handlers**
+
+|Nombre|Categoría|Método|Dependencias|
+|-|-|-|-|
+|GetForecastQueryHandler|Query Handler|handle(query: GetForecastQuery): ForecastResult|ForecastRepository, ParkingLotSettingsReader, Clock|
+|GetForecastsQueryHandler|Query Handler|handle(query: GetForecastsQuery): ForecastSetResult|ForecastRepository, ParkingLotSettingsReader, Clock|
+|GetArrivalAdviceQueryHandler|Query Handler|handle(query: GetArrivalAdviceQuery): ArrivalAdviceResult|ForecastRepository, ParkingLotSettingsReader, AdvisoryDomainService, Clock|
+|GetNextAvailabilityQueryHandler|Query Handler|handle(query: GetNextAvailabilityQuery): NextAvailabilityResult|ParkingLotSettingsReader, OccupancyReader, AdvisoryDomainService, Clock|
+|GenerateForecastsCommandHandler|Command Handler|handle(command: GenerateForecastsCommand): Void|ParkingLotSettingsReader, OccupancyReader, PredictionModelPort, ForecastDomainService, ForecastRepository, ForecastEventPublisher, Clock|
+|EvaluateForecastsCommandHandler|Command Handler|handle(command: EvaluateForecastsCommand): Void|ForecastRepository, OccupancyReader, Clock|
+
+**Flujos de ejecución**
+
+`GetForecastQueryHandler`:
+
+1. Verifica que el estacionamiento pertenece a la institución.
+2. Recupera el pronóstico más reciente del horizonte; si no existe, lo informa como faltante.
+3. Determina con la hora del servidor si está vigente o vencido y devuelve un `ForecastResult`.
+
+`GetForecastsQueryHandler`:
+
+1. Verifica la pertenencia del estacionamiento y recupera los pronósticos más recientes.
+2. Marca cada horizonte (15, 30, 45, 60) como vigente, vencido o faltante; un faltante no invalida los demás.
+3. Devuelve un `ForecastSetResult` con la hora del servidor.
+
+`GetArrivalAdviceQueryHandler`:
+
+1. Obtiene el `ParkingLotProfile` y los pronósticos más recientes.
+2. Delega en `AdvisoryDomainService`; si no hay pronóstico vigente, informa que la asesoría no está disponible.
+3. Devuelve un `ArrivalAdviceResult`. No almacena ni registra el ETA.
+
+`GetNextAvailabilityQueryHandler`:
+
+1. Obtiene el `ParkingLotProfile`, los espacios libres (sin contar los UNKNOWN) y las salidas dentro de la ventana de flujo.
+2. Delega en `AdvisoryDomainService` y devuelve un `NextAvailabilityResult`. Cubre los tres casos de US36: con libres no hay estimación, lleno con salidas da un rango, lleno sin salidas informa que no puede estimarse.
+
+`GenerateForecastsCommandHandler`:
+
+1. Obtiene el `ParkingLotProfile` y la ocupación actual; sin lectura utilizable, termina sin generar pronósticos.
+2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
+3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
+4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated`.
+
+`EvaluateForecastsCommandHandler`:
+
+1. Recupera los pronósticos con `targetAt` anterior o igual a `asOf` y sin ocupación observada.
+2. Obtiene de Occupancy la ocupación observada de cada uno; si existe, la registra en el agregado y lo persiste. Si no existe, el pronóstico sigue pendiente.
+
+
+**Resultados de aplicación**
+
+|Nombre|Categoría|Atributos|
+|-|-|-|
+|ForecastResult|Result|forecast, status (VALID o EXPIRED), serverTime|
+|ForecastSetResult|Result|parkingLotId, items (VALID, EXPIRED o MISSING por horizonte), serverTime|
+|ArrivalAdviceResult|Result|advice, serverTime|
+|NextAvailabilityResult|Result|availability, serverTime|
+
+`serverTime` sale de un reloj inyectable; la vigencia siempre se compara con esa hora y no con la del dispositivo.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|ForecastRepository|Puerto (Domain Layer)|save, findById, findLatest, findLatestByLot, findPendingEvaluation|Guardar y recuperar pronósticos.|
+|OccupancyReader|Puerto hacia Occupancy|currentOccupancy(parkingLotId), freeSpaces(parkingLotId), exitsInWindow(parkingLotId, windowMinutes), observedOccupancyAt(parkingLotId, instant), recentSnapshots(parkingLotId, from, to)|Leer datos de ocupación.|
+|ParkingLotSettingsReader|Puerto hacia Parking Configuration|profileOf(institutionId, parkingLotId), activeLots(), calendarEventsAround(institutionId, from, to)|Leer la configuración necesaria.|
+|PredictionModelPort|Puerto hacia el modelo|`predict(features): List<ModelPrediction>`|Obtener predicciones por horizonte.|
+|ForecastEventPublisher|Puerto de eventos|publish(events)|Publicar eventos de dominio.|
+
+
+### 5.5.4. Infrastructure Layer
+
+La Infrastructure Layer contiene las implementaciones técnicas que almacenan pronósticos, obtienen datos de otros Bounded Contexts, invocan al modelo y publican eventos. Implementa las abstracciones del dominio y de la Application Layer, de modo que las capas superiores no dependen de una base de datos, un modelo concreto ni un mecanismo de mensajería.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|ForecastRepositoryAdapter|Repository (implementación)|ForecastRepository|Spring Data JPA, MySQL|Guarda y recupera pronósticos en la tabla `forecasts`.|
+|OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|API pública del módulo Occupancy|Lee los datos de ocupación.|
+|ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|API pública del módulo Parking Configuration|Lee la configuración del estacionamiento.|
+|PredictionModelClient|Adapter (cliente del modelo)|PredictionModelPort|Cliente HTTP, Resilience4j|Invoca al modelo y traduce su respuesta a `ModelPrediction`.|
+|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring|Publica `ForecastGenerated` tras confirmar la transacción.|
+
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
+|Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
+|Multi-tenancy|`institutionId` no se almacena en `forecasts`; se resuelve por el estacionamiento y se toma siempre del usuario autenticado, nunca de un parámetro.|
+|Tecnología|Monolito modular en Java 21 y Spring Boot 3 sobre MySQL. Domain y Application Layer no dependen de ella.|
 
 
 
