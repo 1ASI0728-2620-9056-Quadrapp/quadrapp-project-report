@@ -14,7 +14,7 @@
 | Profesor | Enrique Alejandro Valdivia Verde |
 | Startup | Integra Labs |
 | Producto | Quadrapp |
-| Mes y año | Setiembre, 2026 |
+| Mes y año | Octubre, 2026 |
 
 **Integrantes**
 
@@ -45,6 +45,23 @@
 | 1.10 | 2026-09-19 | Sulca Sanchez, Piero Angel | Consolidación de los Constraints como Technical Stories, incorporación del Impact Mapping y ajuste del Architectural Drivers Backlog con la totalidad de las restricciones. |
 | 1.11 | 2026-09-19 | Becerra Tejeda, Alessandra Nicole | Incorporación de los diagramas de arquitectura de software a nivel de contexto y de paisaje del sistema. |
 | 1.12 | 2026-09-19 | Equipo Integra Labs | Consolidación del Student Outcome, el avance de conclusiones y el registro de colaboración para la entrega del primer hito. |
+| 1.13 | 2026-09-20 | Sulca Sanchez, Piero Angel | Incorporación de los diagramas de contenedores y de despliegue, de la evidencia de colaboración de GitHub y del enlace al video de exposición del primer hito, y corrección de la tabla de contenido. |
+| 2.0 | 2026-09-30 | Nanfuñay Liza, Pedro Jesus | Incorporación de la estructura de los capítulos V y VI para el segundo hito. |
+| 2.1 | 2026-10-02 | Nanfuñay Liza, Pedro Jesus | Incorporación del diseño táctico del Bounded Context Analytics, con sus capas y diagramas. |
+| 2.2 | 2026-10-02 | Nanfuñay Liza, Pedro Jesus | Incorporación de la Information Architecture: Organization, Labeling y Searching Systems, SEO Tags and Meta Tags y Navigation Systems. |
+| 2.3 | 2026-10-05 | Nanfuñay Liza, Pedro Jesus | Corrección de los Bounded Context Canvases y del Context Mapping a partir de la retroalimentación del primer hito. |
+| 2.4 | 2026-10-07 | Nanfuñay Liza, Pedro Jesus | Corrección del registro de entrevistas con el distrito, el inicio y la duración de cada grabación, y actualización de su foto en los perfiles del equipo. |
+| 2.5 | 2026-10-08 | Becerra Tejeda, Alessandra Nicole | Incorporación de las Style Guidelines generales y para web, mobile y dispositivos, con el branding, la paleta de colores y los criterios de accesibilidad. |
+| 2.6 | 2026-10-08 | Becerra Tejeda, Alessandra Nicole | Corrección de la explicación de los diagramas de paisaje y de contexto, y del registro de su entrevista con el distrito y el inicio de la grabación. |
+| 2.7 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación del diseño táctico del Bounded Context Prediction & Advisory, con sus capas y diagramas. |
+| 2.8 | 2026-10-09 | Melgarejo Gomez, Marcia Victoria | Incorporación de los wireframes y wireflows de la aplicación móvil y de la consola de operación. |
+| 2.9 | 2026-10-09 | Becerra Tejeda, Alessandra Nicole | Incorporación del diseño táctico de los Bounded Contexts IAM y Notifications, con sus capas y diagramas, y de sus acciones del segundo hito en el Student Outcome. |
+| 2.10 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción del EventStorming en diez pasos, del Candidate Context Discovery en tres iteraciones y de cinco Domain Message Flows numerados, con el enlace al tablero de diseño estratégico en los anexos. |
+| 2.11 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del primer hito: reconstrucción de los Bounded Context Canvases y de las tres alternativas de Context Mapping con la misma herramienta del EventStorming. |
+| 2.12 | 2026-10-09 | Sulca Sanchez, Piero Angel | Alineación del informe con la arquitectura de monolito modular: decisiones del ADD, diagramas C4 en Structurizr, To-Be Scenario Mapping, diagramas de componentes, clases y base de datos del capítulo V, y canales del capítulo VI. |
+| 2.13 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación del rol de operador en IAM y del manejo de los eventos del campus en Prediction & Advisory. |
+| 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
+| 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
 
 # Project Report Collaboration Insights
 
@@ -60,13 +77,27 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Bejarano Martinez, Alvaro Leandro | Segmentos objetivo, User Personas, User Task Matrix, Empathy Mapping, EventStorming, Candidate Context Discovery y Domain Message Flows Modeling. |
 | Melgarejo Gomez, Marcia Victoria | As-is y To-be Scenario Mapping, Ubiquitous Language, Design Purpose, Quality Attribute Scenarios, funcionalidad primaria, Architectural Drivers Backlog y decisiones de diseño. |
 | Nanfuñay Liza, Pedro Jesus | Lean UX Process, análisis competitivo con sus estrategias y tácticas, Bounded Context Canvases y Context Mapping. |
-| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, configuración del repositorio y guía de contribución. |
+| Sulca Sanchez, Piero Angel | Descripción de la startup, diseño, registro y análisis de entrevistas, Impact Mapping, Product Backlog, Constraints, diagramas de contenedores y de despliegue, configuración del repositorio y guía de contribución. |
 
 **Evidencias de colaboración.** Al cierre del primer hito, el repositorio registra 29 Pull Requests integrados y commits de los cinco integrantes, realizados entre el 15 y el 19 de setiembre de 2026 con su propia identidad de Git. El analítico de contribuciones de GitHub confirma la participación de todo el equipo en la elaboración del informe.
 
 ![Analítico de contribuciones del repositorio del informe](assets/capitulo-07/collaboration-contributors.png)
 
 *Figura: analítico de Contributors del repositorio al cierre del primer hito. Registra 33 commits de Sulca Sanchez, 13 de Nanfuñay Liza, 11 de Becerra Tejeda, 9 de Bejarano Martinez y 4 de Melgarejo Gomez, lo que corresponde con los aportes descritos en el Registro de Versiones del Informe.*
+
+**Organización del trabajo en el segundo hito (TB1).** El equipo distribuyó el diseño táctico del capítulo V por bounded context y el capítulo VI por sección, y atendió en las secciones afectadas la retroalimentación recibida en el primer hito. Se mantuvo el flujo de trabajo del primer hito: ramas `feature/` y `fix/` por tarea, commits con Conventional Commits y la identidad de Git de cada integrante, e integración en `develop`. En paralelo, se inició la implementación de la Landing Page en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización. Las correcciones del capítulo IV se rehicieron con una sola herramienta por artefacto para mantener la coherencia entre ellos: Excalidraw para el EventStorming, los contextos candidatos, los message flows, los canvases y el context map, y Structurizr para los diagramas C4. El diseño táctico se elaboró sobre los contratos que fija el capítulo IV, es decir, los eventos publicados y las fachadas entre contextos, para que cada bounded context del capítulo V sea consistente con los demás.
+
+**Aportes por integrante en el segundo hito.**
+
+| Integrante | Secciones elaboradas o corregidas |
+| --- | --- |
+| Bejarano Martinez, Alvaro Leandro | Implementación inicial de la Landing Page en el repositorio `Landing_Page` (commit del 9 de octubre de 2026). |
+| Becerra Tejeda, Alessandra Nicole | Diseño táctico de los Bounded Contexts IAM y Notifications; Style Guidelines generales y para web, mobile y dispositivos; corrección de la explicación de los diagramas de paisaje y de contexto y del registro de su entrevista. |
+| Melgarejo Gomez, Marcia Victoria | Diseño táctico del Bounded Context Prediction & Advisory; wireframes y wireflows de la aplicación móvil y de la consola de operación. |
+| Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
+| Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
+
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 20 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
@@ -127,6 +158,86 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
     - [4.3.2. Software Architecture Context Level Diagrams](#432-software-architecture-context-level-diagrams)
     - [4.3.3. Software Architecture Container Level Diagrams](#433-software-architecture-container-level-diagrams)
     - [4.3.4. Software Architecture Deployment Diagrams](#434-software-architecture-deployment-diagrams)
+- [Capítulo V: Tactical-Level Software Design](#capítulo-v-tactical-level-software-design)
+  - [5.1. Bounded Context: IAM](#51-bounded-context-iam)
+    - [5.1.1. Domain Layer](#511-domain-layer)
+    - [5.1.2. Interface Layer](#512-interface-layer)
+    - [5.1.3. Application Layer](#513-application-layer)
+    - [5.1.4. Infrastructure Layer](#514-infrastructure-layer)
+    - [5.1.6. Bounded Context Software Architecture Component Level Diagrams](#516-bounded-context-software-architecture-component-level-diagrams)
+    - [5.1.7. Bounded Context Software Architecture Code Level Diagrams](#517-bounded-context-software-architecture-code-level-diagrams)
+      - [5.1.7.1. Bounded Context Domain Layer Class Diagrams](#5171-bounded-context-domain-layer-class-diagrams)
+      - [5.1.7.2. Bounded Context Database Design Diagram](#5172-bounded-context-database-design-diagram)
+  - [5.2. Bounded Context: Parking Configuration](#52-bounded-context-parking-configuration)
+    - [5.2.1. Domain Layer](#521-domain-layer)
+    - [5.2.2. Interface Layer](#522-interface-layer)
+    - [5.2.3. Application Layer](#523-application-layer)
+    - [5.2.4. Infrastructure Layer](#524-infrastructure-layer)
+    - [5.2.6. Bounded Context Software Architecture Component Level Diagrams](#526-bounded-context-software-architecture-component-level-diagrams)
+    - [5.2.7. Bounded Context Software Architecture Code Level Diagrams](#527-bounded-context-software-architecture-code-level-diagrams)
+      - [5.2.7.1. Bounded Context Domain Layer Class Diagrams](#5271-bounded-context-domain-layer-class-diagrams)
+      - [5.2.7.2. Bounded Context Database Design Diagram](#5272-bounded-context-database-design-diagram)
+  - [5.3. Bounded Context: Parking Sensing](#53-bounded-context-parking-sensing)
+    - [5.3.1. Domain Layer](#531-domain-layer)
+    - [5.3.2. Interface Layer](#532-interface-layer)
+    - [5.3.3. Application Layer](#533-application-layer)
+    - [5.3.4. Infrastructure Layer](#534-infrastructure-layer)
+    - [5.3.6. Bounded Context Software Architecture Component Level Diagrams](#536-bounded-context-software-architecture-component-level-diagrams)
+    - [5.3.7. Bounded Context Software Architecture Code Level Diagrams](#537-bounded-context-software-architecture-code-level-diagrams)
+      - [5.3.7.1. Bounded Context Domain Layer Class Diagrams](#5371-bounded-context-domain-layer-class-diagrams)
+      - [5.3.7.2. Bounded Context Database Design Diagram](#5372-bounded-context-database-design-diagram)
+  - [5.4. Bounded Context: Occupancy](#54-bounded-context-occupancy)
+    - [5.4.1. Domain Layer](#541-domain-layer)
+    - [5.4.2. Interface Layer](#542-interface-layer)
+    - [5.4.3. Application Layer](#543-application-layer)
+    - [5.4.4. Infrastructure Layer](#544-infrastructure-layer)
+    - [5.4.6. Bounded Context Software Architecture Component Level Diagrams](#546-bounded-context-software-architecture-component-level-diagrams)
+    - [5.4.7. Bounded Context Software Architecture Code Level Diagrams](#547-bounded-context-software-architecture-code-level-diagrams)
+      - [5.4.7.1. Bounded Context Domain Layer Class Diagrams](#5471-bounded-context-domain-layer-class-diagrams)
+      - [5.4.7.2. Bounded Context Database Design Diagram](#5472-bounded-context-database-design-diagram)
+  - [5.5. Bounded Context: Prediction & Advisory](#55-bounded-context-prediction--advisory)
+    - [5.5.1. Domain Layer](#551-domain-layer)
+    - [5.5.2. Interface Layer](#552-interface-layer)
+    - [5.5.3. Application Layer](#553-application-layer)
+    - [5.5.4. Infrastructure Layer](#554-infrastructure-layer)
+    - [5.5.6. Bounded Context Software Architecture Component Level Diagrams](#556-bounded-context-software-architecture-component-level-diagrams)
+    - [5.5.7. Bounded Context Software Architecture Code Level Diagrams](#557-bounded-context-software-architecture-code-level-diagrams)
+      - [5.5.7.1. Bounded Context Domain Layer Class Diagrams](#5571-bounded-context-domain-layer-class-diagrams)
+      - [5.5.7.2. Bounded Context Database Design Diagram](#5572-bounded-context-database-design-diagram)
+  - [5.6. Bounded Context: Analytics](#56-bounded-context-analytics)
+    - [5.6.1. Domain Layer](#561-domain-layer)
+    - [5.6.2. Interface Layer](#562-interface-layer)
+    - [5.6.3. Application Layer](#563-application-layer)
+    - [5.6.4. Infrastructure Layer](#564-infrastructure-layer)
+    - [5.6.6. Bounded Context Software Architecture Component Level Diagrams](#566-bounded-context-software-architecture-component-level-diagrams)
+    - [5.6.7. Bounded Context Software Architecture Code Level Diagrams](#567-bounded-context-software-architecture-code-level-diagrams)
+      - [5.6.7.1. Bounded Context Domain Layer Class Diagrams](#5671-bounded-context-domain-layer-class-diagrams)
+      - [5.6.7.2. Bounded Context Database Design Diagram](#5672-bounded-context-database-design-diagram)
+  - [5.7. Bounded Context: Notifications](#57-bounded-context-notifications)
+    - [5.7.1. Domain Layer](#571-domain-layer)
+    - [5.7.2. Interface Layer](#572-interface-layer)
+    - [5.7.3. Application Layer](#573-application-layer)
+    - [5.7.4. Infrastructure Layer](#574-infrastructure-layer)
+    - [5.7.6. Bounded Context Software Architecture Component Level Diagrams](#576-bounded-context-software-architecture-component-level-diagrams)
+    - [5.7.7. Bounded Context Software Architecture Code Level Diagrams](#577-bounded-context-software-architecture-code-level-diagrams)
+      - [5.7.7.1. Bounded Context Domain Layer Class Diagrams](#5771-bounded-context-domain-layer-class-diagrams)
+      - [5.7.7.2. Bounded Context Database Design Diagram](#5772-bounded-context-database-design-diagram)
+- [Capítulo VI: Solution UX Design](#capítulo-vi-solution-ux-design)
+  - [6.1. Style Guidelines](#61-style-guidelines)
+    - [6.1.1. General Style Guidelines](#611-general-style-guidelines)
+    - [6.1.2. Web, Mobile & Devices Style Guidelines](#612-web-mobile--devices-style-guidelines)
+  - [6.2. Information Architecture](#62-information-architecture)
+    - [6.2.1. Organization Systems](#621-organization-systems)
+    - [6.2.2. Labeling Systems](#622-labeling-systems)
+    - [6.2.3. Searching Systems](#623-searching-systems)
+    - [6.2.4. SEO Tags and Meta Tags](#624-seo-tags-and-meta-tags)
+    - [6.2.5. Navigation Systems](#625-navigation-systems)
+  - [6.3. Landing Page UI Design](#63-landing-page-ui-design)
+    - [6.3.1. Landing Page Wireframe](#631-landing-page-wireframe)
+    - [6.3.2. Landing Page Mock-up](#632-landing-page-mock-up)
+  - [6.4. Applications UX/UI Design](#64-applications-uxui-design)
+    - [6.4.1. Applications Wireframes](#641-applications-wireframes)
+    - [6.4.2. Applications Wireflow Diagrams](#642-applications-wireflow-diagrams)
 - [Conclusiones](#conclusiones)
   - [Avance de conclusiones](#avance-de-conclusiones)
   - [Video About-the-Team](#video-about-the-team)
@@ -162,7 +273,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.<br>
-          TP: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
+          TB1: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
@@ -170,20 +281,25 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.
+          AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.<br>
+          TB1: Logré sustentar el diseño táctico del Bounded Context Prediction & Advisory, explicando cómo se generan los pronósticos, cómo se deriva la asesoría de llegada a partir del tiempo estimado y cómo los wireframes y wireflows llevan esas capacidades a la experiencia del conductor y del administrador.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.
+          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.<br>
+          TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.
+          AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.<br>
+          TB1: Logré sustentar la reconstrucción del diseño estratégico (EventStorming, contextos candidatos, message flows, canvases y context map) y el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
-        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.
+        La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.<br><br>
+        <strong>TB1:</strong><br>
+        La sustentación del diseño táctico permitió explicar, contexto por contexto, cómo se implementan las capacidades de Quadrapp, desde la lectura de un sensor hasta la asesoría de llegada que recibe el conductor. Atender la retroalimentación del primer hito obligó a explicar con mayor precisión la técnica aplicada en cada artefacto del diseño estratégico y a justificar la decisión de arquitectura ante una audiencia técnica.
       </td>
     </tr>
     <tr>
@@ -192,28 +308,33 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.<br>
-          TP: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
+          TB1: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
-          AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
+          AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
-          AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.
+          AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
+          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.
+          AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.<br>
+          TB1: Redacté el diseño táctico del Bounded Context Analytics y la Information Architecture, y corregí los Bounded Context Canvases, el Context Mapping y el registro de entrevistas a partir de la retroalimentación del primer hito.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
-          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.
+          AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.<br>
+          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y documenté las correcciones del capítulo IV explicando la técnica aplicada en cada paso, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
-        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.
+        La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.<br><br>
+        <strong>TB1:</strong><br>
+        La redacción del diseño táctico como diccionario de clases, con sus capas, reglas de negocio y diagramas, permitió documentar la solución con un nivel de detalle implementable. Mantener los mismos nombres de eventos, fachadas y tablas entre el capítulo IV y el capítulo V, y entre los diagramas y el texto, aseguró que lectores con distinta especialidad encuentren una misma versión coherente del sistema.
       </td>
     </tr>
   </tbody>
@@ -7408,9 +7529,52 @@ La Landing Page permite recorrer las secciones informativas sin abandonar el sit
 
 ## 6.3. Landing Page UI Design
 
+La Landing Page es el primer contacto de los dos segmentos con Quadrapp. Su diseño traduce la arquitectura de información de la sección 6.2 en una sola página con anclas: la barra de navegación lleva a *Cómo funciona*, *Conductores*, *Instituciones*, *Privacidad*, *Nosotros* y *FAQ*, y cada segmento tiene su propia sección y su propia llamada a la acción. El conductor llega a *Conocer la app* y a las descargas para iOS y Android (US26); el administrador, a *Soy una institución*, *Solicitar una conversación* y al formulario de contacto institucional (US27).
+
+El contenido comunica el alcance real del producto para evitar falsas expectativas. Desde la portada se indica que Quadrapp no hace reservas, no cobra y no rastrea la ubicación (CON-10, CON-07); la sección de predicción aclara que una estimación orienta pero no reserva un espacio y explica el estado UNKNOWN; y la sección de privacidad explica que la aplicación calcula el tiempo estimado de llegada en el dispositivo. El pie de página enlaza los términos y condiciones y la política de privacidad (US28, CON-18).
+
+Los diseños se elaboraron en Figma, en el archivo de diseño del equipo, a partir de la propuesta de valor (US25) y del Design System de la sección 6.1. La versión implementada se publicó en [tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) y su código está en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización.
+
 ### 6.3.1. Landing Page Wireframe
 
+El wireframe define la estructura y la jerarquía de la página sin usar color: los bloques grises marcan imágenes y superficies, y el texto ya es el definitivo, para validar la arquitectura de información antes de aplicar el estilo visual.
+
+**Desktop Web Browser**
+
+La página se organiza en una columna de contenido de 1440 px con márgenes laterales de 72 px, que mantienen alineados todos los bloques. De arriba abajo:
+
+1. **Barra de navegación**, con la marca a la izquierda, las seis anclas al centro y la acción *Hablar con Integra Labs* a la derecha.
+2. **Portada**, con el mensaje principal ("Anticipa el estacionamiento antes de salir"), dos acciones diferenciadas por segmento y tres garantías de alcance: sin reservas, sin pagos y sin rastreo de ubicación.
+3. **Franja de valor**, con tres beneficios breves: antes de salir, durante el turno y con privacidad.
+4. **Cómo funciona**, con tres pasos numerados (*Observa*, *Entiende*, *Anticipa*) que resumen el recorrido del sensor a la decisión.
+5. **Para conductores**, con una vista previa de la aplicación (probabilidad y horizontes de 15 a 60 minutos) y los botones de descarga.
+6. **Para instituciones**, con una vista previa de la consola (operación del turno, saturación prevista y alertas) y la acción *Solicitar una conversación*.
+7. **Predicción con contexto**, con las cuatro señales del modelo y un aviso de transparencia.
+8. **Privacidad por diseño**, **Beneficios** y **Nosotros**, con la visión y la misión de Integra Labs.
+9. **Contacto institucional**, con un formulario de cinco campos y el consentimiento de uso de datos.
+10. **Preguntas frecuentes** y **pie de página** con los enlaces de producto, compañía y documentos legales.
+
+Se aplican los principios de jerarquía (un solo titular dominante por sección, con una etiqueta superior que nombra la sección), proximidad (cada sección agrupa texto, evidencia visual y acción), alineación (todo el contenido respeta los mismos márgenes) y repetición (las tarjetas de pasos, señales y beneficios comparten estructura). En diseño inclusivo, el formulario muestra etiquetas visibles sobre cada campo en lugar de depender del texto de ejemplo; los íconos siempre acompañan a un texto, y las preguntas frecuentes se presentan como un acordeón con respuestas cortas.
+
+![Wireframe de la Landing Page para Desktop Web Browser](assets/capitulo-06/landing/landing-wireframe-desktop.png)
+
+*Figura: wireframe de la Landing Page para Desktop Web Browser, elaborado en Figma.*
+
 ### 6.3.2. Landing Page Mock-up
+
+El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin cambiar la estructura ni los textos.
+
+**Desktop Web Browser**
+
+- **Color.** El teal primario `#087F83` identifica las acciones principales y la marca; el azul petróleo `#052B39` y la superficie `#073B4C` dan fondo a la portada y a la sección de instituciones; el acento `#DDF3F1` marca la franja de valor y los avisos informativos; y `#F3F7F6` separa las secciones claras.
+- **Estados.** La vista previa de la aplicación usa los colores de estado definidos: verde para buena disponibilidad, ámbar para disponibilidad limitada y rojo para baja disponibilidad, siempre acompañados del porcentaje, para que el color nunca sea la única señal. En la vista previa de la consola, el ámbar marca la franja de saturación prevista y los sensores en estado UNKNOWN.
+- **Tipografía e íconos.** Se emplea la familia sans-serif de la guía de estilos, con la jerarquía resuelta por tamaño y peso, e íconos de línea con el mismo grosor en toda la página.
+- **Imagen.** La portada usa una fotografía de un campus universitario, que sitúa el producto en su contexto, integrada mediante un degradado oscuro que mantiene el contraste del texto blanco.
+- **Accesibilidad.** Los pares de color de texto y fondo son los verificados en la sección 6.1 frente al nivel AA de WCAG 2.2; los botones primarios combinan texto blanco sobre `#087F83` (4.8:1) y el texto principal usa `#052B39` sobre fondos claros (13.8:1).
+
+![Mock-up de la Landing Page para Desktop Web Browser](assets/capitulo-06/landing/landing-mockup-desktop.png)
+
+*Figura: mock-up de la Landing Page para Desktop Web Browser, elaborado en Figma.*
 
 ## 6.4. Applications UX/UI Design
 
@@ -7489,7 +7653,7 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ### 6.4.2. Applications Wireflow Diagrams
 
-Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan diez diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
+Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan ocho diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
 
 #### VISTA CONDUCTOR (APP MÓVIL)
 
@@ -7528,6 +7692,8 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 ![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
 
 ---
+
+# Conclusiones
 
 ## Avance de conclusiones
 
