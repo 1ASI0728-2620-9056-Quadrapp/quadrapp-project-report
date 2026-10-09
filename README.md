@@ -63,6 +63,7 @@
 | 2.14 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del Registro de Versiones, del Project Report Collaboration Insights, del Student Outcome y de la tabla de contenido para el segundo hito, y restauración del encabezado de conclusiones. |
 | 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser exportados del archivo de Figma del equipo, y del enlace a la Landing Page implementada. |
 | 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Corrección del diseño de base de datos y del diagrama de clases de Analytics: reemplazo de los diagramas en texto por la descripción del diagrama y alineación con PostgreSQL. |
+| 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación de los wireframes de escritorio de la consola de operación para el inventario de dispositivos y del Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
 
 # Project Report Collaboration Insights
 
@@ -7501,7 +7502,7 @@ El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin ca
 
 ### 6.4.1. Applications Wireframes
 
-Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador que se presentan a continuación corresponden a esa vista móvil de la consola.
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
 
 
 #### VISTA CONDUCTOR (APP MÓVIL)
@@ -7572,9 +7573,31 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Más · campus y equipo](./assets/capitulo-06/wireframes/Más%20·%20campus%20y%20equipo.png)
 
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, ESCRITORIO)
+
+**Inventario de dispositivos**: lista los sensores y gateways de la institución con su zona, sede, tipo, asociación, salud, última comunicación y batería, y permite filtrarlos por zona, sede, estacionamiento, tipo y salud (US20, US32).  
+
+![Wireframe - Inventario de dispositivos](./assets/capitulo-06/wireframes/Inventario%20de%20dispositivos.png)
+
+**Gestión de dispositivo · G-03**: reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
+
+![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/Gestión%20de%20dispositivo%20·%20G-03.png)
+
+**Registrar dispositivo**: ventana para registrar un sensor o gateway con su número de serie, tipo, estacionamiento, asociación, dirección (en los sensores de paso) e intervalo de reporte esperado (US19, US32). La institución se muestra fija: el administrador solo registra dispositivos de su universidad.  
+
+![Wireframe - Registrar dispositivo](./assets/capitulo-06/wireframes/Registrar%20dispositivo.png)
+
+**Reasignar G-03**: ventana para cambiar el estacionamiento asociado a un dispositivo. Advierte que los espacios que queden sin lectura pasan a UNKNOWN y no se cuentan como libres (US08, US18).  
+
+![Wireframe - Reasignar G-03](./assets/capitulo-06/wireframes/Reasignar%20G-03.png)
+
+**Dar de baja G-03**: ventana para retirar un dispositivo sin reemplazarlo. Exige un motivo y escribir el identificador para confirmar, y conserva el historial (US32).  
+
+![Wireframe - Dar de baja G-03](./assets/capitulo-06/wireframes/Dar%20de%20baja%20G-03.png)
+
 ### 6.4.2. Applications Wireflow Diagrams
 
-Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan ocho diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
+Los wireflows combinan las pantallas de los wireframes con flechas que indican qué elemento toca el usuario y a qué pantalla lleva. Se presentan nueve diagramas, uno por funcionalidad principal, organizados por tipo de usuario.
 
 #### VISTA CONDUCTOR (APP MÓVIL)
 
@@ -7611,6 +7634,12 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 **Wireflow 8 · Calendario, dominios y equipo**: Desde Más · campus y equipo, el administrador crea un evento de calendario, añade un dominio institucional o invita a un nuevo integrante al equipo.  
 
 ![Wireflow 8 - Calendario, dominios y equipo](./assets/capitulo-06/wireflows/Wireflow%208%20·%20Calendario,%20dominios%20y%20equipo.png)
+
+#### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, ESCRITORIO)
+
+**Wireflow 9 · Dispositivos de la institución**: Desde el Inventario de dispositivos, el administrador registra un dispositivo nuevo o abre la Gestión de un dispositivo; desde ahí lo reasigna a otro estacionamiento o lo da de baja.  
+
+![Wireflow 9 - Dispositivos de la institución](./assets/capitulo-06/wireflows/Wireflow%209%20·%20Dispositivos%20de%20la%20institución.png)
 
 ---
 
