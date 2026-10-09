@@ -132,6 +132,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
   - [Video About-the-Team](#video-about-the-team)
 - [Bibliografía](#bibliografía)
 - [Anexos](#anexos)
+  - [Tablero de diseño estratégico](#tablero-de-diseño-estratégico)
   - [Videos de Exposiciones](#videos-de-exposiciones)
 
 ---
@@ -6369,6 +6370,14 @@ World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 
 ---
 
 # Anexos
+
+## Tablero de diseño estratégico
+
+El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows y el Context Map elegido se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
+
+| Artefacto | Enlace |
+| --- | --- |
+| Strategic-Level Domain-Driven Design (Excalidraw) | [Abrir tablero](https://excalidraw.com/#json=AwfVtCDCsg4Nfujz9eTx2,SHK0Hbpkf3Tu3b42qHBk4A) |
 
 ## Videos de Exposiciones
 
