@@ -3124,6 +3124,111 @@ Representa dónde se ejecuta cada contenedor. Los nodos de sensado y el broker p
 
 ## 5.1. Bounded Context: IAM
 
+El contexto IAM (Identity and Access Management) es el servicio transversal que decide quién puede ingresar a Quadrapp y con qué rol. Gestiona las instituciones (tenants), sus dominios de correo habilitados, las cuentas, las invitaciones, el acceso sin contraseña mediante código de un solo uso y las sesiones basadas en tokens. Su dominio es genérico (Security / Compliance) y no gestiona ocupación ni predicción. Sostiene los drivers FD-01, QAD-07, QAD-08, CON-08, CON-09 y CON-17, y las decisiones DD-08 y DD-09. Su contenido corresponde a las historias US01, US02, US03, US30 y US31, y a las historias técnicas TS01 y TS15.
+
+### 5.1.1. Domain Layer
+ 
+**Aggregates.**
+ 
+| Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
+|---|---|---|---|
+| Tenant | `Tenant` | `EmailDomain` (entidad), `TenantStatus` (ONBOARDING, ACTIVE) | Representa a una institución y sus dominios habilitados. Un dominio solo puede pertenecer a una institución (conflicto 409). Retirar un dominio impide nuevos registros pero conserva las cuentas ya verificadas. |
+| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_ADMIN, INSTITUTION_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
+| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol asignado fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez. |
+| OtpChallenge | `OtpChallenge` | `OneTimeCode` (guardado como hash), `AttemptCounter` | Desafío de acceso por código de un solo uso. Expira, agota intentos y se consume al usarse. |
+| Session | `RefreshToken` | `TokenClaims` (usuario, institución, rol) | Sesión revocable. El cierre de sesión revoca el token de refresco asociado. |
+| PlatformCredential | `PlatformCredential` | `CredentialStatus` | Credencial del equipo de plataforma, distinta de la cuenta de un usuario, que autoriza el alta de instituciones (TS15). |
+ 
+**Domain Services.**
+- `AccessPolicy`: decide si un correo puede recibir un código. Aplica, en orden, las reglas de cuenta existente, invitación vigente y dominio habilitado (US01, escenarios 1, 4 y 5).
+- `AccessPolicy` también resuelve los permisos de cada rol (`permissionsOf`, `can`), con lo que "los permisos se asignan por rol".
+- `OtpRequestThrottle`: determina si un correo superó el número de solicitudes permitidas en la ventana configurada (respuesta 429, CON-09).
+**Mensajes de entrada (canvas).** `SignInRequested`, `SessionValidated` y `RoleAssignmentRequested`, enviados desde la app móvil y el Admin Dashboard.
+ 
+**Domain Events publicados.** `AccessGranted`, `AccessDenied`, `UserIdentityProvided`, `AuthorizedContextProvided`, `SessionRevoked`, `RoleAssigned`, `TenantProvisioned`, `EmailDomainEnabled`, `EmailDomainRetired`, `InvitationIssued`, `InvitationAccepted` y `UserAccountCreated`. `UserIdentityProvided` y `AuthorizedContextProvided` son el lenguaje publicado hacia los demás contextos: entregan usuario, institución, rol y permisos autorizados, y viajan como claims del token.
+ 
+**Repositories (interfaces del dominio).** `TenantRepository`, `UserAccountRepository`, `InvitationRepository`, `OtpChallengeRepository`, `RefreshTokenRepository`, `PlatformCredentialRepository`.
+ 
+**Reglas de negocio principales.**
+1. Un correo recibe un código solo si su dominio está habilitado, si tiene una invitación vigente o si ya tiene una cuenta; en otro caso no se emite ningún código.
+2. El código tiene vigencia corta, un número máximo de intentos y se almacena únicamente como hash.
+3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa el API Gateway para el aislamiento entre instituciones (CON-08).
+4. Los administradores se crean solo por invitación o en el alta inicial de la institución (CON-17).
+5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
+
+### 5.1.2. Interface Layer
+ 
+El contexto expone una API REST documentada con OpenAPI (CON-12). Todas las rutas, salvo el inicio de sesión, requieren token válido o credencial de plataforma. Los textos devueltos respetan el idioma de la solicitud (es_419 o en_US).
+ 
+| Controller | Endpoint | Resultado | Origen |
+|---|---|---|---|
+| `AuthController` | `POST /api/v1/auth/otp` | `SignInRequested`: 202 si el correo es elegible; 429 si excede solicitudes | TS01 |
+| `AuthController` | `POST /api/v1/auth/login` | `AccessGranted`: 200 con token de sesión y claims; `AccessDenied`: 401 si el código es inválido, vencido o agotó intentos | TS01 |
+| `AuthController` | `POST /api/v1/auth/refresh` | 200 con nuevo token de acceso; 401 si el token de refresco venció | TS01 |
+| `AuthController` | `POST /api/v1/auth/logout` | 204 y revocación del token de refresco | US02 (ruta propuesta) |
+| `AuthController` | `GET /api/v1/auth/session` | `SessionValidated`: 200 con usuario, institución, rol y permisos vigentes; 401 si la sesión no es válida | Canvas (ruta propuesta) |
+| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no es administrador institucional | Canvas, US31 (ruta propuesta) |
+| `TenantController` | `POST /api/v1/tenants` | 201 con la institución y la invitación de su primer administrador; 403 sin credenciales de plataforma; 409 si el dominio ya existe | TS15 |
+| `EmailDomainController` | `POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}` | 201 o 204; 409 si el dominio pertenece a otra institución | US30 (rutas propuestas) |
+| `InvitationController` | `POST /api/v1/invitations` | 201 con la invitación registrada y enviada | US31 (ruta propuesta) |
+| `InvitationController` | `POST /api/v1/invitations/{invitationId}/accept` | 200 con la cuenta creada; 410 si la invitación venció | US31 (ruta propuesta) |
+| `KeyController` | `GET /.well-known/jwks.json` | 200 con las claves públicas para que el API Gateway valide los tokens | DD-08 (ruta propuesta) |
+ 
+El API Gateway valida el token, el rol y la institución antes de enrutar la solicitud (DD-08), de modo que IAM no queda en el camino de cada consulta de los demás contextos.
+ 
+### 5.1.3. Application Layer
+ 
+La capa de aplicación contiene los casos de uso, que cargan los aggregates, invocan sus operaciones, guardan el resultado y publican los eventos. No contiene reglas de negocio.
+ 
+| Command / Query handler | Caso de uso | Historias |
+|---|---|---|
+| `RequestOtpHandler` | Verifica la elegibilidad del correo, aplica el límite de solicitudes, genera el código, guarda su hash y solicita su envío | US01, TS01 |
+| `AuthenticateWithOtpHandler` | Valida el código, consume el desafío, crea o recupera la cuenta, registra la aceptación de términos e emite los tokens; publica `AccessGranted` o `AccessDenied` | US01, TS01 |
+| `RefreshSessionHandler` | Emite un nuevo token de acceso a partir de un token de refresco vigente | US03, TS01 |
+| `CloseSessionHandler` | Revoca el token de refresco y registra el cierre | US02 |
+| `ProvisionTenantHandler` | Crea la institución, registra sus dominios y emite la invitación de su primer administrador | TS15, QAS-08 |
+| `AddEmailDomainHandler` y `RetireEmailDomainHandler` | Habilitan o retiran dominios de correo de una institución | US30 |
+| `ValidateSessionHandler` | Verifica el token y devuelve usuario, institución, rol y permisos vigentes | Canvas |
+| `AssignRoleHandler` | Cambia el rol de una cuenta de la misma institución, valida que quien lo solicita pueda hacerlo y revoca las sesiones previas | Canvas, US31 |
+| `IssueInvitationHandler` y `AcceptInvitationHandler` | Emiten una invitación con rol y vigencia, y crean la cuenta al aceptarla | US31 |
+ 
+**Puertos de salida (interfaces implementadas por infraestructura).** `EmailSender` (envío de códigos e invitaciones), `TokenIssuer` (emisión y firma de tokens), `CodeHasher`, `Clock`, `AuditLog` (registro de accesos rechazados, QAS-07) y `DomainEventPublisher`.
+ 
+**Seguridad aplicada en esta capa.** El límite de solicitudes de código y la auditoría de intentos rechazados se ejecutan antes de cualquier consulta al dominio, para cumplir el 100 % de rechazos registrados en 1 s o menos (QAS-07).
+ 
+### 5.1.4. Infrastructure Layer
+ 
+| Componente | Implementa | Detalle |
+|---|---|---|
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02); el motor se define en la sección de implementación. Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
+| `JwtTokenIssuer` | `TokenIssuer` | Firma tokens de acceso y de refresco con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`); publica las claves de verificación. |
+| `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción. |
+| `HashingCodeHasher` | `CodeHasher` | Calcula el hash del código de un solo uso y de los tokens guardados. |
+| `PersistentAuditLog` | `AuditLog` | Registra los accesos denegados (`AccessDenied`: 401, 403 y 429) sin almacenar datos personales innecesarios. |
+| `EventPublisherAdapter` | `DomainEventPublisher` | Publica los eventos de dominio y el contexto autorizado hacia los demás contextos que los necesiten. |
+| Cifrado en tránsito | Transversal | Todas las comunicaciones usan TLS (QAS-07). |
+ 
+### 5.1.6. Bounded Context Software Architecture Component Level Diagrams
+ 
+El diagrama de componentes descompone el servicio IAM en sus componentes de interfaz, aplicación, dominio e infraestructura y muestra sus relaciones con el API Gateway, el servicio de correo y los demás Bounded Contexts, que reciben la identidad y el contexto autorizado. El IAM es propio de Quadrapp, por lo que no depende de un proveedor de identidad externo. Las flechas indican la dirección de la dependencia.
+ 
+![Diagrama de componentes C4 del contexto IAM](assets/capitulo-05/iam/iam_c4_componentes.png)
+ 
+### 5.1.7. Bounded Context Software Architecture Code Level Diagrams
+ 
+#### 5.1.7.1. Bounded Context Domain Layer Class Diagrams
+ 
+![Diagrama de clases de la capa de dominio del contexto IAM](assets/capitulo-05/iam/iam_clases.png)
+ 
+#### 5.1.7.2. Bounded Context Database Design Diagram
+ 
+Cada tabla incluye la institución como identificador de aislamiento (DD-09). El contexto no mantiene claves foráneas hacia las bases de datos de otros contextos.
+ 
+![Diagrama de base de datos del contexto IAM](assets/capitulo-05/iam/iam_bd.png)
+ 
+---
+ 
+
 ## 5.2. Bounded Context: Parking Configuration
 
 ## 5.3. Bounded Context: Parking Sensing
@@ -4291,7 +4396,107 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 ## 5.7. Bounded Context: Notifications
 
----
+El contexto Notifications decide a quién avisar, cuándo y por qué canal, y entrega las alertas de baja disponibilidad a los conductores. Recibe las predicciones desde Prediction & Advisory mediante el lenguaje publicado (Published Language) del mapa de contextos y entrega los mensajes por push o por correo a través de capas anticorrupción hacia los proveedores externos de mensajería. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
+ 
+### 5.2.1. Domain Layer
+ 
+**Aggregates.**
+ 
+| Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
+|---|---|---|---|
+| NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja. Darse de baja conserva las demás suscripciones. |
+| NotificationPreferences | `NotificationPreferences` | `AlertType` (LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST), `Channel` | Preferencias del usuario: notificaciones activas o no, tipos de alerta y canales habilitados. Desactivarlas conserva la suscripción pero omite el envío. |
+| DeviceRegistration | `DeviceRegistration` | `DeviceToken`, `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
+| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador (institucional o de estacionamiento) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
+| NotificationTemplate | `NotificationTemplate` | `AlertType`, `Channel`, `Locale` (es_419, en_US) | Plantilla del mensaje por tipo de alerta, canal e idioma. |
+| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_ADMINS, INSTITUTION_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
+ 
+**Domain Services.**
+- `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
+- `ChannelPolicy`: determina el canal de envío según la preferencia del usuario ("el canal depende de la preferencia del usuario").
+- `DeduplicationPolicy`: impide enviar una nueva alerta cuando ya se envió una para la misma condición y esa condición sigue activa (US23, escenario 4).
+**Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `EmailSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`.
+ 
+**Domain Events consumidos.** `SaturationPredicted` y `ForecastChanged`, publicados por Prediction & Advisory, y `UserIdentityProvided`, entregado por IAM. Los nombres deben coincidir con los publicados por esos contextos.
+ 
+**Repositories.** `SubscriptionRepository`, `PreferencesRepository`, `RuleRepository`, `TemplateRepository`, `DeviceRepository`, `NotificationRepository`.
+ 
+**Reglas de negocio principales.**
+1. Si la saturación se prevé dentro de una franja con suscripción vigente y el usuario tiene las notificaciones habilitadas, se envía la alerta (US23, escenario 1).
+2. Si el pronóstico cambia (`ForecastChanged`) y la asesoría de llegada pasa a categoría LOW para un conductor con notificaciones habilitadas, se envía el aviso inmediato para su hora estimada de llegada (US23, escenario 2).
+3. Con notificaciones deshabilitadas se conserva la suscripción y se omite el envío (US23, escenario 3).
+4. No se generan alertas repetidas para una condición ya notificada (US23, escenario 4).
+5. Un token de dispositivo rechazado por el proveedor se marca inválido y no se vuelve a usar.
+6. No se envían más alertas que las permitidas por la regla del administrador ni se repite una alerta dentro del intervalo mínimo configurado.
+7. Los datos de notificación (token y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
+#### 5.2.2. Interface Layer
+ 
+| Controller o consumidor | Endpoint o evento | Resultado | Origen |
+|---|---|---|---|
+| `SubscriptionController` | `POST /api/v1/notification-subscriptions` | 201 con la suscripción creada | TS12 |
+| `SubscriptionController` | `GET /api/v1/notification-subscriptions` | 200 con las suscripciones del usuario | US33 (ruta propuesta) |
+| `SubscriptionController` | `DELETE /api/v1/notification-subscriptions/{id}` | 204; conserva las demás suscripciones | US33 (ruta propuesta) |
+| `PreferencesController` | `PUT /api/v1/notification-preferences` | `PreferenceUpdated`: 200 y aplicación a los envíos posteriores | TS12 |
+| `PreferencesController` | `GET /api/v1/notification-preferences` | 200 con las preferencias actuales | US24 (ruta propuesta) |
+| `DeviceController` | `POST /api/v1/notification-devices` | 201 y registro del dispositivo como destino de alertas | US33, escenario 2 (ruta propuesta) |
+| `RuleController` | `PUT /api/v1/notification-rules` y `GET /api/v1/notification-rules` | `NotificationRuleConfigured`: 200 con la regla guardada; 403 si el rol no es administrativo | Canvas (rutas propuestas) |
+| `HistoryController` | `GET /api/v1/notifications` | `NotificationHistoryProvided`: 200 con el historial de notificaciones del usuario | Canvas (ruta propuesta) |
+| `PredictionEventConsumer` | Eventos `SaturationPredicted` y `ForecastChanged` | Evalúa las suscripciones afectadas y el aviso inmediato cuando la categoría es LOW | Mapa de contextos, US23 |
+ 
+Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el rol se toman del token validado por el API Gateway (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
+ 
+### 5.2.3. Application Layer
+ 
+| Command / Event handler | Caso de uso | Historias |
+|---|---|---|
+| `CreateSubscriptionHandler` | Registra la suscripción a un estacionamiento y franja | US33, TS12 |
+| `CancelSubscriptionHandler` | Da de baja una suscripción; al quedar sin suscripciones activas, elimina el token de dispositivo y las preferencias | US33, CON-07 |
+| `UpdatePreferencesHandler` | Guarda las preferencias y las aplica a los envíos posteriores | US24, TS12 |
+| `RegisterDeviceHandler` | Registra el token de un dispositivo como destino de alertas | US33 |
+| `ConfigureNotificationRuleHandler` | Guarda la regla de alerta de un estacionamiento y publica `NotificationRuleConfigured` | Canvas |
+| `GetNotificationHistoryHandler` | Devuelve el historial de notificaciones del usuario (`NotificationHistoryProvided`) | Canvas |
+| `HandleSaturationPredictedHandler` | Localiza suscripciones con franja afectada, aplica `AlertPolicy`, `ChannelPolicy` y `DeduplicationPolicy` y crea las notificaciones | US23 |
+| `HandleForecastChangedHandler` | Genera el aviso inmediato cuando el nuevo pronóstico deja la llegada en categoría LOW | US23 |
+| `DispatchNotificationHandler` | Envía una notificación pendiente por el canal elegido (push a los dispositivos válidos o correo), registra el resultado y publica `UserNotificationDelivered` | US23, TS12 |
+| `HandleDeliveryRejectionHandler` | Marca el token como inválido cuando el proveedor lo rechaza y evita reintentos | TS12, DD-07 |
+ 
+**Puertos de salida.** `PushSender` y `EmailSender` (envío a los proveedores de mensajería), `IdentityContext` (identidad entregada por IAM), `DomainEventPublisher` y `Clock`.
+ 
+**Tolerancia a fallas.** El envío se ejecuta de forma independiente de la actualización de ocupación. Si un proveedor no responde dentro del tiempo límite, se abre su circuit breaker y las notificaciones pendientes se registran como fallidas, sin afectar la frescura de la ocupación definida en QAS-02 (QAS-06).
+ 
+### 5.2.4. Infrastructure Layer
+ 
+| Componente | Implementa | Detalle |
+|---|---|---|
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
+| `PushGatewayAdapter` | `PushSender` | Capa anticorrupción hacia el proveedor de mensajería push (`PushSent`). Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06). |
+| `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo (`EmailSent`), con timeout y circuit breaker propios. |
+| `IdentityContextAdapter` | `IdentityContext` | Capa anticorrupción que traduce `UserIdentityProvided` (usuario, institución y rol) al modelo local, sin consultar la base de IAM (CON-02). |
+| Consumidores de eventos | Adaptadores de entrada | Suscripciones a los eventos de Prediction & Advisory con procesamiento idempotente, para tolerar entregas duplicadas. |
+| `EventPublisherAdapter` | `DomainEventPublisher` | Publica los eventos propios del contexto. |
+| Programador de reintentos | Transversal | Reintenta únicamente las notificaciones fallidas por indisponibilidad del proveedor, nunca los tokens marcados como inválidos. |
+ 
+### 5.2.6. Bounded Context Software Architecture Component Level Diagrams
+ 
+El diagrama muestra los componentes internos del servicio Notifications, su integración por eventos con Prediction & Advisory, la identidad recibida desde IAM y su comunicación con el proveedor de mensajería push y el servicio de correo a través de capas anticorrupción.
+ 
+![Diagrama de componentes C4 del contexto Notifications](assets/capitulo-05/notificaciones/notif_c4_componentes.png)
+ 
+### 5.2.7. Bounded Context Software Architecture Code Level Diagrams
+ 
+#### 5.2.7.1. Bounded Context Domain Layer Class Diagrams
+ 
+![Diagrama de clases de la capa de dominio del contexto Notifications](assets/capitulo-05/notificaciones/notif_clases.png)
+ 
+#### 5.2.7.2. Bounded Context Database Design Diagram
+ 
+Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02).
+ 
+![Diagrama de base de datos del contexto Notifications](assets/capitulo-05/notificaciones/notif_bd.png)
+ 
+**Índices relevantes.** Índice único sobre (`user_id`, `condition_key`) en `notifications` para sostener la deduplicación, índice único sobre (`alert_type`, `channel`, `locale`) en `notification_templates`, índice sobre (`parking_lot_id`, `status`) en `notification_subscriptions` para localizar rápidamente las suscripciones afectadas por una saturación prevista.
+
+ 
 
 # Capítulo VI: Solution UX Design
 
