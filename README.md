@@ -4287,9 +4287,164 @@ El diseño se mantiene independiente de un motor de base de datos específico. L
 
 ## 6.1. Style Guidelines
 
+Las Style Guidelines establecen los criterios visuales y de interacción que dan coherencia a los cuatro productos de Quadrapp: la Landing Page, la aplicación móvil del conductor, la consola de operación de cada universidad y la consola de administración de plataforma de Integra Labs. Se definieron a partir de los diseños de interfaz elaborados por el equipo de frontend y se alinean con los constraints CON-11 (accesibilidad e internacionalización) y CON-13 (Material Design), con la privacidad de la ubicación (CON-07) y con la propuesta de valor del producto: informar con claridad y honestidad cuánta confianza merece cada dato.
+
 ### 6.1.1. General Style Guidelines
 
+**Identidad de marca.** Quadrapp se presenta como un producto sobrio, confiable y orientado a la decisión. Su lenguaje visual transmite tres ideas: claridad (una respuesta antes que muchos datos), honestidad (toda estimación muestra su confianza y su antigüedad) y privacidad (el mensaje "compartimos minutos de llegada, nunca tu ubicación" se repite en los puntos de decisión). El logotipo es un ícono de marcador de ubicación en blanco sobre un cuadrado redondeado de color teal, acompañado del nombre "Quadrapp" en tipografía de trazo ligero. Sobre fondos oscuros, el ícono se invierte (marcador teal sobre fondo claro).
+
+**Paleta de colores.** La paleta se compone de un color de marca, neutros de fondo y texto, y colores semánticos que comunican el estado de la disponibilidad. Los valores hexadecimales se tomaron de los diseños entregados.
+
+<p align="center"><img src="assets/capitulo-06/colores/franja_paleta.png" width="700" alt="Paleta principal de Quadrapp"></p>
+
+| Rol | Color | Hex | Uso principal |
+|---|:---:|---|---|
+| Primario (marca) | <img src="assets/capitulo-06/colores/087F83.png" width="28" alt="#087F83"> | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
+| Primario oscuro | <img src="assets/capitulo-06/colores/052B39.png" width="28" alt="#052B39"> | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
+| Superficie oscura | <img src="assets/capitulo-06/colores/073B4C.png" width="28" alt="#073B4C"> | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
+| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola de plataforma |
+| Acento suave | <img src="assets/capitulo-06/colores/DDF3F1.png" width="28" alt="#DDF3F1"> | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
+| Fondo de pantalla | <img src="assets/capitulo-06/colores/F3F7F6.png" width="28" alt="#F3F7F6"> | `#F3F7F6` | Fondo general de las aplicaciones |
+| Superficie | <img src="assets/capitulo-06/colores/FFFFFF.png" width="28" alt="#FFFFFF"> | `#FFFFFF` | Tarjetas, formularios, modales |
+| Texto secundario | <img src="assets/capitulo-06/colores/4D5C5E.png" width="28" alt="#4D5C5E"> | `#4D5C5E` | Descripciones, etiquetas, ayudas |
+| Borde | <img src="assets/capitulo-06/colores/CEDDDA.png" width="28" alt="#CEDDDA"> | `#CEDDDA` | Bordes de tarjetas y campos |
+| Éxito / Buena disponibilidad | <img src="assets/capitulo-06/colores/16704D.png" width="28" alt="#16704D"> <img src="assets/capitulo-06/colores/DFF3E9.png" width="28" alt="#DFF3E9"> | `#16704D` (fondo `#DFF3E9`) | Espacios libres, categoría HIGH, estado operativo |
+| Atención / Limitada / UNKNOWN | <img src="assets/capitulo-06/colores/A36108.png" width="28" alt="#A36108"> <img src="assets/capitulo-06/colores/D98617.png" width="28" alt="#D98617"> <img src="assets/capitulo-06/colores/FFF2D6.png" width="28" alt="#FFF2D6"> | `#A36108` (acento `#D98617`, fondo `#FFF2D6`) | Disponibilidad limitada, espacios UNKNOWN, datos desactualizados |
+| Error / Baja disponibilidad | <img src="assets/capitulo-06/colores/BE4045.png" width="28" alt="#BE4045"> <img src="assets/capitulo-06/colores/FCE6E6.png" width="28" alt="#FCE6E6"> | `#BE4045` (fondo `#FCE6E6`) | Categoría LOW, dispositivos sin señal, acciones destructivas |
+
+**Significado de los colores de estado.** El color nunca es el único portador del significado: cada estado incluye siempre un texto y, cuando corresponde, un ícono (por ejemplo, "Buena disponibilidad", "Limitada", "Poca disponibilidad", "Sin datos"). La correspondencia con el dominio es:
+
+| Estado | Color | Etiqueta | En el plano | Texto en pantalla |
+|---|---|:---:|:---:|---|
+| HIGH | Verde | <img src="assets/capitulo-06/componentes/chip_buena.png" width="78" alt="chip buena"> | | Buena disponibilidad |
+| LIMITED | Ámbar | <img src="assets/capitulo-06/componentes/chip_limitada.png" width="86" alt="chip limitada"> | | Disponibilidad limitada |
+| LOW | Rojo | <img src="assets/capitulo-06/componentes/chip_poca.png" width="70" alt="chip poca"> | | Poca disponibilidad |
+| Espacio libre | Verde | <img src="assets/capitulo-06/componentes/chip_libre.png" width="78" alt="chip libre"> | <img src="assets/capitulo-06/estados/plaza_libre.png" width="34" alt="plaza libre"> | Libre |
+| Espacio ocupado | Gris petróleo | <img src="assets/capitulo-06/componentes/chip_ocupada.png" width="96" alt="chip ocupada"> | <img src="assets/capitulo-06/estados/plaza_ocupada.png" width="34" alt="plaza ocupada"> | Ocupada |
+| UNKNOWN | Ámbar con trama diagonal en el plano | <img src="assets/capitulo-06/componentes/chip_sin_datos.png" width="96" alt="chip sin_datos"> | <img src="assets/capitulo-06/estados/plaza_sin_datos.png" width="34" alt="plaza sin_datos"> | Sin datos / UNKNOWN (nunca se cuenta como libre) |
+
+**Contraste y accesibilidad.** Se verificó la relación de contraste de los pares de color principales frente al criterio WCAG 2.2 nivel AA (4.5:1 para texto normal, 3:1 para texto grande y componentes de interfaz).
+
+| Combinación | Muestra | Relación | Resultado |
+|---|:---:|---|---|
+| Texto `#052B39` sobre fondo `#F3F7F6` | <img src="assets/capitulo-06/contraste/052B39_sobre_F3F7F6.png" width="84" alt="texto #052B39 sobre #F3F7F6"> | 13.8:1 | Cumple |
+| Blanco sobre `#052B39` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_052B39.png" width="84" alt="texto #FFFFFF sobre #052B39"> | 14.9:1 | Cumple |
+| Blanco sobre botón teal `#087F83` | <img src="assets/capitulo-06/contraste/FFFFFF_sobre_087F83.png" width="84" alt="texto #FFFFFF sobre #087F83"> | 4.8:1 | Cumple |
+| Texto `#4D5C5E` sobre blanco | <img src="assets/capitulo-06/contraste/4D5C5E_sobre_FFFFFF.png" width="84" alt="texto #4D5C5E sobre #FFFFFF"> | 7.0:1 | Cumple |
+| Verde `#16704D` sobre `#DFF3E9` | <img src="assets/capitulo-06/contraste/16704D_sobre_DFF3E9.png" width="84" alt="texto #16704D sobre #DFF3E9"> | 5.2:1 | Cumple |
+| Rojo `#BE4045` sobre blanco | <img src="assets/capitulo-06/contraste/BE4045_sobre_FFFFFF.png" width="84" alt="texto #BE4045 sobre #FFFFFF"> | 5.2:1 | Cumple |
+| Teal `#087F83` como texto sobre `#F3F7F6` | <img src="assets/capitulo-06/contraste/087F83_sobre_F3F7F6.png" width="84" alt="texto #087F83 sobre #F3F7F6"> | 4.45:1 | Ligeramente bajo en texto pequeño |
+| Teal `#087F83` como texto sobre `#DDF3F1` | <img src="assets/capitulo-06/contraste/087F83_sobre_DDF3F1.png" width="84" alt="texto #087F83 sobre #DDF3F1"> | 4.15:1 | Bajo en texto pequeño |
+| Ámbar `#A36108` sobre `#FFF2D6` | <img src="assets/capitulo-06/contraste/A36108_sobre_FFF2D6.png" width="84" alt="texto #A36108 sobre #FFF2D6"> | 4.43:1 | Ligeramente bajo en texto pequeño |
+| Rojo `#BE4045` sobre `#FCE6E6` | <img src="assets/capitulo-06/contraste/BE4045_sobre_FCE6E6.png" width="84" alt="texto #BE4045 sobre #FCE6E6"> | 4.39:1 | Ligeramente bajo en texto pequeño |
+
+Para los cuatro casos bajo el umbral, la guía establece que el texto pequeño use una variante más oscura del mismo tono, o que se aplique peso seminegrita o tamaño grande. Los íconos y bordes de componentes mantienen al menos 3:1.
+
+| Variante para texto pequeño | Muestra | Relación |
+|---|:---:|---|
+| `#066A6E` sobre fondos claros (menta) | <img src="assets/capitulo-06/contraste/066A6E_sobre_DDF3F1.png" width="84" alt="texto #066A6E sobre #DDF3F1"> | 5.9:1 |
+| `#8A5206` sobre ámbar claro | <img src="assets/capitulo-06/contraste/8A5206_sobre_FFF2D6.png" width="84" alt="texto #8A5206 sobre #FFF2D6"> | 5.8:1 |
+| `#A8363B` sobre rojo claro | <img src="assets/capitulo-06/contraste/A8363B_sobre_FCE6E6.png" width="84" alt="texto #A8363B sobre #FCE6E6"> | 5.4:1 |
+
+**Tipografía.** Los diseños emplean una familia sans-serif de formas abiertas y alta legibilidad en pantalla, de aspecto similar a Inter, usada en toda la solución. La jerarquía se resuelve con tamaño y peso, no con cambios de familia.
+
+| Nivel | Uso | Peso | Referencia de tamaño |
+|---|---|---|---|
+| Display | Título principal de la Landing Page | Regular | 40–56 px (escritorio), 32 px (móvil) |
+| Título de pantalla | "Operación de turno", "Estacionamientos" | Seminegrita | 24–28 px |
+| Título de tarjeta | "Saturación prevista", "Alertas" | Seminegrita | 18–20 px |
+| Cifra destacada | 82 %, 184 libres | Seminegrita | 32–48 px |
+| Cuerpo | Descripciones y listas | Regular | 14–16 px |
+| Etiqueta / ayuda | Datos actualizados hace 2 min | Regular | 12–13 px |
+
+<p align="center"><img src="assets/capitulo-06/tipografia/tipografia.png" width="460" alt="Jerarquía tipográfica"></p>
+
+Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a 1.6) y sin mayúsculas sostenidas salvo en etiquetas cortas de sección (por ejemplo, "CÓMO FUNCIONA").
+
+**Iconografía.** Se utiliza un único conjunto de íconos lineales, de trazo uniforme y esquinas redondeadas, para mantener la coherencia (marcador de ubicación, escudo de privacidad, campana de alertas, gráfico de predicción, mapa de zonas, puerta de accesos, antena de sensores). Los íconos acompañan siempre a una etiqueta de texto en la navegación.
+
+**Forma, espacio y elevación.** Las tarjetas y los modales usan esquinas muy redondeadas (aprox. 16–24 px), los botones y campos esquinas medias (aprox. 12 px) y los chips de estado forma de píldora. La separación entre elementos sigue una escala de múltiplos de 4 u 8 px. La elevación es mínima: las tarjetas se distinguen por un borde fino (`#CEDDDA`) y una sombra muy suave, y los modales se apoyan en un fondo atenuado.
+
+**Voz y tono.** Los textos se redactan en español latinoamericano (es_419) con inglés (en_US) como alternativa, en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la consola ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
+
+**Imágenes y datos.** La Landing Page usa fotografía de campus y de trabajo en equipo en tonos cálidos, con superposiciones oscuras de color petróleo para asegurar la lectura del texto. En las aplicaciones no se usan fotografías; los datos se presentan con cifras grandes, barras de progreso, gráficos de línea simples y planos esquemáticos del estacionamiento.
+
 ### 6.1.2. Web, Mobile & Devices Style Guidelines
+
+La solución se compone de cuatro productos con contextos de uso distintos. Esta sección precisa cómo se aplican las guías generales en cada uno.
+
+| Producto | Dispositivo principal | Usuario | Patrón de diseño |
+|---|---|---|---|
+| Landing Page | Navegador web (escritorio y móvil) | Visitante: conductor o institución | Página de desplazamiento vertical con secciones, llamadas a la acción por segmento y formulario de contacto |
+| Aplicación móvil del conductor | Teléfono (Android e iOS, Flutter) | Conductor de la comunidad educativa | Navegación inferior de cuatro destinos |
+| Consola de operación | Navegador web y pantalla móvil de turno | Administrador de estacionamientos universitarios | Navegación inferior de cinco destinos en móvil; panel con barra lateral en escritorio |
+| Consola de administración de plataforma | Navegador web de escritorio | Equipo de Integra Labs | Barra lateral oscura fija con tres secciones y contenido en tarjetas y tablas |
+
+**Aplicación móvil del conductor.**
+- *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta.
+- *Pantalla de inicio.* Una tarjeta oscura central responde la pregunta "¿Encontraré espacio al llegar?" con el porcentaje, la categoría, el tiempo de llegada "calculado en tu dispositivo" y la confianza. Debajo se muestran los horizontes de 15, 30, 45 y 60 minutos como fichas coloreadas por categoría.
+- *Acceso.* El inicio de sesión es de dos pasos: correo institucional y código de verificación de seis dígitos con cuenta regresiva para reenviar. Un aviso explica que, si la conexión se interrumpe, el código se conserva y se reintenta.
+- *Zonas.* Resumen de capacidad, libres y desconocidos, y tarjetas por zona con etiqueta de estado. El detalle de zona ofrece vista de mapa esquemático y vista de lista con filtros (Todas, Libres, Sin datos), siempre con la advertencia de que la vista es una muestra.
+- *Predicción.* Tarjeta con el tiempo de llegada y una tarjeta por horizonte con barra de progreso y categoría. Un panel inferior deslizable muestra el detalle (ocupación prevista, saturación, momento de generación, vigencia, fuente, nivel de confianza y versión del modelo).
+- *Alertas.* Interruptores por tipo de alerta, franjas horarias por estacionamiento con opción de pausar o eliminar, y un aviso de datos desactualizados.
+- *Estados transversales.* Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
+- *Interacción.* Objetivos táctiles de al menos 44 × 44 px, acciones principales en la mitad inferior de la pantalla y un único botón primario por vista.
+
+**Consola de operación (administradores de cada universidad).**
+- *Navegación.* Cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más. Un selector de campus en el encabezado oscuro indica el ámbito institucional.
+- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos.
+- *Gestión de la distribución.* Plano esquemático por zonas, edición mediante hojas inferiores ("Añadir zona", "Añadir espacio"), borrador con número de versión y publicación con una confirmación que resume los cambios. Las acciones con impacto (deshabilitar un espacio) exigen un diálogo de confirmación con botón rojo.
+- *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways en modo lectura, gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
+- *Administración.* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
+
+**Consola de administración de plataforma (Integra Labs).**
+- *Estructura.* Barra lateral oscura de ancho fijo con tres secciones (Dashboard general, Universidades, Sensores y gateways), identificación del ámbito global y del usuario en la parte inferior. El contenido usa una cuadrícula de tarjetas de indicadores y tablas con filtros, búsqueda y paginación.
+- *Flujos.* Alta de universidad en tres pasos (datos y dominios, primer administrador, crear e invitar) con validaciones en línea (por ejemplo, dominio duplicado) que bloquean el envío hasta resolver el conflicto; inventario global de dispositivos con salud, última comunicación y batería; gestión de un dispositivo con registro, reemplazo y baja.
+- *Principio de ámbito.* Cada pantalla indica explícitamente si trabaja en el ámbito global de plataforma o en el de una universidad, para respaldar el aislamiento de datos (CON-08).
+
+**Landing Page.**
+- *Estructura.* Encabezado con navegación (Cómo funciona, Conductores, Instituciones, Privacidad, Nosotros, FAQ) y botón de contacto; sección principal con titular, subtítulo y llamadas a la acción para conductores e instituciones; franja de beneficios; secciones por segmento con maqueta del producto; sección de señales de la predicción; privacidad por diseño; beneficios; presentación de Integra Labs; formulario de contacto institucional; preguntas frecuentes; y pie de página con enlaces a términos y política de privacidad (CON-18).
+- *Estilo.* Alterna fondos claros y oscuros para separar el mensaje de conductores del de instituciones; el botón primario es teal y el secundario es un botón con borde. Todas las secciones mantienen el mismo ancho máximo de contenido y centrado.
+
+**Comportamiento responsivo.**
+- Móvil (hasta 600 px): una columna, navegación inferior, tarjetas a todo el ancho con 16 px de margen lateral.
+- Tableta (600–1024 px): dos columnas en tarjetas de resumen, navegación inferior o lateral colapsada.
+- Escritorio (más de 1024 px): barra lateral fija en las consolas, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
+
+**Componentes comunes.**
+
+*Botones.* Primario (teal con texto blanco), secundario (borde y texto petróleo) y destructivo (rojo). Un solo botón primario por vista; los botones largos incluyen ícono a la derecha.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_botones.png" width="520" alt="Botones primario, secundario y destructivo"></p>
+
+*Tarjetas.* Fondo blanco, borde fino, esquinas redondeadas y título de tarjeta en la parte superior; las tarjetas destacadas usan fondo `#052B39` con texto blanco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_tarjetas.png" width="500" alt="Tarjeta estándar y tarjeta destacada"></p>
+
+*Chips y etiquetas.* Forma de píldora con color de fondo claro y texto oscuro del mismo tono, siempre con texto.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_chips.png" width="560" alt="Chips de estado"></p>
+
+*Avisos.* Informativo (menta), advertencia (ámbar claro), error (rojo claro) y éxito (verde claro), con ícono a la izquierda y mensaje breve.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_avisos.png" width="560" alt="Avisos informativo, advertencia, error y éxito"></p>
+
+*Formularios.* Etiqueta encima del campo, ayuda debajo, borde teal al enfocar, borde rojo con mensaje en línea cuando hay error y marca de obligatorio con asterisco.
+
+<p align="center"><img src="assets/capitulo-06/componentes/componentes_formularios.png" width="560" alt="Campos de formulario en estado normal, con foco y con error"></p>
+
+*Modales y hojas inferiores.* Hoja deslizable para formularios y detalles en móvil; diálogo centrado para confirmaciones; fondo atenuado y botón de cierre visible.
+
+**Accesibilidad e internacionalización.**
+- Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page y en la consola de operación, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
+- El estado nunca depende solo del color; se acompaña de texto, ícono o trama.
+- Los textos están disponibles en es_419 y en_US (inglés por defecto), con formatos de fecha y hora según el idioma.
+- Los mensajes de error indican qué ocurrió y cómo resolverlo, y los datos desactualizados se señalan siempre con su antigüedad.
+
+**Privacidad en la interfaz.**
+Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesión, en la pantalla de inicio, en la predicción y en las preferencias de alertas, con un ícono de escudo y un texto equivalente a "Compartimos minutos de llegada, nunca tu ubicación", en coherencia con CON-07.
+
+
 
 ## 6.2. Information Architecture
 
