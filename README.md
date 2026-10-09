@@ -64,6 +64,7 @@
 | 2.15 | 2026-10-09 | Sulca Sanchez, Piero Angel | Incorporación del Landing Page UI Design, con el wireframe y el mock-up para Desktop Web Browser diseñados por Bejarano Martinez, Alvaro Leandro, y del enlace a la Landing Page implementada. |
 | 2.16 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del diseño de base de datos y del diagrama de clases de Analytics: descripción de los diagramas en lugar de esquemas en texto y alineación con PostgreSQL. |
 | 2.17 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de coherencia del capítulo VI: wireframes de escritorio de la consola de operación para el inventario de dispositivos y Wireflow 9, adaptados al alcance de una institución a partir de las pantallas de plataforma del archivo de Figma. |
+| 2.18 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización de los enlaces del informe para que muestren su URL, incorporación del anexo de enlaces a los artefactos y de la evidencia de colaboración del segundo hito. |
 
 # Project Report Collaboration Insights
 
@@ -99,7 +100,11 @@ El informe se elabora de forma colaborativa en el repositorio [https://github.co
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
 | Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; incorporación de la Landing Page UI Design con el diseño de Bejarano Martinez; actualización del Registro de Versiones, del Collaboration Insights, del Student Outcome y de la tabla de contenido; y revisión de coherencia del informe como coordinador del equipo: artefactos del capítulo IV observados en el primer hito, arquitectura y diagramas C4, diagramas de los demás bounded contexts y wireframes de la consola. |
 
-**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 24 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.17 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, hasta la integración del segundo hito en `main`, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 25 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.18 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+
+![Analítico de contribuciones del repositorio del informe al cierre del segundo hito](assets/capitulo-07/collaboration-contributors-tb1.png)
+
+*Figura: analítico de Contributors del repositorio después de integrar el segundo hito en `main`. Registra 62 commits de Sulca Sanchez, 43 de Becerra Tejeda, 23 de Nanfuñay Liza, 12 de Melgarejo Gomez y 9 de Bejarano Martinez. Frente al primer hito, los commits agregados por cada integrante corresponden a los descritos en el Registro de Versiones del Informe.*
 
 # Contenido
 
