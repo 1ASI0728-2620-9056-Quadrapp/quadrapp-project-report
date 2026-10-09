@@ -3045,7 +3045,7 @@ El diseño estratégico utiliza los principios de Domain-Driven Design para deli
 
 El EventStorming se desarrolló en una sesión de trabajo del equipo siguiendo los diez pasos propuestos en el material del curso, a partir del problema, los segmentos y las decisiones del Attribute-Driven Design descritas en las secciones anteriores. El objetivo fue identificar los eventos del dominio de Quadrapp, ordenarlos en el tiempo, reconocer los puntos críticos del proceso y agrupar los agregados resultantes en bounded contexts candidatos.
 
-La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta en [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ), enlace que también se registra en los Anexos.
+La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta: [tablero de diseño estratégico en Excalidraw](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ), enlace que también se registra en los Anexos.
 
 Por la cantidad de eventos, la línea de tiempo se organizó en tres fases del negocio: la incorporación de la institución y la configuración del estacionamiento, el sensado y la ocupación en tiempo real, y la predicción, la asesoría de llegada y las alertas.
 
@@ -3541,7 +3541,7 @@ El Deployment Diagram representa dónde se ejecuta cada contenedor en producció
 
 ## 5.1. Bounded Context: IAM
 
-El contexto IAM (Identity and Access Management) es el servicio transversal que decide quién puede ingresar a Quadrapp y con qué rol. Gestiona las instituciones (tenants), sus dominios de correo habilitados, las cuentas, las invitaciones, el acceso sin contraseña mediante código de un solo uso y las sesiones basadas en tokens. Su dominio es genérico (Security / Compliance) y no gestiona ocupación ni predicción. Sostiene los drivers FD-01, QAD-07, QAD-08, CON-08, CON-09 y CON-17, y las decisiones DD-08 y DD-09. Su contenido corresponde a las historias US01, US02, US03, US30 y US31, y a las historias técnicas TS01 y TS15.
+El contexto IAM (Identity and Access Management) es el bounded context transversal que decide quién puede ingresar a Quadrapp y con qué rol. Gestiona las instituciones (tenants), sus dominios de correo habilitados, las cuentas, las invitaciones, el acceso sin contraseña mediante código de un solo uso y las sesiones basadas en tokens. Su dominio es genérico (Security / Compliance) y no gestiona ocupación ni predicción. Sostiene los drivers FD-01, QAD-07, QAD-08, CON-08, CON-09 y CON-17, y las decisiones DD-08 y DD-09. Su contenido corresponde a las historias US01, US02, US03, US30 y US31, y a las historias técnicas TS01 y TS15.
 
 ### Class Dictionary
 
@@ -3549,23 +3549,32 @@ La siguiente tabla resume las clases e interfaces principales de IAM. Los atribu
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| Tenant | Domain | Aggregate Root. Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación. | id, name, status, createdAt | addDomain(), retireDomain(), activate(), ownsDomain() |
-| EmailDomain | Domain | Entity. Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe). | domain, verification, verifiedAt | — |
-| UserAccount | Domain | Aggregate Root. Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07). | id, tenantId, email, displayName, role, status, terms | assignRole(), acceptTerms(), isParkingAdmin() |
-| Invitation | Domain | Aggregate Root. Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17). | id, tenantId, email, role, status, expiresAt | accept(), expire() |
-| OtpChallenge | Domain | Aggregate Root. Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09). | id, email, codeHash, expiresAt, attempts, consumedAt | verify(), consume() |
-| RefreshToken | Domain | Aggregate Root. Sesión revocable del usuario (US02, US03). | id, userId, tokenHash, expiresAt, revokedAt | revoke(), isActive() |
-| PlatformCredential | Domain | Aggregate Root. Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15). | id, secretHash, status | — |
+| Tenant | Domain | Aggregate Root. Institución cliente de Quadrapp. Agrupa sus dominios de correo y su estado de incorporación. | tenantId, name, status, domains, createdAt | provision(), addDomain(), retireDomain(), activate(), ownsDomain() |
+| EmailDomain | Domain | Entity. Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe). | emailDomainId, domain, verification, verifiedAt | retire(), isEnabled() |
+| UserAccount | Domain | Aggregate Root. Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07). | userId, tenantId, email, displayName, role, status, terms, createdAt | register(), assignRole(), acceptTerms(), isParkingAdmin() |
+| Invitation | Domain | Aggregate Root. Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17). | invitationId, tenantId, email, role, status, invitedBy, tokenHash, expiresAt, acceptedAt | issue(), accept(), expire() |
+| OtpChallenge | Domain | Aggregate Root. Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09). | challengeId, email, code, attempts, createdAt, consumedAt | request(), verify(), consume() |
+| RefreshToken | Domain | Aggregate Root del agregado Session. Sesión revocable del usuario (US02, US03). | tokenId, userId, tokenHash, issuedAt, expiresAt, revokedAt | issue(), revoke(), isActive() |
+| PlatformCredential | Domain | Aggregate Root. Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15). | credentialId, secretHash, status, createdAt | isActive() |
+| Email | Domain | Value Object. Correo de la cuenta, de la invitación o del desafío. | value | value(), domain() |
+| TermsAcceptance | Domain | Value Object. Versión y momento de aceptación de los términos y la política de privacidad. | version, acceptedAt | — |
+| ExpirationPolicy | Domain | Value Object. Vigencia con la que se emite una invitación. | validityHours | expiresAt() |
+| OneTimeCode | Domain | Value Object. Código de un solo uso guardado como hash, con su fin de vigencia. | hash, expiresAt | matches(), isExpired() |
+| AttemptCounter | Domain | Value Object. Intentos de verificación usados y máximo permitido. | used, max | increment(), isExhausted() |
+| TokenClaims | Domain | Value Object. Datos que viajan en el token: usuario, institución, rol y permisos. | userId, tenantId, role, permissions | — |
 | AccessPolicy | Domain | Domain Service. Decide si un correo puede recibir un código y resuelve los permisos de cada rol. | — | canRequestCode(), permissionsOf(), can() |
 | OtpRequestThrottle | Domain | Domain Service. Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo. | — | isAllowed() |
-| Role, Permission, TenantStatus, InvitationStatus | Domain | Enumeraciones del contexto. | — | — |
-| TenantRepository, UserAccountRepository, InvitationRepository, OtpChallengeRepository, RefreshTokenRepository, PlatformCredentialRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
-| RequestOtpHandler, AuthenticateWithOtpHandler, RefreshSessionHandler, CloseSessionHandler | Application | Command Handlers del acceso y la sesión. | Dependencies | handle() |
-| ProvisionTenantHandler, AddEmailDomainHandler, RetireEmailDomainHandler | Application | Command Handlers de instituciones y dominios. | Dependencies | handle() |
-| ValidateSessionHandler, AssignRoleHandler, IssueInvitationHandler, AcceptInvitationHandler | Application | Command y Query Handlers de sesión, roles e invitaciones. | Dependencies | handle() |
-| EmailSender, TokenIssuer, CodeHasher, AuditLog, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.1.3 |
+| Role, Permission, TenantStatus, VerificationStatus, AccountStatus, InvitationStatus, CredentialStatus | Domain | Enumeraciones del contexto. | — | — |
+| TenantRepository, UserAccountRepository, InvitationRepository, OtpChallengeRepository, RefreshTokenRepository, PlatformCredentialRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…(), countByEmailSince() |
+| TenantProvisioned, EmailDomainEnabled, EmailDomainRetired, UserAccountCreated, RoleAssigned, InvitationIssued, InvitationAccepted, AccessGranted, AccessDenied, SessionRevoked, UserIdentityProvided, AuthorizedContextProvided | Domain | Domain Events publicados (Published Language). | Ver 5.1.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura: acceso con código, sesión, instituciones, dominios, roles e invitaciones. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura: validación de la sesión y claves de verificación de los tokens. | Dependencies | handle() |
+| AccessDeniedEventHandler | Application | Event Handler. Registra en la auditoría cada acceso rechazado por código inválido. | Dependencies | handle() |
+| EmailSender, TokenIssuer, CodeHasher, AuditLog, IamEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.1.3 |
 | AuthController, UserController, TenantController, EmailDomainController, InvitationController, KeyController | Interface | Controllers REST. | Handler dependencies | Ver 5.1.2 |
-| JwtTokenIssuer, EmailGatewayAdapter, HashingCodeHasher, PersistentAuditLog, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.1.4 |
+| AuditEventListener | Interface | Consumer del evento `AccessDenied`. | Event Handler dependency | on() |
+| *RepositoryAdapter | Infrastructure | Implementan los repositorios sobre el esquema `iam`. | Persistence dependency | save(), find…() |
+| JwtTokenIssuer, EmailGatewayAdapter, HashingCodeHasher, PersistentAuditLog, IamEventPublisherAdapter | Infrastructure | Implementaciones de los puertos de salida. | Integration dependencies | Ver 5.1.4 |
 
 ### 5.1.1. Domain Layer
  
@@ -3573,12 +3582,12 @@ La siguiente tabla resume las clases e interfaces principales de IAM. Los atribu
  
 | Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
 |---|---|---|---|
-| Tenant | `Tenant` | `EmailDomain` (entidad), `TenantStatus` (ONBOARDING, ACTIVE) | Representa a una institución y sus dominios habilitados. Un dominio solo puede pertenecer a una institución (conflicto 409). Retirar un dominio impide nuevos registros pero conserva las cuentas ya verificadas. |
-| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_OPERATOR, PARKING_ADMIN), `Permission`, `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
-| Invitation | `Invitation` | `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` | Permite crear cuentas con rol PARKING_ADMIN o PARKING_OPERATOR, también fuera de los dominios habilitados. Tiene vigencia limitada y solo puede aceptarse una vez (US31). |
-| OtpChallenge | `OtpChallenge` | `OneTimeCode` (guardado como hash), `AttemptCounter` | Desafío de acceso por código de un solo uso. Expira, agota intentos y se consume al usarse. |
-| Session | `RefreshToken` | `TokenClaims` (usuario, institución, rol) | Sesión revocable. El cierre de sesión revoca el token de refresco asociado. |
-| PlatformCredential | `PlatformCredential` | `CredentialStatus` | Credencial del equipo de plataforma, distinta de la cuenta de un usuario, que autoriza el alta de instituciones (TS15). |
+| Tenant | `Tenant` | `EmailDomain` (entidad, con `VerificationStatus`: VERIFIED, RETIRED), `TenantStatus` (ONBOARDING, ACTIVE) | Representa a una institución y sus dominios habilitados. Un dominio solo puede pertenecer a una institución (conflicto 409). Retirar un dominio impide nuevos registros pero conserva las cuentas ya verificadas. |
+| UserAccount | `UserAccount` | `Email`, `Role` (DRIVER, PARKING_OPERATOR, PARKING_ADMIN), `Permission`, `AccountStatus` (ACTIVE, DISABLED), `TermsAcceptance` (versión y fecha) | Cuenta de un integrante de la institución. Guarda solo correo institucional, nombre visible, rol e institución; no almacena documento de identidad, código de estudiante ni placa (CON-07). Cada rol otorga un conjunto de permisos; los roles administrativos no admiten autorregistro. |
+| Invitation | `Invitation` | `Email`, `InvitationStatus` (PENDING, ACCEPTED, EXPIRED, REVOKED), `ExpirationPolicy` (vigencia) | Permite crear cuentas con rol PARKING_ADMIN o PARKING_OPERATOR, también fuera de los dominios habilitados. Tiene vigencia limitada, solo puede aceptarse una vez y se acepta con el token del enlace enviado al correo, del que solo se guarda el hash (US31). |
+| OtpChallenge | `OtpChallenge` | `Email`, `OneTimeCode` (hash y fin de vigencia), `AttemptCounter` (intentos usados y máximo) | Desafío de acceso por código de un solo uso. Expira, agota intentos y se consume al usarse. |
+| Session | `RefreshToken` | `TokenClaims` (usuario, institución, rol y permisos) | Sesión revocable. El cierre de sesión revoca el token de refresco asociado. |
+| PlatformCredential | `PlatformCredential` | `CredentialStatus` (ACTIVE, REVOKED) | Credencial del equipo de plataforma, distinta de la cuenta de un usuario, que autoriza el alta de instituciones (TS15). |
  
 **Domain Services.**
 - `AccessPolicy`: decide si un correo puede recibir un código. Aplica, en orden, las reglas de cuenta existente, invitación vigente y dominio habilitado (US01, escenarios 1, 4 y 5).
@@ -3595,7 +3604,7 @@ La siguiente tabla resume las clases e interfaces principales de IAM. Los atribu
 
 **Mensajes de entrada (canvas).** `SignInRequested`, `SessionValidated` y `RoleAssignmentRequested`, enviados desde la app móvil y el Admin Dashboard.
  
-**Domain Events publicados.** `AccessGranted`, `AccessDenied`, `UserIdentityProvided`, `AuthorizedContextProvided`, `SessionRevoked`, `RoleAssigned`, `TenantProvisioned`, `EmailDomainEnabled`, `EmailDomainRetired`, `InvitationIssued`, `InvitationAccepted` y `UserAccountCreated`. `UserIdentityProvided` y `AuthorizedContextProvided` son el lenguaje publicado hacia los demás contextos: entregan usuario, institución, rol y permisos autorizados, y viajan como claims del token.
+**Domain Events publicados.** `AccessGranted`, `AccessDenied`, `UserIdentityProvided`, `AuthorizedContextProvided`, `SessionRevoked`, `RoleAssigned`, `TenantProvisioned`, `EmailDomainEnabled`, `EmailDomainRetired`, `InvitationIssued`, `InvitationAccepted` y `UserAccountCreated`. `UserIdentityProvided` y `AuthorizedContextProvided` son el lenguaje publicado hacia los demás contextos: entregan usuario, institución, rol y permisos autorizados, y viajan como claims del token (`TokenClaims`). La tabla de eventos del diccionario indica sus atributos y qué agregado registra cada uno.
  
 **Repositories (interfaces del dominio).** `TenantRepository`, `UserAccountRepository`, `InvitationRepository`, `OtpChallengeRepository`, `RefreshTokenRepository`, `PlatformCredentialRepository`.
  
@@ -3608,47 +3617,47 @@ La siguiente tabla resume las clases e interfaces principales de IAM. Los atribu
 
 **Diccionario de clases del dominio**
 
-Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+Cada clase se documenta con su propósito, sus atributos y sus métodos. Como en los demás contextos, los atributos son privados y los métodos, públicos, y los tipos coinciden con el diagrama de clases de la sección 5.1.7.1. Las referencias a otros agregados se guardan como identificadores `UUID`.
 
-**Aggregate Root: Tenant**
+**Aggregate 1: Tenant**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|Tenant|Aggregate Root|Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación.|
+|Tenant|Aggregate Root|Institución cliente de Quadrapp. Agrupa sus dominios de correo y su estado de incorporación.|
 
 Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|TenantId|Public|Identificador de la institución.|
-|name|String|Public|Nombre de la institución.|
-|status|TenantStatus|Public|ONBOARDING mientras se configura; ACTIVE cuando puede operar.|
-|createdAt|DateTime|Public|Fecha del alta.|
+|tenantId|UUID|Private|Identificador de la institución.|
+|name|String|Private|Nombre de la institución.|
+|status|TenantStatus|Private|ONBOARDING mientras se configura; ACTIVE cuando puede operar.|
+|domains|`List<EmailDomain>`|Private|Dominios de correo de la institución, verificados o retirados.|
+|createdAt|Instant|Private|Momento del alta.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|addDomain(domain)|EmailDomain|Public|Habilita un dominio; rechaza uno que pertenezca a otra institución (409).|
-|retireDomain(domain)|void|Public|Retira un dominio: impide nuevos registros, pero conserva las cuentas verificadas.|
-|activate()|void|Public|Pasa la institución a ACTIVE.|
-|ownsDomain(domain)|boolean|Public|Indica si el dominio pertenece a la institución.|
+|provision(name: String, domains: `List<String>`, now: Instant)|Tenant|Public (static)|Crea la institución en estado ONBOARDING con sus dominios verificados y registra `TenantProvisioned` (TS15, escenario 1).|
+|addDomain(domain: String, now: Instant)|EmailDomain|Public|Habilita un dominio para el registro y registra `EmailDomainEnabled` (US30, escenario 1).|
+|retireDomain(domain: String, now: Instant)|Void|Public|Retira un dominio y registra `EmailDomainRetired`: impide nuevos registros, pero conserva las cuentas verificadas (US30, escenario 2).|
+|activate()|Void|Public|Pasa la institución de ONBOARDING a ACTIVE.|
+|ownsDomain(domain: String)|Boolean|Public|Indica si el dominio pertenece a la institución y está habilitado.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Entity: EmailDomain**
+Un dominio solo puede pertenecer a una institución: antes de `provision` o `addDomain`, el caso de uso consulta `TenantRepository.findByDomain` y responde 409 si el dominio ya pertenece a otra (US30, escenario 3; TS15, escenario 3).
 
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|EmailDomain|Entity|Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe).|
+**Entities, Value Objects y enumeraciones del agregado Tenant**
 
-Attributes
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|EmailDomain|Entity|emailDomainId: UUID, domain: String, verification: VerificationStatus, verifiedAt: Instant|retire(): Void; isEnabled(): Boolean|Dominio de correo institucional (por ejemplo, upc.edu.pe). `isEnabled()` es verdadero mientras el dominio está en VERIFIED.|
+|TenantStatus|Enumeration|ONBOARDING, ACTIVE|—|Estado de la institución.|
+|VerificationStatus|Enumeration|VERIFIED, RETIRED|—|VERIFIED: el dominio se verificó como propio de la institución y está habilitado para el registro (US30, escenario 1; TS15). RETIRED: el dominio se retiró y no admite nuevos registros (US30, escenario 2).|
 
-|Nombre|Tipo de dato|Visibilidad|Descripción|
-|-|-|-|-|
-|domain|String|Public|Dominio de correo.|
-|verification|VerificationStatus|Public|Estado de la verificación del dominio.|
-|verifiedAt|DateTime|Public|Fecha de la verificación.|
-
-**Aggregate Root: UserAccount**
+**Aggregate 2: UserAccount**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -3658,23 +3667,37 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|UserId|Public|Identificador del usuario.|
-|tenantId|TenantId|Public|Institución a la que pertenece.|
-|email|Email|Public|Correo institucional o invitado.|
-|displayName|String|Public|Nombre visible.|
-|role|Role|Public|Rol que define sus permisos.|
-|status|AccountStatus|Public|Estado de la cuenta.|
-|terms|TermsAcceptance|Public|Versión y fecha de aceptación de los términos y la política de privacidad.|
+|userId|UUID|Private|Identificador del usuario.|
+|tenantId|UUID|Private|Referencia a la institución a la que pertenece.|
+|email|Email|Private|Correo institucional o invitado.|
+|displayName|String|Private|Nombre visible.|
+|role|Role|Private|Rol que define sus permisos.|
+|status|AccountStatus|Private|ACTIVE o DISABLED.|
+|terms|TermsAcceptance?|Private|Versión y momento de aceptación de los términos y la política de privacidad; vacío hasta que la cuenta inicia sesión por primera vez.|
+|createdAt|Instant|Private|Momento de creación de la cuenta.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|assignRole(role)|void|Public|Cambia el rol de la cuenta; las sesiones previas se revocan.|
-|acceptTerms(version, date)|void|Public|Registra la aceptación de los términos vigentes.|
-|isParkingAdmin()|boolean|Public|Indica si la cuenta tiene el rol PARKING_ADMIN.|
+|register(tenantId: UUID, email: Email, displayName: String, role: Role, now: Instant)|UserAccount|Public (static)|Crea la cuenta en estado ACTIVE y registra `UserAccountCreated`. Se usa en el primer acceso de un conductor y al aceptar una invitación; los roles administrativos solo se crean por invitación o en el alta inicial de la institución (CON-17).|
+|assignRole(role: Role, now: Instant)|Void|Public|Cambia el rol de la cuenta y registra `RoleAssigned`; el caso de uso revoca las sesiones previas.|
+|acceptTerms(version: String, now: Instant)|Void|Public|Registra la versión y el momento de aceptación de los términos vigentes (CON-07, escenario 3).|
+|isParkingAdmin()|Boolean|Public|Indica si la cuenta tiene el rol PARKING_ADMIN.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: Invitation**
+**Value Objects y enumeraciones del agregado UserAccount**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|Email|Value Object|value: String|value(): String; domain(): String|Correo normalizado. `domain()` devuelve el dominio con el que `AccessPolicy` comprueba si está habilitado. También lo usan `Invitation` y `OtpChallenge`.|
+|TermsAcceptance|Value Object|version: String, acceptedAt: Instant|—|Versión y momento de aceptación de los términos y la política de privacidad.|
+|Role|Enumeration|DRIVER, PARKING_OPERATOR, PARKING_ADMIN|—|Rol del usuario. También lo usan `Invitation` y `TokenClaims`.|
+|Permission|Enumeration|VIEW_AVAILABILITY, RECEIVE_ALERTS, CONFIGURE_PARKING, MONITOR_OPERATION, VIEW_ANALYTICS, MANAGE_USERS, MANAGE_TENANT|—|Permisos que otorga cada rol; `AccessPolicy` los resuelve.|
+|AccountStatus|Enumeration|ACTIVE, DISABLED|—|ACTIVE desde la creación de la cuenta; DISABLED identifica una cuenta que ya no puede iniciar sesión.|
+
+**Aggregate 3: Invitation**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -3684,21 +3707,34 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|InvitationId|Public|Identificador de la invitación.|
-|tenantId|TenantId|Public|Institución que invita.|
-|email|Email|Public|Correo invitado.|
-|role|Role|Public|Rol que tendrá la cuenta: PARKING_ADMIN o PARKING_OPERATOR.|
-|status|InvitationStatus|Public|PENDING, ACCEPTED, EXPIRED o REVOKED.|
-|expiresAt|DateTime|Public|Fin de la vigencia.|
+|invitationId|UUID|Private|Identificador de la invitación.|
+|tenantId|UUID|Private|Institución que invita.|
+|email|Email|Private|Correo invitado.|
+|role|Role|Private|Rol que tendrá la cuenta: PARKING_ADMIN o PARKING_OPERATOR.|
+|status|InvitationStatus|Private|PENDING, ACCEPTED, EXPIRED o REVOKED.|
+|invitedBy|UUID?|Private|Administrador que emitió la invitación; vacío en la invitación del primer administrador (TS15).|
+|tokenHash|String|Private|Hash del token de un solo uso que viaja en el enlace de la invitación; el token nunca se guarda en claro (US31, escenario 1).|
+|expiresAt|Instant|Private|Fin de la vigencia.|
+|acceptedAt|Instant?|Private|Momento de la aceptación, si la hubo.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|accept(now)|UserAccount|Public|Crea la cuenta con el rol asignado; falla si la invitación venció o ya se usó.|
-|expire(now)|void|Public|Marca la invitación como vencida.|
+|issue(tenantId: UUID, email: Email, role: Role, invitedBy: UUID, tokenHash: String, policy: ExpirationPolicy, now: Instant)|Invitation|Public (static)|Crea la invitación en estado PENDING con el hash del token del enlace, calcula `expiresAt` con la política de vigencia y registra `InvitationIssued`. Solo admite los roles PARKING_ADMIN y PARKING_OPERATOR (US31, escenario 1).|
+|accept(displayName: String, now: Instant)|UserAccount|Public|Crea la cuenta (`UserAccount.register`) con el correo, el rol y la institución de la invitación y el nombre visible indicado, pasa a ACCEPTED y registra `InvitationAccepted`; falla si la invitación venció (410) o ya se usó (US31, escenarios 2 y 3).|
+|expire(now: Instant)|Void|Public|Pasa la invitación a EXPIRED al superar su vigencia.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: OtpChallenge**
+**Value Objects y enumeraciones del agregado Invitation**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|ExpirationPolicy|Value Object|validityHours: Integer|expiresAt(issuedAt: Instant): Instant|Vigencia de la invitación. Se aplica al emitirla para calcular `expiresAt`.|
+|InvitationStatus|Enumeration|PENDING, ACCEPTED, EXPIRED, REVOKED|—|Estado de la invitación.|
+
+**Aggregate 4: OtpChallenge**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -3708,21 +3744,31 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|ChallengeId|Public|Identificador del desafío.|
-|email|Email|Public|Correo que solicitó el código.|
-|codeHash|String|Public|Hash del código; el código nunca se guarda en claro.|
-|expiresAt|DateTime|Public|Fin de la vigencia del código.|
-|attempts|int|Public|Intentos de verificación realizados.|
-|consumedAt|DateTime|Public|Momento en que se usó el código.|
+|challengeId|UUID|Private|Identificador del desafío.|
+|email|Email|Private|Correo que solicitó el código.|
+|code|OneTimeCode|Private|Hash del código y fin de su vigencia; el código nunca se guarda en claro.|
+|attempts|AttemptCounter|Private|Intentos de verificación usados y máximo permitido.|
+|createdAt|Instant|Private|Momento de la solicitud; con él se aplica el límite de solicitudes.|
+|consumedAt|Instant?|Private|Momento en que se usó el código.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|verify(code, now)|boolean|Public|Compara el código con el hash; cuenta el intento y falla si venció o agotó los intentos.|
-|consume()|void|Public|Marca el desafío como usado.|
+|request(email: Email, code: OneTimeCode, maxAttempts: Integer, now: Instant)|OtpChallenge|Public (static)|Crea el desafío con el hash del código y su vigencia, y el contador de intentos en cero (US01, escenario 1).|
+|verify(candidateHash: String, now: Instant)|Boolean|Public|Cuenta el intento y compara el hash del código ingresado con el guardado. Falla si el código no coincide, venció, agotó los intentos o ya se usó, y en ese caso registra `AccessDenied` (US01, escenario 3).|
+|consume(now: Instant)|Void|Public|Marca el desafío como usado y registra `AccessGranted` (US01, escenario 2).|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: RefreshToken**
+**Value Objects del agregado OtpChallenge**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|OneTimeCode|Value Object|hash: String, expiresAt: Instant|matches(candidateHash: String): Boolean; isExpired(now: Instant): Boolean|Código de un solo uso guardado únicamente como hash, con su fin de vigencia. El hash lo calcula el puerto `CodeHasher`.|
+|AttemptCounter|Value Object|used: Integer, max: Integer|increment(): AttemptCounter; isExhausted(): Boolean|Intentos realizados y máximo permitido. Es inmutable: `increment()` devuelve un nuevo contador.|
+
+**Aggregate 5: Session (raíz RefreshToken)**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -3732,20 +3778,30 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|TokenId|Public|Identificador del token.|
-|userId|UserId|Public|Usuario de la sesión.|
-|tokenHash|String|Public|Hash del token de refresco.|
-|expiresAt|DateTime|Public|Fin de la vigencia.|
-|revokedAt|DateTime|Public|Momento de la revocación, si la hubo.|
+|tokenId|UUID|Private|Identificador del token.|
+|userId|UUID|Private|Referencia a la cuenta de la sesión.|
+|tokenHash|String|Private|Hash del token de refresco.|
+|issuedAt|Instant|Private|Momento de la emisión.|
+|expiresAt|Instant|Private|Fin de la vigencia.|
+|revokedAt|Instant?|Private|Momento de la revocación, si la hubo.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|revoke(now)|void|Public|Revoca la sesión al cerrar sesión o al cambiar el rol.|
-|isActive(now)|boolean|Public|Indica si el token sigue vigente y no fue revocado.|
+|issue(userId: UUID, tokenHash: String, expiresAt: Instant, now: Instant)|RefreshToken|Public (static)|Abre la sesión con el hash del token de refresco y su fin de vigencia (US01, escenario 2; US03).|
+|revoke(now: Instant)|Void|Public|Revoca la sesión al cerrar sesión o al cambiar el rol, y registra `SessionRevoked` (US02).|
+|isActive(now: Instant)|Boolean|Public|Indica si el token sigue vigente y no fue revocado.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: PlatformCredential**
+**Value Objects del agregado Session**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|TokenClaims|Value Object|userId: UUID, tenantId: UUID, role: Role, permissions: `Set<Permission>`|—|Datos que viajan en cada token de acceso emitido con la sesión. Son el lenguaje publicado `UserIdentityProvided` (usuario, institución y rol) y `AuthorizedContextProvided` (permisos autorizados) que usa la capa de seguridad del backend (CON-08).|
+
+**Aggregate 6: PlatformCredential**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -3755,100 +3811,215 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|CredentialId|Public|Identificador de la credencial.|
-|secretHash|String|Public|Hash del secreto.|
-|status|CredentialStatus|Public|Estado de la credencial.|
-
-**Domain Service: AccessPolicy**
-
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|AccessPolicy|Domain Service|Decide si un correo puede recibir un código y resuelve los permisos de cada rol.|
+|credentialId|UUID|Private|Identificador de la credencial.|
+|secretHash|String|Private|Hash del secreto.|
+|status|CredentialStatus|Private|ACTIVE o REVOKED.|
+|createdAt|Instant|Private|Momento de creación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|canRequestCode(email)|AccessDecision|Public|Aplica, en orden, cuenta existente, invitación vigente y dominio habilitado (US01).|
-|permissionsOf(role)|`Set<Permission>`|Public|Devuelve los permisos del rol.|
-|can(role, permission)|boolean|Public|Indica si el rol tiene el permiso.|
+|isActive()|Boolean|Public|Indica si la credencial autoriza el alta de instituciones; sin una credencial activa, la solicitud recibe 403 (TS15, escenario 2).|
 
-**Domain Service: OtpRequestThrottle**
+**Enumeraciones del agregado PlatformCredential**
 
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|OtpRequestThrottle|Domain Service|Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo.|
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|CredentialStatus|Enumeration|ACTIVE, REVOKED|—|ACTIVE autoriza el alta de instituciones; REVOKED ya no la autoriza.|
 
-Methods
+**Domain Services**
 
-|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|Nombre|Categoría|Métodos|Descripción|
 |-|-|-|-|
-|isAllowed(email, now)|boolean|Public|Devuelve falso si el correo superó el límite; la API responde 429.|
+|AccessPolicy|Domain Service|canRequestCode(email: Email): Boolean; permissionsOf(role: Role): `Set<Permission>`; can(role: Role, permission: Permission): Boolean|`canRequestCode` aplica, en orden, cuenta existente (`UserAccount`), invitación vigente (`Invitation`) y dominio habilitado (`Tenant`) (US01, escenarios 1, 4 y 5). `permissionsOf` y `can` resuelven los permisos de cada rol.|
+|OtpRequestThrottle|Domain Service|isAllowed(email: Email, now: Instant): Boolean|Devuelve falso si el correo superó las solicitudes permitidas en la ventana configurada, que cuenta con `OtpChallengeRepository.countByEmailSince`; la API responde 429 (CON-09).|
 
-**Enumeraciones**
+**Repositories (interfaces del dominio)**
 
-|Nombre|Valores|Descripción|
+|Nombre|Operaciones|Descripción|
 |-|-|-|
-|Role|DRIVER, PARKING_OPERATOR, PARKING_ADMIN|Rol del usuario.|
-|Permission|VIEW_AVAILABILITY, RECEIVE_ALERTS, CONFIGURE_PARKING, MONITOR_OPERATION, VIEW_ANALYTICS, MANAGE_USERS, MANAGE_TENANT|Permisos que otorga cada rol.|
-|TenantStatus|ONBOARDING, ACTIVE|Estado de la institución.|
-|InvitationStatus|PENDING, ACCEPTED, EXPIRED, REVOKED|Estado de la invitación.|
+|TenantRepository|save(tenant: Tenant): Void; findById(tenantId: UUID): Tenant; findByDomain(domain: String): Tenant|Persistencia de `Tenant`. `findByDomain` detecta el conflicto 409 y permite comprobar si el dominio de un correo está habilitado.|
+|UserAccountRepository|save(account: UserAccount): Void; findById(userId: UUID): UserAccount; findByEmail(email: Email): UserAccount|Persistencia de `UserAccount`. `findByEmail` resuelve la regla de cuenta existente.|
+|InvitationRepository|save(invitation: Invitation): Void; findById(invitationId: UUID): Invitation; findPendingByEmail(email: Email): Invitation; findByTokenHash(tokenHash: String): Invitation|Persistencia de `Invitation`. `findPendingByEmail` resuelve la regla de invitación vigente y `findByTokenHash` localiza la invitación a partir del token del enlace (US31, escenario 2).|
+|OtpChallengeRepository|save(challenge: OtpChallenge): Void; findById(challengeId: UUID): OtpChallenge; findLatestByEmail(email: Email): OtpChallenge; countByEmailSince(email: Email, since: Instant): Integer|Persistencia de `OtpChallenge`. `countByEmailSince` alimenta el límite de solicitudes.|
+|RefreshTokenRepository|save(token: RefreshToken): Void; findById(tokenId: UUID): RefreshToken; findByTokenHash(tokenHash: String): RefreshToken; findActiveByUser(userId: UUID): `List<RefreshToken>`|Persistencia de `RefreshToken`. `findActiveByUser` permite revocar las sesiones previas al cambiar el rol.|
+|PlatformCredentialRepository|save(credential: PlatformCredential): Void; findById(credentialId: UUID): PlatformCredential|Persistencia de `PlatformCredential`.|
+
+**Domain Events publicados (Published Language)**
+
+|Evento|Atributos|Lo registra|Descripción y consumidores|
+|-|-|-|-|
+|TenantProvisioned|tenantId: UUID, name: String, domains: `List<String>`, provisionedAt: Instant|`Tenant.provision`|Alta de la institución. Parking Configuration lo consume para inicializar su calendario (TS15).|
+|EmailDomainEnabled|tenantId: UUID, emailDomainId: UUID, domain: String, enabledAt: Instant|`Tenant.addDomain`|Dominio habilitado para el registro (US30).|
+|EmailDomainRetired|tenantId: UUID, emailDomainId: UUID, domain: String, retiredAt: Instant|`Tenant.retireDomain`|Dominio retirado (US30).|
+|UserAccountCreated|userId: UUID, tenantId: UUID, role: Role, createdAt: Instant|`UserAccount.register`|Cuenta creada. No incluye el correo ni el nombre visible (CON-07).|
+|RoleAssigned|userId: UUID, tenantId: UUID, role: Role, assignedAt: Instant|`UserAccount.assignRole`|Cambio de rol de una cuenta.|
+|InvitationIssued|invitationId: UUID, tenantId: UUID, email: Email, role: Role, invitedBy: UUID, expiresAt: Instant|`Invitation.issue`|Invitación emitida; el caso de uso envía el enlace al correo invitado (US31). No incluye el token ni su hash.|
+|InvitationAccepted|invitationId: UUID, tenantId: UUID, email: Email, role: Role, acceptedAt: Instant|`Invitation.accept`|Invitación aceptada y cuenta creada (US31).|
+|AccessGranted|challengeId: UUID, email: Email, grantedAt: Instant|`OtpChallenge.consume`|Código válido; el caso de uso emite los tokens de la sesión (US01).|
+|AccessDenied|challengeId: UUID, attemptsUsed: Integer, deniedAt: Instant|`OtpChallenge.verify`|Código inválido, vencido o sin intentos (401); `AccessDeniedEventHandler` lo guarda en `AuditLog` (QAS-07).|
+|SessionRevoked|tokenId: UUID, userId: UUID, revokedAt: Instant|`RefreshToken.revoke`|Cierre de sesión o revocación por cambio de rol (US02).|
+|UserIdentityProvided|userId: UUID, tenantId: UUID, role: Role|`TokenClaims` (claims del token)|Usuario, institución y rol que reciben los demás contextos.|
+|AuthorizedContextProvided|userId: UUID, tenantId: UUID, permissions: `Set<Permission>`|`TokenClaims` (claims del token)|Permisos autorizados del rol que reciben los demás contextos.|
+
+Los atributos de cada evento salen solo de datos que el agregado ya guarda o que recibe en la operación que lo registra (por ejemplo, `now`). Ningún evento incluye códigos, tokens ni sus hashes.
 
 ### 5.1.2. Interface Layer
- 
-El contexto expone una API REST documentada con OpenAPI (CON-12). Todas las rutas, salvo el inicio de sesión, requieren token válido o credencial de plataforma. Los textos devueltos respetan el idioma de la solicitud (es_419 o en_US).
- 
-| Controller | Endpoint | Resultado | Origen |
-|---|---|---|---|
-| `AuthController` | `POST /api/v1/auth/otp` | `SignInRequested`: 202 si el correo es elegible; 429 si excede solicitudes | TS01 |
-| `AuthController` | `POST /api/v1/auth/login` | `AccessGranted`: 200 con token de sesión y claims; `AccessDenied`: 401 si el código es inválido, vencido o agotó intentos | TS01 |
-| `AuthController` | `POST /api/v1/auth/refresh` | 200 con nuevo token de acceso; 401 si el token de refresco venció | TS01 |
-| `AuthController` | `POST /api/v1/auth/logout` | 204 y revocación del token de refresco | US02 (ruta propuesta) |
-| `AuthController` | `GET /api/v1/auth/session` | `SessionValidated`: 200 con usuario, institución, rol y permisos vigentes; 401 si la sesión no es válida | Canvas (ruta propuesta) |
-| `UserController` | `PUT /api/v1/users/{userId}/role` | `RoleAssignmentRequested`: 200 con el rol asignado; 403 si quien lo solicita no tiene el rol PARKING_ADMIN | Canvas, US31 (ruta propuesta) |
-| `TenantController` | `POST /api/v1/tenants` | 201 con la institución y la invitación de su primer administrador; 403 sin credenciales de plataforma; 409 si el dominio ya existe | TS15 |
-| `EmailDomainController` | `POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}` | 201 o 204; 409 si el dominio pertenece a otra institución | US30 (rutas propuestas) |
-| `InvitationController` | `POST /api/v1/invitations` | 201 con la invitación registrada y enviada | US31 (ruta propuesta) |
-| `InvitationController` | `POST /api/v1/invitations/{invitationId}/accept` | 200 con la cuenta creada; 410 si la invitación venció | US31 (ruta propuesta) |
-| `KeyController` | `GET /.well-known/jwks.json` | 200 con las claves públicas con las que la capa de seguridad valida los tokens | DD-08 (ruta propuesta) |
- 
+
+La Interface Layer expone las capacidades de IAM a la aplicación móvil, a la consola web de operación y al equipo de plataforma, y recibe el evento propio que alimenta la auditoría. Recibe solicitudes, valida su forma, las transforma en Commands o Queries, delega en la Application Layer y representa el resultado. No contiene reglas de negocio. La API se documenta con OpenAPI (CON-12) y los textos devueltos respetan el idioma de la solicitud (es_419 o en_US). Las rutas de inicio de sesión, renovación, aceptación de invitación y claves públicas se autentican con su propio secreto (código, token de refresco o token de invitación) o son públicas; las demás exigen un token de acceso válido o la credencial de plataforma.
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|AuthController|`POST /api/v1/auth/otp`|`SignInRequested`: envía `RequestOtpCommand`; 202 si el correo es elegible; 429 si excede las solicitudes permitidas|TS01, US01|
+|AuthController|`POST /api/v1/auth/login`|Envía `AuthenticateWithOtpCommand`. `AccessGranted`: 200 con el token de acceso, el token de refresco y los claims; `AccessDenied`: 401 si el código es inválido, venció o agotó sus intentos|TS01, US01|
+|AuthController|`POST /api/v1/auth/refresh`|Envía `RefreshSessionCommand`; 200 con un nuevo token de acceso; 401 si el token de refresco venció o fue revocado|TS01, US03|
+|AuthController|`POST /api/v1/auth/logout`|Envía `CloseSessionCommand`; 204 y revocación del token de refresco|US02 (ruta propuesta)|
+|AuthController|`GET /api/v1/auth/session`|`SessionValidated`: ejecuta `ValidateSessionQuery`; 200 con usuario, institución, rol y permisos vigentes; 401 si la sesión no es válida|Canvas (ruta propuesta)|
+|UserController|`PUT /api/v1/users/{userId}/role`|`RoleAssignmentRequested`: envía `AssignRoleCommand`; 200 con el rol asignado; 403 si quien lo solicita no tiene el rol PARKING_ADMIN|Canvas, US31 (ruta propuesta)|
+|TenantController|`POST /api/v1/tenants`|Envía `ProvisionTenantCommand`; 201 con la institución y la invitación de su primer administrador; 403 sin credencial de plataforma; 409 si un dominio ya pertenece a otra institución|TS15|
+|EmailDomainController|`POST /api/v1/tenants/{tenantId}/domains` y `DELETE /api/v1/tenants/{tenantId}/domains/{domain}`|Envían `AddEmailDomainCommand` o `RetireEmailDomainCommand`; 201 o 204; 403 si `tenantId` no es la institución del token; 409 si el dominio pertenece a otra institución|US30 (rutas propuestas)|
+|InvitationController|`POST /api/v1/invitations`|Envía `IssueInvitationCommand`; 201 con la invitación registrada y el enlace enviado al correo|US31, escenario 1 (ruta propuesta)|
+|InvitationController|`POST /api/v1/invitations/acceptance`|Recibe el token del enlace y el nombre visible, y envía `AcceptInvitationCommand`; 200 con la cuenta creada; 404 si el token no corresponde a ninguna invitación; 409 si ya se usó; 410 si venció|US31, escenarios 2 y 3 (ruta propuesta)|
+|KeyController|`GET /.well-known/jwks.json`|Ejecuta `GetSigningKeysQuery`; 200 con las claves públicas con las que la capa de seguridad valida los tokens|DD-08 (ruta propuesta)|
+
+Solicitud de `POST /api/v1/invitations/acceptance`:
+
+```json
+{
+  "token": "q8V3…",
+  "displayName": "Lucía Ramos"
+}
+```
+
+El token viaja solo en el enlace del correo y en esta solicitud; IAM guarda únicamente su hash (`Invitation.tokenHash`).
+
+**Event Consumer**
+
+|Nombre|Categoría|Evento|Descripción|
+|-|-|-|-|
+|AuditEventListener|Consumer (`@TransactionalEventListener`)|`AccessDenied` (IAM)|Ejecuta `AccessDeniedEventHandler` después de confirmar la transacción que contó el intento fallido.|
+
 La capa de seguridad del backend (Spring Security) valida el token, el rol y la institución antes de que la solicitud llegue al controlador (DD-08), de modo que IAM no queda en el camino de cada consulta de los demás módulos.
- 
+
 ### 5.1.3. Application Layer
- 
-La capa de aplicación contiene los casos de uso, que cargan los aggregates, invocan sus operaciones, guardan el resultado y publican los eventos. No contiene reglas de negocio.
- 
-| Command / Query handler | Caso de uso | Historias |
-|---|---|---|
-| `RequestOtpHandler` | Verifica la elegibilidad del correo, aplica el límite de solicitudes, genera el código, guarda su hash y solicita su envío | US01, TS01 |
-| `AuthenticateWithOtpHandler` | Valida el código, consume el desafío, crea o recupera la cuenta, registra la aceptación de términos e emite los tokens; publica `AccessGranted` o `AccessDenied` | US01, TS01 |
-| `RefreshSessionHandler` | Emite un nuevo token de acceso a partir de un token de refresco vigente | US03, TS01 |
-| `CloseSessionHandler` | Revoca el token de refresco y registra el cierre | US02 |
-| `ProvisionTenantHandler` | Crea la institución, registra sus dominios y emite la invitación de su primer administrador | TS15, QAS-08 |
-| `AddEmailDomainHandler` y `RetireEmailDomainHandler` | Habilitan o retiran dominios de correo de una institución | US30 |
-| `ValidateSessionHandler` | Verifica el token y devuelve usuario, institución, rol y permisos vigentes | Canvas |
-| `AssignRoleHandler` | Cambia el rol de una cuenta de la misma institución, valida que quien lo solicita pueda hacerlo y revoca las sesiones previas | Canvas, US31 |
-| `IssueInvitationHandler` y `AcceptInvitationHandler` | Emiten una invitación con rol y vigencia, y crean la cuenta al aceptarla | US31 |
- 
-**Puertos de salida (interfaces implementadas por infraestructura).** `EmailSender` (envío de códigos e invitaciones), `TokenIssuer` (emisión y firma de tokens), `CodeHasher`, `Clock`, `AuditLog` (registro de accesos rechazados, QAS-07) y `DomainEventPublisher`.
- 
+
+La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son conceder el acceso con código de un solo uso, mantener y revocar sesiones, dar de alta instituciones y sus dominios, gestionar roles e invitaciones, y entregar a los demás módulos la identidad y el contexto autorizado.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|RequestOtpCommand|email, locale|RequestOtpCommandHandler|AccessPolicy, OtpRequestThrottle, OtpChallengeRepository, CodeHasher, EmailSender, AuditLog, Clock|US01, TS01, CON-09|
+|AuthenticateWithOtpCommand|email, code, termsVersion, displayName|AuthenticateWithOtpCommandHandler|OtpChallengeRepository, UserAccountRepository, InvitationRepository, TenantRepository, RefreshTokenRepository, AccessPolicy, CodeHasher, TokenIssuer, IamEventPublisher, Clock|US01, TS01|
+|RefreshSessionCommand|refreshToken|RefreshSessionCommandHandler|RefreshTokenRepository, UserAccountRepository, AccessPolicy, CodeHasher, TokenIssuer, Clock|US03, TS01|
+|CloseSessionCommand|userId, refreshToken|CloseSessionCommandHandler|RefreshTokenRepository, CodeHasher, IamEventPublisher, Clock|US02|
+|ProvisionTenantCommand|credentialId, credentialSecret, name, domains, firstAdminEmail|ProvisionTenantCommandHandler|PlatformCredentialRepository, TenantRepository, InvitationRepository, CodeHasher, EmailSender, IamEventPublisher, Clock|TS15, QAS-08|
+|AddEmailDomainCommand|tenantId, domain|AddEmailDomainCommandHandler|TenantRepository, IamEventPublisher, Clock|US30|
+|RetireEmailDomainCommand|tenantId, domain|RetireEmailDomainCommandHandler|TenantRepository, IamEventPublisher, Clock|US30|
+|AssignRoleCommand|tenantId, requesterId, userId, role|AssignRoleCommandHandler|UserAccountRepository, RefreshTokenRepository, AccessPolicy, IamEventPublisher, Clock|Canvas, US31|
+|IssueInvitationCommand|tenantId, invitedBy, email, role|IssueInvitationCommandHandler|InvitationRepository, CodeHasher, EmailSender, IamEventPublisher, Clock|US31|
+|AcceptInvitationCommand|token, displayName|AcceptInvitationCommandHandler|InvitationRepository, UserAccountRepository, CodeHasher, IamEventPublisher, Clock|US31|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|ValidateSessionQuery|accessToken|ValidateSessionQueryHandler|SessionView (userId, tenantId, role, permissions)|
+|GetSigningKeysQuery|—|GetSigningKeysQueryHandler|JwkSetView (claves públicas vigentes)|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|AccessDeniedEventHandler|`AccessDenied` (IAM)|Registra el rechazo en `AuditLog` con el desafío, los intentos usados y el momento, sin el código ni el correo (QAS-07).|
+
+IAM no consume eventos de otros contextos: su único Event Handler procesa un evento propio. Los demás contextos reciben `TenantProvisioned` como evento y la identidad (`UserIdentityProvided`, `AuthorizedContextProvided`) como claims del token.
+
+**Flujos de ejecución**
+
+`RequestOtpCommandHandler`:
+
+1. Consulta `OtpRequestThrottle.isAllowed`; si el correo superó las solicitudes permitidas en la ventana, registra el rechazo en `AuditLog` y responde 429 sin emitir el código (CON-09, escenario 2).
+2. Consulta `AccessPolicy.canRequestCode`, que aplica en orden cuenta existente, invitación vigente y dominio habilitado; si ninguna se cumple, no emite el código e informa que el correo no corresponde a una institución habilitada (US01, escenario 5).
+3. Genera el código con `CodeHasher`, crea el desafío con `OtpChallenge.request` (solo con el hash y el fin de vigencia), lo guarda y envía el código con `EmailSender` en el idioma de la solicitud. Responde 202 (US01, escenario 1).
+
+`AuthenticateWithOtpCommandHandler`:
+
+1. Carga el último desafío del correo (`findLatestByEmail`) y llama a `verify` con el hash del código ingresado. Si falla, guarda el intento contado, publica `AccessDenied` y responde 401 (US01, escenario 3).
+2. Llama a `consume`, que registra `AccessGranted`.
+3. Busca la cuenta por correo. Si no existe y el correo tiene una invitación vigente, la acepta con `Invitation.accept`, que crea la cuenta con el rol invitado (US01, escenario 4); si no, crea la cuenta de conductor con `UserAccount.register` en la institución dueña del dominio (`TenantRepository.findByDomain`).
+4. Registra la aceptación de los términos vigentes (`acceptTerms`), emite el token de acceso con los `TokenClaims` (`AccessPolicy.permissionsOf`) y abre la sesión con `RefreshToken.issue`, que guarda solo el hash del token de refresco.
+5. Guarda todo en una transacción y publica los eventos registrados.
+
+`AcceptInvitationCommandHandler`:
+
+1. Calcula el hash del token recibido con `CodeHasher` y busca la invitación con `InvitationRepository.findByTokenHash`; si no existe, responde 404.
+2. Si la invitación ya se usó, responde 409. Si venció, llama a `expire`, la guarda y responde 410 (US31, escenario 3).
+3. Llama a `accept`, que crea la cuenta con el rol y la institución de la invitación y registra `InvitationAccepted` (US31, escenario 2).
+4. Guarda la invitación y la cuenta en una transacción y publica `InvitationAccepted` y `UserAccountCreated`. La persona invitada inicia sesión después con un código de un solo uso.
+
+`ProvisionTenantCommandHandler`:
+
+1. Carga la credencial de plataforma, compara el hash del secreto y verifica `isActive`; sin una credencial activa responde 403 (TS15, escenario 2).
+2. Comprueba con `TenantRepository.findByDomain` que ningún dominio pertenezca a otra institución; si alguno ya existe, responde 409 (TS15, escenario 3).
+3. Crea la institución con `Tenant.provision` y emite la invitación de su primer administrador con `Invitation.issue` (rol PARKING_ADMIN, sin `invitedBy` y con el hash del token del enlace).
+4. Guarda ambos agregados, envía el enlace con `EmailSender` y publica `TenantProvisioned` e `InvitationIssued`. Parking Configuration inicializa el calendario de la institución al recibir `TenantProvisioned`.
+
+`AssignRoleCommandHandler`:
+
+1. Verifica con `AccessPolicy.can` que quien lo solicita tenga el permiso MANAGE_USERS y que la cuenta pertenezca a su institución; si no, responde 403.
+2. Llama a `assignRole`, que registra `RoleAssigned`, y revoca las sesiones vigentes de la cuenta (`findActiveByUser` y `revoke`), que registran `SessionRevoked`.
+3. Guarda los cambios y publica los eventos.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|TenantRepository, UserAccountRepository, InvitationRepository, OtpChallengeRepository, RefreshTokenRepository, PlatformCredentialRepository|Puertos (Domain Layer)|Ver 5.1.1|Persistencia de los agregados.|
+|EmailSender|Puerto hacia el servicio de correo|sendCode(email, code, locale); sendInvitation(email, link, locale)|Envía los códigos de acceso y los enlaces de invitación.|
+|TokenIssuer|Puerto de emisión de tokens|issueAccessToken(claims: TokenClaims): String; verify(accessToken: String): TokenClaims; publicKeys(): JwkSetView|Firma y verifica los tokens de acceso y publica sus claves.|
+|CodeHasher|Puerto criptográfico|generateCode(): String; generateToken(): String; hash(value: String): String|Genera los códigos de acceso y los tokens de invitación y de refresco, y calcula su hash; IAM guarda solo hashes.|
+|AuditLog|Puerto de auditoría|record(entry: AuditEntry)|Registra los accesos rechazados (401, 403 y 429).|
+|IamEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar desafíos, sesiones, invitaciones y cambios.|
+
 **Seguridad aplicada en esta capa.** El límite de solicitudes de código y la auditoría de intentos rechazados se ejecutan antes de cualquier consulta al dominio, para cumplir el 100 % de rechazos registrados en 1 s o menos (QAS-07).
- 
+
 ### 5.1.4. Infrastructure Layer
- 
-| Componente | Implementa | Detalle |
-|---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `iam` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
-| `JwtTokenIssuer` | `TokenIssuer` | Firma tokens de acceso y de refresco con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`); publica las claves de verificación. |
-| `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción. |
-| `HashingCodeHasher` | `CodeHasher` | Calcula el hash del código de un solo uso y de los tokens guardados. |
-| `PersistentAuditLog` | `AuditLog` | Registra los accesos denegados (`AccessDenied`: 401, 403 y 429) sin almacenar datos personales innecesarios. |
-| `EventPublisherAdapter` | `DomainEventPublisher` | Publica los eventos de dominio y el contexto autorizado hacia los demás contextos que los necesiten. |
-| Cifrado en tránsito | Transversal | Todas las comunicaciones usan TLS (QAS-07). |
- 
+
+La Infrastructure Layer implementa los repositorios, la emisión de tokens, el cálculo de hashes, el envío de correos, la auditoría y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|TenantRepositoryAdapter|Repository (implementación)|TenantRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `tenants` y sus dominios en `email_domains`.|
+|UserAccountRepositoryAdapter|Repository (implementación)|UserAccountRepository|Spring Data JPA, PostgreSQL|Guarda la cuenta en `user_accounts`, con `TermsAcceptance` en columnas propias.|
+|InvitationRepositoryAdapter|Repository (implementación)|InvitationRepository|Spring Data JPA, PostgreSQL|Guarda la invitación en `invitations`; `findByTokenHash` usa el índice único de `token_hash`.|
+|OtpChallengeRepositoryAdapter|Repository (implementación)|OtpChallengeRepository|Spring Data JPA, PostgreSQL|Guarda el desafío en `otp_challenges`, con `OneTimeCode` y `AttemptCounter` en columnas propias; `countByEmailSince` usa el índice por correo y fecha.|
+|RefreshTokenRepositoryAdapter|Repository (implementación)|RefreshTokenRepository|Spring Data JPA, PostgreSQL|Guarda la sesión en `refresh_tokens`; `findByTokenHash` usa el índice único de `token_hash`.|
+|PlatformCredentialRepositoryAdapter|Repository (implementación)|PlatformCredentialRepository|Spring Data JPA, PostgreSQL|Guarda las credenciales del equipo de plataforma en `platform_credentials`.|
+|JwtTokenIssuer|Adapter (tokens)|TokenIssuer|Nimbus JOSE + JWT|Firma tokens de acceso con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`) y publica las claves de verificación.|
+|HashingCodeHasher|Adapter (criptografía)|CodeHasher|`SecureRandom`, HMAC-SHA-256|Genera códigos y tokens aleatorios y calcula el hash de los códigos de un solo uso, de los tokens guardados y de los secretos de plataforma.|
+|EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción.|
+|PersistentAuditLog|Adapter (persistencia)|AuditLog|Spring Data JPA, PostgreSQL|Guarda en `audit_log` los accesos rechazados (401, 403 y 429), incluidos los `AccessDenied` del inicio de sesión, sin almacenar datos personales innecesarios.|
+|IamEventPublisherAdapter|Adapter (eventos)|IamEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio; los consumidores, como el de `TenantProvisioned` en Parking Configuration, los reciben con `@TransactionalEventListener` después de confirmar la transacción.|
+|SecurityFilterChain|Configuración transversal|—|Spring Security|Valida el JWT con las claves de `JwtTokenIssuer`, el rol y la institución antes de cada controlador del backend, y registra en `AuditLog` los rechazos 401 y 403 (DD-08).|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `iam`. Los demás módulos reciben la identidad como claims del token o como eventos, nunca leyendo sus tablas (CON-02).|
+|Secretos|Los códigos de un solo uso, los tokens de invitación y de refresco y los secretos de plataforma se guardan solo como hash.|
+|Multi-tenancy|`tenant_id` se guarda en las tablas con datos de una institución y viaja en el token, del que lo toman los demás módulos (CON-08, DD-09).|
+|Cifrado en tránsito|Todas las comunicaciones usan TLS (QAS-07).|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `iam` de PostgreSQL, según DD-01.|
+
 ### 5.1.6. Bounded Context Software Architecture Component Level Diagrams
  
-El diagrama de componentes descompone el servicio IAM en sus componentes de interfaz, aplicación, dominio e infraestructura y muestra sus relaciones con la capa de seguridad del backend, el servicio de correo y los demás módulos, que reciben la identidad y el contexto autorizado. El IAM es propio de Quadrapp, por lo que no depende de un proveedor de identidad externo. Las flechas indican la dirección de la dependencia.
+El diagrama de componentes descompone el módulo IAM en sus componentes de interfaz, aplicación, dominio e infraestructura y muestra sus relaciones con la capa de seguridad del backend, el servicio de correo y los demás módulos, que reciben la identidad y el contexto autorizado. El IAM es propio de Quadrapp, por lo que no depende de un proveedor de identidad externo. Las flechas indican la dirección de la dependencia.
  
 ![Diagrama de componentes C4 del contexto IAM](assets/capitulo-05/iam/iam_c4_componentes.png)
  
@@ -3856,12 +4027,16 @@ El diagrama de componentes descompone el servicio IAM en sus componentes de inte
  
 #### 5.1.7.1. Bounded Context Domain Layer Class Diagrams
  
+El diagrama presenta los seis agregados del contexto (`Tenant`, `UserAccount`, `Invitation`, `OtpChallenge`, `Session`, con raíz `RefreshToken`, y `PlatformCredential`) con su entidad, sus Value Objects y sus enumeraciones, los Domain Services `AccessPolicy` y `OtpRequestThrottle`, una interfaz de repositorio por cada raíz y los eventos que publica el contexto, cada uno con sus atributos. Los atributos son privados (-) y los métodos, públicos (+); los métodos subrayados son fábricas estáticas (`Tenant.provision`, `UserAccount.register`, `Invitation.issue`, `OtpChallenge.request` y `RefreshToken.issue`). Las composiciones indican qué objetos viven dentro de cada agregado y con qué multiplicidad (por ejemplo, un `Tenant` agrupa de cero a muchos `EmailDomain` y un `OtpChallenge` compone exactamente un `OneTimeCode` y un `AttemptCounter`); las asociaciones hacia las enumeraciones muestran el estado o el rol de cada objeto. Las dependencias punteadas indican qué agregados consultan los servicios, qué raíz persiste cada repositorio, qué eventos registra cada agregado (`registers`) y que `UserIdentityProvided` y `AuthorizedContextProvided` viajan como claims (`TokenClaims`). Las referencias entre agregados (`tenantId`, `userId`, `invitedBy`) se guardan solo como identificadores `UUID`.
+
 ![Diagrama de clases de la capa de dominio del contexto IAM](assets/capitulo-05/iam/iam_clases.png)
  
 #### 5.1.7.2. Bounded Context Database Design Diagram
  
-Cada tabla incluye la institución como identificador de aislamiento (DD-09). El contexto no mantiene claves foráneas hacia las bases de datos de otros contextos.
- 
+El esquema `iam` de PostgreSQL contiene una tabla por agregado raíz (`tenants`, `user_accounts`, `invitations`, `otp_challenges`, `refresh_tokens` y `platform_credentials`) y una tabla hija, `email_domains`, para la colección `domains` de `Tenant`. Los Value Objects se guardan en columnas de la tabla de su agregado: `Email` en `email`, `TermsAcceptance` en `terms_version` y `terms_accepted_at`, `OneTimeCode` en `code_hash` y `code_expires_at`, y `AttemptCounter` en `attempts_used` y `max_attempts`. Las enumeraciones se guardan como `VARCHAR` con una restricción `CHECK` de sus valores. Las claves foráneas unen solo tablas del esquema `iam`; el contexto no mantiene claves foráneas hacia los esquemas de otros contextos (CON-02).
+
+Las tablas con datos de una institución (`email_domains`, `user_accounts`, `invitations` y `audit_log`) guardan `tenant_id` para el aislamiento lógico (DD-09). `otp_challenges` y `platform_credentials` no lo guardan, porque el desafío se solicita antes de conocer la institución y la credencial pertenece al equipo de plataforma; `refresh_tokens` obtiene la institución de su cuenta. Los índices únicos de `token_hash` sostienen `findByTokenHash` de invitaciones y sesiones, y el índice único parcial sobre `email` con estado PENDING garantiza una sola invitación vigente por correo (`findPendingByEmail`). `audit_log` no corresponde a un agregado: es la tabla del puerto `AuditLog`, que implementa `PersistentAuditLog`. `TokenClaims` y los eventos pendientes (`domainEvents`) no se persisten.
+
 ![Diagrama de base de datos del contexto IAM](assets/capitulo-05/iam/iam_bd.png)
  
 ---
@@ -6065,65 +6240,70 @@ Los identificadores `tenantId`, `parkingLotId` y `zoneId` actúan únicamente co
 
 #### HistoricalOccupancy:
 
-**Categoría:** Aggregate Root.
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|HistoricalOccupancy|Aggregate Root|Representar la información histórica de ocupación observada para un estacionamiento o una zona durante un periodo determinado.|
 
-**Propósito:** Representar la información histórica de ocupación observada para un estacionamiento o una zona durante un periodo determinado.
+Attributes
 
-**Atributos:**
-- historicalOccupancyId: UUID — Identificador único del registro histórico.
-- tenantId: UUID — Referencia externa a la institución propietaria de la información.
-- parkingLotId: UUID — Referencia externa al estacionamiento al que corresponde el registro.
-- zoneId: UUID? — Referencia externa a una zona cuando la información ha sido desagregada por zona.
-- periodStart: Instant — Momento inicial del periodo representado.
-- periodEnd: Instant — Momento final del periodo representado.
-- occupancyRate: OccupancyRate — Porcentaje de ocupación observado durante el periodo.
-- entryCount: Integer — Cantidad de ingresos registrada durante el periodo.
-- exitCount: Integer — Cantidad de salidas registrada durante el periodo.
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|historicalOccupancyId|UUID|Private|Identificador único del registro histórico.|
+|tenantId|UUID|Private|Referencia externa a la institución propietaria de la información.|
+|parkingLotId|UUID|Private|Referencia externa al estacionamiento al que corresponde el registro.|
+|zoneId|UUID?|Private|Referencia externa a una zona cuando la información ha sido desagregada por zona.|
+|periodStart|Instant|Private|Momento inicial del periodo representado.|
+|periodEnd|Instant|Private|Momento final del periodo representado.|
+|occupancyRate|OccupancyRate|Private|Porcentaje de ocupación observado durante el periodo.|
+|entryCount|Integer|Private|Cantidad de ingresos registrada durante el periodo.|
+|exitCount|Integer|Private|Cantidad de salidas registrada durante el periodo.|
 
-**Operaciones:**
-- belongsToPeriod(startDate, endDate) — Determina si el registro se encuentra dentro del periodo solicitado.
-- belongsToZone(zoneId) — Indica si el registro corresponde a la zona especificada.
-- hasValidPeriod() — Comprueba que el inicio del periodo no sea posterior al final.
-- hasFlowData() — Indica si el registro dispone de información de entradas o salidas.
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|belongsToPeriod(startDate, endDate)|Boolean|Public|Determina si el registro se encuentra dentro del periodo solicitado.|
+|belongsToZone(zoneId)|Boolean|Public|Indica si el registro corresponde a la zona especificada.|
+|hasValidPeriod()|Boolean|Public|Comprueba que el inicio del periodo no sea posterior al final.|
+|hasFlowData()|Boolean|Public|Indica si el registro dispone de información de entradas o salidas.|
 
 tenantId, parkingLotId y zoneId no convierten a Institution, Parking Lot o Parking Zone en elementos pertenecientes al agregado. Sus ciclos de vida son administrados fuera de Analytics.
 
 
 #### OccupancyRate
 
-**Categoría:** Value Object.
-
-**Propósito:** Representar el porcentaje de ocupación observado durante un periodo.
-
-**Atributos:**
-- value: Decimal — Porcentaje de ocupación correspondiente al registro histórico.
-
-**Operaciones:**
-- value() — Devuelve el porcentaje representado.
-- isValid() — Determina si el porcentaje se encuentra dentro de un rango válido (El valor debe permanecer dentro del intervalo de 0 % a 100 %)
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|OccupancyRate|Value Object|value: Decimal|value(); isValid()|Representar el porcentaje de ocupación observado durante un periodo. `value`: Porcentaje de ocupación correspondiente al registro histórico. `value()`: Devuelve el porcentaje representado. `isValid()`: Determina si el porcentaje se encuentra dentro de un rango válido (El valor debe permanecer dentro del intervalo de 0 % a 100 %).|
 
 OccupancyRate no representa la disponibilidad actual del estacionamiento. Su utilización dentro de Analytics corresponde exclusivamente al análisis de información histórica.
 
 
 #### ForecastSnapshot
 
-**Categoría:** Aggregate Root / Entity.
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ForecastSnapshot|Aggregate Root / Entity|Conservar una representación histórica de un pronóstico generado por Prediction & Advisory para permitir su comparación posterior con la ocupación observada.|
 
-**Propósito:** Conservar una representación histórica de un pronóstico generado por Prediction & Advisory para permitir su comparación posterior con la ocupación observada.
+Attributes
 
-**Atributos:**
-- forecastId: UUID — Identificador del pronóstico recibido.
-- tenantId: UUID — Institución a la que pertenece el pronóstico.
-- parkingLotId: UUID — Estacionamiento sobre el cual fue realizada la predicción.
-- generatedAt: Instant — Momento en que fue generado el pronóstico.
-- targetAt: Instant — Momento futuro para el cual fue realizada la estimación.
-- horizonMinutes: Integer — Horizonte temporal utilizado por la predicción.
-- modelVersion: String — Versión del modelo con el que se generó el pronóstico.
-- predictedOccupancyRate: OccupancyRate — Nivel de ocupación previsto.
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|forecastId|UUID|Private|Identificador del pronóstico recibido.|
+|tenantId|UUID|Private|Institución a la que pertenece el pronóstico.|
+|parkingLotId|UUID|Private|Estacionamiento sobre el cual fue realizada la predicción.|
+|generatedAt|Instant|Private|Momento en que fue generado el pronóstico.|
+|targetAt|Instant|Private|Momento futuro para el cual fue realizada la estimación.|
+|horizonMinutes|Integer|Private|Horizonte temporal utilizado por la predicción.|
+|modelVersion|String|Private|Versión del modelo con el que se generó el pronóstico.|
+|predictedOccupancyRate|OccupancyRate|Private|Nivel de ocupación previsto.|
 
-**Operaciones:**
-- targets(referenceTime) — Indica si el pronóstico corresponde al momento observado que se desea evaluar.
-- wasGeneratedWith(modelVersion) — Determina si el pronóstico fue generado con una versión específica del modelo.
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|targets(referenceTime)|Boolean|Public|Indica si el pronóstico corresponde al momento observado que se desea evaluar.|
+|wasGeneratedWith(modelVersion)|Boolean|Public|Determina si el pronóstico fue generado con una versión específica del modelo.|
 
 ForecastSnapshot representa una instantánea histórica. Una modificación posterior del modelo de predicción no debe alterar la información correspondiente a un pronóstico que ya fue generado.
 
@@ -6132,92 +6312,52 @@ Analytics tampoco administra el modelo predictivo. modelVersion es únicamente u
 
 #### PeakHour
 
-**Categoría:** Value Object.
-
-**Propósito:** Representar un periodo identificado a partir del historial como uno de los momentos de mayor ocupación del estacionamiento.
-
-**Atributos:**
-- periodStart: Instant — Inicio del periodo identificado.
-- periodEnd: Instant — Final del periodo identificado.
-- occupancyRate: OccupancyRate — Nivel de ocupación observado durante dicho periodo.
-
-**Operaciones:**
-- contains(timestamp) — Determina si un instante se encuentra dentro del periodo representado.
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|PeakHour|Value Object|periodStart: Instant, periodEnd: Instant, occupancyRate: OccupancyRate|contains(timestamp)|Representar un periodo identificado a partir del historial como uno de los momentos de mayor ocupación del estacionamiento. `periodStart`: Inicio del periodo identificado. `periodEnd`: Final del periodo identificado. `occupancyRate`: Nivel de ocupación observado durante dicho periodo. `contains(timestamp)`: Determina si un instante se encuentra dentro del periodo representado.|
 
 
 #### DemandPattern
 
-**Categoría:** Value Object.
-
-**Propósito:** Representar un comportamiento recurrente identificado a partir de la comparación de información histórica correspondiente a diferentes días y horarios.
-
-**Atributos:**
-- period: String — Periodo temporal al que corresponde el patrón identificado.
-- occupancyRate: OccupancyRate — Nivel de ocupación representativo del comportamiento observado.
-
-**Operaciones:**
-- matches(period) — Indica si el patrón corresponde al periodo consultado.
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|DemandPattern|Value Object|period: String, occupancyRate: OccupancyRate|matches(period)|Representar un comportamiento recurrente identificado a partir de la comparación de información histórica correspondiente a diferentes días y horarios. `period`: Periodo temporal al que corresponde el patrón identificado. `occupancyRate`: Nivel de ocupación representativo del comportamiento observado. `matches(period)`: Indica si el patrón corresponde al periodo consultado.|
 
 DemandPattern no genera predicciones por sí mismo. Su propósito dentro de Analytics es representar tendencias históricas que pueden ser consultadas y analizadas.
 
 
 #### PredictionAccuracy
 
-**Categoría:** Value Object.
-
-**Propósito:** Representar las métricas obtenidas al comparar un conjunto de pronósticos con la ocupación realmente observada durante el periodo correspondiente.
-
-**Atributos:**
-- meanAbsoluteError: Decimal — Error absoluto medio expresado en puntos porcentuales.
-- withinMarginPercentage: Decimal — Porcentaje de pronósticos cuyo error se encuentra dentro del margen configurado.
-- modelVersion: String — Versión del modelo a la que corresponden las métricas.
-
-**Operaciones:**
-- meanAbsoluteError() — Devuelve el error absoluto medio calculado.
-- withinMarginPercentage() — Devuelve el porcentaje de pronósticos dentro del margen configurado.
-- belongsToModelVersion(modelVersion) — Indica si el resultado corresponde a una determinada versión del modelo.
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|PredictionAccuracy|Value Object|meanAbsoluteError: Decimal, withinMarginPercentage: Decimal, modelVersion: String|meanAbsoluteError(); withinMarginPercentage(); belongsToModelVersion(modelVersion)|Representar las métricas obtenidas al comparar un conjunto de pronósticos con la ocupación realmente observada durante el periodo correspondiente. `meanAbsoluteError`: Error absoluto medio expresado en puntos porcentuales. `withinMarginPercentage`: Porcentaje de pronósticos cuyo error se encuentra dentro del margen configurado. `modelVersion`: Versión del modelo a la que corresponden las métricas. `meanAbsoluteError()`: Devuelve el error absoluto medio calculado. `withinMarginPercentage()`: Devuelve el porcentaje de pronósticos dentro del margen configurado. `belongsToModelVersion(modelVersion)`: Indica si el resultado corresponde a una determinada versión del modelo.|
 
 Cuando no existen pronósticos y datos de ocupación observada suficientes para efectuar una comparación, no debe generarse un PredictionAccuracy como si el cálculo fuera válido.
 
 
 #### HistoricalOccupancyRepository
 
-**Categoría:** Repository Interface.
-
-**Propósito:** Definir las operaciones necesarias para persistir y recuperar registros históricos de ocupación sin acoplar el dominio de Analytics a una tecnología específica de almacenamiento.
-
-**Operaciones:**
-- save(historicalOccupancy)
-- findByPeriod(tenantId, parkingLotId, startDate, endDate)
-- findByPeriodAndZone(tenantId, parkingLotId, zoneId, startDate, endDate)
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|HistoricalOccupancyRepository|Repository Interface|save(historicalOccupancy); findByPeriod(tenantId, parkingLotId, startDate, endDate); findByPeriodAndZone(tenantId, parkingLotId, zoneId, startDate, endDate)|Definir las operaciones necesarias para persistir y recuperar registros históricos de ocupación sin acoplar el dominio de Analytics a una tecnología específica de almacenamiento.|
 
 Todas las consultas deben respetar la institución a la que pertenece la información.
 
 
 #### ForecastSnapshotRepository
 
-**Categoría:** Repository Interface.
-
-**Propósito:** Definir las operaciones necesarias para almacenar y recuperar las instantáneas de pronósticos utilizadas por Analytics para evaluar su precisión.
-
-**Operaciones:**
-- save(forecastSnapshot)
-- findByPeriod(tenantId, parkingLotId, startDate, endDate)
-- findByModelVersion(tenantId, parkingLotId, modelVersion, startDate, endDate)
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|ForecastSnapshotRepository|Repository Interface|save(forecastSnapshot); findByPeriod(tenantId, parkingLotId, startDate, endDate); findByModelVersion(tenantId, parkingLotId, modelVersion, startDate, endDate)|Definir las operaciones necesarias para almacenar y recuperar las instantáneas de pronósticos utilizadas por Analytics para evaluar su precisión.|
 
 Analytics utiliza este repositorio para acceder a su propia representación histórica del pronóstico y no para consultar directamente la persistencia interna de Prediction & Advisory.
 
 
 #### AnalyticsDomainService
 
-**Categoría:** Domain Service.
-
-**Propósito:** Ejecutar operaciones analíticas que requieren trabajar con varios registros históricos o relacionar la ocupación observada con pronósticos previamente generados.
-
-**Operaciones:**
-- identifyPeakHours(historicalOccupancies) — Identifica los periodos con mayor ocupación dentro de los registros disponibles.
-- identifyDemandPatterns(historicalOccupancies) — Permite identificar comportamientos recurrentes a partir del historial.
-- calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin) — Compara los pronósticos con la ocupación observada y genera las métricas correspondientes.
+|Nombre|Categoría|Métodos|Descripción|
+|-|-|-|-|
+|AnalyticsDomainService|Domain Service|identifyPeakHours(historicalOccupancies); identifyDemandPatterns(historicalOccupancies); calculatePredictionAccuracy(forecasts, observedOccupancies, configuredMargin)|Ejecutar operaciones analíticas que requieren trabajar con varios registros históricos o relacionar la ocupación observada con pronósticos previamente generados. `identifyPeakHours`: Identifica los periodos con mayor ocupación dentro de los registros disponibles. `identifyDemandPatterns`: Permite identificar comportamientos recurrentes a partir del historial. `calculatePredictionAccuracy`: Compara los pronósticos con la ocupación observada y genera las métricas correspondientes.|
 
 El Domain Service no obtiene directamente los datos desde una base de datos. Los registros necesarios son recuperados mediante las abstracciones de Repository antes de realizar las operaciones del dominio. Tampoco genera nuevas predicciones ni modifica las recibidas desde Prediction & Advisory.
 
@@ -7019,25 +7159,31 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | id, userId, tenantId, parkingLotId, timeSlot, status, createdAt | pause(), cancel(), covers() |
-| NotificationPreferences | Domain | Aggregate Root. Preferencias del usuario sobre qué alertas recibir y por qué canal (US24). | userId, tenantId, enabled, enabledTypes, enabledChannels, updatedAt | enable(), disable(), allows() |
-| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas. | id, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes | configure(), appliesTo() |
-| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega. | id, userId, tenantId, parkingLotId, type, channel, segment, conditionKey, content, status, createdAt, sentAt | markSent(), markFailed(), skip() |
-| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo o correo. | deviceId, channel, result, errorCode, attemptedAt | — |
-| DeviceRegistration | Domain | Aggregate Root. Token del dispositivo del conductor, destino de las alertas push. | id, userId, token, platform, status, registeredAt | invalidate(), isUsable() |
-| NotificationTemplate | Domain | Aggregate Root. Plantilla de mensaje por tipo de alerta, canal e idioma. | id, alertType, channel, locale, titleTemplate, bodyTemplate | render() |
+| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | subscriptionId, userId, tenantId, parkingLotId, timeSlot, status, createdAt | create(), pause(), cancel(), covers() |
+| NotificationPreferences | Domain | Aggregate Root. Preferencias del usuario sobre qué alertas recibir y por qué canal (US24). | userId, tenantId, enabled, enabledTypes, enabledChannels, updatedAt | create(), update(), enable(), disable(), allows() |
+| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas. | ruleId, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes, updatedAt | define(), configure(), appliesTo() |
+| NotificationTemplate | Domain | Aggregate Root. Plantilla de mensaje por tipo de alerta, canal e idioma. | templateId, alertType, channel, locale, titleTemplate, bodyTemplate | render() |
+| DeviceRegistration | Domain | Aggregate Root. Token del dispositivo del conductor, destino de las alertas push. | deviceId, userId, tenantId, token, platform, status, registeredAt, invalidatedAt | register(), invalidate(), isUsable() |
+| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su canal, su estado y sus intentos de entrega. | notificationId, userId, tenantId, parkingLotId, type, channel, segment, conditionKey, templateId, content, status, attempts, createdAt, sentAt | create(), recordAttempt(), markSent(), markFailed(), skip() |
+| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo o correo. | attemptId, deviceId, channel, result, errorCode, attemptedAt | isRetryable() |
 | TimeSlot | Domain | Value Object. Franja semanal en la que el conductor suele llegar. | days, start, end | contains() |
+| DeviceToken | Domain | Value Object. Token entregado por el proveedor push. | value | value() |
+| ConditionKey | Domain | Value Object. Clave de la condición notificada; evita alertas repetidas. | value | value() |
+| NotificationContent | Domain | Value Object. Título y cuerpo ya renderizados. | title, body | — |
 | AlertPolicy | Domain | Domain Service. Decide si corresponde enviar una alerta. | — | shouldAlert() |
 | ChannelPolicy | Domain | Domain Service. Determina por qué canales se envía una alerta. | — | channelsFor() |
 | DeduplicationPolicy | Domain | Domain Service. Evita repetir una alerta para una condición ya notificada (US23, escenario 4). | — | isDuplicate() |
-| AlertType, Channel, RecipientSegment, NotificationStatus, DeviceStatus | Domain | Enumeraciones del contexto. | — | — |
-| SubscriptionRepository, PreferencesRepository, RuleRepository, TemplateRepository, DeviceRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
-| CreateSubscriptionHandler, CancelSubscriptionHandler, UpdatePreferencesHandler, RegisterDeviceHandler, ConfigureNotificationRuleHandler | Application | Command Handlers de suscripciones, preferencias, dispositivos y reglas. | Dependencies | handle() |
-| HandleSaturationPredictedHandler, DispatchNotificationHandler, HandleDeliveryRejectionHandler | Application | Event y Command Handlers del envío de alertas. | Dependencies | handle() |
-| GetNotificationHistoryHandler | Application | Query Handler del historial. | Dependencies | handle() |
-| PushSender, EmailSender, IdentityContext, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
-| SubscriptionController, PreferencesController, DeviceController, RuleController, HistoryController, PredictionEventConsumer | Interface | Controllers REST y consumidor del evento SaturationPredicted. | Handler dependencies | Ver 5.7.2 |
-| PushGatewayAdapter, EmailGatewayAdapter, IdentityContextAdapter, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.7.4 |
+| AlertType, Channel, SubscriptionStatus, Locale, Platform, DeviceStatus, RecipientSegment, NotificationStatus, DeliveryResult | Domain | Enumeraciones del contexto. | — | — |
+| NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, DeviceRegistrationRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…(), deleteByUser(), existsByUserAndConditionKey(), findRetryable() |
+| SubscriptionCreated, SubscriptionCancelled, PreferenceUpdated, NotificationRuleConfigured, DeviceTokenInvalidated, UserNotificationDelivered, PushSent, EmailSent, NotificationSkipped | Domain | Domain Events publicados. | Ver 5.7.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura: suscripciones, preferencias, dispositivos, reglas, envío y reintento de alertas. | Dependencies | handle() |
+| *Query y *QueryHandler | Application | Casos de uso de lectura: suscripciones, preferencias, reglas e historial. | Dependencies | handle() |
+| SaturationPredictedEventHandler | Application | Event Handler. Evalúa las suscripciones afectadas por una saturación prevista y crea las notificaciones. | Dependencies | handle() |
+| PushSender, EmailSender, IdentityContext, NotificationEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
+| SubscriptionController, PreferencesController, DeviceController, RuleController, HistoryController | Interface | Controllers REST. | Handler dependencies | Ver 5.7.2 |
+| PredictionEventConsumer, NotificationRetryScheduler | Interface | Consumer del evento `SaturationPredicted` y proceso programado de reintentos. | Handler dependencies | on(), retryFailedNotifications() |
+| *RepositoryAdapter | Infrastructure | Implementan los repositorios sobre el esquema `notifications`. | Persistence dependency | save(), find…() |
+| PushGatewayAdapter, EmailGatewayAdapter, IdentityContextAdapter, NotificationEventPublisherAdapter | Infrastructure | Implementaciones de los puertos de salida. | Integration dependencies | Ver 5.7.4 |
 
 ### 5.7.1. Domain Layer
  
@@ -7047,21 +7193,21 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
 |---|---|---|---|
 | NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja. Darse de baja conserva las demás suscripciones. |
 | NotificationPreferences | `NotificationPreferences` | `AlertType` (LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST), `Channel` | Preferencias del usuario: notificaciones activas o no, tipos de alerta y canales habilitados. Desactivarlas conserva la suscripción pero omite el envío. |
-| DeviceRegistration | `DeviceRegistration` | `DeviceToken`, `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
-| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
+| DeviceRegistration | `DeviceRegistration` | `DeviceToken` (valor del token), `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
+| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas (`minIntervalMinutes`) | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
 | NotificationTemplate | `NotificationTemplate` | `AlertType`, `Channel`, `Locale` (es_419, en_US) | Plantilla del mensaje por tipo de alerta, canal e idioma. |
-| Notification | `Notification` | `DeliveryAttempt` (entidad), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `NotificationContent`, `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
+| Notification | `Notification` | `DeliveryAttempt` (entidad, con `DeliveryResult`: DELIVERED, REJECTED, PROVIDER_UNAVAILABLE), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `NotificationContent` (título y cuerpo), `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
  
 **Domain Services.**
 - `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
 - `ChannelPolicy`: determina el canal de envío según la preferencia del usuario ("el canal depende de la preferencia del usuario").
 - `DeduplicationPolicy`: impide enviar una nueva alerta cuando ya se envió una para la misma condición y esa condición sigue activa (US23, escenario 4).
 
-**Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `EmailSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`.
+**Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `EmailSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`. La tabla de eventos del diccionario indica sus atributos y qué agregado registra cada uno.
  
 **Domain Events consumidos.** `SaturationPredicted`, publicado por Prediction & Advisory como Published Language, y `UserIdentityProvided`, entregado por IAM. Los nombres deben coincidir con los publicados por esos contextos.
  
-**Repositories.** `SubscriptionRepository`, `PreferencesRepository`, `RuleRepository`, `TemplateRepository`, `DeviceRepository`, `NotificationRepository`.
+**Repositories.** `NotificationSubscriptionRepository`, `NotificationPreferencesRepository`, `NotificationRuleRepository`, `NotificationTemplateRepository`, `DeviceRegistrationRepository`, `NotificationRepository`.
  
 **Reglas de negocio principales.**
 1. Si la saturación se prevé dentro de una franja con suscripción vigente y el usuario tiene las notificaciones habilitadas, se envía la alerta (US23, escenario 1).
@@ -7074,9 +7220,9 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
 
 **Diccionario de clases del dominio**
 
-Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+Cada clase se documenta con su propósito, sus atributos y sus métodos. Como en los demás contextos, los atributos son privados y los métodos, públicos, y los tipos coinciden con el diagrama de clases de la sección 5.7.7.1. Las referencias a usuario, institución, estacionamiento y dispositivo se guardan como identificadores `UUID`.
 
-**Aggregate Root: NotificationSubscription**
+**Aggregate 1: NotificationSubscription**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -7086,23 +7232,33 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|SubscriptionId|Public|Identificador de la suscripción.|
-|userId|UserId|Public|Conductor suscrito.|
-|tenantId|TenantId|Public|Institución.|
-|parkingLotId|ParkingLotId|Public|Estacionamiento de interés.|
-|timeSlot|TimeSlot|Public|Días y rango horario en que suele llegar.|
-|status|SubscriptionStatus|Public|ACTIVE, PAUSED o CANCELLED.|
-|createdAt|DateTime|Public|Fecha de creación.|
+|subscriptionId|UUID|Private|Identificador de la suscripción.|
+|userId|UUID|Private|Conductor suscrito (IAM).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento de interés (Parking Configuration).|
+|timeSlot|TimeSlot|Private|Días y rango horario en que suele llegar.|
+|status|SubscriptionStatus|Private|ACTIVE, PAUSED o CANCELLED.|
+|createdAt|Instant|Private|Momento de creación.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|pause()|void|Public|Pausa la suscripción sin eliminarla.|
-|cancel()|void|Public|Da de baja la suscripción; las demás se conservan.|
-|covers(arrivalTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+|create(userId: UUID, tenantId: UUID, parkingLotId: UUID, timeSlot: TimeSlot, now: Instant)|NotificationSubscription|Public (static)|Crea la suscripción en estado ACTIVE y registra `SubscriptionCreated` (TS12, escenario 1).|
+|pause()|Void|Public|Pausa la suscripción sin eliminarla.|
+|cancel(now: Instant)|Void|Public|Da de baja la suscripción y registra `SubscriptionCancelled`; las demás suscripciones se conservan.|
+|covers(arrivalTime: Instant)|Boolean|Public|Indica si un momento cae dentro de la franja de una suscripción activa.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: NotificationPreferences**
+**Value Objects y enumeraciones del agregado NotificationSubscription**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|TimeSlot|Value Object|days: `Set<DayOfWeek>`, start: LocalTime, end: LocalTime|contains(at: Instant): Boolean|Franja semanal en la que el conductor suele llegar; `end` es posterior a `start`.|
+|SubscriptionStatus|Enumeration|ACTIVE, PAUSED, CANCELLED|—|Estado de la suscripción.|
+
+**Aggregate 2: NotificationPreferences**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -7112,22 +7268,26 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|userId|UserId|Public|Usuario.|
-|tenantId|TenantId|Public|Institución.|
-|enabled|boolean|Public|Interruptor general de las notificaciones.|
-|enabledTypes|`Set<AlertType>`|Public|Tipos de alerta habilitados.|
-|enabledChannels|`Set<Channel>`|Public|Canales habilitados.|
-|updatedAt|DateTime|Public|Última modificación.|
+|userId|UUID|Private|Usuario (IAM); identifica las preferencias.|
+|tenantId|UUID|Private|Institución (IAM).|
+|enabled|Boolean|Private|Interruptor general de las notificaciones.|
+|enabledTypes|`Set<AlertType>`|Private|Tipos de alerta habilitados.|
+|enabledChannels|`Set<Channel>`|Private|Canales habilitados.|
+|updatedAt|Instant|Private|Última modificación.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|enable()|void|Public|Activa las notificaciones.|
-|disable()|void|Public|Desactiva las notificaciones; la suscripción se conserva.|
-|allows(type, channel)|boolean|Public|Indica si se permite un tipo de alerta por un canal.|
+|create(userId: UUID, tenantId: UUID, now: Instant)|NotificationPreferences|Public (static)|Crea las preferencias del usuario con las notificaciones habilitadas, todos los tipos de alerta y el canal PUSH. Se usa al registrar la primera suscripción del usuario.|
+|update(enabledTypes: `Set<AlertType>`, enabledChannels: `Set<Channel>`, now: Instant)|Void|Public|Reemplaza los tipos y canales habilitados y registra `PreferenceUpdated`; se aplica a los envíos posteriores (TS12, escenario 2).|
+|enable(now: Instant)|Void|Public|Activa las notificaciones y registra `PreferenceUpdated`.|
+|disable(now: Instant)|Void|Public|Desactiva las notificaciones y registra `PreferenceUpdated`; la suscripción se conserva (US23, escenario 3).|
+|allows(type: AlertType, channel: Channel)|Boolean|Public|Indica si se permite un tipo de alerta por un canal.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: NotificationRule**
+**Aggregate 3: NotificationRule**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -7137,92 +7297,25 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|RuleId|Public|Identificador de la regla.|
-|tenantId|TenantId|Public|Institución.|
-|parkingLotId|ParkingLotId|Public|Estacionamiento.|
-|alertType|AlertType|Public|Tipo de alerta regulado.|
-|enabled|boolean|Public|Indica si el tipo está activo.|
-|minIntervalMinutes|int|Public|Minutos mínimos entre dos alertas del mismo tipo.|
+|ruleId|UUID|Private|Identificador de la regla.|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento (Parking Configuration).|
+|alertType|AlertType|Private|Tipo de alerta regulado.|
+|enabled|Boolean|Private|Indica si el tipo está activo.|
+|minIntervalMinutes|Integer|Private|Minutos mínimos entre dos alertas del mismo tipo.|
+|updatedAt|Instant|Private|Última modificación.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|configure(enabled, interval)|void|Public|Actualiza la regla y registra NotificationRuleConfigured.|
-|appliesTo(parkingLotId, type)|boolean|Public|Indica si la regla aplica a un estacionamiento y tipo.|
+|define(tenantId: UUID, parkingLotId: UUID, alertType: AlertType, enabled: Boolean, minIntervalMinutes: Integer, now: Instant)|NotificationRule|Public (static)|Crea la regla de un tipo de alerta para un estacionamiento y registra `NotificationRuleConfigured`. Hay una sola regla por estacionamiento y tipo.|
+|configure(enabled: Boolean, minIntervalMinutes: Integer, now: Instant)|Void|Public|Actualiza la regla y registra `NotificationRuleConfigured`.|
+|appliesTo(parkingLotId: UUID, type: AlertType)|Boolean|Public|Indica si la regla aplica a un estacionamiento y tipo.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate Root: Notification**
-
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega.|
-
-Attributes
-
-|Nombre|Tipo de dato|Visibilidad|Descripción|
-|-|-|-|-|
-|id|NotificationId|Public|Identificador de la notificación.|
-|userId|UserId|Public|Destinatario.|
-|tenantId|TenantId|Public|Institución.|
-|parkingLotId|ParkingLotId|Public|Estacionamiento de la alerta.|
-|type|AlertType|Public|Tipo de alerta.|
-|channel|Channel|Public|PUSH o EMAIL.|
-|segment|RecipientSegment|Public|Segmento destinatario.|
-|conditionKey|ConditionKey|Public|Clave de la condición notificada; evita duplicados.|
-|content|NotificationContent|Public|Título y cuerpo ya renderizados.|
-|status|NotificationStatus|Public|PENDING, SENT, FAILED o SKIPPED.|
-|createdAt|DateTime|Public|Creación.|
-|sentAt|DateTime|Public|Envío exitoso.|
-
-Methods
-
-|Nombre|Tipo de retorno|Visibilidad|Descripción|
-|-|-|-|-|
-|markSent(now)|void|Public|Registra el envío exitoso.|
-|markFailed(reason)|void|Public|Registra la falla del proveedor; puede reintentarse.|
-|skip(reason)|void|Public|Omite el envío (por ejemplo, notificaciones desactivadas).|
-
-**Entity: DeliveryAttempt**
-
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|DeliveryAttempt|Entity|Intento de entrega de una notificación a un dispositivo o correo.|
-
-Attributes
-
-|Nombre|Tipo de dato|Visibilidad|Descripción|
-|-|-|-|-|
-|deviceId|DeviceId|Public|Dispositivo destino.|
-|channel|Channel|Public|Canal usado.|
-|result|DeliveryResult|Public|Resultado devuelto por el proveedor.|
-|errorCode|String|Public|Código de error del proveedor, si lo hubo.|
-|attemptedAt|DateTime|Public|Momento del intento.|
-
-**Aggregate Root: DeviceRegistration**
-
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|DeviceRegistration|Aggregate Root|Token del dispositivo del conductor, destino de las alertas push.|
-
-Attributes
-
-|Nombre|Tipo de dato|Visibilidad|Descripción|
-|-|-|-|-|
-|id|DeviceId|Public|Identificador del registro.|
-|userId|UserId|Public|Propietario.|
-|token|DeviceToken|Public|Token entregado por el proveedor push.|
-|platform|Platform|Public|ANDROID o IOS.|
-|status|DeviceStatus|Public|VALID o INVALID.|
-|registeredAt|DateTime|Public|Fecha de registro.|
-
-Methods
-
-|Nombre|Tipo de retorno|Visibilidad|Descripción|
-|-|-|-|-|
-|invalidate(now)|void|Public|Marca el token como inválido cuando el proveedor lo rechaza.|
-|isUsable()|boolean|Public|Indica si el token puede recibir alertas.|
-
-**Aggregate Root: NotificationTemplate**
+**Aggregate 4: NotificationTemplate**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
@@ -7232,134 +7325,286 @@ Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|id|TemplateId|Public|Identificador de la plantilla.|
-|alertType|AlertType|Public|Tipo de alerta.|
-|channel|Channel|Public|Canal.|
-|locale|String|Public|es_419 o en_US.|
-|titleTemplate|String|Public|Plantilla del título.|
-|bodyTemplate|String|Public|Plantilla del cuerpo.|
+|templateId|UUID|Private|Identificador de la plantilla.|
+|alertType|AlertType|Private|Tipo de alerta.|
+|channel|Channel|Private|Canal.|
+|locale|Locale|Private|Idioma de la plantilla: es_419 o en_US.|
+|titleTemplate|String|Private|Plantilla del título.|
+|bodyTemplate|String|Private|Plantilla del cuerpo.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|render(params)|NotificationContent|Public|Completa la plantilla con los datos de la alerta.|
+|render(params: `Map<String, String>`)|NotificationContent|Public|Completa la plantilla con los datos de la alerta.|
 
-**Value Object: TimeSlot**
+**Enumeraciones del agregado NotificationTemplate**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|Locale|Enumeration|es_419, en_US|—|Idiomas de la plantilla.|
+
+**Aggregate 5: DeviceRegistration**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|TimeSlot|Value Object|Franja semanal en la que el conductor suele llegar.|
+|DeviceRegistration|Aggregate Root|Token del dispositivo del conductor, destino de las alertas push.|
 
 Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|days|`Set<DayOfWeek>`|Public|Días de la semana.|
-|start|Time|Public|Hora de inicio.|
-|end|Time|Public|Hora de fin.|
+|deviceId|UUID|Private|Identificador del registro del dispositivo.|
+|userId|UUID|Private|Propietario (IAM).|
+|tenantId|UUID|Private|Institución (IAM).|
+|token|DeviceToken|Private|Token entregado por el proveedor push.|
+|platform|Platform|Private|ANDROID o IOS.|
+|status|DeviceStatus|Private|VALID o INVALID.|
+|registeredAt|Instant|Private|Momento del registro.|
+|invalidatedAt|Instant?|Private|Momento en que el token se marcó como inválido.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|contains(dateTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+|register(userId: UUID, tenantId: UUID, token: DeviceToken, platform: Platform, now: Instant)|DeviceRegistration|Public (static)|Registra el token del dispositivo en estado VALID como destino de las alertas push (US33, escenario 2).|
+|invalidate(now: Instant)|Void|Public|Marca el token como inválido cuando el proveedor lo rechaza y registra `DeviceTokenInvalidated` (TS12, escenario 3).|
+|isUsable()|Boolean|Public|Indica si el token puede recibir alertas.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Domain Service: AlertPolicy**
+**Value Objects y enumeraciones del agregado DeviceRegistration**
+
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|DeviceToken|Value Object|value: String|value(): String|Token del dispositivo entregado por el proveedor push; es único.|
+|Platform|Enumeration|ANDROID, IOS|—|Plataforma del dispositivo.|
+|DeviceStatus|Enumeration|VALID, INVALID|—|Estado del token del dispositivo.|
+
+**Aggregate 6: Notification**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|AlertPolicy|Domain Service|Decide si corresponde enviar una alerta.|
+|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su canal, su estado y sus intentos de entrega.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|notificationId|UUID|Private|Identificador de la notificación.|
+|userId|UUID|Private|Destinatario (IAM).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID|Private|Estacionamiento de la alerta (Parking Configuration).|
+|type|AlertType|Private|Tipo de alerta.|
+|channel|Channel|Private|PUSH o EMAIL.|
+|segment|RecipientSegment|Private|Segmento destinatario.|
+|conditionKey|ConditionKey|Private|Clave de la condición notificada; evita duplicados.|
+|templateId|UUID|Private|Referencia a la `NotificationTemplate` con la que se renderizó el contenido; permite saber qué versión del mensaje recibió el usuario.|
+|content|NotificationContent|Private|Título y cuerpo ya renderizados.|
+|status|NotificationStatus|Private|PENDING, SENT, FAILED o SKIPPED.|
+|attempts|`List<DeliveryAttempt>`|Private|Intentos de entrega registrados.|
+|createdAt|Instant|Private|Momento de creación.|
+|sentAt|Instant?|Private|Momento del envío exitoso.|
+|domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|shouldAlert(preferences, subscription, rule, type, time)|boolean|Public|Evalúa preferencias, suscripción vigente, regla del administrador, tipo y franja horaria.|
+|create(userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, channel: Channel, segment: RecipientSegment, conditionKey: ConditionKey, templateId: UUID, content: NotificationContent, now: Instant)|Notification|Public (static)|Crea la notificación en estado PENDING con el contenido ya renderizado por `NotificationTemplate.render` y la referencia a esa plantilla.|
+|recordAttempt(attempt: DeliveryAttempt)|Void|Public|Agrega el resultado de un intento de entrega.|
+|markSent(now: Instant)|Void|Public|Pasa a SENT y registra `PushSent` o `EmailSent`, según el canal, y `UserNotificationDelivered`.|
+|markFailed(reason: String)|Void|Public|Pasa a FAILED cuando el proveedor falla; solo se reintenta si el último intento es reintentable.|
+|skip(reason: String, now: Instant)|Void|Public|Pasa a SKIPPED sin enviar (por ejemplo, con notificaciones desactivadas) y registra `NotificationSkipped`.|
+|pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Domain Service: ChannelPolicy**
+**Entities, Value Objects y enumeraciones del agregado Notification**
 
-|Nombre|Categoría|Descripción|
-|-|-|-|
-|ChannelPolicy|Domain Service|Determina por qué canales se envía una alerta.|
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|DeliveryAttempt|Entity|attemptId: UUID, deviceId: UUID?, channel: Channel, result: DeliveryResult, errorCode: String?, attemptedAt: Instant|isRetryable(): Boolean|Intento de entrega a un dispositivo o correo; `deviceId` queda vacío cuando el canal es EMAIL. Solo es reintentable un intento con resultado PROVIDER_UNAVAILABLE.|
+|ConditionKey|Value Object|value: String|value(): String|Identifica la condición notificada, por ejemplo, la saturación prevista de un estacionamiento. Mientras la condición sigue activa, no se repite la alerta (US23, escenario 4).|
+|NotificationContent|Value Object|title: String, body: String|—|Título y cuerpo ya renderizados con la plantilla; se conservan aunque la plantilla cambie después.|
+|RecipientSegment|Enumeration|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|—|Segmento destinatario.|
+|NotificationStatus|Enumeration|PENDING, SENT, FAILED, SKIPPED|—|Estado de la notificación.|
+|DeliveryResult|Enumeration|DELIVERED, REJECTED, PROVIDER_UNAVAILABLE|—|DELIVERED: el proveedor aceptó el envío. REJECTED: el proveedor rechazó el token; el token se marca como inválido y no se reintenta (TS12, escenario 3). PROVIDER_UNAVAILABLE: el proveedor no respondió dentro del tiempo límite o su circuit breaker está abierto; el envío se puede reintentar (QAS-06).|
 
-Methods
+**Enumeraciones compartidas**
 
-|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|Nombre|Categoría|Atributos|Métodos|Descripción|
+|-|-|-|-|-|
+|AlertType|Enumeration|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|—|Tipos de alerta. Lo usan `NotificationPreferences`, `NotificationRule`, `NotificationTemplate` y `Notification`.|
+|Channel|Enumeration|PUSH, EMAIL|—|Canales de envío. Lo usan `NotificationPreferences`, `NotificationTemplate`, `Notification` y `DeliveryAttempt`.|
+
+**Domain Services**
+
+|Nombre|Categoría|Métodos|Descripción|
 |-|-|-|-|
-|channelsFor(preferences, type)|`Set<Channel>`|Public|Devuelve los canales habilitados para el tipo.|
+|AlertPolicy|Domain Service|shouldAlert(preferences: NotificationPreferences, subscription: NotificationSubscription, rule: NotificationRule, type: AlertType, at: Instant): Boolean|Evalúa notificaciones habilitadas, suscripción vigente, regla del administrador, tipo de alerta y franja horaria.|
+|ChannelPolicy|Domain Service|channelsFor(preferences: NotificationPreferences, type: AlertType): `Set<Channel>`|Devuelve los canales habilitados para el tipo según la preferencia del usuario.|
+|DeduplicationPolicy|Domain Service|isDuplicate(conditionKey: ConditionKey, userId: UUID): Boolean|Indica si la condición ya se notificó al usuario y sigue activa; se apoya en `NotificationRepository.existsByUserAndConditionKey` (US23, escenario 4).|
 
-**Domain Service: DeduplicationPolicy**
+**Repositories (interfaces del dominio)**
 
-|Nombre|Categoría|Descripción|
+|Nombre|Operaciones|Descripción|
 |-|-|-|
-|DeduplicationPolicy|Domain Service|Evita repetir una alerta para una condición ya notificada (US23, escenario 4).|
+|NotificationSubscriptionRepository|save(subscription: NotificationSubscription): Void; findById(subscriptionId: UUID): NotificationSubscription; findByUser(userId: UUID): `List<NotificationSubscription>`; findActiveByParkingLot(parkingLotId: UUID): `List<NotificationSubscription>`|Persistencia de `NotificationSubscription`. `findActiveByParkingLot` localiza las suscripciones afectadas por `SaturationPredicted`.|
+|NotificationPreferencesRepository|save(preferences: NotificationPreferences): Void; findByUser(userId: UUID): NotificationPreferences; deleteByUser(userId: UUID): Void|Persistencia de `NotificationPreferences`. `deleteByUser` elimina las preferencias al darse de baja (CON-07, escenario 2).|
+|NotificationRuleRepository|save(rule: NotificationRule): Void; findById(ruleId: UUID): NotificationRule; findByParkingLot(parkingLotId: UUID): `List<NotificationRule>`|Persistencia de `NotificationRule`.|
+|NotificationTemplateRepository|save(template: NotificationTemplate): Void; findById(templateId: UUID): NotificationTemplate; findFor(alertType: AlertType, channel: Channel, locale: Locale): NotificationTemplate|Persistencia de `NotificationTemplate`. `findFor` obtiene la plantilla por tipo, canal e idioma.|
+|DeviceRegistrationRepository|save(device: DeviceRegistration): Void; findById(deviceId: UUID): DeviceRegistration; findUsableByUser(userId: UUID): `List<DeviceRegistration>`; deleteByUser(userId: UUID): Void|Persistencia de `DeviceRegistration`. `deleteByUser` elimina los tokens al darse de baja (CON-07, escenario 2).|
+|NotificationRepository|save(notification: Notification): Void; findById(notificationId: UUID): Notification; findByUser(userId: UUID): `List<Notification>`; existsByUserAndConditionKey(userId: UUID, conditionKey: ConditionKey): Boolean; findRetryable(): `List<Notification>`|Persistencia de `Notification`. `findByUser` entrega el historial, `existsByUserAndConditionKey` sostiene la deduplicación y `findRetryable` devuelve las notificaciones FAILED cuyo último intento terminó en PROVIDER_UNAVAILABLE.|
 
-Methods
+**Domain Events publicados**
 
-|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|Evento|Atributos|Lo registra|Descripción|
 |-|-|-|-|
-|isDuplicate(conditionKey, userId)|boolean|Public|Indica si la condición ya se notificó al usuario y sigue activa.|
+|SubscriptionCreated|subscriptionId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, timeSlot: TimeSlot, createdAt: Instant|`NotificationSubscription.create`|Suscripción registrada (US33, TS12).|
+|SubscriptionCancelled|subscriptionId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, cancelledAt: Instant|`NotificationSubscription.cancel`|Baja de una suscripción; las demás se conservan.|
+|PreferenceUpdated|userId: UUID, tenantId: UUID, enabled: Boolean, enabledTypes: `Set<AlertType>`, enabledChannels: `Set<Channel>`, updatedAt: Instant|`NotificationPreferences.update`, `enable` y `disable`|Preferencias aplicadas a los envíos posteriores (US24).|
+|NotificationRuleConfigured|ruleId: UUID, tenantId: UUID, parkingLotId: UUID, alertType: AlertType, enabled: Boolean, minIntervalMinutes: Integer, updatedAt: Instant|`NotificationRule.define` y `configure`|Regla de alerta guardada por el administrador.|
+|DeviceTokenInvalidated|deviceId: UUID, userId: UUID, tenantId: UUID, invalidatedAt: Instant|`DeviceRegistration.invalidate`|Token rechazado por el proveedor; no se vuelve a usar. No incluye el token.|
+|UserNotificationDelivered|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, channel: Channel, sentAt: Instant|`Notification.markSent`|Alerta entregada al conductor.|
+|PushSent|notificationId: UUID, userId: UUID, tenantId: UUID, sentAt: Instant|`Notification.markSent` (canal PUSH)|Envío confirmado por el proveedor de mensajería push.|
+|EmailSent|notificationId: UUID, userId: UUID, tenantId: UUID, sentAt: Instant|`Notification.markSent` (canal EMAIL)|Envío confirmado por el servicio de correo.|
+|NotificationSkipped|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, skippedAt: Instant|`Notification.skip`|Envío omitido, por ejemplo con notificaciones desactivadas (US23, escenario 3).|
 
-**Enumeraciones**
-
-|Nombre|Valores|Descripción|
-|-|-|-|
-|AlertType|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|Tipos de alerta.|
-|Channel|PUSH, EMAIL|Canales de envío.|
-|RecipientSegment|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|Segmento destinatario.|
-|NotificationStatus|PENDING, SENT, FAILED, SKIPPED|Estado de la notificación.|
-|DeviceStatus|VALID, INVALID|Estado del token del dispositivo.|
+Los atributos de cada evento salen solo de datos que el agregado ya guarda o que recibe en la operación que lo registra (por ejemplo, `now`). Ningún evento incluye el contenido del mensaje, el token del dispositivo ni la ubicación del conductor (CON-07).
 
 ### 5.7.2. Interface Layer
- 
-| Controller o consumidor | Endpoint o evento | Resultado | Origen |
-|---|---|---|---|
-| `SubscriptionController` | `POST /api/v1/notification-subscriptions` | 201 con la suscripción creada | TS12 |
-| `SubscriptionController` | `GET /api/v1/notification-subscriptions` | 200 con las suscripciones del usuario | US33 (ruta propuesta) |
-| `SubscriptionController` | `DELETE /api/v1/notification-subscriptions/{id}` | 204; conserva las demás suscripciones | US33 (ruta propuesta) |
-| `PreferencesController` | `PUT /api/v1/notification-preferences` | `PreferenceUpdated`: 200 y aplicación a los envíos posteriores | TS12 |
-| `PreferencesController` | `GET /api/v1/notification-preferences` | 200 con las preferencias actuales | US24 (ruta propuesta) |
-| `DeviceController` | `POST /api/v1/notification-devices` | 201 y registro del dispositivo como destino de alertas | US33, escenario 2 (ruta propuesta) |
-| `RuleController` | `PUT /api/v1/notification-rules` y `GET /api/v1/notification-rules` | `NotificationRuleConfigured`: 200 con la regla guardada; 403 si el rol no es administrativo | Canvas (rutas propuestas) |
-| `HistoryController` | `GET /api/v1/notifications` | `NotificationHistoryProvided`: 200 con el historial de notificaciones del usuario | Canvas (ruta propuesta) |
-| `PredictionEventConsumer` | Evento `SaturationPredicted` | Evalúa las suscripciones afectadas | Mapa de contextos, US23 |
- 
-Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el rol se toman del token validado por la capa de seguridad del backend (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
- 
+
+La Interface Layer expone las capacidades de Notifications a la aplicación móvil y a la consola web de operación, recibe el evento `SaturationPredicted` de Prediction & Advisory y dispara el proceso programado de reintentos. Recibe solicitudes o eventos, valida su forma, los transforma en Commands o Queries y delega en la Application Layer. No contiene reglas de negocio. Las rutas HTTP requieren una sesión vigente: el usuario, la institución y el rol se toman del token validado por la capa de seguridad del backend (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
+
+**Controllers REST**
+
+|Controller|Endpoint|Resultado|Origen|
+|-|-|-|-|
+|SubscriptionController|`POST /api/v1/notification-subscriptions`|Envía `CreateSubscriptionCommand`; 201 con la suscripción creada|TS12, US33|
+|SubscriptionController|`GET /api/v1/notification-subscriptions`|Ejecuta `GetSubscriptionsQuery`; 200 con las suscripciones del usuario|US33 (ruta propuesta)|
+|SubscriptionController|`DELETE /api/v1/notification-subscriptions/{id}`|Envía `CancelSubscriptionCommand`; 204; conserva las demás suscripciones|US33 (ruta propuesta)|
+|PreferencesController|`PUT /api/v1/notification-preferences`|`PreferenceUpdated`: envía `UpdatePreferencesCommand`; 200 y aplicación a los envíos posteriores|TS12, US24|
+|PreferencesController|`GET /api/v1/notification-preferences`|Ejecuta `GetPreferencesQuery`; 200 con las preferencias actuales|US24 (ruta propuesta)|
+|DeviceController|`POST /api/v1/notification-devices`|Envía `RegisterDeviceCommand`; 201 y registro del dispositivo como destino de alertas|US33, escenario 2 (ruta propuesta)|
+|RuleController|`PUT /api/v1/notification-rules`|`NotificationRuleConfigured`: envía `ConfigureNotificationRuleCommand`; 200 con la regla guardada; 403 si el rol no es PARKING_ADMIN|Canvas (ruta propuesta)|
+|RuleController|`GET /api/v1/notification-rules?parkingLotId={lotId}`|Ejecuta `GetNotificationRulesQuery`; 200 con las reglas del estacionamiento|Canvas (ruta propuesta)|
+|HistoryController|`GET /api/v1/notifications`|`NotificationHistoryProvided`: ejecuta `GetNotificationHistoryQuery`; 200 con el historial de notificaciones del usuario|Canvas (ruta propuesta)|
+
+**Event Consumer**
+
+|Nombre|Categoría|Evento|Descripción|
+|-|-|-|-|
+|PredictionEventConsumer|Consumer (`@TransactionalEventListener`)|`SaturationPredicted` (Prediction & Advisory)|Recibe el evento después de que Prediction & Advisory confirma su transacción y ejecuta `SaturationPredictedEventHandler` (mapa de contextos, US23).|
+
+**Proceso programado: NotificationRetryScheduler**
+
+|Método|Frecuencia|Command|Descripción|
+|-|-|-|-|
+|retryFailedNotifications()|Cada 1 min|RetryFailedNotificationsCommand|Reintenta las notificaciones que fallaron por indisponibilidad del proveedor (QAS-06).|
+
 ### 5.7.3. Application Layer
- 
-| Command / Event handler | Caso de uso | Historias |
-|---|---|---|
-| `CreateSubscriptionHandler` | Registra la suscripción a un estacionamiento y franja | US33, TS12 |
-| `CancelSubscriptionHandler` | Da de baja una suscripción; al quedar sin suscripciones activas, elimina el token de dispositivo y las preferencias | US33, CON-07 |
-| `UpdatePreferencesHandler` | Guarda las preferencias y las aplica a los envíos posteriores | US24, TS12 |
-| `RegisterDeviceHandler` | Registra el token de un dispositivo como destino de alertas | US33 |
-| `ConfigureNotificationRuleHandler` | Guarda la regla de alerta de un estacionamiento y publica `NotificationRuleConfigured` | Canvas |
-| `GetNotificationHistoryHandler` | Devuelve el historial de notificaciones del usuario (`NotificationHistoryProvided`) | Canvas |
-| `HandleSaturationPredictedHandler` | Localiza suscripciones con franja afectada, aplica `AlertPolicy`, `ChannelPolicy` y `DeduplicationPolicy` y crea las notificaciones | US23 |
-| `DispatchNotificationHandler` | Envía una notificación pendiente por el canal elegido (push a los dispositivos válidos o correo), registra el resultado y publica `UserNotificationDelivered` | US23, TS12 |
-| `HandleDeliveryRejectionHandler` | Marca el token como inválido cuando el proveedor lo rechaza y evita reintentos | TS12, DD-07 |
- 
-**Puertos de salida.** `PushSender` y `EmailSender` (envío a los proveedores de mensajería), `IdentityContext` (identidad entregada por IAM), `DomainEventPublisher` y `Clock`.
- 
+
+La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son gestionar suscripciones, preferencias, dispositivos y reglas de alerta, decidir y crear las alertas ante una saturación prevista, enviarlas por el canal elegido y reintentarlas cuando el proveedor no está disponible.
+
+**Commands y Command Handlers**
+
+|Command|Atributos|Command Handler|Dependencias|Historias|
+|-|-|-|-|-|
+|CreateSubscriptionCommand|userId, tenantId, parkingLotId, timeSlot|CreateSubscriptionCommandHandler|NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationEventPublisher, Clock|US33, TS12|
+|CancelSubscriptionCommand|userId, subscriptionId|CancelSubscriptionCommandHandler|NotificationSubscriptionRepository, NotificationPreferencesRepository, DeviceRegistrationRepository, NotificationEventPublisher, Clock|US33, CON-07|
+|UpdatePreferencesCommand|userId, tenantId, enabled, enabledTypes, enabledChannels|UpdatePreferencesCommandHandler|NotificationPreferencesRepository, NotificationEventPublisher, Clock|US24, TS12|
+|RegisterDeviceCommand|userId, tenantId, token, platform|RegisterDeviceCommandHandler|DeviceRegistrationRepository, Clock|US33|
+|ConfigureNotificationRuleCommand|tenantId, parkingLotId, alertType, enabled, minIntervalMinutes|ConfigureNotificationRuleCommandHandler|NotificationRuleRepository, NotificationEventPublisher, Clock|Canvas|
+|DispatchNotificationCommand|notificationId|DispatchNotificationCommandHandler|NotificationRepository, DeviceRegistrationRepository, PushSender, EmailSender, NotificationEventPublisher, Clock|US23, TS12, DD-07|
+|RetryFailedNotificationsCommand|now|RetryFailedNotificationsCommandHandler|NotificationRepository, DispatchNotificationCommandHandler|QAS-06|
+
+**Queries y Query Handlers**
+
+|Query|Atributos|Query Handler|Resultado|
+|-|-|-|-|
+|GetSubscriptionsQuery|userId|GetSubscriptionsQueryHandler|`List<SubscriptionView>`|
+|GetPreferencesQuery|userId|GetPreferencesQueryHandler|PreferencesView|
+|GetNotificationRulesQuery|tenantId, parkingLotId|GetNotificationRulesQueryHandler|`List<NotificationRuleView>`|
+|GetNotificationHistoryQuery|userId|GetNotificationHistoryQueryHandler|`List<NotificationView>` (`NotificationHistoryProvided`)|
+
+**Event Handlers**
+
+|Event Handler|Evento|Descripción|
+|-|-|-|
+|SaturationPredictedEventHandler|`SaturationPredicted` (Prediction & Advisory)|Localiza las suscripciones cuya franja contiene la saturación prevista, aplica `AlertPolicy`, `DeduplicationPolicy` y `ChannelPolicy`, renderiza la plantilla, crea las notificaciones y ejecuta `DispatchNotificationCommand` por cada una. Dependencias: NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, NotificationRepository, AlertPolicy, ChannelPolicy, DeduplicationPolicy, DispatchNotificationCommandHandler, Clock.|
+
+**Flujos de ejecución**
+
+`SaturationPredictedEventHandler`:
+
+1. Busca con `findActiveByParkingLot` las suscripciones del estacionamiento y conserva las que cubren `saturationExpectedAt` (`covers`).
+2. Para cada suscriptor carga sus preferencias y las reglas del estacionamiento, y evalúa `AlertPolicy.shouldAlert` con el tipo SATURATION_FORECAST. Si la regla del administrador o la franja no lo permiten, no crea ninguna notificación.
+3. Arma la clave de condición (estacionamiento, tipo y momento previsto) y, si `DeduplicationPolicy.isDuplicate` indica que la condición ya se notificó al usuario, termina (US23, escenario 4).
+4. Obtiene los canales con `ChannelPolicy.channelsFor`. Por cada canal obtiene la plantilla con `NotificationTemplateRepository.findFor` (tipo, canal e idioma) y la completa con `render`, que devuelve el `NotificationContent`.
+5. Crea la notificación con `Notification.create`, con el segmento DRIVERS, el contenido renderizado y la referencia `templateId` de la plantilla usada. Si el usuario tiene las notificaciones desactivadas, llama a `skip`, que registra `NotificationSkipped` y conserva la suscripción (US23, escenario 3).
+6. Guarda las notificaciones y, después de confirmar la transacción, ejecuta `DispatchNotificationCommand` por cada notificación pendiente.
+
+`DispatchNotificationCommandHandler`:
+
+1. Carga la notificación pendiente. Si el canal es PUSH, obtiene los dispositivos utilizables del usuario (`findUsableByUser`) y envía el contenido con `PushSender` a cada uno; si es EMAIL, lo envía con `EmailSender`.
+2. Registra cada resultado con `recordAttempt`. Si un intento termina en REJECTED, carga el `DeviceRegistration` y llama a `invalidate`, que registra `DeviceTokenInvalidated`; ese token no se vuelve a usar (TS12, escenario 3).
+3. Si algún intento termina en DELIVERED, llama a `markSent`, que registra `PushSent` o `EmailSent` y `UserNotificationDelivered`. Si el proveedor no respondió a tiempo o su circuit breaker está abierto, llama a `markFailed` (QAS-06).
+4. Guarda los agregados y publica los eventos.
+
+`CancelSubscriptionCommandHandler`:
+
+1. Carga la suscripción del usuario y llama a `cancel`, que registra `SubscriptionCancelled`.
+2. Si el usuario ya no tiene suscripciones activas, elimina sus preferencias y sus dispositivos (`deleteByUser`) (CON-07, escenario 2).
+3. Guarda los cambios y publica los eventos.
+
+`CreateSubscriptionCommandHandler`:
+
+1. Crea la suscripción con `NotificationSubscription.create`, que registra `SubscriptionCreated`.
+2. Si el usuario aún no tiene preferencias, las crea con `NotificationPreferences.create`.
+3. Guarda ambos agregados y publica los eventos.
+
+**Puertos de salida**
+
+|Nombre|Categoría|Operaciones|Descripción|
+|-|-|-|-|
+|NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, DeviceRegistrationRepository, NotificationRepository|Puertos (Domain Layer)|Ver 5.7.1|Persistencia de los agregados.|
+|PushSender|Puerto hacia el proveedor push|send(token: DeviceToken, content: NotificationContent): DeliveryResult|Envía la alerta a un dispositivo y traduce la respuesta del proveedor a `DeliveryResult`.|
+|EmailSender|Puerto hacia el servicio de correo|send(userId: UUID, content: NotificationContent): DeliveryResult|Envía la alerta por correo y traduce la respuesta del servicio a `DeliveryResult`.|
+|IdentityContext|Puerto hacia IAM|currentUser(): AuthenticatedUser|Entrega el usuario, la institución y el rol del token validado (`UserIdentityProvided`).|
+|NotificationEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar suscripciones, intentos y envíos.|
+
 **Tolerancia a fallas.** El envío se ejecuta de forma independiente de la actualización de ocupación. Si un proveedor no responde dentro del tiempo límite, se abre su circuit breaker y las notificaciones pendientes se registran como fallidas, sin afectar la frescura de la ocupación definida en QAS-02 (QAS-06).
- 
+
 ### 5.7.4. Infrastructure Layer
- 
-| Componente | Implementa | Detalle |
-|---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `notifications` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
-| `PushGatewayAdapter` | `PushSender` | Capa anticorrupción hacia el proveedor de mensajería push (`PushSent`). Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06). |
-| `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo (`EmailSent`), con timeout y circuit breaker propios. |
-| `IdentityContextAdapter` | `IdentityContext` | Capa anticorrupción que traduce `UserIdentityProvided` (usuario, institución y rol) al modelo local, sin consultar la base de IAM (CON-02). |
-| Consumidores de eventos | Adaptadores de entrada | `@TransactionalEventListener` sobre los eventos de Prediction & Advisory; la deduplicación por condición evita alertas repetidas. |
-| `EventPublisherAdapter` | `DomainEventPublisher` | Publica los eventos propios del contexto. |
-| Programador de reintentos | Transversal | Reintenta únicamente las notificaciones fallidas por indisponibilidad del proveedor, nunca los tokens marcados como inválidos. |
- 
+
+La Infrastructure Layer implementa los repositorios, las capas anticorrupción hacia los proveedores de mensajería y hacia la identidad entregada por IAM, y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
+
+|Nombre|Categoría|Implementa|Tecnología|Descripción|
+|-|-|-|-|-|
+|NotificationSubscriptionRepositoryAdapter|Repository (implementación)|NotificationSubscriptionRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notification_subscriptions` y los días de su franja en `subscription_days`.|
+|NotificationPreferencesRepositoryAdapter|Repository (implementación)|NotificationPreferencesRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notification_preferences` y sus conjuntos de tipos y canales en `notification_preference_alert_types` y `notification_preference_channels`; `deleteByUser` los elimina en cascada.|
+|NotificationRuleRepositoryAdapter|Repository (implementación)|NotificationRuleRepository|Spring Data JPA, PostgreSQL|Guarda las reglas en `notification_rules`, una por estacionamiento y tipo de alerta.|
+|NotificationTemplateRepositoryAdapter|Repository (implementación)|NotificationTemplateRepository|Spring Data JPA, PostgreSQL|Guarda las plantillas en `notification_templates`; `findFor` usa el índice único por tipo, canal e idioma.|
+|DeviceRegistrationRepositoryAdapter|Repository (implementación)|DeviceRegistrationRepository|Spring Data JPA, PostgreSQL|Guarda los dispositivos en `device_registrations`.|
+|NotificationRepositoryAdapter|Repository (implementación)|NotificationRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notifications`, con `NotificationContent` en columnas propias, y sus intentos en `delivery_attempts`.|
+|PushGatewayAdapter|Adapter (anti-corruption)|PushSender|Cliente HTTP del proveedor push, Resilience4j|Capa anticorrupción hacia el proveedor de mensajería push. Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06).|
+|EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo, con timeout y circuit breaker propios.|
+|IdentityContextAdapter|Adapter (anti-corruption)|IdentityContext|Spring Security|Traduce `UserIdentityProvided` (usuario, institución y rol del token) al modelo local, sin consultar la base de IAM (CON-02).|
+|NotificationEventPublisherAdapter|Adapter (eventos)|NotificationEventPublisher|Eventos de aplicación de Spring|Publica los eventos propios del contexto después de confirmar la transacción.|
+
+**Consideraciones**
+
+|Tema|Decisión|
+|-|-|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `notifications` (DD-01). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos (CON-02).|
+|Reintentos|Solo se reintentan las notificaciones fallidas por indisponibilidad del proveedor (último intento PROVIDER_UNAVAILABLE, según `DeliveryAttempt.isRetryable`), nunca los tokens marcados como inválidos.|
+|Deduplicación|La clave de condición evita alertas repetidas en el dominio y el índice único de `notifications` la refuerza ante eventos duplicados.|
+|Multi-tenancy|`tenant_id` se guarda en las tablas con datos de una institución y se toma del token o del evento recibido (CON-08).|
+|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `notifications` de PostgreSQL, según DD-01.|
+
 ### 5.7.6. Bounded Context Software Architecture Component Level Diagrams
  
-El diagrama muestra los componentes internos del servicio Notifications, su integración por eventos con Prediction & Advisory, la identidad recibida desde IAM y su comunicación con el proveedor de mensajería push y el servicio de correo a través de capas anticorrupción.
+El diagrama muestra los componentes internos del módulo Notifications, su integración por eventos con Prediction & Advisory, la identidad recibida desde IAM y su comunicación con el proveedor de mensajería push y el servicio de correo a través de capas anticorrupción.
  
 ![Diagrama de componentes C4 del contexto Notifications](assets/capitulo-05/notificaciones/notif_c4_componentes.png)
  
@@ -7367,15 +7612,19 @@ El diagrama muestra los componentes internos del servicio Notifications, su inte
  
 #### 5.7.7.1. Bounded Context Domain Layer Class Diagrams
  
+El diagrama presenta los seis agregados del contexto (`NotificationSubscription`, `NotificationPreferences`, `NotificationRule`, `NotificationTemplate`, `DeviceRegistration` y `Notification`) con su entidad, sus Value Objects y sus enumeraciones, los Domain Services `AlertPolicy`, `ChannelPolicy` y `DeduplicationPolicy`, una interfaz de repositorio por cada raíz y los eventos que publica el contexto, cada uno con sus atributos. Los atributos son privados (-) y los métodos, públicos (+); los métodos subrayados son fábricas estáticas (`NotificationSubscription.create`, `NotificationPreferences.create`, `NotificationRule.define`, `DeviceRegistration.register` y `Notification.create`). Las composiciones indican qué objetos viven dentro de cada agregado y con qué multiplicidad (por ejemplo, una `Notification` registra de cero a muchos `DeliveryAttempt` y compone exactamente una `ConditionKey` y un `NotificationContent`). `AlertType` y `Channel` se agrupan como enumeraciones compartidas porque las usan varios agregados. Las dependencias punteadas indican qué agregados evalúan los servicios, qué raíz persiste cada repositorio, qué eventos registra cada agregado (`registers`) y que cada `Notification` se renderiza con una `NotificationTemplate` (`rendered with`), a la que referencia por `templateId`. Las referencias a usuario, institución, estacionamiento, dispositivo y plantilla se guardan solo como identificadores `UUID`.
+
 ![Diagrama de clases de la capa de dominio del contexto Notifications](assets/capitulo-05/notificaciones/notif_clases.png)
  
 #### 5.7.7.2. Bounded Context Database Design Diagram
- 
-Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02).
- 
+
+El esquema `notifications` de PostgreSQL contiene una tabla por agregado raíz y una tabla hija por cada colección interna: `subscription_days` para los días de `TimeSlot`, `notification_preference_alert_types` y `notification_preference_channels` para los conjuntos `enabledTypes` y `enabledChannels` de `NotificationPreferences`, y `delivery_attempts` para los intentos de cada `Notification`. Las tablas hijas tienen clave primaria compuesta o propia y una clave foránea hacia su raíz con `ON DELETE CASCADE`, de modo que `deleteByUser` elimina también los tipos y canales habilitados (CON-07, escenario 2). Los Value Objects se guardan en columnas de su agregado (`TimeSlot` en `start_time` y `end_time`, `DeviceToken` en `device_token`, `ConditionKey` en `condition_key` y `NotificationContent` en `title` y `body`), y las enumeraciones como `VARCHAR` con una restricción `CHECK` de sus valores.
+
+Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02). Dentro del esquema, `notifications.template_id` referencia la plantilla con la que se renderizó el contenido y `delivery_attempts.device_id` el dispositivo del intento; esta última usa `ON DELETE SET NULL` para que eliminar los dispositivos de un usuario no borre el historial de entregas.
+
 ![Diagrama de base de datos del contexto Notifications](assets/capitulo-05/notificaciones/notif_bd.png)
- 
-**Índices relevantes.** Índice único sobre (`user_id`, `condition_key`) en `notifications` para sostener la deduplicación, índice único sobre (`alert_type`, `channel`, `locale`) en `notification_templates`, índice sobre (`parking_lot_id`, `status`) en `notification_subscriptions` para localizar rápidamente las suscripciones afectadas por una saturación prevista.
+
+**Índices relevantes.** Índice único sobre (`user_id`, `condition_key`, `channel`) en `notifications` para sostener la deduplicación sin impedir que una misma alerta salga por push y por correo; índice único sobre (`alert_type`, `channel`, `locale`) en `notification_templates`; índice único sobre (`parking_lot_id`, `alert_type`) en `notification_rules`, una regla por estacionamiento y tipo; índice único sobre `device_token` en `device_registrations`, e índice sobre (`parking_lot_id`, `status`) en `notification_subscriptions` para localizar rápidamente las suscripciones afectadas por una saturación prevista. Los eventos pendientes (`domainEvents`) no se persisten.
 
  
 
@@ -8217,7 +8466,7 @@ El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Do
 
 | Artefacto | Enlace |
 | --- | --- |
-| Strategic-Level Domain-Driven Design (Excalidraw) | [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
+| Strategic-Level Domain-Driven Design (Excalidraw) | [Tablero de diseño estratégico (Excalidraw)](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
 
 ## Enlaces a los artefactos
 
@@ -8226,7 +8475,7 @@ Los artefactos elaborados en herramientas en línea pueden consultarse en los si
 | Artefacto | Sección | Herramienta | Enlace |
 | --- | --- | --- | --- |
 | Product Backlog | 3.4 | Trello | [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T) |
-| EventStorming, Candidate Context Discovery, Domain Message Flows, Bounded Context Canvases y Context Mapping | 4.2 | Excalidraw | [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
+| EventStorming, Candidate Context Discovery, Domain Message Flows, Bounded Context Canvases y Context Mapping | 4.2 | Excalidraw | [Tablero de diseño estratégico (Excalidraw)](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
 | Landing Page, wireframes y wireflows | 6.3 y 6.4 | Figma | [https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0) |
 | Landing Page implementada | 6.3 | Netlify | [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) |
 | Código de la Landing Page | 6.3 | GitHub | [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) |
