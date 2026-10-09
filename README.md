@@ -97,7 +97,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 | Nanfuñay Liza, Pedro Jesus | Estructura de los capítulos V y VI; diseño táctico del Bounded Context Analytics; Information Architecture; corrección de los Bounded Context Canvases, del Context Mapping y del registro de entrevistas. |
 | Sulca Sanchez, Piero Angel | Diseño táctico de los Bounded Contexts Parking Configuration, Parking Sensing y Occupancy; reconstrucción del EventStorming, del Candidate Context Discovery, de los Domain Message Flows, de los Bounded Context Canvases y del Context Mapping; alineación de la arquitectura y de los diagramas C4; To-Be Scenario Mapping; actualización del Registro de Versiones, del Collaboration Insights y de la tabla de contenido. |
 
-**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 17 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
+**Evidencias de colaboración del segundo hito.** Entre el 30 de setiembre y el 9 de octubre de 2026, el repositorio del informe registra commits de cuatro integrantes, realizados con su propia identidad de Git: 32 de Becerra Tejeda, 20 de Sulca Sanchez, 10 de Nanfuñay Liza y 8 de Melgarejo Gomez. Estos commits corresponden a las versiones 2.0 a 2.15 del Registro de Versiones del Informe. El aporte de Bejarano Martinez en este hito se registra en el repositorio `Landing_Page`.
 
 # Contenido
 
