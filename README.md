@@ -67,7 +67,7 @@
 
 # Project Report Collaboration Insights
 
-El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report), alojado en la organización de GitHub del equipo.
+El informe se elabora de forma colaborativa en el repositorio [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report), alojado en la organización de GitHub del equipo.
 
 **Organización del trabajo en el primer hito.** El equipo distribuyó las secciones del informe por integrante y acordó un flujo de trabajo común, documentado en la guía de contribución del repositorio: cada integrante trabaja en una rama `feature/` nombrada por la tarea, registra sus cambios con Conventional Commits en inglés y abre un Pull Request hacia `develop`, que se integra mediante merge commit para conservar la autoría de cada aporte. El informe se mantiene en un único archivo `README.md`, lo que exige que cada integrante intervenga solamente en las secciones que le corresponden y actualice su rama antes de integrar.
 
@@ -87,7 +87,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 
 *Figura: analítico de Contributors del repositorio al cierre del primer hito. Registra 33 commits de Sulca Sanchez, 13 de Nanfuñay Liza, 11 de Becerra Tejeda, 9 de Bejarano Martinez y 4 de Melgarejo Gomez, lo que corresponde con los aportes descritos en el Registro de Versiones del Informe.*
 
-**Organización del trabajo en el segundo hito (TB1).** El equipo distribuyó el diseño táctico del capítulo V por bounded context y el capítulo VI por sección, y atendió en las secciones afectadas la retroalimentación recibida en el primer hito. Se mantuvo el flujo de trabajo del primer hito: ramas `feature/` y `fix/` por tarea, commits con Conventional Commits y la identidad de Git de cada integrante, e integración en `develop`. En paralelo, se inició la implementación de la Landing Page en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización. Las correcciones del capítulo IV se rehicieron con una sola herramienta por artefacto para mantener la coherencia entre ellos: Excalidraw para el EventStorming, los contextos candidatos, los message flows, los canvases y el context map, y Structurizr para los diagramas C4. El diseño táctico se elaboró sobre los contratos que fija el capítulo IV, es decir, los eventos publicados y las fachadas entre contextos, para que cada bounded context del capítulo V sea consistente con los demás.
+**Organización del trabajo en el segundo hito (TB1).** El equipo distribuyó el diseño táctico del capítulo V por bounded context y el capítulo VI por sección, y atendió en las secciones afectadas la retroalimentación recibida en el primer hito. Se mantuvo el flujo de trabajo del primer hito: ramas `feature/` y `fix/` por tarea, commits con Conventional Commits y la identidad de Git de cada integrante, e integración en `develop`. En paralelo, se inició la implementación de la Landing Page en el repositorio [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización. Las correcciones del capítulo IV se rehicieron con una sola herramienta por artefacto para mantener la coherencia entre ellos: Excalidraw para el EventStorming, los contextos candidatos, los message flows, los canvases y el context map, y Structurizr para los diagramas C4. El diseño táctico se elaboró sobre los contratos que fija el capítulo IV, es decir, los eventos publicados y las fachadas entre contextos, para que cada bounded context del capítulo V sea consistente con los demás.
 
 **Aportes por integrante en el segundo hito.**
 
@@ -246,6 +246,7 @@ El informe se elabora de forma colaborativa en el repositorio [quadrapp-project-
 - [Bibliografía](#bibliografía)
 - [Anexos](#anexos)
   - [Tablero de diseño estratégico](#tablero-de-diseño-estratégico)
+  - [Enlaces a los artefactos](#enlaces-a-los-artefactos)
   - [Videos de Exposiciones](#videos-de-exposiciones)
 
 ---
@@ -1073,7 +1074,7 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 | Nombres y apellidos | Gabriel Fernando Gordon Salas |
 | Edad | 21 años |
 | Ocupación y vínculo con la universidad | Estudiante de Ingeniería de Software, 8.º ciclo |
-| Enlace de la grabación | [Ver entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQB7hsSytElgTbdx5DxjN9FzAX5EA4gjUnooYg17Ymlv_UM?e=JY5T1p&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D) |
 | Duración | 05:17 |
 | Captura | <img src="assets/capitulo-02/Entrevista3_GabrielGordon.png" alt="Captura de la entrevista a Gabriel" width="500"/> |
 | Resumen | Estudiante de Ingeniería de Software que llega al campus en el auto de su familia 4 días a la semana, de lunes a jueves. Para movilizarse utiliza Waze o Google Maps y se informa mediante WhatsApp y correo institucional. Antes de salir no cuenta con información sobre el estacionamiento, por lo que lo intuye según el día y la época del ciclo, y a veces consulta al grupo de WhatsApp, cuyas respuestas pueden quedar desactualizadas al llegar. Tras la cola de ingreso y la validación de su credencial, suele tardar unos 10 minutos en encontrar espacio. En una semana de exámenes buscó durante unos 20 minutos, terminó en un estacionamiento particular externo y llegó 15 minutos tarde a su evaluación. Estima perder unas 2 horas semanales entre salir antes y dar vueltas, y califica la importancia del problema con un 8 sobre 10. Considera importante conocer la probabilidad de encontrar espacio a su hora de llegada, idealmente por zona o piso, aunque solo confiaría en la predicción si es precisa. |
@@ -7457,7 +7458,7 @@ La Landing Page es el primer contacto de los dos segmentos con Quadrapp. Su dise
 
 El contenido comunica el alcance real del producto para evitar falsas expectativas. Desde la portada se indica que Quadrapp no hace reservas, no cobra y no rastrea la ubicación (CON-10, CON-07); la sección de predicción aclara que una estimación orienta pero no reserva un espacio y explica el estado UNKNOWN; y la sección de privacidad explica que la aplicación calcula el tiempo estimado de llegada en el dispositivo. El pie de página enlaza los términos y condiciones y la política de privacidad (US28, CON-18).
 
-Los diseños se elaboraron en Figma, en el archivo de diseño del equipo, a partir de la propuesta de valor (US25) y del Design System de la sección 6.1. La versión implementada se publicó en [tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) y su código está en el repositorio [Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización.
+Los diseños se elaboraron en Figma, en el archivo de diseño del equipo ([https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0)), a partir de la propuesta de valor (US25) y del Design System de la sección 6.1. La versión implementada se publicó en [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) y su código está en el repositorio [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) de la organización.
 
 ### 6.3.1. Landing Page Wireframe
 
@@ -7504,7 +7505,7 @@ El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin ca
 
 ### 6.4.1. Applications Wireframes
 
-Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes y los wireflows se elaboraron en Figma: [https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0). Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
 
 
 #### VISTA CONDUCTOR (APP MÓVIL)
@@ -7720,6 +7721,19 @@ El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Do
 | Artefacto | Enlace |
 | --- | --- |
 | Strategic-Level Domain-Driven Design (Excalidraw) | [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
+
+## Enlaces a los artefactos
+
+Los artefactos elaborados en herramientas en línea pueden consultarse en los siguientes enlaces públicos.
+
+| Artefacto | Sección | Herramienta | Enlace |
+| --- | --- | --- | --- |
+| Product Backlog | 3.4 | Trello | [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T) |
+| EventStorming, Candidate Context Discovery, Domain Message Flows, Bounded Context Canvases y Context Mapping | 4.2 | Excalidraw | [https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ](https://excalidraw.com/#json=HmbDCkRWT8nY8qEi-2usD,FRT6kKXHjsc7Lc4HXsAFJQ) |
+| Landing Page, wireframes y wireflows | 6.3 y 6.4 | Figma | [https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0) |
+| Landing Page implementada | 6.3 | Netlify | [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) |
+| Código de la Landing Page | 6.3 | GitHub | [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) |
+| Informe del proyecto | — | GitHub | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report) |
 
 ## Videos de Exposiciones
 
