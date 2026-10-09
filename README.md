@@ -2877,7 +2877,7 @@ El diseño estratégico utiliza los principios de Domain-Driven Design para deli
 
 El EventStorming se desarrolló en una sesión de trabajo del equipo siguiendo los diez pasos propuestos en el material del curso, a partir del problema, los segmentos y las decisiones del Attribute-Driven Design descritas en las secciones anteriores. El objetivo fue identificar los eventos del dominio de Quadrapp, ordenarlos en el tiempo, reconocer los puntos críticos del proceso y agrupar los agregados resultantes en bounded contexts candidatos.
 
-La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta mediante el enlace registrado en los Anexos.
+La sesión se modeló en Excalidraw con la notación de colores del método: naranja para los eventos de dominio, azul para los comandos, amarillo para los actores, morado para las políticas, verde para los read models, rojo para los sistemas externos, rosado para los puntos críticos y amarillo pálido para los agregados. Cada figura de esta sección es una captura del tablero al cierre del paso correspondiente. El tablero completo puede consultarse en la herramienta en [https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA](https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA), enlace que también se registra en los Anexos.
 
 Por la cantidad de eventos, la línea de tiempo se organizó en tres fases del negocio: la incorporación de la institución y la configuración del estacionamiento, el sensado y la ocupación en tiempo real, y la predicción, la asesoría de llegada y las alertas.
 
@@ -6340,11 +6340,11 @@ World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 
 
 ## Tablero de diseño estratégico
 
-El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows y el Context Map elegido se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
+El EventStorming completo (pasos 1 a 10), el Candidate Context Discovery, los Domain Message Flows, los Bounded Context Canvases y el Context Map elegido se encuentran en un único tablero de Excalidraw, que puede consultarse en la herramienta:
 
 | Artefacto | Enlace |
 | --- | --- |
-| Strategic-Level Domain-Driven Design (Excalidraw) | [Abrir tablero](https://excalidraw.com/#json=AwfVtCDCsg4Nfujz9eTx2,SHK0Hbpkf3Tu3b42qHBk4A) |
+| Strategic-Level Domain-Driven Design (Excalidraw) | [https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA](https://excalidraw.com/#json=ZOYSiiHnXfACWMP1fm84P,5mHQweH2hL1GJ--X_bpieA) |
 
 ## Videos de Exposiciones
 
