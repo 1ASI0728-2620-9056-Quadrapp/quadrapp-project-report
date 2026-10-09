@@ -3540,6 +3540,30 @@ El Deployment Diagram representa dónde se ejecuta cada contenedor en producció
 
 El contexto IAM (Identity and Access Management) es el servicio transversal que decide quién puede ingresar a Quadrapp y con qué rol. Gestiona las instituciones (tenants), sus dominios de correo habilitados, las cuentas, las invitaciones, el acceso sin contraseña mediante código de un solo uso y las sesiones basadas en tokens. Su dominio es genérico (Security / Compliance) y no gestiona ocupación ni predicción. Sostiene los drivers FD-01, QAD-07, QAD-08, CON-08, CON-09 y CON-17, y las decisiones DD-08 y DD-09. Su contenido corresponde a las historias US01, US02, US03, US30 y US31, y a las historias técnicas TS01 y TS15.
 
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de IAM. Los atributos y métodos de las clases del dominio coinciden con el diagrama de clases de la sección de Code Level Diagrams.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| Tenant | Domain | Aggregate Root. Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación. | id, name, status, createdAt | addDomain(), retireDomain(), activate(), ownsDomain() |
+| EmailDomain | Domain | Entity. Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe). | domain, verification, verifiedAt | — |
+| UserAccount | Domain | Aggregate Root. Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07). | id, tenantId, email, displayName, role, status, terms | assignRole(), acceptTerms(), isParkingAdmin() |
+| Invitation | Domain | Aggregate Root. Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17). | id, tenantId, email, role, status, expiresAt | accept(), expire() |
+| OtpChallenge | Domain | Aggregate Root. Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09). | id, email, codeHash, expiresAt, attempts, consumedAt | verify(), consume() |
+| RefreshToken | Domain | Aggregate Root. Sesión revocable del usuario (US02, US03). | id, userId, tokenHash, expiresAt, revokedAt | revoke(), isActive() |
+| PlatformCredential | Domain | Aggregate Root. Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15). | id, secretHash, status | — |
+| AccessPolicy | Domain | Domain Service. Decide si un correo puede recibir un código y resuelve los permisos de cada rol. | — | canRequestCode(), permissionsOf(), can() |
+| OtpRequestThrottle | Domain | Domain Service. Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo. | — | isAllowed() |
+| Role, Permission, TenantStatus, InvitationStatus | Domain | Enumeraciones del contexto. | — | — |
+| TenantRepository, UserAccountRepository, InvitationRepository, OtpChallengeRepository, RefreshTokenRepository, PlatformCredentialRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
+| RequestOtpHandler, AuthenticateWithOtpHandler, RefreshSessionHandler, CloseSessionHandler | Application | Command Handlers del acceso y la sesión. | Dependencies | handle() |
+| ProvisionTenantHandler, AddEmailDomainHandler, RetireEmailDomainHandler | Application | Command Handlers de instituciones y dominios. | Dependencies | handle() |
+| ValidateSessionHandler, AssignRoleHandler, IssueInvitationHandler, AcceptInvitationHandler | Application | Command y Query Handlers de sesión, roles e invitaciones. | Dependencies | handle() |
+| EmailSender, TokenIssuer, CodeHasher, AuditLog, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.1.3 |
+| AuthController, UserController, TenantController, EmailDomainController, InvitationController, KeyController | Interface | Controllers REST. | Handler dependencies | Ver 5.1.2 |
+| JwtTokenIssuer, EmailGatewayAdapter, HashingCodeHasher, PersistentAuditLog, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.1.4 |
+
 ### 5.1.1. Domain Layer
  
 **Aggregates.**
@@ -3578,6 +3602,194 @@ El contexto IAM (Identity and Access Management) es el servicio transversal que 
 3. El token de sesión incluye siempre usuario, institución, rol y permisos, que son los datos que usa la capa de seguridad del backend para el aislamiento entre instituciones (CON-08).
 4. Los administradores y los operadores se crean solo por invitación; el primer administrador se crea en el alta inicial de la institución (CON-17). Ningún rol administrativo admite autorregistro.
 5. La creación de una institución exige credenciales de plataforma; un token de usuario recibe 403.
+
+**Diccionario de clases del dominio**
+
+Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+
+**Aggregate Root: Tenant**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Tenant|Aggregate Root|Institución cliente de Quadrapp. Agrupa sus dominios de correo habilitados y su estado de incorporación.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TenantId|Public|Identificador de la institución.|
+|name|String|Public|Nombre de la institución.|
+|status|TenantStatus|Public|ONBOARDING mientras se configura; ACTIVE cuando puede operar.|
+|createdAt|DateTime|Public|Fecha del alta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|addDomain(domain)|EmailDomain|Public|Habilita un dominio; rechaza uno que pertenezca a otra institución (409).|
+|retireDomain(domain)|void|Public|Retira un dominio: impide nuevos registros, pero conserva las cuentas verificadas.|
+|activate()|void|Public|Pasa la institución a ACTIVE.|
+|ownsDomain(domain)|boolean|Public|Indica si el dominio pertenece a la institución.|
+
+**Entity: EmailDomain**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|EmailDomain|Entity|Dominio de correo institucional habilitado para el registro (por ejemplo, upc.edu.pe).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|domain|String|Public|Dominio de correo.|
+|verification|VerificationStatus|Public|Estado de la verificación del dominio.|
+|verifiedAt|DateTime|Public|Fecha de la verificación.|
+
+**Aggregate Root: UserAccount**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|UserAccount|Aggregate Root|Cuenta de un integrante de la institución. Guarda solo los datos necesarios para la finalidad declarada (CON-07).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|UserId|Public|Identificador del usuario.|
+|tenantId|TenantId|Public|Institución a la que pertenece.|
+|email|Email|Public|Correo institucional o invitado.|
+|displayName|String|Public|Nombre visible.|
+|role|Role|Public|Rol que define sus permisos.|
+|status|AccountStatus|Public|Estado de la cuenta.|
+|terms|TermsAcceptance|Public|Versión y fecha de aceptación de los términos y la política de privacidad.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|assignRole(role)|void|Public|Cambia el rol de la cuenta; las sesiones previas se revocan.|
+|acceptTerms(version, date)|void|Public|Registra la aceptación de los términos vigentes.|
+|isParkingAdmin()|boolean|Public|Indica si la cuenta tiene el rol PARKING_ADMIN.|
+
+**Aggregate Root: Invitation**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Invitation|Aggregate Root|Invitación de un solo uso para crear una cuenta de administrador u operador (US31, CON-17).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|InvitationId|Public|Identificador de la invitación.|
+|tenantId|TenantId|Public|Institución que invita.|
+|email|Email|Public|Correo invitado.|
+|role|Role|Public|Rol que tendrá la cuenta: PARKING_ADMIN o PARKING_OPERATOR.|
+|status|InvitationStatus|Public|PENDING, ACCEPTED, EXPIRED o REVOKED.|
+|expiresAt|DateTime|Public|Fin de la vigencia.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|accept(now)|UserAccount|Public|Crea la cuenta con el rol asignado; falla si la invitación venció o ya se usó.|
+|expire(now)|void|Public|Marca la invitación como vencida.|
+
+**Aggregate Root: OtpChallenge**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OtpChallenge|Aggregate Root|Desafío de acceso mediante un código de un solo uso enviado al correo (CON-09).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|ChallengeId|Public|Identificador del desafío.|
+|email|Email|Public|Correo que solicitó el código.|
+|codeHash|String|Public|Hash del código; el código nunca se guarda en claro.|
+|expiresAt|DateTime|Public|Fin de la vigencia del código.|
+|attempts|int|Public|Intentos de verificación realizados.|
+|consumedAt|DateTime|Public|Momento en que se usó el código.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|verify(code, now)|boolean|Public|Compara el código con el hash; cuenta el intento y falla si venció o agotó los intentos.|
+|consume()|void|Public|Marca el desafío como usado.|
+
+**Aggregate Root: RefreshToken**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|RefreshToken|Aggregate Root|Sesión revocable del usuario (US02, US03).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TokenId|Public|Identificador del token.|
+|userId|UserId|Public|Usuario de la sesión.|
+|tokenHash|String|Public|Hash del token de refresco.|
+|expiresAt|DateTime|Public|Fin de la vigencia.|
+|revokedAt|DateTime|Public|Momento de la revocación, si la hubo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|revoke(now)|void|Public|Revoca la sesión al cerrar sesión o al cambiar el rol.|
+|isActive(now)|boolean|Public|Indica si el token sigue vigente y no fue revocado.|
+
+**Aggregate Root: PlatformCredential**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|PlatformCredential|Aggregate Root|Credencial del equipo de plataforma, distinta de una cuenta de usuario, que autoriza el alta de instituciones (TS15).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|CredentialId|Public|Identificador de la credencial.|
+|secretHash|String|Public|Hash del secreto.|
+|status|CredentialStatus|Public|Estado de la credencial.|
+
+**Domain Service: AccessPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AccessPolicy|Domain Service|Decide si un correo puede recibir un código y resuelve los permisos de cada rol.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|canRequestCode(email)|AccessDecision|Public|Aplica, en orden, cuenta existente, invitación vigente y dominio habilitado (US01).|
+|permissionsOf(role)|`Set<Permission>`|Public|Devuelve los permisos del rol.|
+|can(role, permission)|boolean|Public|Indica si el rol tiene el permiso.|
+
+**Domain Service: OtpRequestThrottle**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|OtpRequestThrottle|Domain Service|Limita la cantidad de códigos que puede solicitar un correo en una ventana de tiempo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|isAllowed(email, now)|boolean|Public|Devuelve falso si el correo superó el límite; la API responde 429.|
+
+**Enumeraciones**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|Role|DRIVER, PARKING_OPERATOR, PARKING_ADMIN|Rol del usuario.|
+|Permission|VIEW_AVAILABILITY, RECEIVE_ALERTS, CONFIGURE_PARKING, MONITOR_OPERATION, VIEW_ANALYTICS, MANAGE_USERS, MANAGE_TENANT|Permisos que otorga cada rol.|
+|TenantStatus|ONBOARDING, ACTIVE|Estado de la institución.|
+|InvitationStatus|PENDING, ACCEPTED, EXPIRED, REVOKED|Estado de la invitación.|
 
 ### 5.1.2. Interface Layer
  
@@ -3623,7 +3835,7 @@ La capa de aplicación contiene los casos de uso, que cargan los aggregates, inv
  
 | Componente | Implementa | Detalle |
 |---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02); el motor se define en la sección de implementación. Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `iam` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Cada tabla incluye el identificador de institución para el aislamiento lógico (DD-09). |
 | `JwtTokenIssuer` | `TokenIssuer` | Firma tokens de acceso y de refresco con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`); publica las claves de verificación. |
 | `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción. |
 | `HashingCodeHasher` | `CodeHasher` | Calcula el hash del código de un solo uso y de los tokens guardados. |
@@ -6798,6 +7010,32 @@ Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-0
 
 El contexto Notifications decide a quién avisar, cuándo y por qué canal, y entrega las alertas de baja disponibilidad a los conductores. Recibe las predicciones desde Prediction & Advisory mediante el lenguaje publicado (Published Language) del mapa de contextos y entrega los mensajes por push o por correo a través de capas anticorrupción hacia los proveedores externos de mensajería. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
  
+### Class Dictionary
+
+La siguiente tabla resume las clases e interfaces principales de Notifications. Los atributos y métodos de las clases del dominio coinciden con el diagrama de clases de la sección de Code Level Diagrams.
+
+| Class / Interface | Layer | Purpose | Main attributes | Main operations |
+|---|---|---|---|---|
+| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | id, userId, tenantId, parkingLotId, timeSlot, status, createdAt | pause(), cancel(), covers() |
+| NotificationPreferences | Domain | Aggregate Root. Preferencias del usuario sobre qué alertas recibir y por qué canal (US24). | userId, tenantId, enabled, enabledTypes, enabledChannels, updatedAt | enable(), disable(), allows() |
+| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas. | id, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes | configure(), appliesTo() |
+| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega. | id, userId, tenantId, parkingLotId, type, channel, segment, conditionKey, content, status, createdAt, sentAt | markSent(), markFailed(), skip() |
+| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo o correo. | deviceId, channel, result, errorCode, attemptedAt | — |
+| DeviceRegistration | Domain | Aggregate Root. Token del dispositivo del conductor, destino de las alertas push. | id, userId, token, platform, status, registeredAt | invalidate(), isUsable() |
+| NotificationTemplate | Domain | Aggregate Root. Plantilla de mensaje por tipo de alerta, canal e idioma. | id, alertType, channel, locale, titleTemplate, bodyTemplate | render() |
+| TimeSlot | Domain | Value Object. Franja semanal en la que el conductor suele llegar. | days, start, end | contains() |
+| AlertPolicy | Domain | Domain Service. Decide si corresponde enviar una alerta. | — | shouldAlert() |
+| ChannelPolicy | Domain | Domain Service. Determina por qué canales se envía una alerta. | — | channelsFor() |
+| DeduplicationPolicy | Domain | Domain Service. Evita repetir una alerta para una condición ya notificada (US23, escenario 4). | — | isDuplicate() |
+| AlertType, Channel, RecipientSegment, NotificationStatus, DeviceStatus | Domain | Enumeraciones del contexto. | — | — |
+| SubscriptionRepository, PreferencesRepository, RuleRepository, TemplateRepository, DeviceRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…() |
+| CreateSubscriptionHandler, CancelSubscriptionHandler, UpdatePreferencesHandler, RegisterDeviceHandler, ConfigureNotificationRuleHandler | Application | Command Handlers de suscripciones, preferencias, dispositivos y reglas. | Dependencies | handle() |
+| HandleSaturationPredictedHandler, DispatchNotificationHandler, HandleDeliveryRejectionHandler | Application | Event y Command Handlers del envío de alertas. | Dependencies | handle() |
+| GetNotificationHistoryHandler | Application | Query Handler del historial. | Dependencies | handle() |
+| PushSender, EmailSender, IdentityContext, DomainEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
+| SubscriptionController, PreferencesController, DeviceController, RuleController, HistoryController, PredictionEventConsumer | Interface | Controllers REST y consumidor del evento SaturationPredicted. | Handler dependencies | Ver 5.7.2 |
+| PushGatewayAdapter, EmailGatewayAdapter, IdentityContextAdapter, EventPublisherAdapter | Infrastructure | Implementaciones de los puertos. | Integration dependencies | Ver 5.7.4 |
+
 ### 5.7.1. Domain Layer
  
 **Aggregates.**
@@ -6830,6 +7068,245 @@ El contexto Notifications decide a quién avisar, cuándo y por qué canal, y en
 5. Un token de dispositivo rechazado por el proveedor se marca inválido y no se vuelve a usar.
 6. No se envían más alertas que las permitidas por la regla del administrador ni se repite una alerta dentro del intervalo mínimo configurado.
 7. Los datos de notificación (token y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
+
+**Diccionario de clases del dominio**
+
+Cada clase se documenta con su propósito, sus atributos y sus métodos, con la visibilidad indicada en el diagrama de clases.
+
+**Aggregate Root: NotificationSubscription**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationSubscription|Aggregate Root|Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|SubscriptionId|Public|Identificador de la suscripción.|
+|userId|UserId|Public|Conductor suscrito.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento de interés.|
+|timeSlot|TimeSlot|Public|Días y rango horario en que suele llegar.|
+|status|SubscriptionStatus|Public|ACTIVE, PAUSED o CANCELLED.|
+|createdAt|DateTime|Public|Fecha de creación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|pause()|void|Public|Pausa la suscripción sin eliminarla.|
+|cancel()|void|Public|Da de baja la suscripción; las demás se conservan.|
+|covers(arrivalTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+
+**Aggregate Root: NotificationPreferences**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationPreferences|Aggregate Root|Preferencias del usuario sobre qué alertas recibir y por qué canal (US24).|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|userId|UserId|Public|Usuario.|
+|tenantId|TenantId|Public|Institución.|
+|enabled|boolean|Public|Interruptor general de las notificaciones.|
+|enabledTypes|`Set<AlertType>`|Public|Tipos de alerta habilitados.|
+|enabledChannels|`Set<Channel>`|Public|Canales habilitados.|
+|updatedAt|DateTime|Public|Última modificación.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|enable()|void|Public|Activa las notificaciones.|
+|disable()|void|Public|Desactiva las notificaciones; la suscripción se conserva.|
+|allows(type, channel)|boolean|Public|Indica si se permite un tipo de alerta por un canal.|
+
+**Aggregate Root: NotificationRule**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|RuleId|Public|Identificador de la regla.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento.|
+|alertType|AlertType|Public|Tipo de alerta regulado.|
+|enabled|boolean|Public|Indica si el tipo está activo.|
+|minIntervalMinutes|int|Public|Minutos mínimos entre dos alertas del mismo tipo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|configure(enabled, interval)|void|Public|Actualiza la regla y registra NotificationRuleConfigured.|
+|appliesTo(parkingLotId, type)|boolean|Public|Indica si la regla aplica a un estacionamiento y tipo.|
+
+**Aggregate Root: Notification**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su canal y su estado de entrega.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|NotificationId|Public|Identificador de la notificación.|
+|userId|UserId|Public|Destinatario.|
+|tenantId|TenantId|Public|Institución.|
+|parkingLotId|ParkingLotId|Public|Estacionamiento de la alerta.|
+|type|AlertType|Public|Tipo de alerta.|
+|channel|Channel|Public|PUSH o EMAIL.|
+|segment|RecipientSegment|Public|Segmento destinatario.|
+|conditionKey|ConditionKey|Public|Clave de la condición notificada; evita duplicados.|
+|content|NotificationContent|Public|Título y cuerpo ya renderizados.|
+|status|NotificationStatus|Public|PENDING, SENT, FAILED o SKIPPED.|
+|createdAt|DateTime|Public|Creación.|
+|sentAt|DateTime|Public|Envío exitoso.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|markSent(now)|void|Public|Registra el envío exitoso.|
+|markFailed(reason)|void|Public|Registra la falla del proveedor; puede reintentarse.|
+|skip(reason)|void|Public|Omite el envío (por ejemplo, notificaciones desactivadas).|
+
+**Entity: DeliveryAttempt**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeliveryAttempt|Entity|Intento de entrega de una notificación a un dispositivo o correo.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|deviceId|DeviceId|Public|Dispositivo destino.|
+|channel|Channel|Public|Canal usado.|
+|result|DeliveryResult|Public|Resultado devuelto por el proveedor.|
+|errorCode|String|Public|Código de error del proveedor, si lo hubo.|
+|attemptedAt|DateTime|Public|Momento del intento.|
+
+**Aggregate Root: DeviceRegistration**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeviceRegistration|Aggregate Root|Token del dispositivo del conductor, destino de las alertas push.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|DeviceId|Public|Identificador del registro.|
+|userId|UserId|Public|Propietario.|
+|token|DeviceToken|Public|Token entregado por el proveedor push.|
+|platform|Platform|Public|ANDROID o IOS.|
+|status|DeviceStatus|Public|VALID o INVALID.|
+|registeredAt|DateTime|Public|Fecha de registro.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|invalidate(now)|void|Public|Marca el token como inválido cuando el proveedor lo rechaza.|
+|isUsable()|boolean|Public|Indica si el token puede recibir alertas.|
+
+**Aggregate Root: NotificationTemplate**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|NotificationTemplate|Aggregate Root|Plantilla de mensaje por tipo de alerta, canal e idioma.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|id|TemplateId|Public|Identificador de la plantilla.|
+|alertType|AlertType|Public|Tipo de alerta.|
+|channel|Channel|Public|Canal.|
+|locale|String|Public|es_419 o en_US.|
+|titleTemplate|String|Public|Plantilla del título.|
+|bodyTemplate|String|Public|Plantilla del cuerpo.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|render(params)|NotificationContent|Public|Completa la plantilla con los datos de la alerta.|
+
+**Value Object: TimeSlot**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|TimeSlot|Value Object|Franja semanal en la que el conductor suele llegar.|
+
+Attributes
+
+|Nombre|Tipo de dato|Visibilidad|Descripción|
+|-|-|-|-|
+|days|`Set<DayOfWeek>`|Public|Días de la semana.|
+|start|Time|Public|Hora de inicio.|
+|end|Time|Public|Hora de fin.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|contains(dateTime)|boolean|Public|Indica si un momento cae dentro de la franja.|
+
+**Domain Service: AlertPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|AlertPolicy|Domain Service|Decide si corresponde enviar una alerta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|shouldAlert(preferences, subscription, rule, type, time)|boolean|Public|Evalúa preferencias, suscripción vigente, regla del administrador, tipo y franja horaria.|
+
+**Domain Service: ChannelPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|ChannelPolicy|Domain Service|Determina por qué canales se envía una alerta.|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|channelsFor(preferences, type)|`Set<Channel>`|Public|Devuelve los canales habilitados para el tipo.|
+
+**Domain Service: DeduplicationPolicy**
+
+|Nombre|Categoría|Descripción|
+|-|-|-|
+|DeduplicationPolicy|Domain Service|Evita repetir una alerta para una condición ya notificada (US23, escenario 4).|
+
+Methods
+
+|Nombre|Tipo de retorno|Visibilidad|Descripción|
+|-|-|-|-|
+|isDuplicate(conditionKey, userId)|boolean|Public|Indica si la condición ya se notificó al usuario y sigue activa.|
+
+**Enumeraciones**
+
+|Nombre|Valores|Descripción|
+|-|-|-|
+|AlertType|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|Tipos de alerta.|
+|Channel|PUSH, EMAIL|Canales de envío.|
+|RecipientSegment|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|Segmento destinatario.|
+|NotificationStatus|PENDING, SENT, FAILED, SKIPPED|Estado de la notificación.|
+|DeviceStatus|VALID, INVALID|Estado del token del dispositivo.|
 
 ### 5.7.2. Interface Layer
  
@@ -6869,7 +7346,7 @@ Las rutas HTTP requieren una sesión vigente. El usuario, la institución y el r
  
 | Componente | Implementa | Detalle |
 |---|---|---|
-| Repositorios persistentes | Interfaces `*Repository` del dominio | Base de datos propia del contexto (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
+| Repositorios persistentes | Interfaces `*Repository` del dominio | Esquema `notifications` de PostgreSQL (DD-01), sin claves foráneas hacia los esquemas de otros módulos (CON-02). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos. |
 | `PushGatewayAdapter` | `PushSender` | Capa anticorrupción hacia el proveedor de mensajería push (`PushSent`). Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06). |
 | `EmailGatewayAdapter` | `EmailSender` | Capa anticorrupción hacia el servicio de correo (`EmailSent`), con timeout y circuit breaker propios. |
 | `IdentityContextAdapter` | `IdentityContext` | Capa anticorrupción que traduce `UserIdentityProvided` (usuario, institución y rol) al modelo local, sin consultar la base de IAM (CON-02). |
