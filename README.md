@@ -3081,11 +3081,47 @@ La tabla siguiente relaciona los eventos de dominio clave del tablero con los no
 
 ### 4.2.2. Candidate Context Discovery
 
-A partir del análisis realizado en el Event Storming, se agruparon los conceptos relacionados y se identificaron los Bounded Contexts candidatos del sistema. Estos contextos representan límites claros de responsabilidad dentro del dominio de QuadRapp y facilitan la definición de una arquitectura modular y mantenible.
+A partir del EventStorming, se realizó el descubrimiento de contextos candidatos para identificar los bounded contexts de Quadrapp. El proceso se desarrolló en tres iteraciones sobre una versión simplificada de la línea de tiempo, que conserva los eventos que mejor representan cada parte del proceso. En cada iteración se aplicó una de las técnicas propuestas: start-with-simple y look-for-pivotal-events para una primera división del dominio, un refinamiento de los borradores según el lenguaje y las reglas de cada parte, y start-with-value para clasificar los contextos resultantes según su valor para el negocio.
 
-![Candidate Context Discovery – Parte 1](./assets/capitulo-04/4parte1.jpg)
+**Iteración 1. Start-with-simple y look-for-pivotal-events**
 
-![Candidate Context Discovery – Parte 2](./assets/capitulo-04/4parte2.jpg)
+En la primera iteración, la línea de tiempo se descompuso en pasos secuenciales, usando como límites los seis eventos pivotales identificados en el paso 4 del EventStorming: institución dada de alta, layout publicado, detección confirmada, disponibilidad actualizada, pronóstico generado y asesoría de llegada emitida. Así se obtuvieron siete fases, desde el alta hasta las alertas y el seguimiento, y debajo de ellas se propusieron seis contextos en borrador. En esta versión, el acceso y la configuración del estacionamiento quedaron juntos, igual que los sensores y la ocupación.
+
+En esta iteración también se observó que algunos eventos no pertenecen a una sola fase. La falla de un sensor, el espacio marcado como desconocido, los ingresos y salidas, los eventos del campus, las suscripciones a alertas y el historial aparecen en distintos momentos del proceso, por lo que se registraron aparte para ubicarlos en la siguiente iteración.
+
+![Candidate Context Discovery, iteración 1: fases delimitadas por los eventos pivotales](assets/capitulo-04/eventstorming/candidate-context-discovery-1-pivotales.png)
+
+*Figura: Candidate Context Discovery, iteración 1. Línea de tiempo simplificada dividida en fases por los eventos pivotales, con los contextos en borrador y, debajo, los eventos que aparecen en varias fases.*
+
+**Iteración 2. Refinamiento de los contextos candidatos**
+
+En la segunda iteración, cada evento se ubicó en el carril del contexto candidato al que pertenece, manteniendo su posición en el tiempo. Los borradores se ajustaron según dos criterios: que los eventos de un mismo contexto compartan el lenguaje y las reglas de negocio, y que el contexto pueda evolucionar sin arrastrar a los demás.
+
+Con ese criterio, el borrador de acceso y estacionamientos se dividió en IAM y Parking Configuration, porque las instituciones, invitaciones y códigos de acceso no comparten reglas con los estacionamientos, zonas y espacios. El cambio más importante fue separar el borrador de sensores y ocupación en dos contextos. Parking Sensing habla de lecturas, dispositivos, intervalos de reporte y tiempo mínimo de detección; Occupancy habla del estado de negocio del espacio, la disponibilidad y el flujo. Por eso la falla de un sensor queda en Parking Sensing, mientras que el espacio marcado como desconocido y los ingresos y salidas quedan en Occupancy. Así, cambiar la tecnología de sensado no afecta el modelo de ocupación. Los borradores de predicción y asesoría se unieron en Prediction & Advisory, porque la asesoría solo existe a partir del pronóstico y comparte su lenguaje de horizontes, confianza y saturación. El borrador de alertas y precisión se dividió en Notifications y Analytics, porque enviar una alerta y medir el error del modelo responden a reglas distintas.
+
+![Candidate Context Discovery, iteración 2: línea de tiempo por contexto candidato](assets/capitulo-04/eventstorming/candidate-context-discovery-2-contextos.png)
+
+*Figura: Candidate Context Discovery, iteración 2. Cada carril corresponde a un contexto candidato y cada evento conserva su posición en el tiempo. A la derecha se indica el límite entre Parking Sensing y Occupancy.*
+
+**Iteración 3. Start-with-value**
+
+En la tercera iteración, los contextos candidatos se clasificaron según su aporte a la propuesta de valor de Quadrapp, que es anticipar la disponibilidad y orientar la llegada del conductor. Prediction & Advisory se consideró core, porque sin el pronóstico y la asesoría Quadrapp sería un contador de espacios más. Parking Configuration, Parking Sensing, Occupancy, Analytics y Notifications se clasificaron como contextos de soporte, porque son específicos del negocio pero existen para sostener al core. IAM se clasificó como genérico, porque resuelve una necesidad común a cualquier aplicación.
+
+![Candidate Context Discovery, iteración 3: clasificación de los contextos por valor](assets/capitulo-04/eventstorming/candidate-context-discovery-3-valor.png)
+
+*Figura: Candidate Context Discovery, iteración 3. Contextos clasificados según su aporte a la propuesta de valor, con la responsabilidad principal de cada uno.*
+
+El resultado del proceso son siete contextos candidatos, que se resumen en la tabla siguiente.
+
+| Contexto candidato | Tipo | Responsabilidad | Eventos representativos |
+| --- | --- | --- | --- |
+| Prediction & Advisory | Core | Pronosticar la disponibilidad a 15, 30, 45 y 60 minutos y emitir la asesoría de llegada | Pronóstico generado, Saturación prevista, Asesoría de llegada emitida |
+| Parking Configuration | Soporte | Definir estacionamientos, zonas, espacios, accesos, dispositivos y calendario | Estacionamiento registrado, Sensor asociado a espacio, Layout publicado |
+| Parking Sensing | Soporte | Traducir la telemetría de los sensores en detecciones confiables y vigilar su salud | Lectura validada, Detección confirmada, Falla de sensor detectada |
+| Occupancy | Soporte | Mantener el estado de cada espacio, la disponibilidad y el flujo vehicular | Espacio marcado como ocupado, Espacio marcado como desconocido, Disponibilidad actualizada |
+| Analytics | Soporte | Consolidar el historial y medir la precisión del modelo | Pronóstico evaluado con la ocupación observada, Precisión del modelo recalculada |
+| Notifications | Soporte | Enviar alertas de baja disponibilidad según las franjas suscritas | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
+| IAM | Genérico | Gestionar instituciones, invitaciones, acceso con código de un solo uso y roles | Institución dada de alta, Sesión iniciada |
 
 ### 4.2.3. Domain Message Flows Modeling
 
