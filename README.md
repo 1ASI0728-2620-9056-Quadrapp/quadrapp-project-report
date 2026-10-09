@@ -7285,7 +7285,7 @@ Los Header Tags organizan semánticamente el contenido de la Landing Page y perm
 
 Un ejemplo de jerarquía para Quadrapp sería:
 
-```text
+```html
 <h1>Anticipa la disponibilidad antes de llegar al campus</h1>
 
 <h2>Estacionamientos universitarios con información actual y predicciones de disponibilidad</h2>
@@ -7310,7 +7310,7 @@ Define la codificación de caracteres utilizada por la Landing Page.
 
 Permite que la página se adapte correctamente a diferentes tamaños de pantalla.
 
-```text
+```html
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1.0"
@@ -7323,7 +7323,7 @@ Permite que la página se adapte correctamente a diferentes tamaños de pantalla
 
 La Landing Page es contenido público y puede ser indexada por motores de búsqueda.
 
-```text
+```html
 <meta name="robots" content="index, follow" />
 ```
 
@@ -7349,7 +7349,7 @@ La consola administrativa de Quadrapp es una aplicación destinada al personal a
 
 **Meta Description:**
 
-```text
+```html
 <meta
   name="description"
   content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
@@ -7379,7 +7379,7 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 
 `<title>Quadrapp | Consulta la disponibilidad antes de llegar</title>`
 
-```text
+```html
 <meta
   name="description"
   content="Consulta la disponibilidad actual de los estacionamientos de tu universidad, revisa predicciones y conoce las condiciones esperadas antes de llegar al campus."
@@ -7387,7 +7387,7 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 ```
 
 
-```text
+```html
 <meta
   name="keywords"
   content="Quadrapp, estacionamiento universitario, disponibilidad de estacionamiento, app de estacionamiento, predicción de disponibilidad, parking universitario"
