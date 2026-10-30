@@ -8396,7 +8396,39 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ## 7.1. Software Configuration Management
 
+La gestión de configuración de software de Quadrapp establece las herramientas, decisiones y convenciones que utilizará el equipo para mantener un trabajo organizado durante el desarrollo de la solución. Su propósito es facilitar la colaboración, llevar un control de los cambios y mantener la consistencia entre los diferentes productos que forman parte del proyecto.
+
+Para ello, abarcamos tres aspectos principales: la configuración del entorno de desarrollo, la gestión del código fuente y las convenciones de despliegue. Estas decisiones permiten que los integrantes trabajen bajo criterios comunes, mantengan la trazabilidad de sus aportes y reduzcan los problemas de integración entre componentes. Incluyendo a su vez, restricciones tecnológicas y decisiones arquitectónicas como la separación de responsabilidades por Bounded Context, la internacionalización (i18n) de las interfaces y las prácticas de accesibilidad establecidas para los productos digitales.
+
 ### 7.1.1 Software Development Environment Configuration
+
+El entorno de desarrollo de Quadrapp reúne las herramientas necesarias para organizar actividades, gestionar requisitos, diseñar la solución, implementar funcionalidades, realizar pruebas y documentar los resultados.
+
+La selección considera las herramientas utilizadas durante el diseño del proyecto y las tecnologías definidas en la arquitectura.
+
+| Categoría | Herramienta / Producto | Propósito / Alcance | Enlace | Imagen |
+|---|---|---|---|---|
+| Project Management | Trello | Organizar las actividades del equipo y dar seguimiento al desarrollo del proyecto. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
+| Requirements Management | Trello | Gestionar el Product Backlog, User Stories, Technical Stories, prioridades y criterios de aceptación. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
+| Product Design | Figma | Diseñar wireframes, mockups y prototipos de las interfaces de Quadrapp. Herramienta pendiente de confirmar. | [https://www.figma.com/es-la/](https://www.figma.com/es-la/) | ![figma-logo](./assets/capitulo-07/figma-logo.png) |
+| Software Architecture | Structurizr | Elaborar diagramas C4 de contexto, contenedores y componentes de la arquitectura. | [https://structurizr.com/](https://structurizr.com/) | ![structurizr-logo](./assets/capitulo-07/structurizr-logo.webp) |
+| Software Architecture | PlantUML | Generar diagramas de clases, componentes y diseño de bases de datos mediante código. | [https://plantuml.com/](https://plantuml.com/) | ![plantuml-logo](./assets/capitulo-07/plantuml-logo.png) |
+| Software Development | Git | Controlar versiones, registrar modificaciones y mantener el historial del código fuente. | [https://git-scm.com/](https://git-scm.com/) | ![git-logo](./assets/capitulo-07/git-logo.png) |
+| Software Development | GitHub | Centralizar los repositorios, administrar ramas y revisar cambios mediante Pull Requests. | [https://github.com/](https://github.com/) | ![github-logo](./assets/capitulo-07/github-logo.png) |
+| Software Development | Visual Studio Code | Editar, ejecutar y depurar el código de los diferentes componentes. Editor propuesto. | [https://code.visualstudio.com/](https://code.visualstudio.com/) | ![visualstudiocode-logo](./assets/capitulo-07/visualstudiocode-logo.png) |
+| Mobile Development | Flutter y Dart | Desarrollar la aplicación móvil multiplataforma para Android e iOS. | [https://flutter.dev/](https://flutter.dev/) | ![flutter-logo](./assets/capitulo-07/flutter-logo.png) |
+| Web Development | HTML5, CSS3 y JavaScript | Implementar la Landing Page pública de Quadrapp. | [https://developer.mozilla.org/es/](https://developer.mozilla.org/es/) | ![mdn-logo](./assets/capitulo-07/mdn-logo.webp) |
+| Web Development | Angular | Desarrollar la consola administrativa con componentes reutilizables. | [https://angular.dev/](https://angular.dev/) | ![angular-logo](./assets/capitulo-07/angular-logo.png) |
+| Backend Development | Spring Boot | Implementar los servicios RESTful de los Bounded Contexts. Framework definitivo pendiente de seleccionar. | [https://docs.spring.io/spring-boot/index.html](https://docs.spring.io/spring-boot/index.html) | ![springboot-logo](./assets/capitulo-07/springboot-logo.webp) |
+| Database Management | MySQL 8.4 LTS | Almacenar la información de los Bounded Contexts, manteniendo sus esquemas o bases de datos separados. | [MySQL](https://www.mysql.com/) | ![mysql-logo](./assets/capitulo-07/mysql-logo.png) |
+| IoT Integration | Spring Integration MQTT / Eclipse Paho | Consumir los mensajes MQTT provenientes de la infraestructura de sensado mediante Parking Sensing. | [Spring Integration MQTT](https://docs.spring.io/spring-integration/reference/mqtt.html) | ![spring-integration-logo](./assets/capitulo-07/spring-integration-logo.png) |
+| Software Development | Node.js | Ejecutar herramientas de desarrollo y administrar las dependencias del frontend cuando corresponda. | [https://nodejs.org/es](https://nodejs.org/es) | ![nodejs-logo](./assets/capitulo-07/nodejs-logo.png) |
+| Software Testing | Cucumber - Gherkin | Definir escenarios de aceptación mediante archivos .feature relacionados con las historias de usuario. | [https://cucumber.io/docs/gherkin/](https://cucumber.io/docs/gherkin/) | ![cucumber-logo](./assets/capitulo-07/cucumber-logo.png) |
+| Software Testing | Postman | Realizar pruebas de las APIs REST y verificar solicitudes, respuestas y códigos HTTP. Herramienta propuesta. | [https://www.postman.com/](https://www.postman.com/) | ![postman-logo](./assets/capitulo-07/postman-logo.png) |
+| Software Deployment | GitHub Actions | Automatizar procesos de compilación, pruebas e integración continua cuando se configuren los pipelines. | [https://github.com/features/actions](https://github.com/features/actions) | ![github-actions-logo](./assets/capitulo-07/github-actions-logo.jpg) |
+| Software Deployment | Docker | Empaquetar los servicios backend en contenedores para facilitar su ejecución y despliegue. Herramienta prevista. | [https://www.docker.com/](https://www.docker.com/) | ![docker-logo](./assets/capitulo-07/docker-logo.png) |
+| Software Documentation | Markdown | Elaborar y mantener el Project Report, README y documentación técnica del proyecto. | [https://www.markdownguide.org/](https://www.markdownguide.org/) | ![markdown-logo](./assets/capitulo-07/markdown-logo.png) |
+| Software Documentation | Swagger | Documentar los endpoints REST, contratos de API, solicitudes y respuestas de los servicios. | [https://swagger.io/](https://swagger.io/) | ![swagger-logo](./assets/capitulo-07/swagger-logo.png) |
 
 ### 7.1.2 Source Code Management
 
