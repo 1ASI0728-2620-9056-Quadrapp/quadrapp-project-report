@@ -68,6 +68,7 @@
 | 2.19 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión del capítulo II según la retroalimentación del docente: User Task Matrix con las tareas de cada User Persona y sus subcolumnas de frecuencia e importancia, y registro de entrevistas con el distrito de residencia, la duración unificada y el inicio de la entrevista del segundo segmento. |
 | 2.20 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los Bounded Contexts IAM y Notifications: diccionario de clases del dominio a partir de sus diagramas de clases y alineación de la persistencia con PostgreSQL. |
 | 2.21 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del avance de conclusiones con los resultados del segundo hito. |
+| 2.22 | 2026-11-13 | Sulca Sanchez, Piero Angel | Actualización de la tecnología de la Landing Page y de las versiones del backend en las restricciones, en la arquitectura de contenedores y despliegue y en el capítulo V, con sus diagramas C4. |
 
 # Project Report Collaboration Insights
 
@@ -2744,7 +2745,7 @@ Las cuatro primeras corresponden a la composición y el despliegue de la soluci�
 | CON-10 | Alcance sin reservas, cobros ni control de acceso | Como Developer, necesito que el alcance excluya las reservas, los cobros y el reconocimiento de placas, porque el estacionamiento es gratuito y el ingreso exige la credencial institucional que verifica el personal de la institución. | **Escenario 1: Operación de las barreras.**<br>Dado que la solución no gestiona el ingreso físico de los vehículos,<br>cuando un vehículo accede al estacionamiento,<br>entonces el control de la barrera y de la credencial permanece a cargo de la institución.<br><br>**Escenario 2: Ausencia de transacciones.**<br>Dado que el producto no administra pagos ni reservas de espacios,<br>cuando se consulta cualquiera de sus servicios,<br>entonces no se expone ninguna operación de cobro ni de reserva. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-11 | Accesibilidad e internacionalización | Como Developer, necesito que los productos entreguen sus textos en inglés y en español latinoamericano, con el inglés como idioma por defecto. Como Developer, necesito incorporar atributos ARIA y cumplir el nivel AA de la WCAG 2.2 (World Wide Web Consortium, 2024) en la Landing Page y en la consola de operación, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | **Escenario 1: Idioma solicitado.**<br>Dado que los productos incorporan internacionalización bajo i18n con los idiomas en_US y es_419,<br>cuando la solicitud declara uno de esos idiomas,<br>entonces los textos y los formatos se entregan en el idioma solicitado.<br><br>**Escenario 2: Idioma por defecto.**<br>Dado que la solicitud no declara un idioma preferido,<br>cuando se genera la respuesta,<br>entonces los mensajes y la documentación se presentan en inglés.<br><br>**Escenario 1: Atributos de accesibilidad.**<br>Dado que las experiencias web incorporan accesibilidad bajo a11y,<br>cuando se publica una vista,<br>entonces sus elementos interactivos exponen los atributos ARIA correspondientes.<br><br>**Escenario 2: Validación del nivel de conformidad.**<br>Dado que el criterio de conformidad adoptado es WCAG 2.2 nivel AA,<br>cuando se evalúa una vista publicada mediante validación automatizada y revisión manual,<br>entonces no se reportan incumplimientos de ese nivel. | EP02, EP06 |
 | CON-12 | Servicios web con el stack definido por el curso | Como Developer, necesito desarrollar los servicios web bajo el estilo RESTful con Spring Boot, ASP.NET Core o Nest y documentarlos con OpenAPI, para cumplir las tecnologías establecidas para el proyecto. OpenAPI proporciona una descripción independiente del lenguaje para las interfaces HTTP (OpenAPI Initiative, 2024). | **Escenario 1: Estilo de los servicios.**<br>Dado que los servicios se exponen bajo el estilo RESTful,<br>cuando se incorpora un nuevo recurso,<br>entonces se implementa en uno de los frameworks permitidos y con el lenguaje que le corresponde.<br><br>**Escenario 2: Documentación de los endpoints.**<br>Dado que la documentación se mantiene junto al código,<br>cuando se publica una versión del servicio,<br>entonces su especificación OpenAPI queda disponible y actualizada. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
-| CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, y la consola de operación con Vue y Vuetify, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se implementa con HTML5, CSS3 y JavaScript.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Vuetify, la biblioteca de componentes de Material Design para Vue. | EP02, EP06 |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Como Developer, necesito construir la Landing Page con HTML5, CSS3 y JavaScript, generados con Astro como generador de sitios estáticos y sin frameworks de cliente, y la consola de operación con Vue y Vuetify, con un lenguaje de diseño basado en Material Design. | **Escenario 1: Tecnología de la Landing Page.**<br>Dado que la Landing Page es un sitio estático,<br>cuando se publica su contenido,<br>entonces se genera con Astro como HTML5, CSS3 y JavaScript estáticos, sin frameworks de cliente.<br><br>**Escenario 2: Biblioteca de componentes.**<br>Dado que la consola de operación utiliza Vue,<br>cuando se incorpora un componente de interfaz,<br>entonces proviene de Vuetify, la biblioteca de componentes de Material Design para Vue. | EP02, EP06 |
 | CON-14 | Aplicación móvil multiplataforma con Flutter | Como Developer, necesito desarrollar una única aplicación móvil multiplataforma con Dart y Flutter, para ofrecer la aplicación en Android e iOS desde una sola base de código (Flutter, s. f.). | **Escenario 1: Tecnología de la aplicación.**<br>Dado que el equipo adoptó una estrategia multiplataforma,<br>cuando se desarrolla la aplicación móvil,<br>entonces se utiliza Dart con Flutter y se generan aplicaciones compatibles con Android e iOS, sin recurrir a tecnologías híbridas. | EP01, EP02, EP03, EP04, EP05, EP06, EP07 |
 | CON-15 | Software del nodo de sensado | Como Developer, necesito desarrollar el software de los nodos de sensado en C++ sobre microcontroladores ESP32, para publicar las lecturas hacia el gateway del campus. | **Escenario 1: Tecnología del nodo.**<br>Dado que los nodos se construyen sobre microcontroladores ESP32,<br>cuando se implementa su software,<br>entonces se emplea C++ con las herramientas del ecosistema del fabricante.<br><br>**Escenario 2: Alcance del software embebido.**<br>Dado que las reglas de ocupación pertenecen al dominio y no al dispositivo,<br>cuando el nodo detecta un cambio en su sensor,<br>entonces publica la lectura con su identificador y marca de tiempo, sin determinar el estado del espacio ni aplicar reglas de estabilidad.<br><br>**Escenario 3: Conservación ante desconexión.**<br>Dado que la red local puede presentar interrupciones,<br>cuando el nodo no logra publicar una lectura,<br>entonces la conserva y la reenvía al restablecerse la conexión. | EP02, EP04 |
 | CON-16 | Detección por sensores sin identificación del vehículo | Como Developer, necesito que la detección de ocupación se realice con sensores de cochera y de paso, sin videovigilancia ni identificación de vehículos, manteniendo el contexto de sensado independiente de la tecnología empleada. | **Escenario 1: Fuentes de detección admitidas.**<br>Dado que el alcance actual contempla sensores registrados en el inventario de dispositivos,<br>cuando se procesa un evento de detección,<br>entonces proviene de un dispositivo registrado y su traducción al lenguaje del dominio ocurre en la capa anticorrupción, de modo que otra tecnología pueda incorporarse sin alterar el modelo de ocupación.<br><br>**Escenario 2: Ausencia de identificación del vehículo.**<br>Dado que los eventos informan presencia y dirección, no identidad,<br>cuando se procesa un evento de ocupación,<br>entonces no se almacena ningún dato que permita identificar al vehículo ni a su conductor. | EP02, EP04 |
@@ -2780,7 +2781,7 @@ El Architectural Drivers Backlog se construyó de forma iterativa a partir del Q
 | CON-17 | Acceso restringido a la comunidad de cada institución | Registro limitado a dominios habilitados o invitación; los administradores no se autorregistran. | High | Medium |
 | CON-10 | Sin reservas, cobros ni control de acceso | Alcance acotado a información, predicción y gestión; el flujo se cuenta sin identificar vehículos. | High | Low |
 | CON-14 | Aplicación móvil multiplataforma con Flutter | Una sola base de código en Dart y Flutter para Android e iOS, sin tecnologías híbridas. | High | Low |
-| CON-13 | Aplicaciones web y Landing Page con Material Design | Landing Page en HTML5, CSS3 y JavaScript; consola en Vue con Vuetify (Material Design). | High | Low |
+| CON-13 | Aplicaciones web y Landing Page con Material Design | Landing Page en HTML5, CSS3 y JavaScript generados con Astro; consola en Vue con Vuetify (Material Design). | High | Low |
 | CON-02 | Domain-Driven Design | Descomposición en Bounded Contexts con persistencia propia. | Medium | High |
 | QAD-08 | Soporte multi-institución (QAS-08) | Incorporar universidades por configuración, con datos aislados. | Medium | High |
 | FD-07 | Tiempo hasta la próxima disponibilidad (US36) | Estimar el rango de liberación de un espacio con el flujo de salidas y el pronóstico vigente. | Medium | High |
@@ -3515,7 +3516,7 @@ Los nodos de sensado del campus publican las lecturas de los sensores de cochera
 
 El Container Diagram descompone Quadrapp en los contenedores que lo conforman, de acuerdo con la decisión de monolito modular de la iteración 1 del ADD (DD-01):
 
-- **Clientes:** la Landing Page (HTML5, CSS3 y JavaScript), la aplicación móvil del conductor (Flutter) y la consola web de operación de cada universidad (Vue con Vuetify, la biblioteca de Material Design para Vue), que es responsive para usarse también desde el teléfono durante el turno.
+- **Clientes:** la Landing Page (HTML5, CSS3 y JavaScript generados con Astro como sitio estático), la aplicación móvil del conductor (Flutter) y la consola web de operación de cada universidad (Vue con Vuetify, la biblioteca de Material Design para Vue), que es responsive para usarse también desde el teléfono durante el turno.
 - **Quadrapp Backend:** un único contenedor Spring Boot con un módulo por bounded context (IAM, Parking Configuration, Parking Sensing, Occupancy, Prediction & Advisory, Analytics y Notifications). La seguridad la aplica Spring Security en el propio backend (DD-08) y un módulo de composición entrega las respuestas agregadas para la app y la consola. La app recibe además los cambios de disponibilidad en tiempo real mediante WebSocket.
 - **Ingesta IoT:** los nodos de sensado publican sus lecturas en el gateway del campus, que las reenvía al broker MQTT de la nube por una conexión saliente cifrada con QoS 1 y las retiene en su búfer local mientras no hay conexión (Store-and-Forward). El campus no expone puertos de entrada. El módulo Parking Sensing es el único suscriptor del broker.
 - **Persistencia:** una base de datos PostgreSQL con un esquema por módulo y sin claves foráneas entre esquemas (CON-02), y Redis para el read model de disponibilidad (iteración 4 del ADD).
@@ -4015,7 +4016,7 @@ La Infrastructure Layer implementa los repositorios, la emisión de tokens, el c
 |Secretos|Los códigos de un solo uso, los tokens de invitación y de refresco y los secretos de plataforma se guardan solo como hash.|
 |Multi-tenancy|`tenant_id` se guarda en las tablas con datos de una institución y viaja en el token, del que lo toman los demás módulos (CON-08, DD-09).|
 |Cifrado en tránsito|Todas las comunicaciones usan TLS (QAS-07).|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `iam` de PostgreSQL, según DD-01.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `iam` de PostgreSQL, según DD-01.|
 
 ### 5.1.6. Bounded Context Software Architecture Component Level Diagrams
  
@@ -4462,7 +4463,7 @@ La Infrastructure Layer implementa los repositorios y la publicación de eventos
 |Versionado del layout|Cada versión se guarda como JSONB inmutable en `layout_versions`. `GET …/layout` usa la versión como `ETag`, de modo que la aplicación lo descarga solo cuando cambia.|
 |Concurrencia|Las reglas de exclusividad de la asociación se refuerzan con índices únicos parciales en la base de datos, además de la validación del dominio.|
 |Multi-tenancy|`tenant_id` se guarda en todas las tablas y se toma siempre del token.|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `configuration` de PostgreSQL, según DD-01.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `configuration` de PostgreSQL, según DD-01.|
 
 ### 5.2.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -4472,7 +4473,7 @@ El diagrama descompone el módulo Parking Configuration dentro del contenedor Qu
 
 | Container | Tecnología | Responsabilidad |
 |---|---|---|
-| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Registra y publica la estructura de los estacionamientos, el inventario de dispositivos y el calendario. |
+| Quadrapp Backend | Java 25, Spring Boot 4 (monolito modular) | Registra y publica la estructura de los estacionamientos, el inventario de dispositivos y el calendario. |
 | Base de datos | PostgreSQL (esquema `configuration`) | Almacena estacionamientos, zonas, espacios, accesos, versiones del layout, dispositivos, asociaciones y calendario. |
 
 #### Componentes del módulo Parking Configuration
@@ -4904,7 +4905,7 @@ La Infrastructure Layer contiene la conexión con el broker, la traducción de l
 |Seguridad|Los sensores no se exponen a internet; solo el gateway abre una conexión saliente al broker con credenciales propias y permisos limitados a su prefijo de tópico (CON-05).|
 |Propiedad de datos|Este contexto es el único que escribe en el esquema `sensing`. Obtiene el inventario de Parking Configuration mediante su fachada y sus eventos, nunca leyendo sus tablas.|
 |Multi-tenancy|`tenant_id` se guarda en todas las tablas con datos de una institución. Las consultas de la consola filtran por el tenant del token.|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `sensing` de PostgreSQL, según DD-01.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `sensing` de PostgreSQL, según DD-01.|
 
 ### 5.3.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -4916,7 +4917,7 @@ El diagrama descompone el módulo Parking Sensing dentro del contenedor Quadrapp
 |---|---|---|
 | Gateway del campus | Linux, agente MQTT | Publica las lecturas y las retiene en un búfer local sin conexión. |
 | Broker MQTT | Eclipse Mosquitto | Recibe las lecturas con QoS 1 y las entrega con sesión persistente. |
-| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Procesa las lecturas, confirma detecciones y vigila la salud de los dispositivos. |
+| Quadrapp Backend | Java 25, Spring Boot 4 (monolito modular) | Procesa las lecturas, confirma detecciones y vigila la salud de los dispositivos. |
 | Base de datos | PostgreSQL (esquema `sensing`) | Almacena flujos de lecturas, salud, enlaces de gateways, deduplicación e incidencias. |
 
 #### Componentes del módulo Parking Sensing
@@ -5296,7 +5297,7 @@ La Infrastructure Layer implementa la persistencia, el read model, la difusión 
 |Frescura|La cadena detección confirmada, guardado, recálculo, Redis y notificación se hace en el mismo proceso, para cumplir 5 s o menos desde la confirmación hasta la aplicación y la consola (QAS-02).|
 |Propiedad de datos|Este contexto es el único que escribe en el esquema `occupancy` y en el read model. El historial de largo plazo pertenece a Analytics; aquí solo se conservan 7 días.|
 |Multi-tenancy|`tenant_id` se guarda en todas las tablas, y las claves de Redis incluyen la institución. Las consultas filtran por el tenant del token.|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `occupancy` de PostgreSQL y Redis, según DD-01 y DD-04.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `occupancy` de PostgreSQL y Redis, según DD-01 y DD-04.|
 
 ### 5.4.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -5306,7 +5307,7 @@ El diagrama descompone el módulo Occupancy dentro del contenedor Quadrapp Backe
 
 | Container | Tecnología | Responsabilidad |
 |---|---|---|
-| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Mantiene el estado de los espacios, la disponibilidad y el flujo. |
+| Quadrapp Backend | Java 25, Spring Boot 4 (monolito modular) | Mantiene el estado de los espacios, la disponibilidad y el flujo. |
 | Base de datos | PostgreSQL (esquema `occupancy`) | Almacena el estado de los espacios y las zonas, los pasos, el historial reciente y las reconciliaciones. |
 | Read model de disponibilidad | Redis | Sirve la disponibilidad a la aplicación y la consola, y difunde los cambios entre réplicas. |
 
@@ -6049,7 +6050,7 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |Propiedad de datos|Este contexto es el único dueño y escritor de `forecasts` y no accede a tablas de otros contextos. Analytics guarda su propio `ForecastSnapshot`; Notifications solo una referencia opcional (`notifications.forecast_id`).|
 |Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
 |Multi-tenancy|`tenant_id` se almacena en `forecasts` como referencia lógica a IAM, sin clave foránea, y se toma siempre del usuario autenticado, nunca de un parámetro.|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
 
 ### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -6059,7 +6060,7 @@ El Component Level Diagram descompone el contenedor del Bounded Context en sus c
 
 | Container | Tecnología | Responsabilidad |
 |---|---|---|
-| Quadrapp Backend | Java 21, Spring Boot 3 (monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
+| Quadrapp Backend | Java 25, Spring Boot 4 (monolito modular) | Genera pronósticos y deriva la asesoría y la próxima disponibilidad. |
 | Base de datos | PostgreSQL (esquema `prediction`) | Almacena la tabla `forecasts`. |
 
 El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Quadrapp Backend. Como colaboradores aparecen la aplicación móvil, el módulo de composición, los módulos Occupancy, Parking Configuration, Analytics y Notifications, la base de datos y el contenedor del modelo de predicción. Las consultas a otros módulos se hacen en proceso, a través de sus fachadas, y los eventos se publican como eventos de aplicación de Spring.
@@ -7600,7 +7601,7 @@ La Infrastructure Layer implementa los repositorios, las capas anticorrupción h
 |Reintentos|Solo se reintentan las notificaciones fallidas por indisponibilidad del proveedor (último intento PROVIDER_UNAVAILABLE, según `DeliveryAttempt.isRetryable`), nunca los tokens marcados como inválidos.|
 |Deduplicación|La clave de condición evita alertas repetidas en el dominio y el índice único de `notifications` la refuerza ante eventos duplicados.|
 |Multi-tenancy|`tenant_id` se guarda en las tablas con datos de una institución y se toma del token o del evento recibido (CON-08).|
-|Tecnología|Módulo del monolito modular en Java 21 y Spring Boot 3, con el esquema `notifications` de PostgreSQL, según DD-01.|
+|Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `notifications` de PostgreSQL, según DD-01.|
 
 ### 5.7.6. Bounded Context Software Architecture Component Level Diagrams
  
