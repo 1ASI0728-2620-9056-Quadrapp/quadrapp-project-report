@@ -8408,27 +8408,22 @@ La selección considera las herramientas utilizadas durante el diseño del proye
 
 | Categoría | Herramienta / Producto | Propósito / Alcance | Enlace | Imagen |
 |---|---|---|---|---|
-| Project Management | Trello | Organizar las actividades del equipo y dar seguimiento al desarrollo del proyecto. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
-| Requirements Management | Trello | Gestionar el Product Backlog, User Stories, Technical Stories, prioridades y criterios de aceptación. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
-| Product Design | Figma | Diseñar wireframes, mockups y prototipos de las interfaces de Quadrapp. Herramienta pendiente de confirmar. | [https://www.figma.com/es-la/](https://www.figma.com/es-la/) | ![figma-logo](./assets/capitulo-07/figma-logo.png) |
-| Software Architecture | Structurizr | Elaborar diagramas C4 de contexto, contenedores y componentes de la arquitectura. | [https://structurizr.com/](https://structurizr.com/) | ![structurizr-logo](./assets/capitulo-07/structurizr-logo.webp) |
-| Software Architecture | PlantUML | Generar diagramas de clases, componentes y diseño de bases de datos mediante código. | [https://plantuml.com/](https://plantuml.com/) | ![plantuml-logo](./assets/capitulo-07/plantuml-logo.png) |
+| Project Requirements and Management | Trello | Organizar las actividades del equipo, gestionar el Product Backlog y realizar el seguimiento de las historias de usuario y tareas del proyecto. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
+| Product Design | Figma | Diseñar wireframes, mockups y prototipos de las interfaces de Quadrapp. | [https://www.figma.com/es-la/](https://www.figma.com/es-la/) | ![figma-logo](./assets/capitulo-07/figma-logo.png) |
+| Software Architecture | Structurizr | Representar la arquitectura del sistema mediante diagramas C4, identificando sus principales componentes y relaciones. | [https://structurizr.com/](https://structurizr.com/) | ![structurizr-logo](./assets/capitulo-07/structurizr-logo.webp) |
+| Software Architecture | PlantUML | Elaborar diagramas UML de clases y componentes para documentar el diseño de los Bounded Contexts. | [https://plantuml.com/](https://plantuml.com/) | ![plantuml-logo](./assets/capitulo-07/plantuml-logo.png) |
 | Software Development | Git | Controlar versiones, registrar modificaciones y mantener el historial del código fuente. | [https://git-scm.com/](https://git-scm.com/) | ![git-logo](./assets/capitulo-07/git-logo.png) |
 | Software Development | GitHub | Centralizar los repositorios, administrar ramas y revisar cambios mediante Pull Requests. | [https://github.com/](https://github.com/) | ![github-logo](./assets/capitulo-07/github-logo.png) |
-| Software Development | Visual Studio Code | Editar, ejecutar y depurar el código de los diferentes componentes. Editor propuesto. | [https://code.visualstudio.com/](https://code.visualstudio.com/) | ![visualstudiocode-logo](./assets/capitulo-07/visualstudiocode-logo.png) |
+| Software Development | Visual Studio Code | Editor de código para desarrollar, ejecutar y depurar el código de los diferentes componentes. | [https://code.visualstudio.com/](https://code.visualstudio.com/) | ![visualstudiocode-logo](./assets/capitulo-07/visualstudiocode-logo.png) |
 | Mobile Development | Flutter y Dart | Desarrollar la aplicación móvil multiplataforma para Android e iOS. | [https://flutter.dev/](https://flutter.dev/) | ![flutter-logo](./assets/capitulo-07/flutter-logo.png) |
 | Web Development | HTML5, CSS3 y JavaScript | Implementar la Landing Page pública de Quadrapp. | [https://developer.mozilla.org/es/](https://developer.mozilla.org/es/) | ![mdn-logo](./assets/capitulo-07/mdn-logo.webp) |
 | Web Development | Angular | Desarrollar la consola administrativa con componentes reutilizables. | [https://angular.dev/](https://angular.dev/) | ![angular-logo](./assets/capitulo-07/angular-logo.png) |
-| Backend Development | Spring Boot | Implementar los servicios RESTful de los Bounded Contexts. Framework definitivo pendiente de seleccionar. | [https://docs.spring.io/spring-boot/index.html](https://docs.spring.io/spring-boot/index.html) | ![springboot-logo](./assets/capitulo-07/springboot-logo.webp) |
-| Database Management | MySQL 8.4 LTS | Almacenar la información de los Bounded Contexts, manteniendo sus esquemas o bases de datos separados. | [MySQL](https://www.mysql.com/) | ![mysql-logo](./assets/capitulo-07/mysql-logo.png) |
-| IoT Integration | Spring Integration MQTT / Eclipse Paho | Consumir los mensajes MQTT provenientes de la infraestructura de sensado mediante Parking Sensing. | [Spring Integration MQTT](https://docs.spring.io/spring-integration/reference/mqtt.html) | ![spring-integration-logo](./assets/capitulo-07/spring-integration-logo.png) |
-| Software Development | Node.js | Ejecutar herramientas de desarrollo y administrar las dependencias del frontend cuando corresponda. | [https://nodejs.org/es](https://nodejs.org/es) | ![nodejs-logo](./assets/capitulo-07/nodejs-logo.png) |
+| Backend Development | Spring Boot | Implementar las APIs REST y los servicios de los Bounded Contexts mediante una arquitectura de monolito modular basada en DDD. | [https://docs.spring.io/spring-boot/index.html](https://docs.spring.io/spring-boot/index.html) | ![springboot-logo](./assets/capitulo-07/springboot-logo.webp) |
+| API Documentation | Swagger | Documentar los endpoints REST, contratos de API, solicitudes y respuestas de los servicios. | [https://swagger.io/](https://swagger.io/) | ![swagger-logo](./assets/capitulo-07/swagger-logo.png) |
+| Database Management | PostgreSQL 18 | Almacenar y relacionar la información de los Bounded Contexts en una base de datos relacional compartida. | [https://www.postgresql.org/](https://www.postgresql.org/) | ![PostgreSQL-logo](./assets/capitulo-07/postgresql-logo.webp) |
 | Software Testing | Cucumber - Gherkin | Definir escenarios de aceptación mediante archivos .feature relacionados con las historias de usuario. | [https://cucumber.io/docs/gherkin/](https://cucumber.io/docs/gherkin/) | ![cucumber-logo](./assets/capitulo-07/cucumber-logo.png) |
-| Software Testing | Postman | Realizar pruebas de las APIs REST y verificar solicitudes, respuestas y códigos HTTP. Herramienta propuesta. | [https://www.postman.com/](https://www.postman.com/) | ![postman-logo](./assets/capitulo-07/postman-logo.png) |
-| Software Deployment | GitHub Actions | Automatizar procesos de compilación, pruebas e integración continua cuando se configuren los pipelines. | [https://github.com/features/actions](https://github.com/features/actions) | ![github-actions-logo](./assets/capitulo-07/github-actions-logo.jpg) |
-| Software Deployment | Docker | Empaquetar los servicios backend en contenedores para facilitar su ejecución y despliegue. Herramienta prevista. | [https://www.docker.com/](https://www.docker.com/) | ![docker-logo](./assets/capitulo-07/docker-logo.png) |
+| Software Deployment | Docker | Empaquetar los servicios backend en contenedores para facilitar su ejecución y despliegue. | [https://www.docker.com/](https://www.docker.com/) | ![docker-logo](./assets/capitulo-07/docker-logo.png) |
 | Software Documentation | Markdown | Elaborar y mantener el Project Report, README y documentación técnica del proyecto. | [https://www.markdownguide.org/](https://www.markdownguide.org/) | ![markdown-logo](./assets/capitulo-07/markdown-logo.png) |
-| Software Documentation | Swagger | Documentar los endpoints REST, contratos de API, solicitudes y respuestas de los servicios. | [https://swagger.io/](https://swagger.io/) | ![swagger-logo](./assets/capitulo-07/swagger-logo.png) |
 
 ### 7.1.2 Source Code Management
 
@@ -8444,12 +8439,10 @@ La solución contempla repositorios para sus principales productos digitales, ma
 
 | Componente | Repositorio | Enlace |
 | ---------- | ----------- | ------ |
-| Project Report | quadrapp-project-report | https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report |
-| Landing Page | Landing_Page | https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page |
-| Web Application |  |  |
-| Mobile Application |  |  |
-| Web Services / Backend |  |  |
-| IoT Solution |  |  |
+| Project Report | quadrapp-project-report | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report) |
+| Landing Page | Landing_Page | [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) |
+| Mobile Application | quadrapp-frontend-mobile | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-frontend-mobile](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-frontend-mobile) |
+| Web Services / Backend | quadrapp-backend | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-backend](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-backend) |
 
 <br>
 
