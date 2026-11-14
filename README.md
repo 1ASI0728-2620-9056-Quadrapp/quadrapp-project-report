@@ -8860,10 +8860,30 @@ Asimismo, se evitará almacenar contraseñas, claves privadas o credenciales dir
 
 Con estas prácticas, Quadrapp busca mantener un desarrollo colaborativo y ordenado, facilitar el seguimiento de las modificaciones y asegurar que cada versión del proyecto pueda identificarse y recuperarse cuando sea necesario.
 
+### 7.1.3. Source Code Style Guide & Conventions
 
-### 7.1.3 Source Code Style Guide & Conventions
+El equipo adopta convenciones comunes para que el código de los distintos componentes sea uniforme y fácil de revisar. Las tecnologías siguen las restricciones CON-12 a CON-14 del capítulo IV.
+
+| Componente | Repositorio | Tecnología |
+| --- | --- | --- |
+| Backend | `quadrapp-backend` | Java 21 y Spring Boot 3, construido con Maven |
+| Aplicación móvil | `quadrapp-frontend-mobile` | Dart y Flutter |
+| Landing Page | `Landing_Page` | Astro, con salida estática en HTML5, CSS3 y JavaScript |
+
+**Estructura del backend.** El paquete base es `com.upc.quadrapp`. Cada bounded context es un módulo con su propio paquete (`iam`, `occupancy`, `parkingconfiguration`, `parkingsensing` y `prediction`), y existe un paquete `shared` para lo común. Dentro de cada módulo el código se separa por capas, por ejemplo `application` y `domain`, y en el dominio se distinguen `model/aggregates` y `model/commands`.
+
+**Nomenclatura.** Las clases usan PascalCase y los comandos del dominio se nombran con la forma verbo + sustantivo + `Command`, por ejemplo `InviteUserCommand`, `RequestOtpCommand` y `SignInCommand`. Los agregados llevan el nombre del concepto del dominio (`Institution`, `User`). `[completar: convención para variables, métodos, pruebas y base de datos]`
+
+**Estructura de la Landing Page.** El código está en `src`, con los componentes en `components` (un archivo `.astro` en PascalCase por sección, como `Hero.astro` y `FaqSection.astro`), las plantillas en `layouts`, la página en `pages/index.astro` y los estilos en `styles/global.css`.
+
+**Servicios web, idioma y accesibilidad.** Los servicios siguen el estilo RESTful y se documentan con OpenAPI (CON-12). Los textos se entregan en inglés y en español latinoamericano, y la Landing Page y la consola cumplen el nivel AA de la WCAG 2.2 (CON-11).
+
+**Control de versiones.** El equipo usa GitHub en la organización del proyecto. Cada integrante trabaja en ramas `feature/` o `fix/` por tarea, registra sus cambios con Conventional Commits en inglés y abre Pull Requests hacia `develop`, que se integran mediante merge commit para conservar la autoría de cada aporte. Las entregas se integran en `main`. En el backend, los commits usan como alcance el bounded context, por ejemplo `fix(iam): answer internal errors with 500 instead of a 409 conflict`. `[completar: herramientas de formato o linter, si las usan]`
+
+---
 
 ### 7.1.4. Software Deployment Configuration
+
 
 ## 7.2. Solution Implementation
 
