@@ -8709,7 +8709,196 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ### 6.4.3. Applications Mock-ups
 
+Los mock-ups son las pantallas de alta fidelidad de Quadrapp: toman la estructura de los wireframes y le aplican la identidad visual del producto (paleta turquesa y azul petróleo, con ámbar para advertencias y rojo para alertas críticas). Quadrapp tiene tres tipos de usuario: el **conductor de la comunidad educativa**, que usa la aplicación móvil; el **administrador de universidad**, que opera el estacionamiento de su institución desde la aplicación móvil; y el **administrador de plataforma**, personal de Integra Labs, que registra universidades y dispositivos desde la consola web. En todas las vistas, un espacio sin lectura se muestra como "Sin datos" o UNKNOWN y nunca se cuenta como libre, y la aplicación del conductor solo envía los minutos estimados de llegada, nunca su ubicación. Los mock-ups se elaboraron en Figma.
+ 
+#### VISTA CONDUCTOR (APP MÓVIL)
+ 
+**Acceso institucional**: pantalla de ingreso. Presenta la propuesta de la aplicación ("Anticipa tu llegada al campus", sin reservas ni pagos), solicita el correo institucional, cuyo dominio valida la pertenencia a la comunidad, y recuerda que solo se comparten los minutos estimados de llegada, nunca la ubicación.  
+ 
+![Mockup - Acceso institucional](./assets/capitulo-06/mockups/Acceso%20institucional.png)
+ 
+**Verificación OTP**: el conductor ingresa el código de seis dígitos enviado a su correo y puede reenviarlo pasado un tiempo. Un aviso informa que, si se interrumpe la conexión, el código se conserva y se reintenta al volver la señal.  
+ 
+![Mockup - Verificación OTP](./assets/capitulo-06/mockups/Verificación%20OTP.png)
+ 
+**Inicio y asesoría de llegada**: pantalla principal. Muestra la sede elegida, el estado de conexión y la asesoría de llegada: la probabilidad de encontrar espacio, los minutos estimados de llegada, los espacios libres, la confianza y la hora de la última actualización. Debajo, "Cómo puede cambiar" presenta la probabilidad a 15, 30, 45 y 60 minutos, y un mapa de la sede ayuda a llegar. La navegación inferior da acceso a Inicio, Zonas, Predicción y Alertas.  
+ 
+![Mockup - Inicio y asesoría de llegada](./assets/capitulo-06/mockups/Inicio%20y%20asesoría%20de%20llegada.png)
+ 
+**¿Cuándo llegas?**: ventana para indicar en cuántos minutos llega el conductor. Permite usar la ubicación del teléfono, para calcular el tiempo automáticamente, o ingresarlo de forma manual con atajos de 10 a 60 minutos. Aclara que la ubicación se queda en el teléfono.  
+ 
+![Mockup - ¿Cuándo llegas?](./assets/capitulo-06/mockups/¿Cuándo%20llegas_.png)
+ 
+**Elegir sede**: ventana para cambiar de sede (Monterrico, San Isidro, San Miguel y Villa). Cada una muestra su estado: espacios libres, "Casi lleno", "Pocos datos" o "Desactualizado".  
+ 
+![Mockup - Elegir sede](./assets/capitulo-06/mockups/Elegir%20sede.png)
+ 
+**Detalle por zonas**: desglosa el estacionamiento de la sede por zona (Zona Norte, Central y Sur). Resume la capacidad, los espacios libres y los que no tienen datos, y muestra por zona los espacios libres y su estado (Buena o Limitada). Avisa que los espacios sin datos no se cuentan como libres.  
+ 
+![Mockup - Detalle por zonas](./assets/capitulo-06/mockups/Detalle%20por%20zonas.png)
+ 
+**Detalle de nivel**: muestra un nivel de la zona (Sótano 1) con su capacidad, libres y sin datos. Su vista de mapa presenta un plano esquemático de plazas con los estados Libre, Ocupada y Sin datos, y una vista de lista alterna muestra las plazas con filtros Todas, Libres y Sin datos.  
+ 
+![Mockup - Detalle de nivel](./assets/capitulo-06/mockups/Detalle%20de%20nivel%20%28Sótano%201%20·%20Zona%20Norte%29%20—%20Mapa.png)
+ 
+**Predicciones por horizonte**: presenta el pronóstico para 15, 30, 45 y 60 minutos, cada uno con su probabilidad, su barra de disponibilidad y su nivel de confianza. Resalta el horizonte más cercano a la hora de llegada del conductor y muestra arriba su tiempo estimado de llegada.  
+ 
+![Mockup - Predicciones por horizonte](./assets/capitulo-06/mockups/Predicciones%20por%20horizonte.png)
+ 
+**Detalle de predicción · 15 min**: ventana con el detalle de un horizonte: probabilidad de encontrar plaza, ocupación prevista, saturación, momento en que se generó, tiempo de vigencia, fuente (modelo principal) y nivel de confianza, junto con la versión del modelo.  
+ 
+![Mockup - Detalle de predicción · 15 min](./assets/capitulo-06/mockups/Detalle%20de%20predicción%20·%2015%20min.png)
+ 
+**Alertas y preferencias**: permite activar las notificaciones y elegir cuándo recibirlas: disponibilidad limitada, datos desactualizados, cambios por eventos del campus y previsión de llenado. Lista las franjas horarias por sede, que se pueden activar, pausar o eliminar, y permite agregar una nueva eligiendo sede, días y horario. Avisa cuando la última lectura es antigua.  
+ 
+![Mockup - Alertas y preferencias](./assets/capitulo-06/mockups/Alertas%20y%20preferencias.png)
+ 
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+ 
+**Inicio de operación**: pantalla principal del turno. Resume el aforo del campus (libres, ocupados y desconocidos), la saturación prevista con una recomendación para orientar el flujo, las alertas de dispositivos y el flujo de entradas y salidas de los últimos 15 minutos. Los desconocidos no se cuentan como libres.  
+ 
+![Mockup - Inicio de operación](./assets/capitulo-06/mockups/Inicio%20de%20operación.png)
+ 
+**Estacionamientos y zonas**: lista las zonas del campus con su porcentaje de ocupación y su estado (Operativa o Atención), con filtros por estado. Muestra además los espacios de la zona seleccionada y da acceso a gestionar zonas y espacios.  
+ 
+![Mockup - Estacionamientos y zonas](./assets/capitulo-06/mockups/Estacionamientos%20y%20zonas.png)
+ 
+**Gestión de zonas y layout**: edición del plano del estacionamiento en un borrador versionado. Permite añadir zonas y espacios, editar o deshabilitar el espacio seleccionado y publicar la nueva versión del layout.  
+ 
+![Mockup - Gestión de zonas y layout](./assets/capitulo-06/mockups/Gestión%20de%20zonas%20y%20layout.png)
+ 
+**Accesos y configuración**: muestra el flujo de entradas y salidas de los últimos 15 minutos, el estado de los accesos del campus y la configuración propia del estacionamiento (horario, modalidad y alerta de ocupación).  
+ 
+![Mockup - Accesos y configuración](./assets/capitulo-06/mockups/Accesos%20y%20configuración.png)
+ 
+**Salud de dispositivos**: consulta en modo lectura el estado de los sensores y gateways de la universidad, con sus incidencias, la batería y la última comunicación, y permite reportar un problema.  
+ 
+![Mockup - Salud de dispositivos](./assets/capitulo-06/mockups/Salud%20de%20dispositivos.png)
+ 
+**Analítica y precisión**: presenta la ocupación observada frente al pronóstico, con el riesgo de saturación del día, y la precisión del pronóstico por horizonte para el día de hoy, 7 días o 30 días. Permite exportar el reporte.  
+ 
+![Mockup - Analítica y precisión](./assets/capitulo-06/mockups/Analítica%20y%20precisión.png)
+ 
+**Más · campus y equipo**: reúne el calendario de eventos del campus, los dominios institucionales con su estado de verificación y el equipo con sus invitaciones pendientes, con acciones para añadir un evento, un dominio o invitar a una persona.  
+ 
+![Mockup - Más · campus y equipo](./assets/capitulo-06/mockups/Más%20·%20campus%20y%20equipo.png)
+ 
+**Añadir zona**: ventana para crear una zona en el borrador del layout, indicando su nombre, el nivel y el número de espacios iniciales. Los espacios nuevos quedan como UNKNOWN hasta que se asocien sensores.  
+ 
+![Mockup - Añadir zona](./assets/capitulo-06/mockups/Añadir%20zona.png)
+ 
+**Publicar layout · confirmación**: ventana que resume los cambios del borrador (zonas, espacios y deshabilitados) antes de publicar, y advierte que los conductores verán el nuevo layout en su próxima actualización.  
+ 
+![Mockup - Publicar layout · confirmación](./assets/capitulo-06/mockups/Publicar%20layout%20·%20confirmación.png)
+ 
+**Editar configuración del estacionamiento**: ventana para ajustar el horario de apertura y cierre y el umbral de la alerta de ocupación. La modalidad es de solo lectura, porque el estacionamiento es gratuito.  
+ 
+![Mockup - Editar configuración del estacionamiento](./assets/capitulo-06/mockups/Editar%20configuración%20del%20estacionamiento.png)
+ 
+**Reportar problema**: ventana para enviar a soporte un reporte sobre una incidencia, con el tipo de problema y una descripción opcional.  
+ 
+![Mockup - Reportar problema](./assets/capitulo-06/mockups/Reportar%20problema.png)
+ 
+**Nuevo evento**: ventana para registrar un evento del calendario del campus, con su fecha, horario, zona afectada y el impacto esperado en la demanda (bajo, medio o alto). Los eventos ajustan la previsión de ocupación.  
+ 
+![Mockup - Nuevo evento](./assets/capitulo-06/mockups/Nuevo%20evento.png)
+ 
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+ 
+**01 · Dashboard general**: resumen global de la plataforma: universidades activas, sedes, dispositivos saludables, incidencias y alertas críticas. Incluye la ocupación global con la proporción de espacios ocupados, libres y desconocidos, las alertas críticas y una tabla con la operación de cada universidad.  
+ 
+![Mockup - 01 · Dashboard general](./assets/capitulo-06/mockups/01%20·%20Dashboard%20general.png)
+ 
+**02 · Universidades**: directorio de las universidades registradas, con su estado (Activa u Onboarding), sedes, dominios de correo y primer administrador. Permite buscar, filtrar por estado, exportar a CSV y dar de alta una universidad.  
+ 
+![Mockup - 02 · Universidades](./assets/capitulo-06/mockups/02%20·%20Universidades.png)
+ 
+**03 · Alta de universidad**: formulario en tres pasos (datos y dominios, primer administrador, crear e invitar). Valida los dominios de correo y, si uno ya pertenece a otra universidad, bloquea el envío de la invitación y explica el motivo.  
+ 
+![Mockup - 03 · Alta de universidad](./assets/capitulo-06/mockups/03%20·%20Alta%20de%20universidad.png)
+ 
+**04 · Universidad Central**: ficha de una universidad. Muestra sus sedes y estacionamientos con la ocupación, sus dominios con su validación, el primer administrador con el estado de su invitación y las alertas de dispositivos asociadas.  
+ 
+![Mockup - 04 · Universidad Central](./assets/capitulo-06/mockups/04%20·%20Universidad%20Central.png)
+ 
+**05 · Inventario IoT global**: lista los sensores y gateways de todas las universidades, con su salud, última comunicación y batería. Permite filtrar por universidad, sede, estacionamiento, tipo y salud, buscar por identificador o número de serie, exportar y registrar un dispositivo.  
+ 
+![Mockup - 05 · Inventario IoT global](./assets/capitulo-06/mockups/05%20·%20Inventario%20IoT%20global.png)
+ 
+**06 · Gestión de dispositivo · G-03**: reúne en una sola vista el estado del gateway, su asociación actual y la incidencia abierta, con las acciones de reasignar, registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja.  
+ 
+![Mockup - 06 · Gestión de dispositivo · G-03](./assets/capitulo-06/mockups/06%20·%20Gestión%20de%20dispositivo%20·%20G-03.png)
+ 
+**07 · Registrar dispositivo**: ventana para registrar un sensor o gateway con su número de serie, tipo, universidad, sede, estacionamiento, asociación, dirección (en los sensores de paso) e intervalo de reporte esperado.  
+ 
+![Mockup - 07 · Registrar dispositivo](./assets/capitulo-06/mockups/07%20·%20Registrar%20dispositivo.png)
+ 
+**08 · Reasignar G-03**: ventana para cambiar el estacionamiento asociado a un dispositivo. Advierte que los espacios que se queden sin lectura pasan a UNKNOWN y no se cuentan como libres, y exige confirmar que el equipo físico ya fue trasladado.  
+ 
+![Mockup - 08 · Reasignar G-03](./assets/capitulo-06/mockups/08%20·%20Reasignar%20G-03.png)
+ 
+**09 · Dar de baja G-03**: ventana para retirar un dispositivo sin reemplazarlo. Exige un motivo y escribir el identificador para confirmar, y conserva el historial.  
+ 
+![Mockup - 09 · Dar de baja G-03](./assets/capitulo-06/mockups/09%20·%20Dar%20de%20baja%20G-03.png)
+ 
 ### 6.4.4. Applications User Flow Diagrams
+
+Los user flows muestran, sobre los mock-ups, el camino que sigue un usuario para cumplir una meta importante dentro de Quadrapp. A diferencia de los wireflows, incluyen la lógica del recorrido: el **happy path** (línea turquesa continua) cuando todo sale bien y los **unhappy paths** o rutas alternas (línea naranja punteada) que se abren en cada decisión (rombo). Se presentan ocho user flows: tres del conductor, tres del administrador de universidad y dos del administrador de plataforma. Los diagramas se elaboraron en Figma.
+ 
+#### VISTA CONDUCTOR (APP MÓVIL)
+ 
+**User Flow 1 · Acceso con correo institucional**  
+**User goal:** Como conductor, quiero entrar a Quadrapp con el correo de mi universidad para consultar la disponibilidad.  
+**Flujo:** Acceso institucional → Verificación OTP → Inicio. Rutas alternas: dominio no registrado; código incorrecto o vencido.  
+ 
+![User Flow 1 - Acceso con correo institucional](./assets/capitulo-06/user-flows/User%20Flow%201%20·%20Acceso%20con%20correo%20institucional.png)
+ 
+**User Flow 2 · Disponibilidad al llegar**  
+**User goal:** Como conductor, quiero saber si encontraré espacio cuando llegue para decidir si salgo ahora.  
+**Flujo:** Inicio → ¿Cuándo llegas? → Predicciones por horizonte → Detalle de predicción. Solo viajan los minutos de llegada, nunca la ubicación. Rutas alternas: sin permiso de ubicación (modo Manual); pronóstico vencido.  
+ 
+![User Flow 2 - Disponibilidad al llegar](./assets/capitulo-06/user-flows/User%20Flow%202%20·%20Disponibilidad%20al%20llegar.png)
+ 
+**User Flow 3 · Sede, zonas y niveles**  
+**User goal:** Como conductor, quiero encontrar la zona y el nivel con más espacios libres para estacionar más rápido.  
+**Flujo:** Inicio → Elegir sede → Detalle por zonas → Niveles → Detalle de nivel. Rutas alternas: sede con datos desactualizados; ver las plazas en lista.  
+ 
+![User Flow 3 - Sede, zonas y niveles](./assets/capitulo-06/user-flows/User%20Flow%203%20·%20Sede,%20zonas%20y%20niveles.png)
+ 
+#### VISTA ADMINISTRADOR DE UNIVERSIDAD (APP MÓVIL)
+ 
+**User Flow 4 · Editar y publicar el layout**  
+**User goal:** Como administrador de universidad, quiero añadir una zona y publicar el layout para que los conductores vean la distribución actualizada.  
+**Flujo:** Estacionamientos y zonas → Gestión de zonas y layout → Añadir zona → Confirmación → Publicado. Rutas alternas: errores de validación; «Seguir editando» sin publicar.  
+ 
+![User Flow 4 - Editar y publicar el layout](./assets/capitulo-06/user-flows/User%20Flow%204%20·%20Editar%20y%20publicar%20el%20layout.png)
+ 
+**User Flow 5 · Incidencia de un dispositivo**  
+**User goal:** Como administrador de universidad, quiero reportar un dispositivo con problemas para que soporte lo atienda.  
+**Flujo:** Inicio de operación → Salud de dispositivos → Reportar problema → Enviado. Rutas alternas: alerta por sensores UNKNOWN; reporte sin conexión.  
+ 
+![User Flow 5 - Incidencia de un dispositivo](./assets/capitulo-06/user-flows/User%20Flow%205%20·%20Incidencia%20de%20un%20dispositivo.png)
+ 
+**User Flow 7 · Registrar un evento del campus**  
+**User goal:** Como administrador de universidad, quiero registrar un evento del campus para que la previsión de ocupación lo considere.  
+**Flujo:** Inicio de operación → Más → Nuevo evento → Evento guardado. Rutas alternas: usuario operador (solo lectura); horario inválido.  
+ 
+![User Flow 7 - Registrar un evento del campus](./assets/capitulo-06/user-flows/User%20Flow%207%20·%20Registrar%20un%20evento%20del%20campus.png)
+ 
+#### VISTA ADMINISTRADOR DE PLATAFORMA (CONSOLA WEB)
+ 
+**User Flow 6 · Reasignar un dispositivo IoT**  
+**User goal:** Como administrador de plataforma, quiero mover un gateway a otro estacionamiento sin perder su historial.  
+**Flujo:** Inventario IoT global → Gestión de dispositivo → Reasignar → Reasignado. Rutas alternas: dar de baja en vez de reasignar; falta confirmar el traslado.  
+ 
+![User Flow 6 - Reasignar un dispositivo IoT](./assets/capitulo-06/user-flows/User%20Flow%206%20·%20Reasignar%20un%20dispositivo%20IoT.png)
+ 
+**User Flow 8 · Alta de una universidad**  
+**User goal:** Como administrador de plataforma, quiero dar de alta una universidad e invitar a su primer administrador para que empiece a usar Quadrapp.  
+**Flujo:** Universidades → Alta de universidad → Universidad en Onboarding → Universidad activa. Rutas alternas: dominio ya usado por otra universidad; invitación vencida.  
+ 
+![User Flow 8 - Alta de una universidad](./assets/capitulo-06/user-flows/User%20Flow%208%20·%20Alta%20de%20una%20universidad.png)
+
 
 ## 6.5. Applications Prototyping
 
@@ -8883,49 +9072,6 @@ El equipo adopta convenciones comunes para que el código de los distintos compo
 ---
 
 ### 7.1.4. Software Deployment Configuration
- 
-En esta entrega se despliegan dos componentes de la solución: la Landing Page y el Quadrapp Backend. Ambos se publican desde sus repositorios de GitHub, de modo que cada despliegue se genera a partir del código versionado, como establece CON-04. Los demás componentes del Deployment Diagram (sección 4.3.4) se desplegarán en etapas posteriores.
- 
-| Componente | Repositorio | Plataforma | Tipo de despliegue |
-| --- | --- | --- | --- |
-| Landing Page | `Landing_Page` | Netlify | Sitio estático generado con Astro |
-| Quadrapp Backend | `quadrapp-backend` | Render | Servicio web con Java 21 y Spring Boot 3 |
- 
-#### Landing Page en Netlify
- 
-La Landing Page se publica en Netlify, proyecto conectado al repositorio `Landing_Page` de GitHub, donde Netlify identifica el framework Astro. Astro genera los archivos estáticos (HTML, CSS y JavaScript) que Netlify publica en su red de distribución. El despliegue de producción vigente se publicó el 9 de octubre a partir de la rama `main` (commit `1bde5be`), el mismo que aparece como último cambio del repositorio, y está disponible públicamente en [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app).
- 
-![Despliegue de la Landing Page en Netlify](assets/capitulo-07/netlify-deploy.jpeg)
- 
-*Figura: panel de Netlify con el despliegue de producción de la Landing Page (estado Published, rama main, commit 1bde5be).*
- 
-#### Backend en Render
- 
-El Quadrapp Backend se despliega en Render como un servicio web conectado al repositorio `quadrapp-backend`. Render compila el proyecto con Maven y ejecuta la aplicación Spring Boot, que se publica con una URL propia. Cada cambio integrado en la rama `main` genera un nuevo despliegue.
- 
-![Despliegue del backend en Render](assets/capitulo-07/render-deploy.png)
- 
-*Figura: despliegue del Quadrapp Backend en Render.*
- 
-#### Entornos
- 
-Por ahora, cada componente cuenta con un único entorno de producción: la Landing Page en Netlify (despliegue de producción desde `main`) y el backend en Render.
- 
-#### Pasos de despliegue
- 
-**Landing Page**
- 
-1. Se integra el cambio en la rama `main` del repositorio `Landing_Page`.
-2. Netlify, conectado al repositorio, toma el código y ejecuta la compilación de Astro (`[confirmar: npm run build]`).
-3. Netlify publica el resultado y actualiza la URL pública.
-**Backend**
- 
-1. Se integra el cambio en la rama de despliegue del repositorio `quadrapp-backend`.
-2. Render detecta el cambio y compila el proyecto con Maven.
-3. Render inicia el servicio y lo publica con su URL.
-#### Configuración y secretos
- 
-Las variables de entorno del backend, como la conexión a la base de datos y las claves con las que se firman los tokens de sesión (DD-08), se definen en el panel de Render y no se guardan en el repositorio. Ambas plataformas publican sus servicios mediante HTTPS, por lo que las comunicaciones usan TLS (DD-08).
 
 
 ## 7.2. Solution Implementation
@@ -8950,9 +9096,7 @@ Las variables de entorno del backend, como la conexión a la base de datos y las
 
 ## 7.3. Validation Interviews
 
-### 7.3.1. Diseño de Entrevistas
-
-Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los mockups de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page, y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría. Los mockups se muestran en el mismo orden a todos los entrevistados.
+Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los artefactos de diseño de los capítulos V y VI (los wireframes y wireflows de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page) y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría.
 
 Las respuestas se analizan como evidencia de comprensión y de preferencia declarada sobre un prototipo, no como evidencia de uso real. Por ello, no demuestran el cumplimiento de los Business Outcomes del Lean UX, que requieren un piloto con la solución implementada.
 
@@ -8964,7 +9108,7 @@ Las respuestas se analizan como evidencia de comprensión y de preferencia decla
 | O2 | Validar la comprensión de la asesoría de llegada | Si el usuario interpreta correctamente la categoría (HIGH, LIMITED, LOW), la probabilidad, los horizontes de 15, 30, 45 y 60 minutos y la confianza. |
 | O3 | Validar la confianza en los datos | Si el usuario entiende el estado "Sin datos / UNKNOWN", la antigüedad del dato y la advertencia de confianza baja, y cuánta confianza deposita en la estimación. |
 | O4 | Validar el mensaje de privacidad | Si el usuario comprende que el tiempo de llegada se calcula en su dispositivo y que el servidor recibe solo minutos. |
-| O5 | Validar la claridad de las pantallas y los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
+| O5 | Validar la claridad de los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
 | O6 | Validar la utilidad de la consola | Si el administrador considera que la información de la consola le permite supervisar el turno, anticipar la saturación y gestionar dispositivos y layout. |
 | O7 | Validar la comunicación de la Landing Page | Si cada visitante entiende qué hace Quadrapp, para quién es y qué no hace (sin reservas, sin pagos, sin rastreo de ubicación). |
 
@@ -8982,9 +9126,11 @@ Cada objetivo se relaciona con una hipótesis del Lean UX (sección 1.2.2.3) y c
 | El administrador utilizará la consola durante la operación del turno. | O6 | El administrador entiende la saturación prevista y el estado de los datos, y considera útil la información presentada (preguntas 4, 5, 7 y 11). |
 | La Landing Page comunica la propuesta y su alcance. | O7 | Al menos 2 de 3 conductores y el administrador explican correctamente qué hace Quadrapp (preguntas 2 y 3 del guion de cada segmento). |
 
-#### Guion para el Segmento 1: Conductores de la comunidad educativa
+### 7.3.1. Diseño de Entrevistas
 
-El entrevistador muestra primero la Landing Page y luego recorre los mockups de la aplicación móvil en este orden: acceso institucional y verificación por código (OTP), inicio y asesoría de llegada, detalle por zonas y por nivel (en vista de mapa y de lista), predicciones por horizonte y alertas. Después formula las preguntas.
+### Guion para el Segmento 1: Conductores de la comunidad educativa
+
+El entrevistador muestra primero la Landing Page y luego recorre la aplicación móvil siguiendo los Wireflows 1 a 4 (ingreso, disponibilidad al llegar, sede y zonas, y alertas). Después formula las preguntas.
 
 *Preguntas iniciales*
 
@@ -8995,20 +9141,20 @@ El entrevistador muestra primero la Landing Page y luego recorre los mockups de 
 2. ¿Qué entiendes que hace Quadrapp y para quién es?
 3. ¿Qué crees que Quadrapp no hace?
 
-*Después de recorrer los mockups de la aplicación móvil*
+*Después de recorrer la aplicación móvil*
 
-4. Imagina que eres la persona de la pantalla de inicio y llegas en el tiempo que indica. ¿Qué te dice la aplicación sobre tus posibilidades de encontrar espacio?
-5. En la pantalla de predicciones, al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte?
-6. En el detalle por zonas hay espacios marcados como "Sin datos". ¿Qué entiendes por eso? ¿Los considerarías libres? ¿Por qué?
+4. Si llegaras en 20 minutos, ¿qué te dice la aplicación sobre tus posibilidades de encontrar espacio?
+5. Al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte?
+6. Si la aplicación no tuviera información de algunos espacios, ¿los considerarías libres? ¿Por qué?
 7. Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué?
-8. La aplicación indica que usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla?
+8. La aplicación usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla?
 9. Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían?
 10. Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona?
 11. ¿Qué falta, qué sobra o qué te confundió de lo que viste?
 
-#### Guion para el Segmento 2: Administradores de estacionamientos universitarios
+### Guion para el Segmento 2: Administradores de estacionamientos universitarios
 
-El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre los mockups de la consola de operación (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
+El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre la consola de operación siguiendo los Wireflows 5 a 9 (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
 
 *Preguntas iniciales*
 
@@ -9019,7 +9165,7 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 2. ¿Qué entiendes que ofrece Quadrapp a una universidad?
 3. ¿Qué crees que Quadrapp no hace?
 
-*Después de recorrer los mockups de la consola*
+*Después de recorrer la Consola de Operación*
 
 4. ¿Qué información usarías primero durante el turno? ¿Cuál no usarías?
 5. ¿Te serviría saber con anticipación cuándo se llenará el estacionamiento? (¿Con cuánta anticipación? ¿Qué margen de error aceptarías?)
@@ -9030,43 +9176,8 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 10. Sobre la precisión de las predicciones y la invitación de operadores, ¿lo que viste te resulta comprensible y útil?
 11. Del 1 al 5, ¿qué tan útil sería esta consola durante tu turno? ¿Qué falta o qué te confundió?
 
+
 ### 7.3.2. Registro de Entrevistas
-
-#### Segmento 1: Conductores de la comunidad educativa
-
-**Entrevista de validación 1**
-
-| Campo | Información |
-| --- | --- |
-| Nombres y apellidos | María Paz Pastor |
-| Edad | 20 años |
-| Distrito de residencia | San Miguel |
-| Ocupación y vínculo con la universidad | Estudiante de Ingeniería Industrial en la Universidad de Lima y conductora |
-| Fecha y medio | 14/11/2026, por Zoom |
-| Entrevistador | Alessandra Becerra |
-| Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
-| Enlace de la grabación |  |
-| Duración | |
-| Inicio | min |
-| Captura | <img src="assets/capitulo-07/entrevistavalidacionmariapaz1.png" alt="Captura de la entrevista de validación a María Paz Pastor" width="500"/> |
-| Resumen | María Paz entendió correctamente qué hace Quadrapp y qué no hace: no reserva espacios, no procesa pagos y no rastrea la ubicación. Interpretó la asesoría de llegada como la probabilidad de encontrar espacio cuando llegue, y no solo como la disponibilidad actual, y usaría los horizontes de predicción para decidir si sale de inmediato o espera. Entiende que los espacios marcados como "Sin datos" no están confirmados y no los consideraría libres. Calificó su confianza con 4 sobre 5, con la salvedad de que se trata de predicciones que pueden cambiar. Valora que la aplicación no use su ubicación porque protege su privacidad, y le servirían los avisos por franja horaria siempre que sean pocos y relevantes. Con lo que vio, saldría antes o cambiaría de zona si hubiera pocas probabilidades de encontrar espacio donde suele estacionar. Le pareció fácil de entender y sugirió destacar con más claridad la zona con mayor probabilidad de encontrar espacio, para decidir más rápido. |
-
-**Respuestas registradas**
-
-| N.º | Pregunta | Respuesta | Objetivo |
-| --- | --- | --- | --- |
-| 2 | ¿Qué entiendes que hace Quadrapp y para quién es? | Es una aplicación que permite conocer qué tan probable es encontrar estacionamiento al momento de llegar. Está dirigida a estudiantes y personas que utilizan el estacionamiento de la universidad. | O7 |
-| 3 | ¿Qué crees que Quadrapp no hace? | No permite reservar espacios, realizar pagos ni rastrear mi ubicación. Solamente brinda información y predicciones sobre la disponibilidad. | O7 |
-| 4 | Imagina que eres la persona de la pantalla de inicio y llegas en el tiempo que indica. ¿Qué te dice la aplicación sobre tus posibilidades de encontrar espacio? | Me indica qué posibilidades tengo de encontrar un espacio cuando llegue, no solamente cuántos hay disponibles en ese momento. Eso me parece bastante útil. | O1, O2 |
-| 5 | En la pantalla de predicciones, al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte? | Me permite comparar cómo cambiará la disponibilidad. Así puedo saber si me conviene salir en ese momento o esperar un poco más. | O2 |
-| 6 | En el detalle por zonas hay espacios marcados como "Sin datos". ¿Qué entiendes por eso? ¿Los considerarías libres? ¿Por qué? | Entiendo que no se puede confirmar si están ocupados o libres. No los consideraría disponibles porque podría llegar y encontrarlos ocupados. | O3 |
-| 7 | Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué? | Le daría un 4, porque me ayudaría a organizarme mejor, aunque entiendo que son predicciones y pueden cambiar. | O3 |
-| 8 | La aplicación indica que usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla? | Me parece positivo porque protege más mi privacidad. Me sentiría más cómoda utilizándola si no necesita conocer mi ubicación. | O4 |
-| 9 | Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían? | Sí, especialmente para conocer los horarios de mayor demanda. Preferiría recibir notificaciones importantes y no demasiadas durante el día. | O5 |
-| 10 | Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona? | Sí, podría salir un poco antes o dirigirme a otra zona si veo que hay pocas probabilidades de encontrar espacio donde suelo estacionar. | O1 |
-| 11 | ¿Qué falta, qué sobra o qué te confundió de lo que viste? | Me pareció fácil de entender. Agregaría una indicación más visible de cuál es la zona con mayor probabilidad de encontrar espacio para tomar decisiones más rápido. | O5 |
-
-Calificación de confianza (pregunta 7): **4 de 5**.
 
 ### 7.3.3. Evaluaciones según heurísticas.
 
