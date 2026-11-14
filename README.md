@@ -3295,7 +3295,7 @@ En el sensado, "Detección confirmada" marca el momento en que una señal técni
 
 *Figura: EventStorming, paso 4 (Pivotal Points), fase de sensado y ocupación.*
 
-En la predicción, "Pronóstico generado" habilita la asesoría y las alertas, y "Asesoría de llegada emitida" entrega al conductor el resultado que justifica el producto.
+En la predicción, "Pronóstico generado" habilita la asesoría y las alertas, y "Asesoría de llegada emitida" entrega al conductor el resultado que justifica el producto. En el tablero la asesoría se registró como un evento, pero en el diseño táctico se refinó: es la respuesta de una consulta que se calcula a partir del pronóstico vigente y no se persiste ni se publica.
 
 ![EventStorming paso 4: eventos pivotales de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-04c-prediccion.png)
 
@@ -3383,7 +3383,7 @@ En el sensado, los sensores de cochera y de paso publican las lecturas, y el gat
 
 *Figura: EventStorming, paso 8 (External Systems), fase de sensado y ocupación.*
 
-En la predicción intervienen el servicio de correo, el proveedor de mensajería push, que entrega las alertas, y el servicio de mapas. Este último se consulta solo desde el dispositivo del conductor para calcular el tiempo estimado de llegada; el servidor recibe únicamente los minutos, como establece CON-07.
+En la predicción intervienen el servicio de correo, que entrega al conductor su código de acceso desde IAM, el proveedor de mensajería push, que entrega las alertas, y el servicio de mapas. Este último se consulta solo desde el dispositivo del conductor para calcular el tiempo estimado de llegada; el servidor recibe únicamente los minutos, como establece CON-07.
 
 ![EventStorming paso 8: sistemas externos de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-08c-prediccion.png)
 
@@ -3395,6 +3395,8 @@ En el noveno paso, los comandos y los eventos se agruparon en agregados, es deci
 
 La separación más importante está en el sensado. SensorFeed recibe las lecturas, descarta las duplicadas o fuera de orden y confirma la detección; DeviceHealth controla el intervalo de reporte y la batería de cada sensor, y GatewayLink representa el reenvío de lecturas retenidas. Ninguno de ellos conoce el estado de negocio del espacio, que pertenece a SpaceOccupancy, ni la disponibilidad del estacionamiento, que pertenece a LotOccupancy. De forma similar, Device registra qué dispositivo está instalado y dónde, mientras que DeviceHealth sabe qué está reportando en este momento. En la predicción, Forecast genera los pronósticos y detecta la saturación, y ArrivalAdvice calcula la asesoría solo con el tiempo estimado en minutos.
 
+Tres de los agregados del tablero se refinaron en el diseño táctico del Capítulo V, sin cambiar los límites de los contextos. ArrivalAdvice dejó de ser un agregado: no recibe comandos ni guarda estado, porque la asesoría se calcula en cada consulta (`GetArrivalAdviceQuery`) a partir del pronóstico vigente y se representa como un Value Object derivado que no se persiste; el único agregado de Prediction & Advisory es `Forecast`. En Analytics, el agregado que evaluaba los pronósticos se modeló como `ForecastSnapshot`, la copia de cada pronóstico que se compara con `HistoricalOccupancy` al llegar su hora objetivo. En Notifications, el agregado de suscripción a alertas se modeló como `NotificationSubscription`.
+
 ![EventStorming paso 9: agregados de Quadrapp con sus comandos y eventos](assets/capitulo-04/eventstorming/eventstorming-paso-09-agregados.png)
 
 *Figura: EventStorming, paso 9 (Aggregates). Agregados en amarillo pálido, con los comandos que reciben, los eventos que producen y la regla principal de cada uno.*
@@ -3403,7 +3405,7 @@ La separación más importante está en el sensado. SensorFeed recibe las lectur
 
 En el último paso, los agregados se agruparon en bounded contexts candidatos según la cercanía de su funcionalidad y las políticas que los conectan. Se obtuvieron siete contextos. Prediction & Advisory es el contexto core, porque contiene la propuesta de valor de Quadrapp. Parking Configuration, Parking Sensing, Occupancy, Analytics y Notifications son contextos de soporte, e IAM es genérico.
 
-Las flechas moradas representan las políticas que conectan los contextos, y las punteadas, las consultas. Parking Configuration entrega a Parking Sensing el mapa entre sensores y espacios, y a Occupancy los espacios y la capacidad de cada zona. Parking Sensing entrega a Occupancy solo las detecciones confirmadas y las fallas. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil, el calendario y los eventos del campus. Sus pronósticos alimentan a Analytics y sus saturaciones previstas, a Notifications.
+Las flechas moradas representan las políticas que conectan los contextos, y las punteadas, las consultas. Parking Configuration entrega a Parking Sensing el mapa entre sensores y espacios, y a Occupancy los espacios y la capacidad de cada zona. Parking Sensing entrega a Occupancy solo las detecciones confirmadas y las fallas. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil, el calendario y los eventos del campus. Sus pronósticos alimentan a Analytics y sus saturaciones previstas, a Notifications. En el mapa de contextos final (sección 4.2.5), Notifications también recibe los eventos de baja disponibilidad y de espacios sin datos de Occupancy, las fallas de sensores y la interrupción de la ingesta de Parking Sensing, y los eventos del campus de Parking Configuration; Analytics recibe además los eventos de Occupancy para construir el historial.
 
 ![EventStorming paso 10: bounded contexts candidatos de Quadrapp](assets/capitulo-04/eventstorming/eventstorming-paso-10-bounded-contexts.png)
 
@@ -3416,15 +3418,25 @@ La tabla siguiente relaciona los eventos de dominio clave del tablero con los no
 | Institución dada de alta | TenantProvisioned | IAM |
 | Layout publicado | ParkingLayoutProvided | Parking Configuration |
 | Evento del campus registrado | CampusEventProvided | Parking Configuration |
+| Evento del campus cancelado | CampusEventCancelled | Parking Configuration |
+| Dispositivo registrado | DeviceRegistered | Parking Configuration |
+| Sensor asociado a espacio | SensorAssigned | Parking Configuration |
+| Dispositivo reemplazado | DeviceReplaced | Parking Configuration |
 | Detección confirmada | SensorStateChanged | Parking Sensing |
+| Paso de vehículo detectado | VehiclePassageDetected | Parking Sensing |
 | Falla de sensor detectada | DeviceFaultDetected | Parking Sensing |
+| Comunicación del sensor restablecida | SensorCommunicationRestored | Parking Sensing |
+| Dispositivo marcado para mantenimiento | DeviceFlaggedForMaintenance | Parking Sensing |
 | Disponibilidad actualizada | OccupancyUpdated | Occupancy |
 | Ingreso o salida registrado | EntryExitRecorded | Occupancy |
+| Espacio marcado como desconocido | SpaceMarkedUnknown | Occupancy |
 | Pronóstico generado | ForecastGenerated | Prediction & Advisory |
 | Saturación prevista | SaturationPredicted | Prediction & Advisory |
-| Asesoría de llegada emitida | ArrivalAdviceIssued | Prediction & Advisory |
-| Precisión del modelo recalculada | AccuracyMetricsProvided | Analytics |
+| Asesoría de llegada emitida | No es un evento: respuesta de `GetArrivalAdviceQuery` (Value Object `ArrivalAdvice`, no se persiste ni se publica) | Prediction & Advisory |
+| Precisión del modelo recalculada | No es un evento: consulta `GetPredictionAccuracyQuery` sobre `ForecastSnapshot` y `HistoricalOccupancy` | Analytics |
 | Alerta de baja disponibilidad enviada | UserNotificationDelivered | Notifications |
+
+En el diseño táctico se agregaron tres eventos que no aparecen como post-its en el tablero: `LowAvailabilityStarted` y `LowAvailabilityEnded`, que Occupancy publica cuando la disponibilidad cruza el umbral de poca disponibilidad, e `IngestionInterrupted`, que Parking Sensing publica cuando el backend pierde la conexión con el broker o ningún gateway de la institución reporta.
 
 ### 4.2.2. Candidate Context Discovery
 
@@ -3462,12 +3474,12 @@ El resultado del proceso son siete contextos candidatos, que se resumen en la ta
 
 | Contexto candidato | Tipo | Responsabilidad | Eventos representativos |
 | --- | --- | --- | --- |
-| Prediction & Advisory | Core | Pronosticar la disponibilidad a 15, 30, 45 y 60 minutos y emitir la asesoría de llegada | Pronóstico generado, Saturación prevista, Asesoría de llegada emitida |
+| Prediction & Advisory | Core | Pronosticar la disponibilidad a 15, 30, 45 y 60 minutos con el modelo de predicción que se ejecuta dentro del contexto y calcular la asesoría de llegada | Pronóstico generado, Saturación prevista (la asesoría de llegada es la respuesta de una consulta) |
 | Parking Configuration | Soporte | Definir estacionamientos, zonas, espacios, accesos, dispositivos y calendario | Estacionamiento registrado, Sensor asociado a espacio, Layout publicado |
 | Parking Sensing | Soporte | Traducir la telemetría de los sensores en detecciones confiables y vigilar su salud | Lectura validada, Detección confirmada, Falla de sensor detectada |
 | Occupancy | Soporte | Mantener el estado de cada espacio, la disponibilidad y el flujo vehicular | Espacio marcado como ocupado, Espacio marcado como desconocido, Disponibilidad actualizada |
 | Analytics | Soporte | Consolidar el historial y medir la precisión del modelo | Pronóstico evaluado con la ocupación observada, Precisión del modelo recalculada |
-| Notifications | Soporte | Enviar alertas de baja disponibilidad según las franjas suscritas | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
+| Notifications | Soporte | Enviar alertas push de baja disponibilidad según las franjas suscritas, y avisos operativos de fallas, ingesta interrumpida y eventos del campus | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
 | IAM | Genérico | Gestionar instituciones, invitaciones, acceso con código de un solo uso y roles | Institución dada de alta, Sesión iniciada |
 
 ### 4.2.3. Domain Message Flows Modeling
@@ -3476,33 +3488,35 @@ Una vez identificados los contextos candidatos, se modeló cómo colaboran para 
 
 Los diagramas siguen la notación de mensaje y contenido combinados. Los actores se representan con una figura de persona, los bounded contexts con una elipse morada y los sistemas con un círculo punteado. Cada mensaje es una tarjeta de color según su tipo: azul para los comandos, naranja para los eventos y verde para las consultas. La tarjeta indica el nombre del mensaje y sus datos más importantes, y el número en la parte superior, que también aparece sobre la flecha, señala el orden en que ocurre dentro del escenario. Las flechas van del emisor al receptor y respetan las relaciones del Context Map: los eventos fluyen del contexto upstream al downstream, y las consultas, del downstream al upstream.
 
+Los escenarios se modelaron siguiendo Domain Storytelling (Hofer y Schwentner, 2021). Cada diagrama cuenta una historia concreta del dominio con tres elementos: los actores, que son las personas, los sistemas externos y los bounded contexts que participan; los objetos de trabajo, que son las tarjetas con el comando, el evento o la consulta y los datos que se intercambian, y las actividades numeradas, que unen a un actor con otro y se leen en orden, como frases del tipo "el conductor solicita la asesoría a la aplicación". A diferencia de la notación original del método, que usa pictogramas para los objetos de trabajo, aquí cada objeto se representa con la tarjeta de color de su tipo de mensaje, para que el diagrama muestre a la vez la historia y la colaboración entre los bounded contexts. Las descripciones de cada escenario siguen la misma numeración.
+
 Se modelaron cinco escenarios, elegidos para que cada bounded context participe en al menos uno.
 
-El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil del estacionamiento, y responde con el evento Asesoría de llegada emitida, que incluye la categoría, la probabilidad, la confianza y la próxima disponibilidad.
+El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory toma el pronóstico vigente, que generó su capacidad de predicción con el modelo que se ejecuta dentro del contexto, consulta a Occupancy la ocupación actual y el flujo, que también sirven para estimar la próxima disponibilidad, y a Parking Configuration el perfil del estacionamiento. Con esos datos calcula la asesoría de llegada (`GetArrivalAdviceQuery`) y la devuelve a la aplicación con la categoría, la probabilidad, la confianza y la próxima disponibilidad. La asesoría es la respuesta de una consulta, no un evento: no se persiste ni se publica, y el tiempo estimado de llegada no se almacena. En el diagrama, la tarjeta 6 aparece en naranja, pero corresponde a esa respuesta.
 
 ![Domain Message Flow: conductor solicita asesoría de llegada](assets/capitulo-04/eventstorming/message-flow-asesoria.png)
 
 *Figura: Domain Message Flow del escenario "Conductor solicita asesoría de llegada". Los números indican el orden de los mensajes.*
 
-En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de baja disponibilidad.
+En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Su capacidad de predicción ejecuta el modelo para cada horizonte y, si el modelo no está disponible o falta historial, aplica la heurística de respaldo con las fotos por minuto de las últimas 8 semanas que entrega Occupancy. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de baja disponibilidad.
 
 ![Domain Message Flow: saturación prevista y alerta al conductor](assets/capitulo-04/eventstorming/message-flow-saturacion.png)
 
 *Figura: Domain Message Flow del escenario "Saturación prevista y alerta al conductor". Los números indican el orden de los mensajes.*
 
-El tercer escenario muestra la falla de un sensor. Parking Sensing detecta que el sensor dejó de reportar dentro de su intervalo y publica el evento Falla de sensor detectada, con el que Occupancy marca el espacio como desconocido. El administrador consulta la salud de los dispositivos desde la consola y reemplaza el dispositivo en Parking Configuration, que publica la nueva asociación entre el sensor y el espacio. Cuando el sensor nuevo publica su primera lectura, Parking Sensing confirma la detección y Occupancy recupera el estado real del espacio.
+El tercer escenario muestra la falla de un sensor. Parking Sensing detecta que el sensor dejó de reportar dentro de su intervalo y publica el evento Falla de sensor detectada, con el que Occupancy marca el espacio como desconocido y Notifications avisa a los operadores. Como un espacio desconocido no cuenta como libre, la capacidad de predicción de Prediction & Advisory trabaja en su siguiente ciclo con esa ocupación corregida. El administrador consulta la salud de los dispositivos desde la consola y reemplaza el dispositivo en Parking Configuration, que publica la nueva asociación entre el sensor y el espacio. Cuando el sensor nuevo publica su primera lectura, Parking Sensing confirma la detección y Occupancy recupera el estado real del espacio.
 
 ![Domain Message Flow: falla de un sensor y reemplazo del dispositivo](assets/capitulo-04/eventstorming/message-flow-falla.png)
 
 *Figura: Domain Message Flow del escenario "Falla de un sensor y reemplazo del dispositivo". Los números indican el orden de los mensajes.*
 
-El cuarto escenario describe el flujo de una lectura en operación normal. El gateway del campus publica la lectura mediante MQTT con QoS 1; Parking Sensing consulta a Parking Configuration el espacio asociado al sensor y, tras el tiempo mínimo, publica el evento Detección confirmada. Occupancy actualiza la disponibilidad y la publica tanto para Analytics, que construye el historial, como para la aplicación móvil.
+El cuarto escenario describe el flujo de una lectura en operación normal. El gateway del campus publica la lectura mediante MQTT con QoS 1; Parking Sensing consulta a Parking Configuration el espacio asociado al sensor y, tras el tiempo mínimo, publica el evento Detección confirmada. Occupancy actualiza la disponibilidad y la publica tanto para Analytics, que construye el historial, como para la aplicación móvil. Esa ocupación y sus fotos por minuto son la entrada que la capacidad de predicción de Prediction & Advisory consulta en el siguiente ciclo de pronóstico.
 
 ![Domain Message Flow: detección de un vehículo y actualización de la disponibilidad](assets/capitulo-04/eventstorming/message-flow-deteccion.png)
 
 *Figura: Domain Message Flow del escenario "Detección de un vehículo y actualización de la disponibilidad". Los números indican el orden de los mensajes.*
 
-El último escenario muestra la incorporación de una institución. El equipo de Integra Labs la da de alta en IAM, que envía la invitación por el servicio de correo. El administrador acepta la invitación, configura el estacionamiento desde la consola y publica el layout en Parking Configuration, que lo comunica a Parking Sensing, con la asociación entre sensores y espacios, y a Occupancy, con la capacidad de cada zona.
+El último escenario muestra la incorporación de una institución. El equipo de Integra Labs la da de alta en IAM, que envía la invitación por el servicio de correo. El administrador acepta la invitación, configura el estacionamiento desde la consola y publica el layout en Parking Configuration, que lo comunica a Parking Sensing, con la asociación entre sensores y espacios, y a Occupancy, con la capacidad de cada zona. Desde ese momento, la capacidad de predicción de Prediction & Advisory puede consultar el perfil del estacionamiento y empezar a generar sus pronósticos.
 
 ![Domain Message Flow: alta de una institución y publicación del layout](assets/capitulo-04/eventstorming/message-flow-incorporacion.png)
 
@@ -3525,25 +3539,25 @@ En los canvas, los comandos se muestran en azul, los eventos en amarillo y las c
 
 Se trabajó primero Prediction & Advisory, por ser el contexto que materializa la propuesta de valor. Las figuras siguientes muestran el mismo canvas al cierre de cada paso.
 
-En la definición general se estableció su propósito: anticipar la disponibilidad de cada estacionamiento a 15, 30, 45 y 60 minutos y orientar la llegada del conductor. Se clasificó como core, porque es lo que diferencia a Quadrapp de un contador de espacios; como custom built, porque el modelo de pronóstico se construye para este negocio, y como contexto de ejecución, porque produce decisiones que el conductor usa en el momento. En el modelo de negocio aporta tanto al compromiso de los conductores como al valor que justifica la licencia institucional.
+En la definición general se estableció su propósito: anticipar la disponibilidad de cada estacionamiento a 15, 30, 45 y 60 minutos y orientar la llegada del conductor. Se clasificó como core, porque es lo que diferencia a Quadrapp de un contador de espacios; como custom built, porque el modelo de pronóstico se construye para este negocio, y como contexto de ejecución, porque produce decisiones que el conductor usa en el momento. En el modelo de negocio aporta tanto al compromiso de los conductores como al valor que justifica la licencia institucional. El modelo de predicción es una capacidad de este contexto y no un bounded context ni un servicio aparte: se entrena fuera de línea en Python con scikit-learn, se exporta a ONNX y se ejecuta dentro del módulo Prediction & Advisory del backend con ONNX Runtime (DD-10).
 
 ![Bounded Context Canvas de Prediction & Advisory, paso 1](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-1-overview.png)
 
 *Figura: Bounded Context Canvas de Prediction & Advisory, paso 1 (Context Overview Definition).*
 
-Al destilar las reglas de negocio se fijaron los horizontes de 15, 30, 45 y 60 minutos y se estableció que cada pronóstico registra su confianza y la versión del modelo, para que su precisión pueda medirse después. También se decidió que, sin datos suficientes, se usa la heurística de respaldo con confianza baja; que la saturación se prevé cuando la ocupación esperada supera el umbral del estacionamiento, y que la asesoría solo recibe el tiempo estimado de llegada en minutos, como establece CON-07. En paralelo se registraron los términos propios del contexto, como Forecast, Forecast Horizon, Confidence Level, Arrival Advice y Next Availability.
+Al destilar las reglas de negocio se fijaron los horizontes de 15, 30, 45 y 60 minutos y se estableció que cada pronóstico registra su confianza y la versión del modelo, para que su precisión pueda medirse después. También se decidió que, si el modelo no está disponible o no hay datos suficientes, se usa la heurística de respaldo con confianza baja, calculada con las fotos por minuto de las últimas 8 semanas que entrega Occupancy; que la saturación se prevé cuando la ocupación esperada supera el umbral del estacionamiento, y que la asesoría solo recibe el tiempo estimado de llegada en minutos, como establece CON-07. En paralelo se registraron los términos propios del contexto, como Forecast, Forecast Horizon, Confidence Level, Arrival Advice y Next Availability.
 
 ![Bounded Context Canvas de Prediction & Advisory, paso 2](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-2-reglas-lenguaje.png)
 
 *Figura: Bounded Context Canvas de Prediction & Advisory, paso 2 (Business Rules Distillation & Ubiquitous Language Capture).*
 
-En el análisis de capacidades se registraron los comandos y consultas que el contexto atiende: solicitar la asesoría de llegada, actualizar el tiempo estimado de llegada y consultar los pronósticos. A partir de ellos se identificaron dos capas: Forecasting, que genera los pronósticos y evalúa la saturación, y Arrival Advisory, que convierte esos pronósticos en una recomendación según el tiempo de llegada del conductor. Se decidió mantener ambas capas en el mismo contexto, porque la asesoría no existe sin el pronóstico y comparte su lenguaje.
+En el análisis de capacidades se registraron los comandos y consultas que el contexto atiende: generar los pronósticos en cada ciclo o cuando cambia un evento del campus, consultar la asesoría de llegada, que se vuelve a consultar cuando cambia el tiempo estimado de llegada, y consultar los pronósticos y la próxima disponibilidad. A partir de ellos se identificaron dos capas: Forecasting, que genera los pronósticos con el modelo de predicción embebido o con la heurística de respaldo y evalúa la saturación, y Arrival Advisory, que convierte esos pronósticos en una recomendación según el tiempo de llegada del conductor, sin guardar estado propio. Se decidió mantener ambas capas en el mismo contexto, porque la asesoría no existe sin el pronóstico y comparte su lenguaje.
 
 ![Bounded Context Canvas de Prediction & Advisory, paso 3](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-3-4-capacidades.png)
 
 *Figura: Bounded Context Canvas de Prediction & Advisory, pasos 3 y 4 (Capability Analysis y Capability Layering).*
 
-Al capturar las dependencias se completó la comunicación a partir de los Domain Message Flows. El contexto consulta a Occupancy la ocupación actual y el flujo, y a Parking Configuration el perfil del estacionamiento, el calendario y los eventos del campus, y recibe de este último la cancelación de un evento, que obliga a regenerar los pronósticos. Publica Pronóstico generado hacia Analytics, Saturación prevista hacia Notifications y la asesoría hacia la aplicación móvil.
+Al capturar las dependencias se completó la comunicación a partir de los Domain Message Flows. El contexto consulta a Occupancy la ocupación actual, el flujo y las fotos por minuto de las últimas 8 semanas, y a Parking Configuration el perfil del estacionamiento, el calendario y los eventos del campus, y recibe de este último `CampusEventProvided` y `CampusEventCancelled`, que obligan a regenerar los pronósticos. Publica `ForecastGenerated` hacia Analytics y `SaturationPredicted` hacia Notifications, y entrega la asesoría a la aplicación móvil como respuesta a una consulta, sin publicar un evento. No depende de Analytics: es Analytics quien consume sus pronósticos.
 
 ![Bounded Context Canvas de Prediction & Advisory, paso 5](assets/capitulo-04/canvases/bounded-context-canvas-prediction-advisory-paso-5-dependencias.png)
 
@@ -3557,37 +3571,37 @@ En la crítica del diseño se revisó si la medición de la precisión debía qu
 
 **Contextos de soporte y genéricos**
 
-Parking Sensing se clasificó como un contexto de soporte de tipo gateway, porque traduce la telemetría de los sensores al lenguaje del dominio. Sus reglas aseguran que cada lectura se aplique una sola vez y en orden, que la detección se confirme tras el tiempo mínimo y que un sensor pase a falla cuando no reporta dentro de su intervalo o tiene batería crítica. Una decisión de diseño clave es que no calcula ocupación ni disponibilidad: solo entrega a Occupancy detecciones confirmadas, pasos de vehículos y fallas. Así, la tecnología de sensado puede cambiar sin afectar al resto del modelo.
+Parking Sensing se clasificó como un contexto de soporte de tipo gateway, porque traduce la telemetría de los sensores al lenguaje del dominio. Sus reglas aseguran que cada lectura se aplique una sola vez y en orden, que la detección se confirme tras el tiempo mínimo y que un sensor pase a falla cuando no reporta dentro de su intervalo o tiene batería crítica. Una decisión de diseño clave es que no calcula ocupación ni disponibilidad: solo entrega a Occupancy detecciones confirmadas, pasos de vehículos y fallas (`SensorStateChanged`, `VehiclePassageDetected`, `DeviceFaultDetected`, `SensorCommunicationRestored`), y a Notifications las fallas, la comunicación restablecida y la interrupción de la ingesta (`IngestionInterrupted`). Así, la tecnología de sensado puede cambiar sin afectar al resto del modelo.
 
 ![Bounded Context Canvas de Parking Sensing](assets/capitulo-04/canvases/bounded-context-canvas-parking-sensing.png)
 
 *Figura: Bounded Context Canvas de Parking Sensing.*
 
-Occupancy mantiene el estado de negocio de cada espacio y es la fuente de verdad de la ocupación actual. Su regla central es que un espacio desconocido nunca cuenta como libre, y cuando el conteo de accesos no coincide con la detección por espacio, prevalece esta última. Recibe las detecciones de Parking Sensing y el layout de Parking Configuration, atiende las consultas de Prediction & Advisory y de la aplicación, y publica la disponibilidad y los ingresos y salidas para Analytics.
+Occupancy mantiene el estado de negocio de cada espacio y es la fuente de verdad de la ocupación actual. Su regla central es que un espacio desconocido nunca cuenta como libre, y cuando el conteo de accesos no coincide con la detección por espacio, prevalece esta última. Recibe las detecciones de Parking Sensing y el layout de Parking Configuration, atiende las consultas de Prediction & Advisory y de la aplicación, publica la disponibilidad y los ingresos y salidas (`OccupancyUpdated`, `EntryExitRecorded`) para Analytics, y la poca disponibilidad y los espacios sin datos (`LowAvailabilityStarted`, `LowAvailabilityEnded`, `SpaceMarkedUnknown`) para Notifications.
 
 ![Bounded Context Canvas de Occupancy](assets/capitulo-04/canvases/bounded-context-canvas-occupancy.png)
 
 *Figura: Bounded Context Canvas de Occupancy.*
 
-Parking Configuration se clasificó como un contexto de borrador, porque el administrador prepara la estructura del estacionamiento y luego la publica. Sus reglas garantizan nombres únicos por institución, un layout versionado en cada publicación y la asociación de cada sensor a un solo espacio o acceso. Publica el layout para Parking Sensing y Occupancy y atiende las consultas de perfil y calendario de Prediction & Advisory.
+Parking Configuration se clasificó como un contexto de borrador, porque el administrador prepara la estructura del estacionamiento y luego la publica. Sus reglas garantizan nombres únicos por institución, un layout versionado en cada publicación y la asociación de cada sensor a un solo espacio o acceso. Publica el layout (`ParkingLayoutProvided`) y los eventos de dispositivos para Parking Sensing y Occupancy, publica los eventos del campus (`CampusEventProvided`, `CampusEventCancelled`) para Prediction & Advisory y Notifications, y atiende las consultas de perfil y calendario de Prediction & Advisory.
 
 ![Bounded Context Canvas de Parking Configuration](assets/capitulo-04/canvases/bounded-context-canvas-parking-configuration.png)
 
 *Figura: Bounded Context Canvas de Parking Configuration.*
 
-Analytics es un contexto de análisis: no interviene en la operación, sino que interpreta sus resultados. Consolida el historial de ocupación por fecha, hora y zona, identifica las horas pico y compara cada pronóstico con la ocupación observada para medir la precisión por horizonte y versión del modelo.
+Analytics es un contexto de análisis: no interviene en la operación, sino que interpreta sus resultados. Consolida el historial de ocupación por fecha, hora y zona, identifica las horas pico y compara cada pronóstico con la ocupación observada para medir la precisión por horizonte y versión del modelo. Traduce los eventos de Occupancy y de Prediction & Advisory a su propio modelo (`HistoricalOccupancy` y `ForecastSnapshot`) y expone la precisión mediante la consulta `GetPredictionAccuracyQuery`, sin publicar eventos hacia los contextos que analiza.
 
 ![Bounded Context Canvas de Analytics](assets/capitulo-04/canvases/bounded-context-canvas-analytics.png)
 
 *Figura: Bounded Context Canvas de Analytics.*
 
-Notifications avisa al conductor cuando se prevé baja disponibilidad en las franjas que suscribió. Sus reglas evitan las alertas repetidas y descartan los tokens que el proveedor rechaza. Se clasificó como product, porque el envío de notificaciones push se apoya en un proveedor existente, aislado mediante una capa anticorrupción.
+Notifications avisa al conductor cuando se prevé baja disponibilidad en las franjas que suscribió (`NotificationSubscription`) y avisa a operadores y administradores de los problemas de operación. Consume `SaturationPredicted` de Prediction & Advisory; `LowAvailabilityStarted`, `LowAvailabilityEnded` y `SpaceMarkedUnknown` de Occupancy; `DeviceFaultDetected`, `SensorCommunicationRestored` e `IngestionInterrupted` de Parking Sensing, y `CampusEventProvided` y `CampusEventCancelled` de Parking Configuration. Sus reglas evitan las alertas repetidas y descartan los tokens que el proveedor rechaza. Entrega solo notificaciones push; el correo quedó en IAM. Se clasificó como product, porque el envío de notificaciones push se apoya en un proveedor existente, aislado mediante una capa anticorrupción.
 
 ![Bounded Context Canvas de Notifications](assets/capitulo-04/canvases/bounded-context-canvas-notifications.png)
 
 *Figura: Bounded Context Canvas de Notifications.*
 
-Por último, IAM se clasificó como genérico, commodity y de tipo gateway, porque es la puerta de entrada a Quadrapp. Da de alta a las instituciones con sus dominios de correo, permite el ingreso de administradores y operadores solo por invitación y autentica con un código de un solo uso. No depende de un proveedor de identidad externo: entrega a los demás contextos la identidad, la institución y el rol de cada usuario.
+Por último, IAM se clasificó como genérico, commodity y de tipo gateway, porque es la puerta de entrada a Quadrapp. Da de alta a las instituciones con sus dominios de correo, permite el ingreso de administradores y operadores solo por invitación y autentica con un código de un solo uso. Envía los códigos y las invitaciones por correo, a través de una capa anticorrupción que aísla al servicio de correo. No depende de un proveedor de identidad externo: entrega a los demás contextos la identidad, la institución y el rol de cada usuario.
 
 ![Bounded Context Canvas de IAM](assets/capitulo-04/canvases/bounded-context-canvas-iam.png)
 
@@ -3646,17 +3660,33 @@ Entre Parking Sensing y Occupancy se utiliza una relación Customer/Supplier jun
 
 Parking Configuration actúa como la fuente de información sobre la estructura del estacionamiento, incluyendo estacionamientos, zonas, espacios, asociaciones de sensores y datos de contexto como el calendario académico y los eventos del campus. Esta información puede ponerse a disposición de los demás contextos mediante un Open Host Service, evitando que cada uno tenga que conocer directamente su modelo interno.
 
-Occupancy proporciona a Prediction & Advisory el estado actual de ocupación y el flujo consolidado del estacionamiento. Por otro lado, Analytics consume los eventos publicados por Occupancy mediante una relación Conformist, utilizando esa información para construir su propio historial sin compartir directamente el modelo de dominio de Occupancy.
+Occupancy proporciona a Prediction & Advisory el estado actual de ocupación, el flujo consolidado del estacionamiento y las fotos por minuto de las últimas 8 semanas, con las que Prediction & Advisory calcula la heurística de respaldo. Por otro lado, Analytics consume los eventos publicados por Occupancy (`OccupancyUpdated` y `EntryExitRecorded`) mediante una relación Customer/Supplier con Published Language, en la que Occupancy es upstream. Analytics no adopta el modelo de Occupancy: traduce esos eventos a su propio modelo, `HistoricalOccupancy`, y por eso la relación no es Conformist.
 
-Cuando Prediction & Advisory genera un nuevo pronóstico, publica el evento ForecastGenerated. Analytics utiliza este evento para comparar la predicción con la ocupación que finalmente fue observada y así calcular las métricas de precisión del modelo.
+Cuando Prediction & Advisory genera un nuevo pronóstico, publica el evento `ForecastGenerated`. La relación con Analytics sigue el mismo criterio: es Customer/Supplier con Published Language, con Prediction & Advisory como upstream, y Analytics traduce el evento a su propio `ForecastSnapshot` para compararlo con la ocupación que finalmente fue observada y calcular la precisión del modelo, que expone con la consulta `GetPredictionAccuracyQuery`. La dependencia va en un solo sentido: Prediction & Advisory no consulta a Analytics, porque eso crearía un ciclo entre los dos módulos.
 
-De manera similar, cuando se identifica una situación relevante como una posible saturación, Prediction & Advisory publica esa información para Notifications mediante Published Language. De esta forma, Notifications puede actuar sobre el evento sin depender de cómo se realiza internamente la predicción.
+De manera similar, cuando se identifica una situación relevante como una posible saturación, Prediction & Advisory publica `SaturationPredicted` para Notifications mediante Published Language. De esta forma, Notifications puede actuar sobre el evento sin depender de cómo se realiza internamente la predicción. El modelo de predicción no aparece en el mapa porque no es un contexto: se entrena fuera de línea en Python con scikit-learn, se exporta a ONNX y se ejecuta con ONNX Runtime dentro del módulo Prediction & Advisory (DD-10).
+
+Notifications también es downstream de Occupancy (`LowAvailabilityStarted`, `LowAvailabilityEnded`, `SpaceMarkedUnknown`), de Parking Sensing (`DeviceFaultDetected`, `SensorCommunicationRestored`, `IngestionInterrupted`) y de Parking Configuration (`CampusEventProvided`, `CampusEventCancelled`). En todos los casos consume eventos publicados y los traduce a sus propias condiciones de alerta, que entrega solo como notificaciones push.
+
+Parking Configuration, Occupancy, Parking Sensing y Prediction & Advisory exponen a los demás contextos un Open Host Service, implementado como una fachada en proceso (`ParkingConfigurationFacade`, `OccupancyFacade`, `ParkingSensingFacade` y `PredictionAdvisoryFacade`) que devuelve vistas de solo lectura, y un Published Language, formado por sus eventos de dominio. Así, ningún contexto lee los agregados ni la persistencia de otro.
 
 IAM se mantiene como un contexto transversal encargado de la identidad, autenticación y autorización. Los demás contextos utilizan la información de usuario, institución y rol proporcionada por IAM cuando necesitan validar el acceso a sus funcionalidades.
 
-Las integraciones con servicios externos también se mantienen aisladas. IAM se comunica con el servicio de correo mediante una Anti-Corruption Layer para el envío de códigos de acceso, mientras que Notifications utiliza el mismo enfoque para integrarse con el proveedor de mensajería push.
+Las integraciones con servicios externos también se mantienen aisladas. IAM se comunica con el servicio de correo mediante una Anti-Corruption Layer para el envío de códigos de acceso de un solo uso e invitaciones, y es el único contexto que usa correo, mientras que Notifications utiliza el mismo enfoque para integrarse con el proveedor de mensajería push.
 
 Finalmente, el proveedor de mapas no forma parte de las dependencias del backend. El cálculo del tiempo estimado de llegada se realiza directamente en la aplicación móvil y el servidor recibe únicamente el ETA expresado en minutos, manteniendo la decisión de privacidad definida para Quadrapp.
+
+<br>
+
+**Alternativas estructurales evaluadas:**
+
+Las tres opciones anteriores conservan los mismos siete Bounded Contexts y solo cambian los patrones de integración. Antes de compararlas, el equipo también evaluó alternativas que cambian la estructura del mapa, y las descartó por las razones siguientes:
+
+| Alternativa estructural | Motivo del descarte |
+| --- | --- |
+| Unir Parking Sensing con Occupancy en un solo contexto | El protocolo de los sensores, la salud de los dispositivos y la deduplicación de lecturas pasarían a formar parte del modelo de ocupación. Desaparecería la Anti-Corruption Layer entre ambos y un cambio de tecnología de sensado obligaría a modificar las reglas de negocio de la disponibilidad. |
+| Dividir Prediction & Advisory en dos contextos, Forecasting y Arrival Advisory | La asesoría no existe sin el pronóstico y comparte su lenguaje de horizontes, confianza y saturación, como se concluyó en el Candidate Context Discovery y en el canvas del contexto. Separarlos crearía una dependencia permanente de un contexto sobre el otro sin autonomía real, por lo que se mantienen como dos capas del mismo contexto. |
+| Unir Analytics con Prediction & Advisory | El contexto que pronostica no debe evaluar su propio error. Mantener la medición de la precisión en Analytics, que solo consume los eventos de Prediction & Advisory, permite comparar versiones del modelo de forma independiente y evita que el core cargue con el historial de largo plazo. |
 
 <br>
 
@@ -3665,9 +3695,11 @@ Finalmente, el proveedor de mapas no forma parte de las dependencias del backend
 Se selecciona la Opción 3, ya que proporciona el mejor equilibrio entre separación de responsabilidades, autonomía de los Bounded Contexts y protección de sus modelos.
 La decisión más importante es mantener una Anti-Corruption Layer entre Parking Sensing y Occupancy. Esto evita que conceptos relacionados con sensores, dispositivos o telemetría formen parte del modelo de ocupación y permite modificar la tecnología de sensado sin alterar directamente las reglas de negocio.
 
-También se decide utilizar Conformist entre Occupancy y Analytics, en lugar de Shared Kernel. Analytics necesita consumir la información producida por Occupancy, pero no requiere compartir sus objetos de dominio ni su persistencia. De esta forma, conserva su propio modelo orientado al análisis histórico.
+También se decide utilizar Customer/Supplier con Published Language entre Occupancy y Analytics, en lugar de Shared Kernel o de Conformist. Analytics necesita consumir la información producida por Occupancy, pero no requiere compartir sus objetos de dominio ni su persistencia, ni adoptar su modelo: traduce los eventos a `HistoricalOccupancy` y conserva su propio modelo orientado al análisis histórico. El mismo criterio se aplica a la relación entre Prediction & Advisory y Analytics.
 
-Prediction & Advisory permanece como el Core Domain de Quadrapp y recibe únicamente la información necesaria para generar pronósticos y asesoría. Sus resultados se exponen mediante contratos publicados hacia Analytics y Notifications, evitando que estos contextos dependan de la implementación interna del modelo predictivo.
+Prediction & Advisory permanece como el Core Domain de Quadrapp y recibe únicamente la información necesaria para generar pronósticos y asesoría, de Occupancy y de Parking Configuration; no depende de Analytics. Su modelo de predicción se ejecuta dentro del propio contexto (DD-10). Sus resultados se exponen mediante contratos publicados hacia Analytics y Notifications, evitando que estos contextos dependan de la implementación interna del modelo predictivo.
+
+En el mapa final, Parking Configuration, Occupancy, Parking Sensing y Prediction & Advisory actúan como Open Host Service, mediante sus fachadas en proceso, y como Published Language, mediante sus eventos de dominio. Notifications es downstream de Prediction & Advisory, Occupancy, Parking Sensing y Parking Configuration, y entrega solo notificaciones push; IAM conserva el correo para los códigos de un solo uso y las invitaciones, detrás de una Anti-Corruption Layer. El diagrama de la Opción 3 todavía muestra la relación entre Occupancy y Analytics como Conformist y no incluye las dependencias de Notifications con Occupancy, Parking Sensing y Parking Configuration; en caso de discrepancia, prevalece lo descrito en este texto.
 
 ## 4.3. Software Architecture
 
@@ -4915,9 +4947,9 @@ Methods
 |-|-|-|
 |SensorStateChanged|eventId, deviceId, tenantId, parkingLotId, spaceId, state (FREE u OCCUPIED), detectedAt|Occupancy, que actualiza el estado del espacio.|
 |VehiclePassageDetected|eventId, deviceId, tenantId, parkingLotId, accessPointId, direction (IN u OUT), detectedAt|Occupancy, que registra el ingreso o la salida.|
-|DeviceFaultDetected|deviceId, tenantId, parkingLotId, targetId, reason, detectedAt|Occupancy, que marca el espacio como desconocido (UNKNOWN).|
+|DeviceFaultDetected|deviceId, tenantId, parkingLotId, targetId, reason, detectedAt|Occupancy, que marca el espacio como desconocido (UNKNOWN), y Notifications, que avisa a los operadores (datos desactualizados).|
 |IngestionInterrupted|tenantId, since, cause (BROKER_DISCONNECTED o NO_GATEWAY_REPORTS)|Notifications, que avisa una sola vez a los operadores y administradores de la institución.|
-|SensorCommunicationRestored|deviceId, tenantId, parkingLotId, targetId, restoredAt|Occupancy y la consola. El espacio deja de ser desconocido con la siguiente `SensorStateChanged`, no con este evento.|
+|SensorCommunicationRestored|deviceId, tenantId, parkingLotId, targetId, restoredAt|Occupancy, la consola y Notifications, que cierra la alerta de datos desactualizados. El espacio deja de ser desconocido con la siguiente `SensorStateChanged`, no con este evento.|
 |DeviceFlaggedForMaintenance|deviceId, tenantId, parkingLotId, reason, flaggedAt|Consola de operación, mediante la fachada.|
 |BufferedReadingsReceived|gatewayId, tenantId, parkingLotId, readingCount, oldestReadingAt|Consola de operación, mediante la fachada.|
 
@@ -8734,6 +8766,8 @@ Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of sof
 Flutter. (s. f.). *Build for and integrate with multiple platforms*. Recuperado el 19 de septiembre de 2026 de https://docs.flutter.dev/platform-integration
 
 Gothelf, J., y Seiden, J. (2021). *Lean UX* (3.ª ed.). O'Reilly Media. https://www.oreilly.com/library/view/lean-ux-3rd/9781098116293/
+
+Hofer, S., y Schwentner, H. (2021). *Domain storytelling: A collaborative, visual, and agile way to build domain-driven software*. Addison-Wesley Professional.
 
 Ministerio de Justicia y Derechos Humanos. (2024). *Decreto Supremo N.º 016-2024-JUS, Reglamento de la Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/smv/normas-legales/6426760-016-2024-jus
 
