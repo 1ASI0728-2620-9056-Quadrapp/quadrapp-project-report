@@ -4107,7 +4107,7 @@ La siguiente tabla resume las clases e interfaces principales de Parking Configu
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
+| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, campus, location, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
 | ParkingZone | Domain | Entity. Sector, nivel o bloque que agrupa espacios. | zoneId, name, spaces | addSpace(), hasSpaceLabeled(), capacity() |
 | ParkingSpace | Domain | Entity. Lugar individual para estacionar. | spaceId, label, position | label() |
 | AccessPoint | Domain | Entity. Entrada o salida vehicular con sensores de paso. | accessPointId, name, type, flowCountingEnabled | enableFlowCounting(), countsFlow() |
@@ -4156,6 +4156,8 @@ Attributes
 |tenantId|UUID|Private|Referencia externa a la institución propietaria (IAM).|
 |name|ParkingLotName|Private|Nombre del estacionamiento; único dentro de la institución.|
 |address|String|Private|Ubicación de referencia dentro del campus.|
+|campus|CampusName|Private|Sede de la institución a la que pertenece el estacionamiento (por ejemplo, "Monterrico"). Solo agrupa los estacionamientos en la interfaz; no tiene reglas propias.|
+|location|GeoPoint|Private|Latitud y longitud del ingreso vehicular. La app la usa para calcular en el dispositivo la duración del trayecto y para abrir la ruta en una app de navegación.|
 |status|ParkingLotStatus|Private|DRAFT mientras no tiene layout publicado; PUBLISHED después de la primera publicación.|
 |settings|OperatingSettings|Private|Umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.|
 |layoutVersion|LayoutVersion|Private|Última versión publicada del layout; 0 si aún no se publicó.|
@@ -4167,7 +4169,7 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|register(tenantId: UUID, name: ParkingLotName, address: String, settings: OperatingSettings)|ParkingLot|Public (static)|Crea el estacionamiento en estado DRAFT con la versión 0.|
+|register(tenantId: UUID, name: ParkingLotName, address: String, campus: CampusName, location: GeoPoint, settings: OperatingSettings)|ParkingLot|Public (static)|Crea el estacionamiento en estado DRAFT con la versión 0.|
 |addZone(name: String)|ParkingZone|Public|Agrega una zona; el nombre no puede repetirse dentro del estacionamiento.|
 |addSpace(zoneId: UUID, label: SpaceLabel, position: SpacePosition)|ParkingSpace|Public|Registra un espacio en la zona; rechaza una etiqueta repetida en la misma zona (US17, escenario 3).|
 |configureAccessPoint(name: String, type: AccessPointType)|AccessPoint|Public|Registra un acceso vehicular asociado al estacionamiento (US19, escenario 1).|
@@ -4191,6 +4193,8 @@ Methods
 |Nombre|Categoría|Atributos|Descripción|
 |-|-|-|-|
 |ParkingLotName|Value Object|value: String|Entre 3 y 80 caracteres, sin espacios al inicio ni al final.|
+|CampusName|Value Object|value: String|Nombre de la sede, entre 2 y 60 caracteres. Los estacionamientos de una misma sede se muestran juntos.|
+|GeoPoint|Value Object|latitude: Decimal, longitude: Decimal|Coordenadas del ingreso vehicular; la latitud va de -90 a 90 y la longitud de -180 a 180.|
 |SpaceLabel|Value Object|value: String|Etiqueta visible del espacio (por ejemplo, "A01"), de 1 a 10 caracteres.|
 |SpacePosition|Value Object|x: Decimal, y: Decimal|Posición del espacio en el plano del estacionamiento que dibuja la aplicación.|
 |OperatingSettings|Value Object|saturationThresholdPct: Integer, flowWindowMinutes: Integer, minimumDetectionSeconds: Integer, accuracyMarginPct: Integer|Umbral de saturación entre 50 y 100 %; ventana de flujo entre 5 y 60 min; tiempo mínimo de detección entre 3 y 60 s; margen de precisión entre 1 y 30 puntos. `defaults()` entrega 90 %, 15 min, 10 s y 10 puntos.|
@@ -4342,7 +4346,7 @@ La Interface Layer expone las capacidades del contexto a la consola web de opera
 |Controller|Endpoint|Resultado|Origen|
 |-|-|-|-|
 |ParkingLotController|`POST /api/v1/parking-lots`|201 con el estacionamiento creado; 400 si faltan datos; 409 si el nombre ya existe en la institución|US16|
-|ParkingLotController|`GET /api/v1/parking-lots`|200 con los estacionamientos de la institución, su estado y su versión de layout; lista vacía si no hay ninguno|US04|
+|ParkingLotController|`GET /api/v1/parking-lots`|200 con los estacionamientos de la institución, su sede, su ubicación, su estado y su versión de layout; lista vacía si no hay ninguno|US04|
 |ParkingLotController|`PUT /api/v1/parking-lots/{lotId}/settings`|200 con los parámetros actualizados; 400 si un valor está fuera de rango|US16 (ruta propuesta)|
 |LayoutController|`POST /api/v1/parking-lots/{lotId}/zones`|201 con la zona creada; 409 si el nombre se repite|US17, escenario 1|
 |LayoutController|`POST /api/v1/parking-lots/{lotId}/zones/{zoneId}/spaces`|201 con el espacio; 409 si la etiqueta ya existe en la zona|US17, escenarios 2 y 3|
@@ -4408,7 +4412,7 @@ La Application Layer coordina los casos de uso: carga los agregados, invoca sus 
 
 |Command|Atributos|Command Handler|Dependencias|Historias|
 |-|-|-|-|-|
-|RegisterParkingLotCommand|tenantId, name, address, settings|RegisterParkingLotCommandHandler|ParkingLotRepository, ConfigurationEventPublisher|US16|
+|RegisterParkingLotCommand|tenantId, name, address, campus, location, settings|RegisterParkingLotCommandHandler|ParkingLotRepository, ConfigurationEventPublisher|US16|
 |UpdateOperatingSettingsCommand|tenantId, parkingLotId, settings|UpdateOperatingSettingsCommandHandler|ParkingLotRepository|US16|
 |AddZoneCommand|tenantId, parkingLotId, name|AddZoneCommandHandler|ParkingLotRepository|US17|
 |AddSpaceCommand|tenantId, parkingLotId, zoneId, label, position|AddSpaceCommandHandler|ParkingLotRepository|US17|
