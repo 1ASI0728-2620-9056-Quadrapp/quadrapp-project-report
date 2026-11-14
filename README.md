@@ -9045,9 +9045,9 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Fecha y medio | 14/11/2026, por Zoom |
 | Entrevistador | Alessandra Becerra |
 | Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
-| Enlace de la grabación |  |
-| Duración | |
-| Inicio | min |
+| Enlace de la grabación | [https://1drv.ms/f/c/ad69326b0def8050/IgCqYGRpxuJOQZk-vXhK-h0EAaTQ3Hozy_MlkhwzEPGFf28?e=zjGTuW](https://1drv.ms/f/c/ad69326b0def8050/IgCqYGRpxuJOQZk-vXhK-h0EAaTQ3Hozy_MlkhwzEPGFf28?e=zjGTuW) |
+| Duración | 07:06 min|
+| Inicio | 02:46 min |
 | Captura | <img src="assets/capitulo-07/entrevistavalidacionmariapaz1.png" alt="Captura de la entrevista de validación a María Paz Pastor" width="500"/> |
 | Resumen | María Paz entendió correctamente qué hace Quadrapp y qué no hace: no reserva espacios, no procesa pagos y no rastrea la ubicación. Interpretó la asesoría de llegada como la probabilidad de encontrar espacio cuando llegue, y no solo como la disponibilidad actual, y usaría los horizontes de predicción para decidir si sale de inmediato o espera. Entiende que los espacios marcados como "Sin datos" no están confirmados y no los consideraría libres. Calificó su confianza con 4 sobre 5, con la salvedad de que se trata de predicciones que pueden cambiar. Valora que la aplicación no use su ubicación porque protege su privacidad, y le servirían los avisos por franja horaria siempre que sean pocos y relevantes. Con lo que vio, saldría antes o cambiaría de zona si hubiera pocas probabilidades de encontrar espacio donde suele estacionar. Le pareció fácil de entender y sugirió destacar con más claridad la zona con mayor probabilidad de encontrar espacio, para decidir más rápido. |
 
