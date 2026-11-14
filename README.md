@@ -8397,9 +8397,148 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ## 7.1. Software Configuration Management
 
+La gestión de configuración de software de Quadrapp establece las herramientas, decisiones y convenciones que utilizará el equipo para mantener un trabajo organizado durante el desarrollo de la solución. Su propósito es facilitar la colaboración, llevar un control de los cambios y mantener la consistencia entre los diferentes productos que forman parte del proyecto.
+
+Para ello, abarcamos tres aspectos principales: la configuración del entorno de desarrollo, la gestión del código fuente y las convenciones de despliegue. Estas decisiones permiten que los integrantes trabajen bajo criterios comunes, mantengan la trazabilidad de sus aportes y reduzcan los problemas de integración entre componentes. Incluyendo a su vez, restricciones tecnológicas y decisiones arquitectónicas como la separación de responsabilidades por Bounded Context, la internacionalización (i18n) de las interfaces y las prácticas de accesibilidad establecidas para los productos digitales.
+
 ### 7.1.1 Software Development Environment Configuration
 
+El entorno de desarrollo de Quadrapp reúne las herramientas necesarias para organizar actividades, gestionar requisitos, diseñar la solución, implementar funcionalidades, realizar pruebas y documentar los resultados.
+
+La selección considera las herramientas utilizadas durante el diseño del proyecto y las tecnologías definidas en la arquitectura.
+
+| Categoría | Herramienta / Producto | Propósito / Alcance | Enlace | Imagen |
+|---|---|---|---|---|
+| Project Requirements and Management | Trello | Organizar las actividades del equipo, gestionar el Product Backlog y realizar el seguimiento de las historias de usuario y tareas del proyecto. | [https://trello.com/](https://trello.com/) | ![trello-logo](./assets/capitulo-07/trello-logo.png) |
+| Product Design | Figma | Diseñar wireframes, mockups y prototipos de las interfaces de Quadrapp. | [https://www.figma.com/es-la/](https://www.figma.com/es-la/) | ![figma-logo](./assets/capitulo-07/figma-logo.png) |
+| Software Architecture | Structurizr | Representar la arquitectura del sistema mediante diagramas C4, identificando sus principales componentes y relaciones. | [https://structurizr.com/](https://structurizr.com/) | ![structurizr-logo](./assets/capitulo-07/structurizr-logo.webp) |
+| Software Architecture | PlantUML | Elaborar diagramas UML de clases y componentes para documentar el diseño de los Bounded Contexts. | [https://plantuml.com/](https://plantuml.com/) | ![plantuml-logo](./assets/capitulo-07/plantuml-logo.png) |
+| Software Development | Git | Controlar versiones, registrar modificaciones y mantener el historial del código fuente. | [https://git-scm.com/](https://git-scm.com/) | ![git-logo](./assets/capitulo-07/git-logo.png) |
+| Software Development | GitHub | Centralizar los repositorios, administrar ramas y revisar cambios mediante Pull Requests. | [https://github.com/](https://github.com/) | ![github-logo](./assets/capitulo-07/github-logo.png) |
+| Software Development | Visual Studio Code | Editor de código para desarrollar, ejecutar y depurar el código de los diferentes componentes. | [https://code.visualstudio.com/](https://code.visualstudio.com/) | ![visualstudiocode-logo](./assets/capitulo-07/visualstudiocode-logo.png) |
+| Mobile Development | Flutter y Dart | Desarrollar la aplicación móvil multiplataforma para Android e iOS. | [https://flutter.dev/](https://flutter.dev/) | ![flutter-logo](./assets/capitulo-07/flutter-logo.png) |
+| Web Development | HTML5, CSS3 y JavaScript | Implementar la Landing Page pública de Quadrapp. | [https://developer.mozilla.org/es/](https://developer.mozilla.org/es/) | ![mdn-logo](./assets/capitulo-07/mdn-logo.webp) |
+| Web Development | Angular | Desarrollar la consola administrativa con componentes reutilizables. | [https://angular.dev/](https://angular.dev/) | ![angular-logo](./assets/capitulo-07/angular-logo.png) |
+| Backend Development | Spring Boot | Implementar las APIs REST y los servicios de los Bounded Contexts mediante una arquitectura de monolito modular basada en DDD. | [https://docs.spring.io/spring-boot/index.html](https://docs.spring.io/spring-boot/index.html) | ![springboot-logo](./assets/capitulo-07/springboot-logo.webp) |
+| API Documentation | Swagger | Documentar los endpoints REST, contratos de API, solicitudes y respuestas de los servicios. | [https://swagger.io/](https://swagger.io/) | ![swagger-logo](./assets/capitulo-07/swagger-logo.png) |
+| Database Management | PostgreSQL 18 | Almacenar y relacionar la información de los Bounded Contexts en una base de datos relacional compartida. | [https://www.postgresql.org/](https://www.postgresql.org/) | ![PostgreSQL-logo](./assets/capitulo-07/postgresql-logo.webp) |
+| Software Testing | Cucumber - Gherkin | Definir escenarios de aceptación mediante archivos .feature relacionados con las historias de usuario. | [https://cucumber.io/docs/gherkin/](https://cucumber.io/docs/gherkin/) | ![cucumber-logo](./assets/capitulo-07/cucumber-logo.png) |
+| Software Deployment | Docker | Empaquetar los servicios backend en contenedores para facilitar su ejecución y despliegue. | [https://www.docker.com/](https://www.docker.com/) | ![docker-logo](./assets/capitulo-07/docker-logo.png) |
+| Software Documentation | Markdown | Elaborar y mantener el Project Report, README y documentación técnica del proyecto. | [https://www.markdownguide.org/](https://www.markdownguide.org/) | ![markdown-logo](./assets/capitulo-07/markdown-logo.png) |
+
 ### 7.1.2 Source Code Management
+
+La gestión del código fuente de Quadrapp se realizará mediante Git y GitHub, permitiendo que los integrantes del equipo desarrollen funcionalidades de manera independiente, registren sus cambios y mantengan un historial organizado del proyecto.
+
+Para facilitar la colaboración se utilizará GitFlow como estrategia de control de versiones, junto con convenciones de nombres para las ramas, commits y releases. Esto permitirá integrar nuevas funcionalidades de forma controlada, preparar versiones estables y realizar correcciones sin afectar directamente el trabajo de los demás integrantes.
+
+**Organización de repositorios:**
+
+Los repositorios del proyecto se centralizan en la organización de GitHub: [https://github.com/1ASI0728-2620-9056-Quadrapp](https://github.com/1ASI0728-2620-9056-Quadrapp)
+
+La solución contempla repositorios para sus principales productos digitales, manteniendo separado el desarrollo de las interfaces, los servicios backend, los componentes IoT y la documentación en lo siguientes repositorios:
+
+| Componente | Repositorio | Enlace |
+| ---------- | ----------- | ------ |
+| Project Report | quadrapp-project-report | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-project-report) |
+| Landing Page | Landing_Page | [https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page](https://github.com/1ASI0728-2620-9056-Quadrapp/Landing_Page) |
+| Mobile Application | quadrapp-frontend-mobile | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-frontend-mobile](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-frontend-mobile) |
+| Web Services / Backend | quadrapp-backend | [https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-backend](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-backend) |
+
+<br>
+
+**Flujo de trabajo GitFlow:**
+
+El equipo adopta el modelo GitFlow, propuesto por Vincent Driessen en "A successful Git branching model". Este enfoque permite trabajar en distintas funcionalidades sin modificar directamente la versión estable del proyecto.
+
+- **`main`:** Contiene las versiones estables, listas para entrega o publicación.
+- **`develop`:** Integra las funcionalidades desarrolladas antes de preparar una nueva versión.
+- **`feature`:** Permiten desarrollar una funcionalidad o tarea de manera independiente.
+- **`release`:** Preparan una nueva versión mediante pruebas y correcciones finales.
+- **`hotfix`:** Corrigen errores urgentes detectados en una versión estable.
+
+<br>
+
+**Convenciones de Commits:**
+
+Todos los commits siguen la siguiente estructura:
+
+```text
+<tipo>(<scope>): <descripción>
+
+<cuerpo detallado si aplica>
+```
+
+<br>
+
+**Tipos de Commit:**
+
+- `feat`: Nueva funcionalidad
+- `fix`: Corrección de bug
+- `refactor`: Cambio de código que no añade funcionalidad ni corrige bugs
+- `docs`: Cambios en documentación
+- `test`: Adición o modificación de pruebas
+- `chore`: Cambios en build, dependencias o configuración
+
+<br>
+
+**Ejemplos:**
+
+```text
+feat(courts): agregar validación de disponibilidad de canchas
+
+fix(auth): corregir token JWT expirado en endpoints
+
+refactor(payments): simplificar lógica de cálculo de tarifas
+```
+
+<br>
+
+**Sufijos de versión:**
+
+- **alpha:** versión inestable, en construcción.
+- **beta:** versión funcional pero todavía no lista para publicarse.
+- **rc:** versión candidata a publicación.
+
+<br>
+
+**Semantic Versioning:**
+
+Para identificar las versiones publicadas se utilizará Semantic Versioning 2.0.0, siguiendo el formato MAJOR.MINOR.PATCH.
+
+Cada número representa el tipo de modificación realizada:
+
+- **MAJOR:** Cambios que rompen la compatibilidad con versiones anteriores de la interfaz pública. Ejemplo: `1.0.0 → 2.0.0`
+- **MINOR:** Nuevas funcionalidades que mantienen la compatibilidad. Ejemplo: `1.0.0 → 1.1.0`
+- **PATCH:** Correcciones de errores que no afectan la compatibilidad. Ejemplo: `1.0.0 → 1.0.1`
+
+<br>
+
+**Convenciones de commits:**
+
+Para mantener un historial claro y consistente, se utilizará Conventional Commits. Los mensajes se redactarán en inglés e indicarán brevemente el tipo de cambio realizado. 
+
+Por ejemplo: 
+- `feat: add alerts endpoint` 
+- `fix: correct zone validation` 
+- `docs: update sprint evidence`
+
+Esta convención permitirá reconocer rápidamente qué se modificó, en qué componente se trabajó y cuál fue el propósito del cambio.
+
+<br>
+
+**Revisión e integración de cambios:**
+
+La integración del código se realizará mediante Pull Requests, siguiendo el flujo de trabajo definido por GitFlow.
+
+Antes de aprobar una integración, el equipo verificará que los cambios cumplan las convenciones de código, no generen conflictos con otras funcionalidades y cuenten con las pruebas correspondientes.
+
+En el caso de los servicios backend, también se revisará que los contratos OpenAPI y los archivos .feature se mantengan actualizados cuando se modifique el comportamiento de una funcionalidad.
+
+Asimismo, se evitará almacenar contraseñas, claves privadas o credenciales directamente en los repositorios. La configuración sensible se mantendrá fuera del código fuente mediante variables de entorno o mecanismos seguros de configuración.
+
+Con estas prácticas, Quadrapp busca mantener un desarrollo colaborativo y ordenado, facilitar el seguimiento de las modificaciones y asegurar que cada versión del proyecto pueda identificarse y recuperarse cuando sea necesario.
+
 
 ### 7.1.3 Source Code Style Guide & Conventions
 
