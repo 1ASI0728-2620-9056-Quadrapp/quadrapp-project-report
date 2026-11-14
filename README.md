@@ -14,7 +14,7 @@
 | Profesor | Enrique Alejandro Valdivia Verde |
 | Startup | Integra Labs |
 | Producto | Quadrapp |
-| Mes y año | Octubre, 2026 |
+| Mes y año | Noviembre, 2026 |
 
 **Integrantes**
 
@@ -123,6 +123,7 @@ El informe se elabora de forma colaborativa en el repositorio [https://github.co
     - [1.2.1. Antecedentes y problemática](#121-antecedentes-y-problemática)
       - [Antecedentes](#antecedentes)
       - [Problemática (5Ws y 2Hs)](#problemática-5ws-y-2hs)
+      - [Objetivos y restricciones](#objetivos-y-restricciones)
     - [1.2.2. Lean UX Process](#122-lean-ux-process)
       - [1.2.2.1. Lean UX Problem Statements](#1221-lean-ux-problem-statements)
       - [1.2.2.2. Lean UX Assumptions](#1222-lean-ux-assumptions)
@@ -299,7 +300,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.<br>
+          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondo la arquitectura que seguirá nuestra solución.<br>
           TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.
         </p>
         <p>
@@ -331,7 +332,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
-          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.
+          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola web de operación, manteniendo la trazabilidad con las historias de usuario.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -364,7 +365,7 @@ del ABET – EAC - Student Outcome 3.
 
 **Nombre de la Startup:** Integra Labs
 
-En Integra Labs desarrollamos soluciones tecnológicas que conectan la infraestructura física de las instituciones educativas con herramientas digitales de gestión. Nuestro primer producto, **Quadrapp**, busca reducir la incertidumbre que experimentan los conductores al buscar estacionamiento en un campus universitario. Mediante sensores IoT instalados en los espacios y accesos del estacionamiento, la solución registra su nivel de ocupación y emplea estos datos para mostrar la disponibilidad actual y estimar las condiciones que encontrará cada conductor al llegar. Quadrapp se ofrece bajo un modelo B2B SaaS: la institución educativa contrata el servicio, su comunidad accede a la información desde una aplicación móvil y el personal responsable supervisa la operación mediante una consola web.
+En Integra Labs desarrollamos soluciones tecnológicas que conectan la infraestructura física de las instituciones educativas con herramientas digitales de gestión. Nuestro primer producto, **Quadrapp**, busca reducir la incertidumbre que experimentan los conductores al buscar estacionamiento en un campus universitario. Mediante sensores IoT instalados en los espacios y accesos del estacionamiento, la solución registra su nivel de ocupación y emplea estos datos para mostrar la disponibilidad actual y estimar las condiciones que encontrará cada conductor al llegar. Quadrapp se ofrece bajo un modelo B2B SaaS: la institución educativa contrata el servicio, su comunidad accede a la información desde una aplicación móvil y el personal responsable supervisa la operación mediante una consola web de operación.
 
 **Colaboraciones Estratégicas**
 
@@ -411,13 +412,13 @@ El valor diferencial de Quadrapp no radica únicamente en mostrar los espacios d
       <td>Curso la carrera de Ingeniería de Software y me destaco por mi perseverancia, organización y capacidad para trabajar en equipo. Me esfuerzo por mantener un ambiente estructurado dentro del grupo, donde cada miembro se sienta valorado y sus ideas sean escuchadas y respetadas. Mi compromiso es fomentar la colaboración efectiva, asegurando que cada contribución se integre de manera ordenada y alineada con los objetivos comunes del equipo.</td>
     </tr>
     <tr>
-      <td><img src="assets/capitulo-01/FotoMelgarejo.png" alt="Sulca Sanchez, Piero Angel" width="160"></td>
+      <td><img src="assets/capitulo-01/FotoMelgarejo.png" alt="Melgarejo Gomez, Marcia Victoria" width="160"></td>
       <td>Melgarejo Gomez, Marcia Victoria</td>
       <td>U20231C505</td>
       <td>Ingeniería de Software</td>
       <td>Actualmente estoy cursando el octavo ciclo de la carrera de Ingeniería de Software en la UPC. Opté por esta carrera debido a mi interés en el mundo de la tecnología y todo lo que este campo puede ofrecer a la sociedad.
 Me caracterizo por ser una persona curiosa, persistente y colaborativa.
-Tengo conocimientos en C++, HTML, CSS, JS, Phyton</td>
+Tengo conocimientos en C++, HTML, CSS, JS y Python.</td>
     </tr>
     <tr>
       <td><img src="assets/capitulo-01/pedro-nanfuñay.jpeg" alt="Nanfuñay Liza, Pedro Jesús" width="160"></td>
@@ -473,6 +474,13 @@ La dificultad para conocer y anticipar la disponibilidad de espacios de estacion
 * Durante los cambios entre bloques de clases.
 * En períodos en los que se concentra una mayor cantidad de vehículos en el campus.
 * Durante actividades universitarias que pueden incrementar temporalmente la demanda de estacionamientos.
+
+#### Where (Dónde)
+
+**¿Dónde se presenta el problema?**
+
+* En los estacionamientos de los campus universitarios de Lima Metropolitana, tanto en sus zonas y espacios como en sus accesos vehiculares, donde se forman colas durante las horas pico.
+* Antes de llegar al campus, en el lugar desde donde el conductor decide a qué hora salir y durante el trayecto, cuando no cuenta con información sobre la ocupación que encontrará.
 
 #### Who (Quién)
 
@@ -540,6 +548,25 @@ El problema puede manifestarse en:
 
 La literatura sobre estacionamientos universitarios relaciona la falta de disponibilidad y la dificultad para encontrar espacios con problemas como mayor tiempo de búsqueda, congestión e insatisfacción de los usuarios (Channamallu et al., 2025, y Mohandes et al., 2019).
 
+### Objetivos y restricciones
+
+**Objetivo general:** reducir la incertidumbre de los conductores de la comunidad educativa sobre la disponibilidad de estacionamiento en los campus universitarios de Lima Metropolitana, mediante información de ocupación actual y pronósticos que les permitan planificar su llegada, y brindar al personal responsable información para supervisar y gestionar sus estacionamientos.
+
+**Objetivos específicos:**
+
+1. Mostrar la disponibilidad actual de cada estacionamiento y de sus zonas a partir de los sensores IoT instalados en los espacios y accesos, cuyas lecturas llegan a la nube a través del gateway del campus.
+2. Pronosticar la ocupación de cada estacionamiento para los siguientes 15, 30, 45 y 60 minutos a partir de la ocupación actual, el historial, el calendario académico y los eventos del campus.
+3. Entregar al conductor una asesoría de llegada según su tiempo estimado de llegada, con la probabilidad de encontrar espacio, su categoría (HIGH, LIMITED o LOW) y el nivel de confianza del pronóstico.
+4. Alertar a los conductores que lo soliciten cuando se prevea baja disponibilidad en el estacionamiento y la franja horaria de su interés.
+5. Ofrecer al personal responsable una consola web de operación para configurar los estacionamientos y sus dispositivos, supervisar la ocupación y el estado de los sensores, y consultar el comportamiento histórico de la demanda.
+
+**Restricciones:**
+
+* El alcance excluye las reservas, los cobros y el control de acceso: el estacionamiento es gratuito y el ingreso con la credencial institucional permanece a cargo de la institución (CON-10).
+* Los sensores detectan la presencia o el paso de un vehículo sin identificarlo, por lo que no se reconocen placas ni se usan cámaras para la detección (CON-16).
+* El servidor recibe únicamente el tiempo estimado de llegada en minutos, nunca la ubicación del conductor (CON-07).
+* El acceso se limita a la comunidad de cada institución y los datos de cada institución se mantienen aislados de los de las demás (CON-08 y CON-17).
+* La solución se dirige inicialmente a los campus universitarios de Lima Metropolitana.
 
 ### 1.2.2. Lean UX Process
 
@@ -549,7 +576,7 @@ El proceso Lean UX organiza los supuestos del equipo como hipótesis que deben c
 
 Hemos observado que los conductores que se trasladan a universidades y centros educativos enfrentan dificultades para encontrar estacionamiento, especialmente durante horarios de alta concurrencia como el inicio y término de clases. Aunque un estacionamiento pueda mostrar espacios disponibles en un momento determinado, esta información no garantiza que dichos espacios continúen libres cuando el conductor llegue, generando incertidumbre, pérdida de tiempo, recorridos innecesarios y congestión dentro y alrededor del campus.
 
-Por otro lado, las universidades y administradores de estacionamientos necesitan gestionar de manera eficiente la ocupación, el ingreso y la salida de vehículos, así como aprovechar la información generada diariamente para comprender los patrones de movilidad de su comunidad. Los sistemas tradicionales suelen concentrarse en mostrar la disponibilidad actual o controlar el acceso, pero no aprovechan suficientemente los datos históricos y operativos para anticipar cómo cambiará la ocupación en los siguientes minutos.
+Por otro lado, las universidades y administradores de estacionamientos necesitan conocer la ocupación de sus estacionamientos y el flujo de ingresos y salidas de vehículos, así como aprovechar la información generada diariamente para comprender los patrones de movilidad de su comunidad. Los sistemas tradicionales suelen concentrarse en mostrar la disponibilidad actual, pero no aprovechan suficientemente los datos históricos y operativos para anticipar cómo cambiará la ocupación en los siguientes minutos.
 
 Esta situación evidencia una brecha entre conocer cuántos espacios están disponibles actualmente y poder estimar qué probabilidad existe de encontrar uno al momento de llegar. Factores como el tiempo estimado de llegada, los registros históricos de ocupación, la fecha, la hora y los horarios académicos pueden aportar información relevante para reducir esta incertidumbre.
 
@@ -566,7 +593,7 @@ Frente a esta problemática, Quadrapp busca atender inicialmente a conductores d
 
 4. El principal valor que los conductores esperan de Quadrapp es reducir la incertidumbre sobre si encontrarán un espacio disponible cuando lleguen, permitiéndoles tomar mejores decisiones durante su desplazamiento.
 
-5. Los administradores obtendrán valor mediante un dashboard que centralice información sobre ocupación actual, comportamiento histórico, períodos de mayor demanda y predicciones de disponibilidad.
+5. Los administradores obtendrán valor mediante la consola web de operación, que centraliza información sobre ocupación actual, comportamiento histórico, períodos de mayor demanda y predicciones de disponibilidad.
 
 6. Obtendremos nuestra base inicial de clientes mediante alianzas con universidades y centros educativos, demostraciones de la solución y pilotos en estacionamientos universitarios.
 
@@ -576,39 +603,39 @@ Frente a esta problemática, Quadrapp busca atender inicialmente a conductores d
 
 9. Nuestro mayor riesgo es que la predicción no alcance un nivel de precisión suficiente para generar confianza debido a información incompleta, fallas en sensores o patrones de ocupación difíciles de anticipar.
 
-10. ¿Cuáles son las suposiciones que, si se demuestran falsas, harán que el proyecto fracase?
-  - Los conductores no encontrarán útil la predicción si existen diferencias frecuentes con la disponibilidad real.
-  - Las universidades podrían no percibir suficiente valor en la implementación de infraestructura IoT.
-  - Los datos históricos podrían ser insuficientes para identificar patrones de demanda útiles.
-  - Las fallas de sensores o conectividad podrían afectar la información de ocupación.
-  - Los horarios académicos y datos históricos podrían no tener suficiente relación con los cambios de demanda como para mejorar las predicciones.
+10. El éxito del proyecto depende de que los conductores sigan usando la predicción porque coincide con la disponibilidad observada con la frecuencia suficiente, y de que las universidades perciban valor suficiente para instalar y mantener la infraestructura IoT. Si esta suposición resulta falsa, el proyecto fracasaría por alguna de las siguientes causas:
+    - Los conductores dejan de usar la predicción porque difiere con frecuencia de la disponibilidad real.
+    - Las universidades no perciben suficiente valor en la implementación de la infraestructura IoT.
+    - Los datos históricos son insuficientes para identificar patrones de demanda útiles.
+    - Las fallas de sensores o de conectividad afectan la información de ocupación.
+    - Los horarios académicos y los datos históricos no guardan suficiente relación con los cambios de demanda como para mejorar las predicciones.
 
 **Business Outcomes:**
 1. Lograr que al menos una institución educativa implemente un piloto de Quadrapp durante el primer año.
 2. Reducir en al menos un 20 % el tiempo promedio dedicado por los conductores a buscar estacionamiento dentro del campus.
-3. Alcanzar una precisión mínima del 80 % en las estimaciones de disponibilidad futura una vez que exista suficiente información histórica.
-4. Conseguir que al menos el 60 % de los conductores activos consulte la predicción antes de llegar al campus durante períodos de alta demanda.4.
+3. Alcanzar una precisión mínima del 80 % en las estimaciones de disponibilidad futura una vez que exista suficiente información histórica. La precisión se mide como el porcentaje de asesorías de llegada cuya categoría de disponibilidad (HIGH, LIMITED o LOW) coincide con la observada a la hora de llegada, evaluado semanalmente (QAS-01).
+4. Conseguir que al menos el 60 % de los conductores activos consulte la predicción antes de llegar al campus durante períodos de alta demanda.
 5. Mantener una disponibilidad de datos de ocupación superior al 95 % mediante sensores IoT.
-6. Conseguir que los administradores utilicen regularmente la información histórica y de demanda proporcionada por el dashboard para supervisar sus estacionamientos.
+6. Conseguir que los administradores utilicen regularmente la información histórica y de demanda proporcionada por la consola web de operación para supervisar sus estacionamientos.
 
 **User Assumptions:**
 1. ¿Quién es el usuario?
-Conductores de la comunidad educativa (estudiantes, docentes y personal administrativo) que se trasladen regularmente al campus, y administradores de estacionamientos universitarios responsables de supervisar la ocupación y operación de dichos espacios.
+Conductores de la comunidad educativa (estudiantes, docentes y personal administrativo) que se trasladan regularmente al campus, y administradores de estacionamientos universitarios responsables de supervisar la ocupación y operación de dichos espacios.
 
 2. ¿Dónde encajaría nuestro producto en la vida o trabajo del usuario?
     - Conductores: Antes y durante su desplazamiento hacia la universidad, utilizando la aplicación móvil para consultar disponibilidad actual, conocer la probabilidad de encontrar un espacio al momento estimado de llegada y recibir alertas de baja disponibilidad.
-    - Administradores: Durante la operación diaria del estacionamiento, utilizando un dashboard para supervisar la ocupación, el flujo de ingresos y salidas, el comportamiento histórico y los períodos de mayor demanda.
+    - Administradores: Durante la operación diaria del estacionamiento, utilizando la consola web de operación para supervisar la ocupación, el flujo de ingresos y salidas, el comportamiento histórico y los períodos de mayor demanda.
 
 3. ¿Qué problemas resuelve el producto para el usuario?
     - Incertidumbre sobre la disponibilidad de estacionamientos al momento de llegar al campus.
     - Tiempo perdido recorriendo estacionamientos sin espacios disponibles.
     - Congestión generada durante los horarios de mayor demanda.
     - Falta de información anticipada para planificar y decidir hacia qué estacionamiento dirigirse.
-    - Procesos manuales o poco eficientes para controlar el ingreso y salida de vehículos.
+    - Falta de información actualizada y de registros consolidados sobre la ocupación y el flujo de ingresos y salidas de vehículos.
 
 4. ¿En qué contexto utiliza el usuario el producto?
     - Los conductores utilizarán principalmente la aplicación móvil mientras planifican o realizan su desplazamiento hacia el campus, consultando la disponibilidad actual y estimada según su tiempo aproximado de llegada.
-    - Los administradores utilizan la aplicación web durante la jornada para supervisar ocupación, tendencias y períodos de alta demanda.
+    - Los administradores utilizarán la consola web de operación durante la jornada para supervisar ocupación, tendencias y períodos de alta demanda.
 
 5. ¿Qué características son esenciales para el usuario? ¿Y por qué?
     - **Predicción de disponibilidad futura:** estima la probabilidad de encontrar un espacio al momento de llegada.
@@ -616,11 +643,11 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
     - **Monitoreo mediante IoT:** proporciona información actualizada de los espacios.
     - **Analítica histórica:** permite identificar patrones de demanda y horas pico.
     - **Notificaciones:** informa cambios relevantes relacionados con disponibilidad o demanda.
-    - **Dashboard de gestión:** centraliza información actual, histórica y predictiva.
+    - **Consola web de operación:** centraliza información actual, histórica y predictiva.
 
 6. ¿Cómo debería verse y comportarse el producto?
     - La aplicación móvil debe presentar claramente la disponibilidad actual, el tiempo estimado de llegada y la probabilidad de encontrar estacionamiento, dejando claro que se trata de una estimación.
-    - La aplicación web debe mostrar ocupación, datos históricos, patrones de demanda y predicciones de manera comprensible para los administradores.
+    - La consola web de operación debe mostrar ocupación, datos históricos, patrones de demanda y predicciones de manera comprensible para los administradores.
 
 **User Outcomes:**
 1. Los conductores quieren reducir la incertidumbre antes de dirigirse hacia un estacionamiento.
@@ -650,9 +677,9 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
     - Suposición: Informar a los conductores sobre cambios relevantes de disponibilidad ayudará a tomar mejores decisiones durante su desplazamiento.
     - Riesgo: Un exceso de alertas podría provocar que los usuarios dejen de prestarles atención.
 
-6. **Dashboard de gestión y análisis**
+6. **Consola web de operación**
     - Suposición: Los administradores utilizarán información actual, histórica y predictiva para comprender mejor la demanda y supervisar los estacionamientos.
-    - Riesgo: Si la información no es clara o accionable, el dashboard tendrá poco valor operativo.
+    - Riesgo: Si la información no es clara o accionable, la consola web de operación tendrá poco valor operativo.
 
 #### 1.2.2.3. Lean UX Hypothesis Statements
 
@@ -666,9 +693,11 @@ Conductores de la comunidad educativa (estudiantes, docentes y personal administ
 
 - Creemos que las notificaciones sobre cambios relevantes de disponibilidad ayudarán a los conductores a tomar mejores decisiones durante su desplazamiento. Lo confirmaremos cuando los usuarios indiquen que las alertas recibidas son útiles y oportunas.
 
-- Creemos que los administradores podrán gestionar mejor los estacionamientos si cuentan con información centralizada sobre ocupación, historial, patrones de demanda y predicciones. Lo confirmaremos cuando utilicen el dashboard durante la operación habitual para apoyar sus decisiones.
+- Creemos que los administradores podrán gestionar mejor los estacionamientos si cuentan con información centralizada sobre ocupación, historial, patrones de demanda y predicciones. Lo confirmaremos cuando utilicen la consola web de operación durante la operación habitual para apoyar sus decisiones.
 
 #### 1.2.2.4. Lean UX Canvas
+
+El Lean UX Canvas reúne en una sola vista el problema de negocio, los usuarios, los resultados esperados, las ideas de solución y las hipótesis que el equipo debe validar primero. Las ideas de solución se limitan al alcance actual de Quadrapp: disponibilidad actual por estacionamiento y zona, pronósticos de ocupación a 15, 30, 45 y 60 minutos, asesoría de llegada según el tiempo estimado, alertas de baja disponibilidad y una consola web de operación para el personal responsable, con la ocupación detectada por sensores IoT cuyas lecturas llegan a la nube a través del gateway del campus. Las reservas, los cobros y el control de acceso quedan fuera del alcance (CON-10).
 
 ![LeanUXCanvas_Quadrapp](./assets/capitulo-01/LeanUXCanvas_Quadrapp.png)
 
@@ -694,8 +723,8 @@ La falta de espacios en horas punta puede incrementar el tiempo de búsqueda, pr
 **Administradores de estacionamientos universitarios:**
 Comprende a los jefes de logística y operaciones del campus, supervisores de turno y operadores de puerta: quienes monitorean el aforo, coordinan el flujo vehicular en los accesos y elaboran los reportes de ocupación. No incluye a la alta dirección de la universidad, que actúa como cliente del modelo B2B y aparece en el Lean UX Canvas.
 
-Ante la variación del aforo y la demanda durante la jornada académica, estos gestores requieren paneles de control y métricas que les permitan supervisar la ocupación, identificar horas de mayor demanda y apoyar la gestión del estacionamiento.
-* **Relevancia para la solución:** Es el segmento operativo que utiliza la consola web y aporta la perspectiva institucional necesaria para adoptar y gestionar la plataforma.
+Ante la variación del aforo y la demanda durante la jornada académica, estos gestores requieren una consola web de operación con métricas que les permitan supervisar la ocupación, identificar horas de mayor demanda y apoyar la gestión del estacionamiento.
+* **Relevancia para la solución:** Es el segmento operativo que utiliza la consola web de operación y aporta la perspectiva institucional necesaria para adoptar y gestionar la plataforma.
 * **Edad estimada:** 30 a 60 años.
 * **Ubicación:** Campus universitarios y áreas adyacentes a las universidades.
 * **Características demográficas y de comportamiento:**
@@ -813,7 +842,7 @@ Ante la variación del aforo y la demanda durante la jornada académica, estos g
     <th rowspan="3">Perfil de Producto</th>
     <th>Productos &amp; Servicios</th>
     <td>
-      Predicción de disponibilidad futura, monitoreo de ocupación en tiempo real mediante IoT, análisis histórico de demanda, recomendaciones de estacionamiento, notificaciones, aplicación móvil para conductores y dashboard web para administradores.
+      Predicción de disponibilidad futura, monitoreo de ocupación en tiempo real mediante IoT, análisis histórico de demanda, recomendaciones de estacionamiento, notificaciones, aplicación móvil para conductores y consola web de operación para administradores.
     </td>
     <td>
       Localización de estacionamientos, consulta de disponibilidad y herramientas digitales orientadas a conductores y operadores.
@@ -843,7 +872,7 @@ Ante la variación del aforo y la demanda durante la jornada académica, estos g
   <tr>
     <th>Canales de distribución<br>(Web y/o Móvil)</th>
     <td>
-      Aplicación móvil para conductores y aplicación web con dashboard para administradores.
+      Aplicación móvil para conductores y consola web de operación para administradores.
     </td>
     <td>
       Aplicación móvil y plataforma web.
@@ -947,7 +976,7 @@ Este enfoque permitirá que tanto conductores como administradores obtengan info
 - Medir continuamente la precisión de las predicciones y compararlas con la disponibilidad realmente observada.
 - Validar periódicamente la información generada por los sensores IoT comparándola con la ocupación real de los espacios.
 - Analizar la relación entre fecha, hora, horarios académicos, horas pico y ocupación histórica para mejorar los modelos de predicción.
-- Mostrar a los administradores mediante un dashboard información relacionada con ocupación actual, comportamiento histórico, períodos de mayor demanda y predicciones.
+- Mostrar a los administradores mediante la consola web de operación información relacionada con ocupación actual, comportamiento histórico, períodos de mayor demanda y predicciones.
 - Utilizar notificaciones únicamente cuando existan cambios relevantes que puedan modificar la decisión del conductor, evitando generar alertas innecesarias.
 - Establecer alianzas directas con universidades para obtener datos, ejecutar pilotos y validar la solución en situaciones reales.
 - Utilizar los resultados de los pilotos como evidencia de la reducción del tiempo de búsqueda y de la utilidad de las predicciones.
@@ -1001,11 +1030,11 @@ Este segmento vive el problema en primera persona y de forma recurrente, por lo 
 *Preguntas complementarias*
 
 13. ¿Qué cambia en semanas especiales, como el inicio de ciclo, los exámenes o los eventos masivos?
-14. Si pudieras saber una sola cosa antes de salir de casa, ¿cuál sería? ¿Preferirías que la aplicación te avise sola o consultarla tú?
+14. Antes de salir hacia el campus, ¿qué información, si hay alguna, te ayudaría a decidir? ¿Cómo y en qué momento te gustaría obtenerla?
 
 *Pregunta de cierre*
 
-15. Si supieras con anticipación la probabilidad de encontrar estacionamiento al llegar, ¿qué cambiaría en tu rutina? ¿Hay algo que no te hayamos preguntado y consideres importante?
+15. Si pudieras cambiar algo de cómo llegas y estacionas hoy en el campus, ¿qué sería y por qué? ¿Hay algo que no te hayamos preguntado y consideres importante?
 
 #### Segmento 2: Administradores de estacionamientos universitarios
 
@@ -1096,14 +1125,14 @@ Cada entrevista se registró en video y se documenta con los datos del entrevist
 
 | Campo | Información |
 | --- | --- |
-| Nombres y apellidos | Mario Grandes |
+| Nombres y apellidos | Mario Grandez |
 | Edad | 26 años |
 | Distrito de residencia | Magdalena del Mar |
 | Ocupación y vínculo con la universidad | Encargado del estacionamiento del campus |
 | Enlace de la grabación | [https://youtu.be/Uwh7i71zwv4?t=2](https://youtu.be/Uwh7i71zwv4?t=2) |
 | Duración | 02:27 min |
 | Inicio | 00:02 min |
-| Captura | <img src="assets/capitulo-02/entrevista-mario-grandes.png" alt="Captura de la entrevista a Mario Grandes" width="500"/> |
+| Captura | <img src="assets/capitulo-02/entrevista-mario-grandes.png" alt="Captura de la entrevista a Mario Grandez" width="500"/> |
 | Resumen | Encargado del estacionamiento de un campus universitario. Su función principal durante el turno es monitorear el flujo vehicular, supervisar al personal en las tranqueras y resolver los cuellos de botella en las horas punta. Conoce la disponibilidad de espacios por experiencia y mirando los reportes básicos de las tranqueras, que describe como poco confiables porque se actualizan con lentitud. El registro de ingresos lo realiza el personal de seguridad de forma manual y él arma los reportes diarios en una hoja de cálculo al finalizar el día. Relata que el lunes a las 8 de la mañana el estacionamiento estuvo cerca de llenarse: lo detectó revisando cámaras, se comunicó con los vigilantes para desviar vehículos hacia zonas alternas y, aunque la situación fue caótica, evitaron el bloqueo de la vía principal. Identifica como problema recurrente las filas en las tranqueras durante el cambio de hora de las 8 de la mañana, y lo atribuye a la falta de visibilidad en tiempo real sobre qué zonas tienen espacios libres. En el inicio de ciclo, los exámenes y los eventos masivos el flujo se dispara alrededor de un 50 por ciento: se preparan asignando más personal, pero carecen de datos históricos para dimensionar cuántos vehículos llegarán. La semana previa a la entrevista falló la lectora de una tranquera principal y debieron operarla manualmente durante 45 minutos hasta que soporte técnico reinició el sistema. Al preguntarle qué información le haría falta, responde que una plataforma analítica capaz de predecir la demanda y anticipar cuántos vehículos llegarán por hora, para organizar los accesos sin depender de suposiciones. |
 
 ### 2.2.3. Análisis de entrevistas
@@ -1161,11 +1190,13 @@ Se analizaron tres entrevistas a estudiantes de 8.º ciclo que llegan al campus 
 
 **Conclusión preliminar**
 
-Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para los conductores, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola de operación para administradores.
+Las entrevistas registradas identifican como problema común la falta de información oportuna sobre la disponibilidad. Para los conductores, esta información es necesaria antes de salir de casa y durante el trayecto. Para el administrador, resulta útil durante el turno y al planificar periodos de alta demanda. Estos hallazgos respaldan una solución que proporcione información de ocupación adaptada a las necesidades de cada segmento mediante una aplicación móvil para conductores y una consola web de operación para administradores.
 
 ## 2.3. Needfinding
 
 ### 2.3.1. User Personas
+
+Los User Personas son arquetipos que representan a cada segmento objetivo y sirven de base para la User Task Matrix, los Empathy Maps y los As-is Scenario Maps de las secciones siguientes. Se elaboró una ficha por segmento a partir del análisis de entrevistas de la sección 2.2.3, del que se tomaron los hábitos, las herramientas, los canales de información, las frustraciones y las necesidades recurrentes, y del análisis competitivo de la sección 2.1, que muestra que las soluciones actuales informan la disponibilidad del momento, pero no la que encontrará el conductor al llegar. **Andrea Santos** representa a los conductores de la comunidad educativa y **Carlos Mendoza**, a los administradores de estacionamientos universitarios. Los nombres y datos personales de cada ficha corresponden a un arquetipo y no a un entrevistado en particular.
 
 #### Conductores de la comunidad educativa
 
@@ -1210,6 +1241,8 @@ Para Andrea, las tareas más frecuentes e importantes ocurren antes de llegar y 
 La principal diferencia está en el alcance. Andrea resuelve una decisión individual antes de salir, mientras que Carlos gestiona la operación de todo el estacionamiento y la reporta a la dirección; por eso sus tareas de consolidación y de reporte, aunque menos frecuentes, tienen importancia alta o media. La coincidencia más relevante es que ambos necesitan estimar si el estacionamiento se llenará en las horas punta, y los dos lo hacen hoy por intuición o con datos que se actualizan con lentitud.
 
 ### 2.3.3. Empathy Mapping
+
+El Empathy Mapping permite comprender qué dice, piensa, hace y siente cada User Persona frente al problema de estacionar en el campus. En la preparación, el equipo colocó al centro del mapa al User Persona de cada segmento y revisó los registros y el análisis de las entrevistas. Luego, cada integrante ubicó sus observaciones en la sección correspondiente respondiendo las preguntas ¿Con quién estamos empatizando?, ¿Qué necesita hacer?, ¿Qué ve?, ¿Qué dice?, ¿Qué hace?, ¿Qué escucha? y ¿Qué piensa y siente?. Finalmente, se identificaron sus Pains, a partir de lo que le preocupa, y sus Gains, a partir de lo que puede ayudar a resolver sus problemas.
 
 #### Conductores de la comunidad educativa
 
@@ -1283,7 +1316,7 @@ En esta sección se define el Ubiquitous Language del dominio del proyecto, con 
 | One-Time Code (Código de Acceso) | Código temporal de un solo uso, enviado al correo del usuario, con el que inicia sesión. |
 | Role (Rol) | Conjunto de permisos de un usuario: conductor, administrador de estacionamientos u operador. |
 | Driver (Conductor) | Miembro de la comunidad educativa que llega al campus en vehículo y consulta Quadrapp desde la aplicación móvil. |
-| Parking Administrator (Administrador de Estacionamientos) | Persona responsable de configurar los estacionamientos y de supervisar su ocupación y operación desde la consola. |
+| Parking Administrator (Administrador de Estacionamientos) | Persona responsable de configurar los estacionamientos y de supervisar su ocupación y operación desde la consola web de operación. |
 | Operator (Operador) | Personal del turno invitado por el administrador que monitorea la operación del estacionamiento desde la consola. |
 | Parking Lot (Estacionamiento) | Área destinada al aparcamiento de vehículos dentro o junto al campus, administrada por la institución. |
 | Parking Zone (Zona de Estacionamiento) | Sección delimitada de un estacionamiento (nivel, sector o bloque) que agrupa un conjunto de espacios. |
@@ -1312,7 +1345,7 @@ En esta sección se define el Ubiquitous Language del dominio del proyecto, con 
 | Forecast (Pronóstico) | Estimación de la ocupación de un estacionamiento para una hora futura, basada en la ocupación actual, el flujo, el historial y el calendario. |
 | Forecast Horizon (Horizonte de Pronóstico) | Anticipación del pronóstico: 15, 30, 45 o 60 minutos. |
 | Confidence Level (Nivel de Confianza) | Grado de confianza de un pronóstico según la cantidad y la calidad de los datos disponibles. |
-| Fallback Heuristic (Heurística de Respaldo) | Estimación basada en promedios históricos que se usa cuando el modelo no está disponible o faltan datos; se publica con confianza baja. |
+| Fallback Heuristic (Heurística de Respaldo) | Estimación que se usa cuando el modelo no está disponible: la ocupación esperada es el promedio de la ocupación del mismo día de la semana y la misma franja de 15 minutos en las últimas 8 semanas, o la ocupación actual si hay menos de 2 semanas de historial. Se publica con confianza baja (LOW). |
 | Model Version (Versión del Modelo) | Versión del modelo de pronóstico que generó un resultado, usada para medir su precisión. |
 | Saturation (Saturación) | Situación en la que la ocupación esperada supera el umbral de saturación configurado para el estacionamiento. |
 | Availability Probability (Probabilidad de Disponibilidad) | Posibilidad, expresada como porcentaje, de que el conductor encuentre un espacio libre al momento de su llegada. Es una estimación, no una garantía. |
@@ -1320,7 +1353,7 @@ En esta sección se define el Ubiquitous Language del dominio del proyecto, con 
 | Estimated Time of Arrival (Tiempo Estimado de Llegada) | Minutos que faltan para que el conductor llegue al estacionamiento, calculados en su dispositivo. El servidor solo recibe los minutos, nunca la ubicación. |
 | Arrival Advice (Asesoría de Llegada) | Recomendación que recibe el conductor según su tiempo estimado de llegada: categoría, probabilidad, confianza y, si corresponde, la próxima disponibilidad. |
 | Next Availability (Próxima Disponibilidad) | Hora estimada en que volverá a haber espacio cuando es poco probable encontrarlo a la llegada. |
-| Forecast Accuracy (Precisión del Pronóstico) | Grado de acierto de los pronósticos, medido como error absoluto medio por estacionamiento, horizonte y versión del modelo. |
+| Forecast Accuracy (Precisión del Pronóstico) | Grado de acierto de los pronósticos, medido como el porcentaje de asesorías de llegada cuya categoría (HIGH, LIMITED o LOW) coincide con la observada a la hora de llegada; se complementa con el error absoluto medio por estacionamiento, horizonte y versión del modelo. |
 | Alert Subscription (Suscripción a Alertas) | Franja horaria y estacionamiento sobre los que el conductor quiere recibir alertas de baja disponibilidad. |
 | Peak Hours (Horas Pico) | Períodos de mayor demanda de estacionamiento, generalmente al inicio y al término de las clases. |
 | Demand Pattern (Patrón de Demanda) | Comportamiento recurrente en la cantidad de vehículos que buscan estacionar según el día, la hora o el calendario académico. |
