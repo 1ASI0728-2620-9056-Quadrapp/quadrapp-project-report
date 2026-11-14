@@ -8895,7 +8895,7 @@ En esta entrega se despliegan dos componentes de la solución: la Landing Page y
  
 La Landing Page se publica en Netlify, proyecto conectado al repositorio `Landing_Page` de GitHub, donde Netlify identifica el framework Astro. Astro genera los archivos estáticos (HTML, CSS y JavaScript) que Netlify publica en su red de distribución. El despliegue de producción vigente se publicó el 9 de octubre a partir de la rama `main` (commit `1bde5be`), el mismo que aparece como último cambio del repositorio, y está disponible públicamente en [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app).
  
-![Despliegue de la Landing Page en Netlify](assets/capitulo-07/netlify-deploy.png)
+![Despliegue de la Landing Page en Netlify](assets/capitulo-07/netlify-deploy.jpeg)
  
 *Figura: panel de Netlify con el despliegue de producción de la Landing Page (estado Published, rama main, commit 1bde5be).*
  
@@ -9031,6 +9031,42 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 11. Del 1 al 5, ¿qué tan útil sería esta consola durante tu turno? ¿Qué falta o qué te confundió?
 
 ### 7.3.2. Registro de Entrevistas
+
+#### Segmento 1: Conductores de la comunidad educativa
+
+**Entrevista de validación 1**
+
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | María Paz Pastor |
+| Edad | 20 años |
+| Distrito de residencia | San Miguel |
+| Ocupación y vínculo con la universidad | Estudiante de Ingeniería Industrial en la Universidad de Lima y conductora |
+| Fecha y medio | 14/11/2026, por Zoom |
+| Entrevistador | Alessandra Becerra |
+| Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
+| Enlace de la grabación |  |
+| Duración | |
+| Inicio | min |
+| Captura | <img src="assets/capitulo-07/entrevistavalidacionmariapaz1.png" alt="Captura de la entrevista de validación a María Paz Pastor" width="500"/> |
+| Resumen | María Paz entendió correctamente qué hace Quadrapp y qué no hace: no reserva espacios, no procesa pagos y no rastrea la ubicación. Interpretó la asesoría de llegada como la probabilidad de encontrar espacio cuando llegue, y no solo como la disponibilidad actual, y usaría los horizontes de predicción para decidir si sale de inmediato o espera. Entiende que los espacios marcados como "Sin datos" no están confirmados y no los consideraría libres. Calificó su confianza con 4 sobre 5, con la salvedad de que se trata de predicciones que pueden cambiar. Valora que la aplicación no use su ubicación porque protege su privacidad, y le servirían los avisos por franja horaria siempre que sean pocos y relevantes. Con lo que vio, saldría antes o cambiaría de zona si hubiera pocas probabilidades de encontrar espacio donde suele estacionar. Le pareció fácil de entender y sugirió destacar con más claridad la zona con mayor probabilidad de encontrar espacio, para decidir más rápido. |
+
+**Respuestas registradas**
+
+| N.º | Pregunta | Respuesta | Objetivo |
+| --- | --- | --- | --- |
+| 2 | ¿Qué entiendes que hace Quadrapp y para quién es? | Es una aplicación que permite conocer qué tan probable es encontrar estacionamiento al momento de llegar. Está dirigida a estudiantes y personas que utilizan el estacionamiento de la universidad. | O7 |
+| 3 | ¿Qué crees que Quadrapp no hace? | No permite reservar espacios, realizar pagos ni rastrear mi ubicación. Solamente brinda información y predicciones sobre la disponibilidad. | O7 |
+| 4 | Imagina que eres la persona de la pantalla de inicio y llegas en el tiempo que indica. ¿Qué te dice la aplicación sobre tus posibilidades de encontrar espacio? | Me indica qué posibilidades tengo de encontrar un espacio cuando llegue, no solamente cuántos hay disponibles en ese momento. Eso me parece bastante útil. | O1, O2 |
+| 5 | En la pantalla de predicciones, al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte? | Me permite comparar cómo cambiará la disponibilidad. Así puedo saber si me conviene salir en ese momento o esperar un poco más. | O2 |
+| 6 | En el detalle por zonas hay espacios marcados como "Sin datos". ¿Qué entiendes por eso? ¿Los considerarías libres? ¿Por qué? | Entiendo que no se puede confirmar si están ocupados o libres. No los consideraría disponibles porque podría llegar y encontrarlos ocupados. | O3 |
+| 7 | Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué? | Le daría un 4, porque me ayudaría a organizarme mejor, aunque entiendo que son predicciones y pueden cambiar. | O3 |
+| 8 | La aplicación indica que usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla? | Me parece positivo porque protege más mi privacidad. Me sentiría más cómoda utilizándola si no necesita conocer mi ubicación. | O4 |
+| 9 | Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían? | Sí, especialmente para conocer los horarios de mayor demanda. Preferiría recibir notificaciones importantes y no demasiadas durante el día. | O5 |
+| 10 | Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona? | Sí, podría salir un poco antes o dirigirme a otra zona si veo que hay pocas probabilidades de encontrar espacio donde suelo estacionar. | O1 |
+| 11 | ¿Qué falta, qué sobra o qué te confundió de lo que viste? | Me pareció fácil de entender. Agregaría una indicación más visible de cuál es la zona con mayor probabilidad de encontrar espacio para tomar decisiones más rápido. | O5 |
+
+Calificación de confianza (pregunta 7): **4 de 5**.
 
 ### 7.3.3. Evaluaciones según heurísticas.
 
