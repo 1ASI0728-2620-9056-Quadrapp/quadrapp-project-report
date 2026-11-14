@@ -6523,22 +6523,16 @@ La respuesta debe permitir presentar:
 - el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
 - la versión del modelo utilizada.
 
+Los resultados se agrupan por estacionamiento, horizonte (15, 30, 45 y 60 minutos) y versión del modelo, como pide US34, para que la consola compare cada horizonte y cada versión por separado.
 
-**Consulta de precisión de predicciones:**
-AnalyticsQueryController también permite iniciar la consulta de precisión de las predicciones generadas por Quadrapp.
+**Endpoints**
 
-La consulta puede considerar:
-- institución;
-- estacionamiento;
-- fecha inicial;
-- fecha final.
-
-El controlador construye un GetPredictionAccuracyQuery y delega su procesamiento a GetPredictionAccuracyQueryHandler.
-
-La respuesta debe permitir presentar:
-- el error absoluto medio de las predicciones expresado en puntos porcentuales;
-- el porcentaje de pronósticos cuyo resultado quedó dentro del margen configurado;
-- la versión del modelo utilizada.
+|Método y ruta|Respuesta|
+|-|-|
+|`GET /api/v1/analytics/occupancy?lotId={lotId}&from={from}&to={to}&zoneId={zoneId}`|200 con la ocupación agregada por hora y por día; 400 si el rango es inválido.|
+|`GET /api/v1/analytics/peak-hours?lotId={lotId}&from={from}&to={to}`|200 con los períodos de mayor ocupación; si el historial no alcanza, lo indica y no devuelve horas pico (regla 12).|
+|`GET /api/v1/analytics/demand-patterns?lotId={lotId}&from={from}&to={to}`|200 con la ocupación promedio por día de la semana y franja horaria.|
+|`GET /api/v1/analytics/prediction-accuracy?lotId={lotId}&from={from}&to={to}`|200 con el MAE y el porcentaje dentro del margen por horizonte y versión del modelo.|
 
 
 **Ámbito institucional de las consultas:**
@@ -7002,19 +6996,7 @@ Este aislamiento debe mantenerse tanto para:
 
 
 **Consideraciones tecnológicas:**
-La infraestructura se mantiene independiente de una tecnología específica en esta etapa del diseño.
-
-La arquitectura de Quadrapp exige que los servicios utilicen tecnologías open-source y que cada Bounded Context posea su propia persistencia, pero el documento actual todavía no determina un motor de base de datos concreto para Analytics.
-
-Por esta razón, clases como:
-- `HistoricalOccupancyRepositoryAdapter`
-- `ForecastSnapshotRepositoryAdapter`
-- `OccupancyIntegrationAdapter`
-- `PredictionIntegrationAdapter`
-
-representan responsabilidades técnicas y no una dependencia hacia un producto particular.
-
-La selección definitiva del motor de persistencia, ORM y mecanismo de mensajería deberá respetar estas interfaces sin introducir cambios en el Domain Layer o en los casos de uso definidos en Application Layer.
+Analytics usa el esquema `analytics` de la misma base de datos PostgreSQL (DD-01), con sus propias migraciones de Flyway y Spring Data JPA. Recibe los eventos de Occupancy y de Prediction & Advisory con `@ApplicationModuleListener`, en el mismo proceso, por lo que no necesita un broker de mensajería. Guarda el historial agregado por hora, no por minuto, con una restricción única por estacionamiento, zona, granularidad e inicio del período, y lo actualiza con upsert: un evento reentregado no se cuenta dos veces.
 
 ### 5.6.6. Bounded Context Software Architecture Component Level Diagrams
 
