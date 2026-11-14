@@ -8883,6 +8883,49 @@ El equipo adopta convenciones comunes para que el código de los distintos compo
 ---
 
 ### 7.1.4. Software Deployment Configuration
+ 
+En esta entrega se despliegan dos componentes de la solución: la Landing Page y el Quadrapp Backend. Ambos se publican desde sus repositorios de GitHub, de modo que cada despliegue se genera a partir del código versionado, como establece CON-04. Los demás componentes del Deployment Diagram (sección 4.3.4) se desplegarán en etapas posteriores.
+ 
+| Componente | Repositorio | Plataforma | Tipo de despliegue |
+| --- | --- | --- | --- |
+| Landing Page | `Landing_Page` | Netlify | Sitio estático generado con Astro |
+| Quadrapp Backend | `quadrapp-backend` | Render | Servicio web con Java 21 y Spring Boot 3 |
+ 
+#### Landing Page en Netlify
+ 
+La Landing Page se publica en Netlify, proyecto conectado al repositorio `Landing_Page` de GitHub, donde Netlify identifica el framework Astro. Astro genera los archivos estáticos (HTML, CSS y JavaScript) que Netlify publica en su red de distribución. El despliegue de producción vigente se publicó el 9 de octubre a partir de la rama `main` (commit `1bde5be`), el mismo que aparece como último cambio del repositorio, y está disponible públicamente en [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app).
+ 
+![Despliegue de la Landing Page en Netlify](assets/capitulo-07/netlify-deploy.png)
+ 
+*Figura: panel de Netlify con el despliegue de producción de la Landing Page (estado Published, rama main, commit 1bde5be).*
+ 
+#### Backend en Render
+ 
+El Quadrapp Backend se despliega en Render como un servicio web conectado al repositorio `quadrapp-backend`. Render compila el proyecto con Maven y ejecuta la aplicación Spring Boot, que se publica con una URL propia. Cada cambio integrado en la rama `main` genera un nuevo despliegue.
+ 
+![Despliegue del backend en Render](assets/capitulo-07/render-deploy.png)
+ 
+*Figura: despliegue del Quadrapp Backend en Render.*
+ 
+#### Entornos
+ 
+Por ahora, cada componente cuenta con un único entorno de producción: la Landing Page en Netlify (despliegue de producción desde `main`) y el backend en Render.
+ 
+#### Pasos de despliegue
+ 
+**Landing Page**
+ 
+1. Se integra el cambio en la rama `main` del repositorio `Landing_Page`.
+2. Netlify, conectado al repositorio, toma el código y ejecuta la compilación de Astro (`[confirmar: npm run build]`).
+3. Netlify publica el resultado y actualiza la URL pública.
+**Backend**
+ 
+1. Se integra el cambio en la rama de despliegue del repositorio `quadrapp-backend`.
+2. Render detecta el cambio y compila el proyecto con Maven.
+3. Render inicia el servicio y lo publica con su URL.
+#### Configuración y secretos
+ 
+Las variables de entorno del backend, como la conexión a la base de datos y las claves con las que se firman los tokens de sesión (DD-08), se definen en el panel de Render y no se guardan en el repositorio. Ambas plataformas publican sus servicios mediante HTTPS, por lo que las comunicaciones usan TLS (DD-08).
 
 
 ## 7.2. Solution Implementation
@@ -8907,7 +8950,9 @@ El equipo adopta convenciones comunes para que el código de los distintos compo
 
 ## 7.3. Validation Interviews
 
-Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los artefactos de diseño de los capítulos V y VI (los wireframes y wireflows de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page) y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría.
+### 7.3.1. Diseño de Entrevistas
+
+Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los mockups de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page, y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría. Los mockups se muestran en el mismo orden a todos los entrevistados.
 
 Las respuestas se analizan como evidencia de comprensión y de preferencia declarada sobre un prototipo, no como evidencia de uso real. Por ello, no demuestran el cumplimiento de los Business Outcomes del Lean UX, que requieren un piloto con la solución implementada.
 
@@ -8919,7 +8964,7 @@ Las respuestas se analizan como evidencia de comprensión y de preferencia decla
 | O2 | Validar la comprensión de la asesoría de llegada | Si el usuario interpreta correctamente la categoría (HIGH, LIMITED, LOW), la probabilidad, los horizontes de 15, 30, 45 y 60 minutos y la confianza. |
 | O3 | Validar la confianza en los datos | Si el usuario entiende el estado "Sin datos / UNKNOWN", la antigüedad del dato y la advertencia de confianza baja, y cuánta confianza deposita en la estimación. |
 | O4 | Validar el mensaje de privacidad | Si el usuario comprende que el tiempo de llegada se calcula en su dispositivo y que el servidor recibe solo minutos. |
-| O5 | Validar la claridad de los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
+| O5 | Validar la claridad de las pantallas y los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
 | O6 | Validar la utilidad de la consola | Si el administrador considera que la información de la consola le permite supervisar el turno, anticipar la saturación y gestionar dispositivos y layout. |
 | O7 | Validar la comunicación de la Landing Page | Si cada visitante entiende qué hace Quadrapp, para quién es y qué no hace (sin reservas, sin pagos, sin rastreo de ubicación). |
 
@@ -8937,11 +8982,9 @@ Cada objetivo se relaciona con una hipótesis del Lean UX (sección 1.2.2.3) y c
 | El administrador utilizará la consola durante la operación del turno. | O6 | El administrador entiende la saturación prevista y el estado de los datos, y considera útil la información presentada (preguntas 4, 5, 7 y 11). |
 | La Landing Page comunica la propuesta y su alcance. | O7 | Al menos 2 de 3 conductores y el administrador explican correctamente qué hace Quadrapp (preguntas 2 y 3 del guion de cada segmento). |
 
-### 7.3.1. Diseño de Entrevistas
+#### Guion para el Segmento 1: Conductores de la comunidad educativa
 
-### Guion para el Segmento 1: Conductores de la comunidad educativa
-
-El entrevistador muestra primero la Landing Page y luego recorre la aplicación móvil siguiendo los Wireflows 1 a 4 (ingreso, disponibilidad al llegar, sede y zonas, y alertas). Después formula las preguntas.
+El entrevistador muestra primero la Landing Page y luego recorre los mockups de la aplicación móvil en este orden: acceso institucional y verificación por código (OTP), inicio y asesoría de llegada, detalle por zonas y por nivel (en vista de mapa y de lista), predicciones por horizonte y alertas. Después formula las preguntas.
 
 *Preguntas iniciales*
 
@@ -8952,20 +8995,20 @@ El entrevistador muestra primero la Landing Page y luego recorre la aplicación 
 2. ¿Qué entiendes que hace Quadrapp y para quién es?
 3. ¿Qué crees que Quadrapp no hace?
 
-*Después de recorrer la aplicación móvil*
+*Después de recorrer los mockups de la aplicación móvil*
 
-4. Si llegaras en 20 minutos, ¿qué te dice la aplicación sobre tus posibilidades de encontrar espacio?
-5. Al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte?
-6. Si la aplicación no tuviera información de algunos espacios, ¿los considerarías libres? ¿Por qué?
+4. Imagina que eres la persona de la pantalla de inicio y llegas en el tiempo que indica. ¿Qué te dice la aplicación sobre tus posibilidades de encontrar espacio?
+5. En la pantalla de predicciones, al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte?
+6. En el detalle por zonas hay espacios marcados como "Sin datos". ¿Qué entiendes por eso? ¿Los considerarías libres? ¿Por qué?
 7. Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué?
-8. La aplicación usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla?
+8. La aplicación indica que usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla?
 9. Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían?
 10. Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona?
 11. ¿Qué falta, qué sobra o qué te confundió de lo que viste?
 
-### Guion para el Segmento 2: Administradores de estacionamientos universitarios
+#### Guion para el Segmento 2: Administradores de estacionamientos universitarios
 
-El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre la consola de operación siguiendo los Wireflows 5 a 9 (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
+El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre los mockups de la consola de operación (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
 
 *Preguntas iniciales*
 
@@ -8976,7 +9019,7 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 2. ¿Qué entiendes que ofrece Quadrapp a una universidad?
 3. ¿Qué crees que Quadrapp no hace?
 
-*Después de recorrer la Consola de Operación*
+*Después de recorrer los mockups de la consola*
 
 4. ¿Qué información usarías primero durante el turno? ¿Cuál no usarías?
 5. ¿Te serviría saber con anticipación cuándo se llenará el estacionamiento? (¿Con cuánta anticipación? ¿Qué margen de error aceptarías?)
@@ -8986,7 +9029,6 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 9. Sobre el reemplazo, el registro y la baja de dispositivos, ¿qué te falta para hacerlo con seguridad?
 10. Sobre la precisión de las predicciones y la invitación de operadores, ¿lo que viste te resulta comprensible y útil?
 11. Del 1 al 5, ¿qué tan útil sería esta consola durante tu turno? ¿Qué falta o qué te confundió?
-
 
 ### 7.3.2. Registro de Entrevistas
 
