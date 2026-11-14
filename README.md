@@ -4115,7 +4115,7 @@ La siguiente tabla resume las clases e interfaces principales de Parking Configu
 | AcademicCalendar | Domain | Aggregate Root. Calendario académico y eventos del campus de una institución. | calendarId, tenantId, periods, campusEvents | initialize(), registerPeriod(), registerCampusEvent(), cancelCampusEvent(), eventsAround() |
 | AcademicPeriod | Domain | Entity. Periodo de clases, exámenes o receso. | periodId, type, range | overlaps() |
 | CampusEvent | Domain | Entity. Actividad de alta afluencia que afecta a un estacionamiento. | campusEventId, name, parkingLotId, window, impact, status | cancel(), isActiveDuring() |
-| OperatingSettings | Domain | Value Object. Parámetros de operación del estacionamiento. | saturationThresholdPct, flowWindowMinutes, minimumDetectionSeconds, accuracyMarginPct | defaults(), isValid() |
+| OperatingSettings | Domain | Value Object. Parámetros de operación del estacionamiento. | saturationThresholdPct, lowAvailabilityPct, flowWindowMinutes, minimumDetectionSeconds, accuracyMarginPct | defaults(), isValid() |
 | LayoutVersion | Domain | Value Object. Versión publicada del layout. | value | next(), isPublished() |
 | LayoutSnapshot | Domain | Value Object. Copia inmutable del layout publicado. | parkingLotId, version, publishedAt, zoneCapacities, placements | — |
 | SensorPlacement | Domain | Value Object. Ubicación de un sensor dentro del layout publicado. | deviceId, hardwareId, target | — |
@@ -4197,7 +4197,7 @@ Methods
 |GeoPoint|Value Object|latitude: Decimal, longitude: Decimal|Coordenadas del ingreso vehicular; la latitud va de -90 a 90 y la longitud de -180 a 180.|
 |SpaceLabel|Value Object|value: String|Etiqueta visible del espacio (por ejemplo, "A01"), de 1 a 10 caracteres.|
 |SpacePosition|Value Object|x: Decimal, y: Decimal|Posición del espacio en el plano del estacionamiento que dibuja la aplicación.|
-|OperatingSettings|Value Object|saturationThresholdPct: Integer, flowWindowMinutes: Integer, minimumDetectionSeconds: Integer, accuracyMarginPct: Integer|Umbral de saturación entre 50 y 100 %; ventana de flujo entre 5 y 60 min; tiempo mínimo de detección entre 3 y 60 s; margen de precisión entre 1 y 30 puntos. `defaults()` entrega 90 %, 15 min, 10 s y 10 puntos.|
+|OperatingSettings|Value Object|saturationThresholdPct: Integer, lowAvailabilityPct: Integer, flowWindowMinutes: Integer, minimumDetectionSeconds: Integer, accuracyMarginPct: Integer|Umbral de saturación entre 50 y 100 %; umbral de poca disponibilidad entre 5 y 30 % de espacios libres; ventana de flujo entre 5 y 60 min; tiempo mínimo de detección entre 3 y 60 s; margen de precisión entre 1 y 30 puntos. `defaults()` entrega 90 %, 10 %, 15 min, 10 s y 10 puntos.|
 |LayoutVersion|Value Object|value: Integer|Número de versión. `next()` devuelve la siguiente; 0 significa que no hay layout publicado.|
 |LayoutSnapshot|Value Object|parkingLotId, version, publishedAt, zoneCapacities: `Map<UUID, Integer>`, placements: `List<SensorPlacement>`|Copia inmutable del layout publicado. Se guarda para que cada versión se pueda volver a consultar.|
 |SensorPlacement|Value Object|deviceId: UUID, hardwareId: HardwareId, target: AssignmentTarget|Asociación vigente de un sensor al momento de publicar.|
@@ -4391,7 +4391,7 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Consumidor|Descripción|
 |-|-|-|-|-|
-|profileOf(tenantId: UUID, parkingLotId: UUID)|ParkingLotProfileView|Public|Prediction & Advisory, Analytics|Umbral de saturación, ventana de flujo y margen de precisión.|
+|profileOf(tenantId: UUID, parkingLotId: UUID)|ParkingLotProfileView|Public|Prediction & Advisory, Analytics, Occupancy|Umbral de saturación, umbral de poca disponibilidad, ventana de flujo y margen de precisión.|
 |activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory|Estacionamientos con layout publicado, con su institución.|
 |calendarEventsAround(tenantId: UUID, from: Instant, to: Instant)|`List<CalendarEventView>`|Public|Prediction & Advisory|Periodos académicos y eventos programados del intervalo.|
 |lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición|Estacionamientos para la pantalla de inicio y la consola.|
@@ -5117,6 +5117,7 @@ Attributes
 |flowAccessPointIds|`Set<UUID>`|Private|Accesos habilitados para el conteo de flujo según el layout.|
 |countedOccupied|Integer|Private|Ocupación derivada del conteo de ingresos y salidas desde la última reconciliación.|
 |consolidatedAt|Instant?|Private|Momento del último dato consolidado; define la antigüedad que se informa.|
+|lowAvailability|Boolean|Private|Indica si el estacionamiento está en poca disponibilidad. Entra cuando los espacios libres bajan del umbral del estacionamiento (10 % por defecto) y sale cuando superan ese umbral más 5 puntos, para no oscilar con cada espacio que se libera y se vuelve a ocupar.|
 |lastReconciledAt|Instant?|Private|Momento de la última reconciliación.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -5126,7 +5127,7 @@ Methods
 |-|-|-|-|
 |open(parkingLotId, tenantId)|LotOccupancy|Public (static)|Crea la ocupación del estacionamiento al recibir su primer layout.|
 |applyLayout(layoutVersion, zoneCapacities, flowAccessPointIds)|Void|Public|Actualiza las zonas, su capacidad y los accesos que cuentan flujo.|
-|recalculate(zoneCounts, at)|Void|Public|Reemplaza los conteos de cada zona, actualiza `consolidatedAt` y registra `OccupancyUpdated` (US05, US06).|
+|recalculate(zoneCounts, at)|Void|Public|Reemplaza los conteos de cada zona, actualiza `consolidatedAt` y registra `OccupancyUpdated` (US05, US06). Si cruza el umbral de poca disponibilidad, registra `LowAvailabilityStarted` o `LowAvailabilityEnded`; no registra nada mientras se mantiene del mismo lado.|
 |recordPassage(passage)|Boolean|Public|Si el acceso cuenta flujo, suma o resta en `countedOccupied` y registra `EntryExitRecorded` (TS14, escenario 1). Devuelve falso si el acceso no está habilitado.|
 |reconcile(policy, at)|ReconciliationResult|Public|Compara `countedOccupied` con los espacios ocupados detectados; si la diferencia supera la tolerancia más los espacios desconocidos, la marca como divergente. Ajusta el conteo a la detección y registra `AccessCountReconciled` (TS14, escenarios 2 y 3).|
 |availability()|Availability|Public|Suma la disponibilidad de todas las zonas.|
@@ -5168,6 +5169,8 @@ El contexto no necesita Domain Services: cada regla se resuelve dentro de un agr
 |SpaceMarkedUnknown|spaceId, parkingLotId, zoneId, reason, changedAt|Interno. Mismo uso que los anteriores.|
 |AccessCountReconciled|parkingLotId, result|Interno. Se registra para la consola.|
 |OccupancyUpdated|tenantId, parkingLotId, availability, zones, layoutVersion, consolidatedAt|Published Language. Lo consume Analytics para el historial de ocupación.|
+|LowAvailabilityStarted|tenantId, parkingLotId, freeSpaces, capacity, at|Published Language. Lo consume Notifications para avisar a los conductores de la franja actual y a los operadores.|
+|LowAvailabilityEnded|tenantId, parkingLotId, freeSpaces, capacity, at|Published Language. Lo consume Notifications para cerrar la condición y permitir una nueva alerta.|
 |EntryExitRecorded|eventId, tenantId, parkingLotId, accessPointId, direction, recordedAt|Published Language. Lo consume Analytics para el flujo histórico.|
 
 `OccupancyUpdated` y `EntryExitRecorded` son los nombres que fija la tabla de eventos de la sección 4.2.1 para "Disponibilidad actualizada" e "Ingreso o salida registrado".
@@ -5222,7 +5225,7 @@ Respuesta de `GET /api/v1/parking-lots/{lotId}/occupancy`:
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|OccupancyRealtimeEndpoint|Endpoint WebSocket (STOMP)|El cliente autenticado se suscribe a `/topic/parking-lots/{lotId}/occupancy` y recibe un mensaje por cada cambio de estado de un espacio y por cada recálculo de la disponibilidad (TS09, escenario 2). La suscripción se autoriza con el mismo token y solo para estacionamientos de su institución.|
+|OccupancyRealtimeEndpoint|Endpoint WebSocket (STOMP)|El cliente autenticado se suscribe a `/topic/parking-lots/{lotId}/occupancy` y recibe un mensaje por cada cambio de estado de un espacio y por cada recálculo de la disponibilidad (TS09, escenario 2). La suscripción se autoriza con el mismo token y solo para estacionamientos de su institución. La app y la consola usan el mismo canal. Durante el reenvío del búfer de un gateway, los cambios se agrupan y se envía como máximo el último estado de cada zona por segundo.|
 
 **Open Host Service: OccupancyFacade**
 
