@@ -8887,7 +8887,86 @@ Con estas prácticas, Quadrapp busca mantener un desarrollo colaborativo y orden
 
 ## 7.3. Validation Interviews
 
+Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los artefactos de diseño de los capítulos V y VI (los wireframes y wireflows de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page) y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría.
+
+Las respuestas se analizan como evidencia de comprensión y de preferencia declarada sobre un prototipo, no como evidencia de uso real. Por ello, no demuestran el cumplimiento de los Business Outcomes del Lean UX, que requieren un piloto con la solución implementada.
+
+#### Objetivos de la validación
+
+| N.º | Objetivo | Qué se quiere saber |
+| --- | --- | --- |
+| O1 | Validar el valor de la propuesta | Si conocer la probabilidad de encontrar espacio a la hora de llegada (y no solo la disponibilidad actual) es útil y cambiaría la decisión del usuario. |
+| O2 | Validar la comprensión de la asesoría de llegada | Si el usuario interpreta correctamente la categoría (HIGH, LIMITED, LOW), la probabilidad, los horizontes de 15, 30, 45 y 60 minutos y la confianza. |
+| O3 | Validar la confianza en los datos | Si el usuario entiende el estado "Sin datos / UNKNOWN", la antigüedad del dato y la advertencia de confianza baja, y cuánta confianza deposita en la estimación. |
+| O4 | Validar el mensaje de privacidad | Si el usuario comprende que el tiempo de llegada se calcula en su dispositivo y que el servidor recibe solo minutos. |
+| O5 | Validar la claridad de los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
+| O6 | Validar la utilidad de la consola | Si el administrador considera que la información de la consola le permite supervisar el turno, anticipar la saturación y gestionar dispositivos y layout. |
+| O7 | Validar la comunicación de la Landing Page | Si cada visitante entiende qué hace Quadrapp, para quién es y qué no hace (sin reservas, sin pagos, sin rastreo de ubicación). |
+
+#### Hipótesis y criterios de validación
+
+Cada objetivo se relaciona con una hipótesis del Lean UX (sección 1.2.2.3) y con un criterio definido antes de entrevistar. Con una muestra tan pequeña, los resultados se reportan como indicios y no como porcentajes generalizables.
+
+| Hipótesis a validar | Objetivo | Criterio de validación |
+| --- | --- | --- |
+| Los conductores reducirán su tiempo de búsqueda si conocen la probabilidad de encontrar espacio al llegar. | O1 | Al menos 2 de 3 conductores describen un cambio concreto en su decisión (hora de salida, estacionamiento o zona) (pregunta 10). |
+| La asesoría de llegada es comprensible para el conductor. | O2 | Al menos 2 de 3 conductores interpretan correctamente lo que indica la aplicación sobre su llegada y los horizontes (preguntas 4 y 5). |
+| Los conductores confiarán en una estimación que informa su confianza y su antigüedad. | O3 | Al menos 2 de 3 entienden que un espacio sin información no se cuenta como libre (pregunta 6) y declaran una confianza de 3 o más sobre 5 (pregunta 7). |
+| El cálculo del tiempo de llegada en el dispositivo no genera rechazo. | O4 | Ningún entrevistado manifiesta desconfianza y al menos 2 de 3 lo explican con sus palabras (pregunta 8). |
+| Los flujos principales de la aplicación son claros. | O5 | Al menos 2 de 3 conductores no señalan pasos confusos ni información faltante en lo que vieron (preguntas 9 y 11). |
+| El administrador utilizará la consola durante la operación del turno. | O6 | El administrador entiende la saturación prevista y el estado de los datos, y considera útil la información presentada (preguntas 4, 5, 7 y 11). |
+| La Landing Page comunica la propuesta y su alcance. | O7 | Al menos 2 de 3 conductores y el administrador explican correctamente qué hace Quadrapp (preguntas 2 y 3 del guion de cada segmento). |
+
 ### 7.3.1. Diseño de Entrevistas
+
+### Guion para el Segmento 1: Conductores de la comunidad educativa
+
+El entrevistador muestra primero la Landing Page y luego recorre la aplicación móvil siguiendo los Wireflows 1 a 4 (ingreso, disponibilidad al llegar, sede y zonas, y alertas). Después formula las preguntas.
+
+*Preguntas iniciales*
+
+1. La última vez nos contaste que no sabías si habría espacio antes de llegar. ¿Sigue siendo así? ¿Qué haces hoy para decidir cuándo salir?
+
+*Después de mostrar la Landing Page*
+
+2. ¿Qué entiendes que hace Quadrapp y para quién es?
+3. ¿Qué crees que Quadrapp no hace?
+
+*Después de recorrer la aplicación móvil*
+
+4. Si llegaras en 20 minutos, ¿qué te dice la aplicación sobre tus posibilidades de encontrar espacio?
+5. Al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte?
+6. Si la aplicación no tuviera información de algunos espacios, ¿los considerarías libres? ¿Por qué?
+7. Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué?
+8. La aplicación usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla?
+9. Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían?
+10. Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona?
+11. ¿Qué falta, qué sobra o qué te confundió de lo que viste?
+
+### Guion para el Segmento 2: Administradores de estacionamientos universitarios
+
+El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre la consola de operación siguiendo los Wireflows 5 a 9 (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
+
+*Preguntas iniciales*
+
+1. La última vez nos comentaste que las filas en las tranqueras a las 8 de la mañana eran el problema más frecuente. ¿Sigue siendo así? (¿Qué herramientas usas hoy para saber cuántos espacios hay libres?)
+
+*Después de mostrar la Landing Page*
+
+2. ¿Qué entiendes que ofrece Quadrapp a una universidad?
+3. ¿Qué crees que Quadrapp no hace?
+
+*Después de recorrer la Consola de Operación*
+
+4. ¿Qué información usarías primero durante el turno? ¿Cuál no usarías?
+5. ¿Te serviría saber con anticipación cuándo se llenará el estacionamiento? (¿Con cuánta anticipación? ¿Qué margen de error aceptarías?)
+6. ¿Cómo cambiaría tu forma de organizar al personal de las tranqueras con esa información?
+7. ¿Qué harías si el sistema no pudiera confirmar el estado de algunos espacios o sensores?
+8. Sobre la edición y publicación del layout, ¿te pareció claro el proceso? ¿Qué falta?
+9. Sobre el reemplazo, el registro y la baja de dispositivos, ¿qué te falta para hacerlo con seguridad?
+10. Sobre la precisión de las predicciones y la invitación de operadores, ¿lo que viste te resulta comprensible y útil?
+11. Del 1 al 5, ¿qué tan útil sería esta consola durante tu turno? ¿Qué falta o qué te confundió?
+
 
 ### 7.3.2. Registro de Entrevistas
 
