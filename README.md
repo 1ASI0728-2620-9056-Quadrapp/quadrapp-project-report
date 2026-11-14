@@ -4107,7 +4107,7 @@ La siguiente tabla resume las clases e interfaces principales de Parking Configu
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, campus, location, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
+| ParkingLot | Domain | Aggregate Root. Estacionamiento de una institución con sus zonas, espacios, accesos y parámetros de operación. | parkingLotId, tenantId, name, address, campus, location, timeZone, status, settings, layoutVersion, zones, accessPoints | register(), addZone(), addSpace(), configureAccessPoint(), enableFlowCounting(), updateSettings(), publishLayout(), capacity() |
 | ParkingZone | Domain | Entity. Sector, nivel o bloque que agrupa espacios. | zoneId, name, spaces | addSpace(), hasSpaceLabeled(), capacity() |
 | ParkingSpace | Domain | Entity. Lugar individual para estacionar. | spaceId, label, position | label() |
 | AccessPoint | Domain | Entity. Entrada o salida vehicular con sensores de paso. | accessPointId, name, type, flowCountingEnabled | enableFlowCounting(), countsFlow() |
@@ -4157,6 +4157,7 @@ Attributes
 |name|ParkingLotName|Private|Nombre del estacionamiento; único dentro de la institución.|
 |address|String|Private|Ubicación de referencia dentro del campus.|
 |campus|CampusName|Private|Sede de la institución a la que pertenece el estacionamiento (por ejemplo, "Monterrico"). Solo agrupa los estacionamientos en la interfaz; no tiene reglas propias.|
+|timeZone|ZoneId|Private|Zona horaria del campus (por defecto, America/Lima). Notifications la usa para evaluar las franjas suscritas y mostrar las horas en las alertas.|
 |location|GeoPoint|Private|Latitud y longitud del ingreso vehicular. La app la usa para calcular en el dispositivo la duración del trayecto y para abrir la ruta en una app de navegación.|
 |status|ParkingLotStatus|Private|DRAFT mientras no tiene layout publicado; PUBLISHED después de la primera publicación.|
 |settings|OperatingSettings|Private|Umbral de saturación, ventana de flujo, tiempo mínimo de detección y margen de precisión.|
@@ -4392,10 +4393,10 @@ Methods
 |Nombre|Tipo de retorno|Visibilidad|Consumidor|Descripción|
 |-|-|-|-|-|
 |profileOf(tenantId: UUID, parkingLotId: UUID)|ParkingLotProfileView|Public|Prediction & Advisory, Analytics, Occupancy|Umbral de saturación, umbral de poca disponibilidad, ventana de flujo y margen de precisión.|
-|activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory|Estacionamientos con layout publicado, con su institución.|
+|activeLots()|`List<ActiveLotView>`|Public|Prediction & Advisory, Notifications|Estacionamientos con layout publicado, con su institución.|
 |calendarEventsAround(tenantId: UUID, from: Instant, to: Instant)|`List<CalendarEventView>`|Public|Prediction & Advisory|Periodos académicos y eventos programados del intervalo.|
-|lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición|Estacionamientos para la pantalla de inicio y la consola.|
-|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición y Occupancy|Layout publicado vigente, con sus zonas, espacios, asociaciones y accesos. Occupancy lo lee al recibir `ParkingLayoutProvided`.|
+|lotsOf(tenantId: UUID)|`List<ParkingLotSummaryView>`|Public|Módulo de composición, Notifications|Con su sede, ubicación y zona horaria. Estacionamientos para la pantalla de inicio y la consola.|
+|layoutOf(tenantId: UUID, parkingLotId: UUID)|LayoutView|Public|Módulo de composición, Occupancy y Notifications|Layout publicado vigente, con sus zonas, espacios, asociaciones y accesos. Occupancy lo lee al recibir `ParkingLayoutProvided`.|
 |resolveDevice(hardwareId: String)|DeviceDirectoryEntry?|Public|Parking Sensing|Dispositivo, institución, estacionamiento, estado, destino vigente y tiempo mínimo de detección. Responde vacío si el identificador no está registrado.|
 
 **Event Consumer**
@@ -5166,7 +5167,7 @@ El contexto no necesita Domain Services: cada regla se resuelve dentro de un agr
 |Evento|Atributos|Alcance y consumidores|
 |-|-|-|
 |SpaceMarkedOccupied, SpaceMarkedFree|spaceId, parkingLotId, zoneId, changedAt|Internos. Disparan el recálculo de la disponibilidad y la notificación a los clientes suscritos.|
-|SpaceMarkedUnknown|spaceId, parkingLotId, zoneId, reason, changedAt|Interno. Mismo uso que los anteriores.|
+|SpaceMarkedUnknown|tenantId, spaceId, parkingLotId, zoneId, reason, changedAt|Published Language. Lo consume Notifications para la alerta de datos desactualizados, agrupada por zona.|
 |AccessCountReconciled|parkingLotId, result|Interno. Se registra para la consola.|
 |OccupancyUpdated|tenantId, parkingLotId, availability, zones, layoutVersion, consolidatedAt|Published Language. Lo consume Analytics para el historial de ocupación.|
 |LowAvailabilityStarted|tenantId, parkingLotId, freeSpaces, capacity, at|Published Language. Lo consume Notifications para avisar a los conductores de la franja actual y a los operadores.|
@@ -7204,7 +7205,7 @@ Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-0
 
 ## 5.7. Bounded Context: Notifications
 
-El contexto Notifications decide a quién avisar, cuándo y por qué canal, y entrega las alertas de baja disponibilidad a los conductores. Recibe las predicciones desde Prediction & Advisory mediante el lenguaje publicado (Published Language) del mapa de contextos y entrega los mensajes por push o por correo a través de capas anticorrupción hacia los proveedores externos de mensajería. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
+El contexto Notifications decide a quién avisar, cuándo y con qué mensaje, y entrega las alertas como notificaciones push. Recibe por el lenguaje publicado (Published Language) del mapa de contextos la saturación prevista de Prediction & Advisory, la poca disponibilidad y los espacios sin datos de Occupancy, las fallas de sensores y la interrupción de la ingesta de Parking Sensing, y los eventos del campus de Parking Configuration. Entrega los mensajes mediante Firebase Cloud Messaging (FCM), a través de una capa anticorrupción: push móvil a los conductores en la aplicación Flutter y web push a los operadores y administradores en la consola web en Vue, que no usan la aplicación móvil. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
  
 ### Class Dictionary
 
@@ -7212,31 +7213,30 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
 
 | Class / Interface | Layer | Purpose | Main attributes | Main operations |
 |---|---|---|---|---|
-| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | subscriptionId, userId, tenantId, parkingLotId, timeSlot, status, createdAt | create(), pause(), cancel(), covers() |
-| NotificationPreferences | Domain | Aggregate Root. Preferencias del usuario sobre qué alertas recibir y por qué canal (US24). | userId, tenantId, enabled, enabledTypes, enabledChannels, updatedAt | create(), update(), enable(), disable(), allows() |
-| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas. | ruleId, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes, updatedAt | define(), configure(), appliesTo() |
-| NotificationTemplate | Domain | Aggregate Root. Plantilla de mensaje por tipo de alerta, canal e idioma. | templateId, alertType, channel, locale, titleTemplate, bodyTemplate | render() |
-| DeviceRegistration | Domain | Aggregate Root. Token del dispositivo del conductor, destino de las alertas push. | deviceId, userId, tenantId, token, platform, status, registeredAt, invalidatedAt | register(), invalidate(), isUsable() |
-| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su canal, su estado y sus intentos de entrega. | notificationId, userId, tenantId, parkingLotId, type, channel, segment, conditionKey, templateId, content, status, attempts, createdAt, sentAt | create(), recordAttempt(), markSent(), markFailed(), skip() |
-| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo o correo. | attemptId, deviceId, channel, result, errorCode, attemptedAt | isRetryable() |
-| TimeSlot | Domain | Value Object. Franja semanal en la que el conductor suele llegar. | days, start, end | contains() |
-| DeviceToken | Domain | Value Object. Token entregado por el proveedor push. | value | value() |
-| ConditionKey | Domain | Value Object. Clave de la condición notificada; evita alertas repetidas. | value | value() |
-| NotificationContent | Domain | Value Object. Título y cuerpo ya renderizados. | title, body | — |
-| AlertPolicy | Domain | Domain Service. Decide si corresponde enviar una alerta. | — | shouldAlert() |
-| ChannelPolicy | Domain | Domain Service. Determina por qué canales se envía una alerta. | — | channelsFor() |
-| DeduplicationPolicy | Domain | Domain Service. Evita repetir una alerta para una condición ya notificada (US23, escenario 4). | — | isDuplicate() |
-| AlertType, Channel, SubscriptionStatus, Locale, Platform, DeviceStatus, RecipientSegment, NotificationStatus, DeliveryResult | Domain | Enumeraciones del contexto. | — | — |
-| NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, DeviceRegistrationRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…(), deleteByUser(), existsByUserAndConditionKey(), findRetryable() |
-| SubscriptionCreated, SubscriptionCancelled, PreferenceUpdated, NotificationRuleConfigured, DeviceTokenInvalidated, UserNotificationDelivered, PushSent, EmailSent, NotificationSkipped | Domain | Domain Events publicados. | Ver 5.7.1 | — |
-| *Command y *CommandHandler | Application | Casos de uso de escritura: suscripciones, preferencias, dispositivos, reglas, envío y reintento de alertas. | Dependencies | handle() |
+| NotificationSubscription | Domain | Aggregate Root. Suscripción del conductor a las alertas de un estacionamiento en una franja horaria (US33). | subscriptionId, userId, tenantId, parkingLotId, timeSlot, status, createdAt | create(), pause(), cancel(), covers(), overlaps() |
+| NotificationPreferences | Domain | Aggregate Root. Preferencias del conductor sobre qué tipos de alerta recibir (US24). | userId, tenantId, enabled, enabledTypes, updatedAt | create(), update(), enable(), disable(), allows() |
+| NotificationRule | Domain | Aggregate Root. Regla que define el administrador para un estacionamiento: si un tipo de alerta está activo y el intervalo mínimo entre alertas. | ruleId, tenantId, parkingLotId, alertType, enabled, minIntervalMinutes, updatedAt | define(), configure(), appliesTo() |
+| NotifiedCondition | Domain | Aggregate Root. Condición ya notificada a un destinatario; sostiene la deduplicación y el intervalo mínimo. | conditionId, userId, tenantId, parkingLotId, alertType, conditionKey, active, lastSentAt, closedAt | open(), reopen(), close(), isActive() |
+| DeviceRegistration | Domain | Aggregate Root. Token FCM de la aplicación móvil o del navegador de la consola, destino de las alertas push. | deviceId, userId, tenantId, token, platform, segment, locale, status, registeredAt, invalidatedAt | register(), refresh(), invalidate(), isUsable() |
+| Notification | Domain | Aggregate Root. Alerta concreta para un destinatario, con su contenido, su estado y sus intentos de entrega. | notificationId, userId, tenantId, parkingLotId, type, segment, conditionKey, locale, content, deepLink, status, skipReason, attempts, dispatchCount, nextAttemptAt, createdAt, sentAt | create(), skipped(), recordAttempt(), markSent(), markFailed(), expire() |
+| DeliveryAttempt | Domain | Entity. Intento de entrega de una notificación a un dispositivo. | attemptId, deviceId, result, errorCode, attemptedAt | isRetryable() |
+| TimeSlot | Domain | Value Object. Franja semanal en la que el conductor suele llegar. | days, start, end | contains(), overlaps() |
+| DeviceToken | Domain | Value Object. Token entregado por FCM. | value | value() |
+| ConditionKey | Domain | Value Object. Clave estable de la condición notificada; no cambia entre ejecuciones del pronóstico. | value | forSaturation(), forLowAvailability(), forStaleData(), forIngestion(), forCampusEvent(), value() |
+| NotificationContent | Domain | Value Object. Título y cuerpo ya renderizados en el idioma del destinatario. | title, body | — |
+| AlertPolicy | Domain | Domain Service. Decide si corresponde enviar una alerta a un destinatario o por qué se omite. | — | evaluate() |
+| DeduplicationPolicy | Domain | Domain Service. Evita repetir una alerta para una condición ya notificada o dentro del intervalo mínimo (US23, escenario 4). | — | check() |
+| AlertType, SubscriptionStatus, Locale, Platform, DeviceStatus, RecipientSegment, NotificationStatus, SkipReason, DeliveryResult | Domain | Enumeraciones del contexto. | — | — |
+| NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotifiedConditionRepository, DeviceRegistrationRepository, NotificationRepository | Domain | Repository. Abstracciones de persistencia de cada agregado. | — | save(), findById(), findBy…(), deleteByUser(), lastSentAt(), findRetryable() |
+| SubscriptionCreated, SubscriptionCancelled, PreferenceUpdated, NotificationRuleConfigured, DeviceTokenInvalidated, UserNotificationDelivered, PushSent, NotificationSkipped | Domain | Domain Events publicados. | Ver 5.7.1 | — |
+| *Command y *CommandHandler | Application | Casos de uso de escritura: suscripciones, preferencias, dispositivos, reglas, generación, envío y reintento de alertas. | Dependencies | handle() |
 | *Query y *QueryHandler | Application | Casos de uso de lectura: suscripciones, preferencias, reglas e historial. | Dependencies | handle() |
-| SaturationPredictedEventHandler | Application | Event Handler. Evalúa las suscripciones afectadas por una saturación prevista y crea las notificaciones. | Dependencies | handle() |
-| PushSender, EmailSender, IdentityContext, NotificationEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
+| SaturationPredictedEventHandler, LowAvailabilityEventHandler, StaleDataEventHandler, CampusEventChangedEventHandler, RoleAssignedEventHandler | Application | Event Handlers. Identifican a los destinatarios de cada tipo de alerta y ejecutan `RaiseAlertCommand` o `CloseConditionCommand`. | Dependencies | handle() |
+| PushSender, NotificationMessageCatalog, ParkingLotDirectory, OccupancyReader, IdentityContext, NotificationEventPublisher, Clock | Application | Puertos de salida. | — | Ver 5.7.3 |
 | SubscriptionController, PreferencesController, DeviceController, RuleController, HistoryController | Interface | Controllers REST. | Handler dependencies | Ver 5.7.2 |
-| PredictionEventConsumer, NotificationRetryScheduler | Interface | Consumer del evento `SaturationPredicted` y proceso programado de reintentos. | Handler dependencies | on(), retryFailedNotifications() |
+| PredictionEventConsumer, OccupancyEventConsumer, SensingEventConsumer, ConfigurationEventConsumer, IamEventConsumer, NotificationRetryScheduler | Interface | Consumers de los eventos de los demás módulos y proceso programado de reintentos. | Handler dependencies | on(), retryFailedNotifications() |
 | *RepositoryAdapter | Infrastructure | Implementan los repositorios sobre el esquema `notifications`. | Persistence dependency | save(), find…() |
-| PushGatewayAdapter, EmailGatewayAdapter, IdentityContextAdapter, NotificationEventPublisherAdapter | Infrastructure | Implementaciones de los puertos de salida. | Integration dependencies | Ver 5.7.4 |
+| PushGatewayAdapter, MessageCatalogAdapter, ParkingLotDirectoryAdapter, OccupancyReaderAdapter, IdentityContextAdapter, NotificationEventPublisherAdapter | Infrastructure | Implementaciones de los puertos de salida. | Integration dependencies | Ver 5.7.4 |
 
 ### 5.7.1. Domain Layer
  
@@ -7244,36 +7244,49 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
  
 | Aggregate | Raíz | Entidades y Value Objects | Responsabilidad e invariantes |
 |---|---|---|---|
-| NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja. Darse de baja conserva las demás suscripciones. |
-| NotificationPreferences | `NotificationPreferences` | `AlertType` (LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST), `Channel` | Preferencias del usuario: notificaciones activas o no, tipos de alerta y canales habilitados. Desactivarlas conserva la suscripción pero omite el envío. |
-| DeviceRegistration | `DeviceRegistration` | `DeviceToken` (valor del token), `Platform` (ANDROID, IOS), `DeviceStatus` (VALID, INVALID) | Destino de las alertas. Un token rechazado por el proveedor se marca como inválido y no se reintenta. |
-| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas (`minIntervalMinutes`) | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) para un estacionamiento: qué tipos de alerta están activos y cada cuánto pueden repetirse (`NotificationRuleConfigured`). |
-| NotificationTemplate | `NotificationTemplate` | `AlertType`, `Channel`, `Locale` (es_419, en_US) | Plantilla del mensaje por tipo de alerta, canal e idioma. |
-| Notification | `Notification` | `DeliveryAttempt` (entidad, con `DeliveryResult`: DELIVERED, REJECTED, PROVIDER_UNAVAILABLE), `Channel` (PUSH, EMAIL), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `NotificationContent` (título y cuerpo), `NotificationStatus` (PENDING, SENT, FAILED, SKIPPED) | Alerta concreta para un destinatario, con su canal y estado de entrega. La clave de condición evita alertas repetidas mientras la misma condición continúa activa. |
+| NotificationSubscription | `NotificationSubscription` | `TimeSlot` (días y rango horario), `SubscriptionStatus` (ACTIVE, PAUSED, CANCELLED) | Franja en la que el conductor suele llegar a un estacionamiento. Solo una suscripción activa por usuario, estacionamiento y franja, y el estacionamiento debe pertenecer a la institución del usuario. Darse de baja conserva las demás suscripciones. |
+| NotificationPreferences | `NotificationPreferences` | `AlertType` | Preferencias del conductor: notificaciones activas o no y tipos de alerta habilitados entre SATURATION_FORECAST, LIMITED_AVAILABILITY y EVENT_CHANGES. Desactivarlas conserva la suscripción pero omite el envío. |
+| NotificationRule | `NotificationRule` | `AlertType`, intervalo mínimo entre alertas (`minIntervalMinutes`) | Regla que configura el administrador de estacionamientos (PARKING_ADMIN) por estacionamiento y tipo de alerta: activa o desactiva el tipo en ese estacionamiento y fija cada cuánto puede repetirse (`NotificationRuleConfigured`). Es la única configuración de las alertas dirigidas al personal. Sin regla definida, el tipo está activo y sin intervalo mínimo. |
+| NotifiedCondition | `NotifiedCondition` | `ConditionKey`, `AlertType` | Registro de la condición notificada a un destinatario. Hay uno solo por usuario y clave de condición; mientras está activo no se repite la alerta, y su `lastSentAt` sostiene el intervalo mínimo. Los eventos de cierre lo desactivan. |
+| DeviceRegistration | `DeviceRegistration` | `DeviceToken` (valor del token), `Platform` (ANDROID, IOS, WEB), `RecipientSegment`, `Locale`, `DeviceStatus` (VALID, INVALID) | Destino de las alertas push: la aplicación móvil del conductor o el navegador de la consola de operadores y administradores. Registrar un token existente lo actualiza (upsert). Un token rechazado por FCM se marca como inválido y no se reintenta; al cerrar sesión, el token se elimina. |
+| Notification | `Notification` | `DeliveryAttempt` (entidad, con `DeliveryResult`: DELIVERED, REJECTED, PROVIDER_UNAVAILABLE), `RecipientSegment` (DRIVERS, PARKING_OPERATORS, PARKING_ADMINS), `ConditionKey`, `Locale`, `NotificationContent` (título y cuerpo), `NotificationStatus` (PENDING, SENT, FAILED, EXPIRED, SKIPPED), `SkipReason` | Alerta concreta para un destinatario, con su enlace profundo y su estado de entrega. Se envía como máximo tres veces y no se reintenta pasados 30 min desde su creación. |
+
+**Tipos de alerta y destinatarios.** Cada tipo de alerta tiene su evento de origen, sus destinatarios, su responsable de configuración y su clave de condición:
+
+|AlertType|Evento que la origina|Evento que la cierra|Destinatarios|Configuración|ConditionKey|
+|-|-|-|-|-|-|
+|SATURATION_FORECAST|`SaturationPredicted` (Prediction & Advisory: parkingLotId, tenantId, horizonMinutes, saturationExpectedAt)|—|DRIVERS: conductores suscritos al estacionamiento cuya franja contiene `saturationExpectedAt` (US33).|Conductor: suscripción (US33) y tipos habilitados (US24).|`tenantId:lotId:timeSlot:date:SATURATION`, con la franja y la fecha de la llegada prevista; no depende del pronóstico ni de la ejecución que lo generó.|
+|LIMITED_AVAILABILITY|`LowAvailabilityStarted` (Occupancy: tenantId, parkingLotId, freeSpaces, capacity, at)|`LowAvailabilityEnded` (Occupancy, mismos atributos)|DRIVERS cuya franja suscrita es la actual y PARKING_OPERATORS de la institución del estacionamiento.|Administrador: umbral por estacionamiento en Parking Configuration (`OperatingSettings.lowAvailabilityPct`, 10 % por defecto) y regla del tipo. Conductor: habilita o deshabilita el tipo.|`lotId:LOW_AVAILABILITY:startedAt`|
+|STALE_DATA|`DeviceFaultDetected` (Parking Sensing) y `SpaceMarkedUnknown` (Occupancy); `IngestionInterrupted` (Parking Sensing: tenantId, since, cause BROKER_DISCONNECTED o NO_GATEWAY_REPORTS) para la alerta de infraestructura|`SensorCommunicationRestored` (Parking Sensing)|Solo PARKING_OPERATORS y PARKING_ADMINS; los conductores ya ven esos espacios como UNKNOWN en la aplicación. Una alerta por zona, no por sensor (por ejemplo, "12 espacios sin datos en la zona Norte"), y una sola alerta de infraestructura por institución.|Administrador: regla por estacionamiento (tipo activo y `minIntervalMinutes`).|`lotId:zoneId:STALE`; `tenantId:INGESTION:since` para la interrupción de la ingesta.|
+|EVENT_CHANGES|`CampusEventProvided` (evento registrado) y `CampusEventCancelled` (evento cancelado), de Parking Configuration: campusEventId, tenantId, parkingLotId, startAt, endAt[, impact]|—|DRIVERS con una franja suscrita que se superpone con la ventana del evento.|Conductor: habilita o deshabilita el tipo.|`campusEventId:status` (REGISTERED o CANCELLED).|
  
 **Domain Services.**
-- `AlertPolicy`: decide si corresponde enviar una alerta, considerando notificaciones habilitadas, regla del administrador, tipo de alerta, suscripción vigente y franja horaria.
-- `ChannelPolicy`: determina el canal de envío según la preferencia del usuario ("el canal depende de la preferencia del usuario").
-- `DeduplicationPolicy`: impide enviar una nueva alerta cuando ya se envió una para la misma condición y esa condición sigue activa (US23, escenario 4).
+- `AlertPolicy`: decide si corresponde enviar una alerta a un destinatario. A los conductores les aplica sus preferencias (notificaciones habilitadas y tipo habilitado) y la regla del estacionamiento; a los operadores y administradores, solo la regla del estacionamiento.
+- `DeduplicationPolicy`: impide enviar una nueva alerta cuando la misma condición ya se notificó al destinatario y sigue activa (US23, escenario 4), o cuando no transcurrió el intervalo mínimo de la regla desde el último envío (`lastSentAt`).
 
-**Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `EmailSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`. La tabla de eventos del diccionario indica sus atributos y qué agregado registra cada uno.
+**Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`. La tabla de eventos del diccionario indica sus atributos y qué agregado registra cada uno.
  
-**Domain Events consumidos.** `SaturationPredicted`, publicado por Prediction & Advisory como Published Language, y `UserIdentityProvided`, entregado por IAM. Los nombres deben coincidir con los publicados por esos contextos.
+**Domain Events consumidos.** `SaturationPredicted` (Prediction & Advisory); `LowAvailabilityStarted`, `LowAvailabilityEnded` y `SpaceMarkedUnknown` (Occupancy); `DeviceFaultDetected`, `SensorCommunicationRestored` e `IngestionInterrupted` (Parking Sensing); `CampusEventProvided` y `CampusEventCancelled` (Parking Configuration), y `UserIdentityProvided` y `RoleAssigned` (IAM). Los nombres deben coincidir con los publicados por esos contextos.
  
-**Repositories.** `NotificationSubscriptionRepository`, `NotificationPreferencesRepository`, `NotificationRuleRepository`, `NotificationTemplateRepository`, `DeviceRegistrationRepository`, `NotificationRepository`.
+**Repositories.** `NotificationSubscriptionRepository`, `NotificationPreferencesRepository`, `NotificationRuleRepository`, `NotifiedConditionRepository`, `DeviceRegistrationRepository`, `NotificationRepository`.
  
 **Reglas de negocio principales.**
-1. Si la saturación se prevé dentro de una franja con suscripción vigente y el usuario tiene las notificaciones habilitadas, se envía la alerta (US23, escenario 1).
-2. Al abrir una alerta, el conductor accede a la asesoría de llegada del estacionamiento; Notifications no conoce el tiempo estimado de llegada ni la ubicación del conductor (US23, escenario 2; CON-07).
+1. Si la saturación se prevé dentro de una franja con suscripción vigente y el conductor tiene habilitadas las notificaciones y el tipo SATURATION_FORECAST, se envía la alerta (US23, escenario 1).
+2. Cada notificación lleva un enlace profundo: al tocarla, el conductor abre la asesoría de llegada del estacionamiento en la aplicación, y el operador o administrador abre el estacionamiento en la consola. Notifications no conoce el tiempo estimado de llegada ni la ubicación del conductor (US23, escenario 2; CON-07).
 3. Con notificaciones deshabilitadas se conserva la suscripción y se omite el envío (US23, escenario 3).
-4. No se generan alertas repetidas para una condición ya notificada (US23, escenario 4).
-5. Un token de dispositivo rechazado por el proveedor se marca inválido y no se vuelve a usar.
-6. No se envían más alertas que las permitidas por la regla del administrador ni se repite una alerta dentro del intervalo mínimo configurado.
-7. Los datos de notificación (token y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
+4. Toda alerta candidata que se descarta (notificaciones o tipo desactivados, regla desactivada, condición ya notificada o intervalo mínimo sin cumplir) queda registrada como SKIPPED con su motivo y publica `NotificationSkipped`.
+5. No se generan alertas repetidas para una condición ya notificada (US23, escenario 4). La `ConditionKey` es estable entre ejecuciones del pronóstico y solo existe un `NotifiedCondition` por usuario y clave.
+6. No se envían alertas de un tipo desactivado por la regla del estacionamiento ni se repite una alerta del mismo tipo y estacionamiento antes del intervalo mínimo configurado, contado desde `lastSentAt`.
+7. Cada tipo llega solo a sus destinatarios: SATURATION_FORECAST y EVENT_CHANGES a conductores suscritos; LIMITED_AVAILABILITY a los conductores de la franja actual y a los operadores; STALE_DATA solo a operadores y administradores, con una alerta por zona.
+8. Notifications no aplica el umbral de poca disponibilidad: Occupancy publica `LowAvailabilityStarted` cuando los espacios libres bajan del umbral `lowAvailabilityPct` del estacionamiento (10 % por defecto) y `LowAvailabilityEnded` cuando superan ese umbral más 5 puntos (histéresis).
+9. Los mensajes se generan en el idioma del destinatario (en_US por defecto, es_419) a partir de recursos traducidos por tipo de alerta, y las horas se muestran en la zona horaria del campus.
+10. Un token de dispositivo rechazado por FCM se marca inválido y no se vuelve a usar. Al cerrar sesión, la aplicación o la consola elimina su token, y registrar un token ya existente lo actualiza.
+11. Una notificación se envía como máximo tres veces, con espera exponencial entre intentos, y pasa a EXPIRED si no se entregó dentro de los 30 min posteriores a su creación.
+12. Los datos de notificación (tokens y preferencias) se conservan solo mientras la suscripción permanece activa y se eliminan al darse de baja (CON-07, escenario 2).
 
 **Diccionario de clases del dominio**
 
-Cada clase se documenta con su propósito, sus atributos y sus métodos. Como en los demás contextos, los atributos son privados y los métodos, públicos, y los tipos coinciden con el diagrama de clases de la sección 5.7.7.1. Las referencias a usuario, institución, estacionamiento y dispositivo se guardan como identificadores `UUID`.
+Cada clase se documenta con su propósito, sus atributos y sus métodos. Como en los demás contextos, los atributos son privados y los métodos, públicos, y los tipos coinciden con el diagrama de clases de la sección 5.7.7.1. Las referencias a usuario, institución, estacionamiento, zona y dispositivo se guardan como identificadores `UUID`.
 
 **Aggregate 1: NotificationSubscription**
 
@@ -7288,7 +7301,7 @@ Attributes
 |subscriptionId|UUID|Private|Identificador de la suscripción.|
 |userId|UUID|Private|Conductor suscrito (IAM).|
 |tenantId|UUID|Private|Institución (IAM).|
-|parkingLotId|UUID|Private|Estacionamiento de interés (Parking Configuration).|
+|parkingLotId|UUID|Private|Estacionamiento de interés (Parking Configuration); pertenece a la institución del conductor.|
 |timeSlot|TimeSlot|Private|Días y rango horario en que suele llegar.|
 |status|SubscriptionStatus|Private|ACTIVE, PAUSED o CANCELLED.|
 |createdAt|Instant|Private|Momento de creación.|
@@ -7298,24 +7311,25 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|create(userId: UUID, tenantId: UUID, parkingLotId: UUID, timeSlot: TimeSlot, now: Instant)|NotificationSubscription|Public (static)|Crea la suscripción en estado ACTIVE y registra `SubscriptionCreated` (TS12, escenario 1).|
+|create(userId: UUID, tenantId: UUID, parkingLotId: UUID, timeSlot: TimeSlot, now: Instant)|NotificationSubscription|Public (static)|Crea la suscripción en estado ACTIVE y registra `SubscriptionCreated` (TS12, escenario 1). El caso de uso verifica antes que el estacionamiento pertenezca a la institución del usuario.|
 |pause()|Void|Public|Pausa la suscripción sin eliminarla.|
 |cancel(now: Instant)|Void|Public|Da de baja la suscripción y registra `SubscriptionCancelled`; las demás suscripciones se conservan.|
-|covers(arrivalTime: Instant)|Boolean|Public|Indica si un momento cae dentro de la franja de una suscripción activa.|
+|covers(at: Instant, zone: ZoneId)|Boolean|Public|Indica si un momento, expresado en la zona horaria del campus, cae dentro de la franja de una suscripción activa.|
+|overlaps(from: Instant, to: Instant, zone: ZoneId)|Boolean|Public|Indica si la franja de una suscripción activa se superpone con una ventana de tiempo, por ejemplo, la de un evento del campus.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
 **Value Objects y enumeraciones del agregado NotificationSubscription**
 
 |Nombre|Categoría|Atributos|Métodos|Descripción|
 |-|-|-|-|-|
-|TimeSlot|Value Object|days: `Set<DayOfWeek>`, start: LocalTime, end: LocalTime|contains(at: Instant): Boolean|Franja semanal en la que el conductor suele llegar; `end` es posterior a `start`.|
+|TimeSlot|Value Object|days: `Set<DayOfWeek>`, start: LocalTime, end: LocalTime|contains(at: Instant, zone: ZoneId): Boolean; overlaps(from: Instant, to: Instant, zone: ZoneId): Boolean|Franja semanal en la que el conductor suele llegar, en hora local del campus; `end` es posterior a `start`.|
 |SubscriptionStatus|Enumeration|ACTIVE, PAUSED, CANCELLED|—|Estado de la suscripción.|
 
 **Aggregate 2: NotificationPreferences**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|NotificationPreferences|Aggregate Root|Preferencias del usuario sobre qué alertas recibir y por qué canal (US24).|
+|NotificationPreferences|Aggregate Root|Preferencias del conductor sobre qué tipos de alerta recibir (US24).|
 
 Attributes
 
@@ -7324,8 +7338,7 @@ Attributes
 |userId|UUID|Private|Usuario (IAM); identifica las preferencias.|
 |tenantId|UUID|Private|Institución (IAM).|
 |enabled|Boolean|Private|Interruptor general de las notificaciones.|
-|enabledTypes|`Set<AlertType>`|Private|Tipos de alerta habilitados.|
-|enabledChannels|`Set<Channel>`|Private|Canales habilitados.|
+|enabledTypes|`Set<AlertType>`|Private|Tipos de alerta habilitados; solo admite SATURATION_FORECAST, LIMITED_AVAILABILITY y EVENT_CHANGES.|
 |updatedAt|Instant|Private|Última modificación.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -7333,18 +7346,18 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|create(userId: UUID, tenantId: UUID, now: Instant)|NotificationPreferences|Public (static)|Crea las preferencias del usuario con las notificaciones habilitadas, todos los tipos de alerta y el canal PUSH. Se usa al registrar la primera suscripción del usuario.|
-|update(enabledTypes: `Set<AlertType>`, enabledChannels: `Set<Channel>`, now: Instant)|Void|Public|Reemplaza los tipos y canales habilitados y registra `PreferenceUpdated`; se aplica a los envíos posteriores (TS12, escenario 2).|
+|create(userId: UUID, tenantId: UUID, now: Instant)|NotificationPreferences|Public (static)|Crea las preferencias del conductor con las notificaciones habilitadas y los tres tipos de alerta dirigidos a conductores. Se usa al registrar la primera suscripción del usuario.|
+|update(enabledTypes: `Set<AlertType>`, now: Instant)|Void|Public|Reemplaza los tipos habilitados y registra `PreferenceUpdated`; rechaza STALE_DATA, que no se dirige a conductores, y se aplica a los envíos posteriores (TS12, escenario 2).|
 |enable(now: Instant)|Void|Public|Activa las notificaciones y registra `PreferenceUpdated`.|
 |disable(now: Instant)|Void|Public|Desactiva las notificaciones y registra `PreferenceUpdated`; la suscripción se conserva (US23, escenario 3).|
-|allows(type: AlertType, channel: Channel)|Boolean|Public|Indica si se permite un tipo de alerta por un canal.|
+|allows(type: AlertType)|Boolean|Public|Indica si las notificaciones están habilitadas y el tipo de alerta también.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
 **Aggregate 3: NotificationRule**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: tipos de alerta activos e intervalo mínimo entre alertas.|
+|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: si un tipo de alerta está activo en ese estacionamiento y el intervalo mínimo entre alertas. Es la configuración de las alertas dirigidas al personal (STALE_DATA y el aviso de LIMITED_AVAILABILITY a operadores) y permite desactivar cualquier tipo en un estacionamiento.|
 
 Attributes
 
@@ -7354,8 +7367,8 @@ Attributes
 |tenantId|UUID|Private|Institución (IAM).|
 |parkingLotId|UUID|Private|Estacionamiento (Parking Configuration).|
 |alertType|AlertType|Private|Tipo de alerta regulado.|
-|enabled|Boolean|Private|Indica si el tipo está activo.|
-|minIntervalMinutes|Integer|Private|Minutos mínimos entre dos alertas del mismo tipo.|
+|enabled|Boolean|Private|Indica si el tipo está activo en el estacionamiento.|
+|minIntervalMinutes|Integer|Private|Minutos mínimos entre dos alertas del mismo tipo y estacionamiento para un mismo destinatario.|
 |updatedAt|Instant|Private|Última modificación.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -7368,40 +7381,40 @@ Methods
 |appliesTo(parkingLotId: UUID, type: AlertType)|Boolean|Public|Indica si la regla aplica a un estacionamiento y tipo.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
-**Aggregate 4: NotificationTemplate**
+**Aggregate 4: NotifiedCondition**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|NotificationTemplate|Aggregate Root|Plantilla de mensaje por tipo de alerta, canal e idioma.|
+|NotifiedCondition|Aggregate Root|Condición ya notificada a un destinatario. Sostiene la deduplicación (US23, escenario 4) y el intervalo mínimo entre alertas.|
 
 Attributes
 
 |Nombre|Tipo de dato|Visibilidad|Descripción|
 |-|-|-|-|
-|templateId|UUID|Private|Identificador de la plantilla.|
-|alertType|AlertType|Private|Tipo de alerta.|
-|channel|Channel|Private|Canal.|
-|locale|Locale|Private|Idioma de la plantilla: es_419 o en_US.|
-|titleTemplate|String|Private|Plantilla del título.|
-|bodyTemplate|String|Private|Plantilla del cuerpo.|
+|conditionId|UUID|Private|Identificador del registro.|
+|userId|UUID|Private|Destinatario (IAM).|
+|tenantId|UUID|Private|Institución (IAM).|
+|parkingLotId|UUID?|Private|Estacionamiento de la condición; vacío en la interrupción de la ingesta, que afecta a toda la institución.|
+|alertType|AlertType|Private|Tipo de alerta de la condición.|
+|conditionKey|ConditionKey|Private|Clave estable de la condición; es única por destinatario.|
+|active|Boolean|Private|Indica si la condición sigue activa.|
+|lastSentAt|Instant|Private|Momento de la última alerta generada para la condición.|
+|closedAt|Instant?|Private|Momento en que un evento de cierre desactivó la condición.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|render(params: `Map<String, String>`)|NotificationContent|Public|Completa la plantilla con los datos de la alerta.|
-
-**Enumeraciones del agregado NotificationTemplate**
-
-|Nombre|Categoría|Atributos|Métodos|Descripción|
-|-|-|-|-|-|
-|Locale|Enumeration|es_419, en_US|—|Idiomas de la plantilla.|
+|open(userId: UUID, tenantId: UUID, parkingLotId: UUID?, alertType: AlertType, conditionKey: ConditionKey, now: Instant)|NotifiedCondition|Public (static)|Registra la condición como activa con `lastSentAt` igual a `now`.|
+|reopen(now: Instant)|Void|Public|Vuelve a activar una condición cerrada cuando ocurre de nuevo (por ejemplo, otra falla en la misma zona) y actualiza `lastSentAt`.|
+|close(now: Instant)|Void|Public|Desactiva la condición al recibir su evento de cierre (`LowAvailabilityEnded` o `SensorCommunicationRestored`).|
+|isActive()|Boolean|Public|Indica si la condición sigue activa.|
 
 **Aggregate 5: DeviceRegistration**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|DeviceRegistration|Aggregate Root|Token del dispositivo del conductor, destino de las alertas push.|
+|DeviceRegistration|Aggregate Root|Token FCM de la aplicación móvil del conductor o del navegador de la consola de un operador o administrador, destino de las alertas push.|
 
 Attributes
 
@@ -7410,10 +7423,12 @@ Attributes
 |deviceId|UUID|Private|Identificador del registro del dispositivo.|
 |userId|UUID|Private|Propietario (IAM).|
 |tenantId|UUID|Private|Institución (IAM).|
-|token|DeviceToken|Private|Token entregado por el proveedor push.|
-|platform|Platform|Private|ANDROID o IOS.|
+|token|DeviceToken|Private|Token entregado por FCM.|
+|platform|Platform|Private|ANDROID o IOS para la aplicación móvil; WEB para la consola.|
+|segment|RecipientSegment|Private|Segmento del propietario, derivado de su rol en el token: DRIVER a DRIVERS, PARKING_OPERATOR a PARKING_OPERATORS y PARKING_ADMIN a PARKING_ADMINS.|
+|locale|Locale|Private|Idioma declarado por la aplicación o la consola al registrar el token.|
 |status|DeviceStatus|Private|VALID o INVALID.|
-|registeredAt|Instant|Private|Momento del registro.|
+|registeredAt|Instant|Private|Momento del registro o de la última actualización.|
 |invalidatedAt|Instant?|Private|Momento en que el token se marcó como inválido.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -7421,8 +7436,9 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|register(userId: UUID, tenantId: UUID, token: DeviceToken, platform: Platform, now: Instant)|DeviceRegistration|Public (static)|Registra el token del dispositivo en estado VALID como destino de las alertas push (US33, escenario 2).|
-|invalidate(now: Instant)|Void|Public|Marca el token como inválido cuando el proveedor lo rechaza y registra `DeviceTokenInvalidated` (TS12, escenario 3).|
+|register(userId: UUID, tenantId: UUID, token: DeviceToken, platform: Platform, segment: RecipientSegment, locale: Locale, now: Instant)|DeviceRegistration|Public (static)|Registra el token en estado VALID como destino de las alertas push (US33, escenario 2).|
+|refresh(userId: UUID, tenantId: UUID, platform: Platform, segment: RecipientSegment, locale: Locale, now: Instant)|Void|Public|Actualiza un token ya registrado con el usuario, la plataforma, el segmento y el idioma recibidos, y lo deja en VALID. Con `register`, implementa el registro como upsert.|
+|invalidate(now: Instant)|Void|Public|Marca el token como inválido cuando FCM lo rechaza y registra `DeviceTokenInvalidated` (TS12, escenario 3).|
 |isUsable()|Boolean|Public|Indica si el token puede recibir alertas.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
@@ -7430,15 +7446,15 @@ Methods
 
 |Nombre|Categoría|Atributos|Métodos|Descripción|
 |-|-|-|-|-|
-|DeviceToken|Value Object|value: String|value(): String|Token del dispositivo entregado por el proveedor push; es único.|
-|Platform|Enumeration|ANDROID, IOS|—|Plataforma del dispositivo.|
+|DeviceToken|Value Object|value: String|value(): String|Token del dispositivo o navegador entregado por FCM; es único.|
+|Platform|Enumeration|ANDROID, IOS, WEB|—|Plataforma del destino: aplicación móvil en Android o iOS, o web push en la consola.|
 |DeviceStatus|Enumeration|VALID, INVALID|—|Estado del token del dispositivo.|
 
 **Aggregate 6: Notification**
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su canal, su estado y sus intentos de entrega.|
+|Notification|Aggregate Root|Alerta concreta para un destinatario, con su contenido, su estado y sus intentos de entrega.|
 
 Attributes
 
@@ -7447,16 +7463,19 @@ Attributes
 |notificationId|UUID|Private|Identificador de la notificación.|
 |userId|UUID|Private|Destinatario (IAM).|
 |tenantId|UUID|Private|Institución (IAM).|
-|parkingLotId|UUID|Private|Estacionamiento de la alerta (Parking Configuration).|
+|parkingLotId|UUID?|Private|Estacionamiento de la alerta (Parking Configuration); vacío en la alerta de interrupción de la ingesta.|
 |type|AlertType|Private|Tipo de alerta.|
-|channel|Channel|Private|PUSH o EMAIL.|
 |segment|RecipientSegment|Private|Segmento destinatario.|
-|conditionKey|ConditionKey|Private|Clave de la condición notificada; evita duplicados.|
-|templateId|UUID|Private|Referencia a la `NotificationTemplate` con la que se renderizó el contenido; permite saber qué versión del mensaje recibió el usuario.|
-|content|NotificationContent|Private|Título y cuerpo ya renderizados.|
-|status|NotificationStatus|Private|PENDING, SENT, FAILED o SKIPPED.|
+|conditionKey|ConditionKey|Private|Clave de la condición notificada.|
+|locale|Locale|Private|Idioma con el que se renderizó el contenido.|
+|content|NotificationContent?|Private|Título y cuerpo ya renderizados; vacío cuando la notificación se omite.|
+|deepLink|String?|Private|Enlace profundo: la asesoría de llegada del estacionamiento en la aplicación para conductores, o el estacionamiento en la consola para operadores y administradores.|
+|status|NotificationStatus|Private|PENDING, SENT, FAILED, EXPIRED o SKIPPED.|
+|skipReason|SkipReason?|Private|Motivo por el que se descartó la alerta candidata.|
 |attempts|`List<DeliveryAttempt>`|Private|Intentos de entrega registrados.|
-|createdAt|Instant|Private|Momento de creación.|
+|dispatchCount|Integer|Private|Envíos realizados; como máximo 3.|
+|nextAttemptAt|Instant?|Private|Momento del próximo reintento, calculado con espera exponencial.|
+|createdAt|Instant|Private|Momento de creación; desde él se cuentan los 30 min de vigencia.|
 |sentAt|Instant?|Private|Momento del envío exitoso.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -7464,49 +7483,50 @@ Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|create(userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, channel: Channel, segment: RecipientSegment, conditionKey: ConditionKey, templateId: UUID, content: NotificationContent, now: Instant)|Notification|Public (static)|Crea la notificación en estado PENDING con el contenido ya renderizado por `NotificationTemplate.render` y la referencia a esa plantilla.|
+|create(userId: UUID, tenantId: UUID, parkingLotId: UUID?, type: AlertType, segment: RecipientSegment, conditionKey: ConditionKey, locale: Locale, content: NotificationContent, deepLink: String, now: Instant)|Notification|Public (static)|Crea la notificación en estado PENDING con el contenido ya renderizado desde los recursos traducidos y el idioma usado.|
+|skipped(userId: UUID, tenantId: UUID, parkingLotId: UUID?, type: AlertType, segment: RecipientSegment, conditionKey: ConditionKey, reason: SkipReason, now: Instant)|Notification|Public (static)|Registra una alerta candidata descartada en estado SKIPPED, con su motivo, y registra `NotificationSkipped`.|
 |recordAttempt(attempt: DeliveryAttempt)|Void|Public|Agrega el resultado de un intento de entrega.|
-|markSent(now: Instant)|Void|Public|Pasa a SENT y registra `PushSent` o `EmailSent`, según el canal, y `UserNotificationDelivered`.|
-|markFailed(reason: String)|Void|Public|Pasa a FAILED cuando el proveedor falla; solo se reintenta si el último intento es reintentable.|
-|skip(reason: String, now: Instant)|Void|Public|Pasa a SKIPPED sin enviar (por ejemplo, con notificaciones desactivadas) y registra `NotificationSkipped`.|
+|markSent(now: Instant)|Void|Public|Pasa a SENT y registra `PushSent` y `UserNotificationDelivered`.|
+|markFailed(now: Instant)|Void|Public|Suma un envío. Si el último intento es reintentable y hubo menos de 3 envíos, conserva PENDING y fija `nextAttemptAt` con espera exponencial (1 min y 2 min); si no, pasa a FAILED.|
+|expire(now: Instant)|Void|Public|Pasa a EXPIRED cuando transcurrieron más de 30 min desde `createdAt` sin entregarse; no se vuelve a reintentar.|
 |pullDomainEvents()|`List<DomainEvent>`|Public|Entrega y vacía los eventos pendientes.|
 
 **Entities, Value Objects y enumeraciones del agregado Notification**
 
 |Nombre|Categoría|Atributos|Métodos|Descripción|
 |-|-|-|-|-|
-|DeliveryAttempt|Entity|attemptId: UUID, deviceId: UUID?, channel: Channel, result: DeliveryResult, errorCode: String?, attemptedAt: Instant|isRetryable(): Boolean|Intento de entrega a un dispositivo o correo; `deviceId` queda vacío cuando el canal es EMAIL. Solo es reintentable un intento con resultado PROVIDER_UNAVAILABLE.|
-|ConditionKey|Value Object|value: String|value(): String|Identifica la condición notificada, por ejemplo, la saturación prevista de un estacionamiento. Mientras la condición sigue activa, no se repite la alerta (US23, escenario 4).|
-|NotificationContent|Value Object|title: String, body: String|—|Título y cuerpo ya renderizados con la plantilla; se conservan aunque la plantilla cambie después.|
-|RecipientSegment|Enumeration|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|—|Segmento destinatario.|
-|NotificationStatus|Enumeration|PENDING, SENT, FAILED, SKIPPED|—|Estado de la notificación.|
-|DeliveryResult|Enumeration|DELIVERED, REJECTED, PROVIDER_UNAVAILABLE|—|DELIVERED: el proveedor aceptó el envío. REJECTED: el proveedor rechazó el token; el token se marca como inválido y no se reintenta (TS12, escenario 3). PROVIDER_UNAVAILABLE: el proveedor no respondió dentro del tiempo límite o su circuit breaker está abierto; el envío se puede reintentar (QAS-06).|
+|DeliveryAttempt|Entity|attemptId: UUID, deviceId: UUID?, result: DeliveryResult, errorCode: String?, attemptedAt: Instant|isRetryable(): Boolean|Intento de entrega a un dispositivo; `deviceId` queda vacío si después se elimina el dispositivo. Solo es reintentable un intento con resultado PROVIDER_UNAVAILABLE.|
+|ConditionKey|Value Object|value: String|forSaturation(tenantId, parkingLotId, timeSlot, date); forLowAvailability(parkingLotId, startedAt); forStaleData(parkingLotId, zoneId); forIngestion(tenantId, since); forCampusEvent(campusEventId, status); value(): String|Identifica la condición notificada con un formato estable que no depende del pronóstico ni de la ejecución que la detectó: `tenantId:lotId:timeSlot:date:SATURATION`, `lotId:LOW_AVAILABILITY:startedAt`, `lotId:zoneId:STALE`, `tenantId:INGESTION:since` y `campusEventId:status` (US23, escenario 4).|
+|NotificationContent|Value Object|title: String, body: String|—|Título y cuerpo ya renderizados en el idioma del destinatario, con las horas en la zona horaria del campus; se conservan aunque los recursos traducidos cambien después.|
+|RecipientSegment|Enumeration|DRIVERS, PARKING_OPERATORS, PARKING_ADMINS|—|Segmento destinatario; determina qué tipos de alerta recibe cada usuario.|
+|NotificationStatus|Enumeration|PENDING, SENT, FAILED, EXPIRED, SKIPPED|—|Estado de la notificación.|
+|SkipReason|Enumeration|NOTIFICATIONS_DISABLED, TYPE_DISABLED, RULE_DISABLED, DUPLICATE, INTERVAL_NOT_ELAPSED|—|Motivo por el que se descarta una alerta candidata.|
+|DeliveryResult|Enumeration|DELIVERED, REJECTED, PROVIDER_UNAVAILABLE|—|DELIVERED: FCM aceptó el envío. REJECTED: FCM rechazó el token por no registrado o inválido; el token se marca como inválido y no se reintenta (TS12, escenario 3). PROVIDER_UNAVAILABLE: FCM no respondió dentro del tiempo límite o su circuit breaker está abierto; el envío se puede reintentar (QAS-06).|
 
 **Enumeraciones compartidas**
 
 |Nombre|Categoría|Atributos|Métodos|Descripción|
 |-|-|-|-|-|
-|AlertType|Enumeration|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|—|Tipos de alerta. Lo usan `NotificationPreferences`, `NotificationRule`, `NotificationTemplate` y `Notification`.|
-|Channel|Enumeration|PUSH, EMAIL|—|Canales de envío. Lo usan `NotificationPreferences`, `NotificationTemplate`, `Notification` y `DeliveryAttempt`.|
+|AlertType|Enumeration|LIMITED_AVAILABILITY, STALE_DATA, EVENT_CHANGES, SATURATION_FORECAST|—|Tipos de alerta. Lo usan `NotificationPreferences`, `NotificationRule`, `NotifiedCondition` y `Notification`.|
+|Locale|Enumeration|en_US, es_419|—|Idiomas de los mensajes; en_US es el idioma por defecto. Lo usan `DeviceRegistration` y `Notification`.|
 
 **Domain Services**
 
 |Nombre|Categoría|Métodos|Descripción|
 |-|-|-|-|
-|AlertPolicy|Domain Service|shouldAlert(preferences: NotificationPreferences, subscription: NotificationSubscription, rule: NotificationRule, type: AlertType, at: Instant): Boolean|Evalúa notificaciones habilitadas, suscripción vigente, regla del administrador, tipo de alerta y franja horaria.|
-|ChannelPolicy|Domain Service|channelsFor(preferences: NotificationPreferences, type: AlertType): `Set<Channel>`|Devuelve los canales habilitados para el tipo según la preferencia del usuario.|
-|DeduplicationPolicy|Domain Service|isDuplicate(conditionKey: ConditionKey, userId: UUID): Boolean|Indica si la condición ya se notificó al usuario y sigue activa; se apoya en `NotificationRepository.existsByUserAndConditionKey` (US23, escenario 4).|
+|AlertPolicy|Domain Service|evaluate(segment: RecipientSegment, type: AlertType, preferences: NotificationPreferences?, rule: NotificationRule?): SkipReason?|Devuelve vacío si corresponde enviar la alerta o el motivo para omitirla. Para DRIVERS evalúa las preferencias (NOTIFICATIONS_DISABLED, TYPE_DISABLED) y la regla del estacionamiento (RULE_DISABLED); para PARKING_OPERATORS y PARKING_ADMINS, solo la regla.|
+|DeduplicationPolicy|Domain Service|check(condition: NotifiedCondition?, lastSentAt: Instant?, rule: NotificationRule?, now: Instant): SkipReason?|Devuelve DUPLICATE si la condición ya se notificó al destinatario y sigue activa (US23, escenario 4), o INTERVAL_NOT_ELAPSED si el último envío del mismo tipo y estacionamiento a ese destinatario ocurrió hace menos de `minIntervalMinutes`. Se apoya en `NotifiedConditionRepository`.|
 
 **Repositories (interfaces del dominio)**
 
 |Nombre|Operaciones|Descripción|
 |-|-|-|
-|NotificationSubscriptionRepository|save(subscription: NotificationSubscription): Void; findById(subscriptionId: UUID): NotificationSubscription; findByUser(userId: UUID): `List<NotificationSubscription>`; findActiveByParkingLot(parkingLotId: UUID): `List<NotificationSubscription>`|Persistencia de `NotificationSubscription`. `findActiveByParkingLot` localiza las suscripciones afectadas por `SaturationPredicted`.|
+|NotificationSubscriptionRepository|save(subscription: NotificationSubscription): Void; findById(subscriptionId: UUID): NotificationSubscription; findByUser(userId: UUID): `List<NotificationSubscription>`; findActiveByParkingLot(parkingLotId: UUID): `List<NotificationSubscription>`|Persistencia de `NotificationSubscription`. `findActiveByParkingLot` localiza las suscripciones afectadas por `SaturationPredicted`, `LowAvailabilityStarted` y los eventos del campus.|
 |NotificationPreferencesRepository|save(preferences: NotificationPreferences): Void; findByUser(userId: UUID): NotificationPreferences; deleteByUser(userId: UUID): Void|Persistencia de `NotificationPreferences`. `deleteByUser` elimina las preferencias al darse de baja (CON-07, escenario 2).|
-|NotificationRuleRepository|save(rule: NotificationRule): Void; findById(ruleId: UUID): NotificationRule; findByParkingLot(parkingLotId: UUID): `List<NotificationRule>`|Persistencia de `NotificationRule`.|
-|NotificationTemplateRepository|save(template: NotificationTemplate): Void; findById(templateId: UUID): NotificationTemplate; findFor(alertType: AlertType, channel: Channel, locale: Locale): NotificationTemplate|Persistencia de `NotificationTemplate`. `findFor` obtiene la plantilla por tipo, canal e idioma.|
-|DeviceRegistrationRepository|save(device: DeviceRegistration): Void; findById(deviceId: UUID): DeviceRegistration; findUsableByUser(userId: UUID): `List<DeviceRegistration>`; deleteByUser(userId: UUID): Void|Persistencia de `DeviceRegistration`. `deleteByUser` elimina los tokens al darse de baja (CON-07, escenario 2).|
-|NotificationRepository|save(notification: Notification): Void; findById(notificationId: UUID): Notification; findByUser(userId: UUID): `List<Notification>`; existsByUserAndConditionKey(userId: UUID, conditionKey: ConditionKey): Boolean; findRetryable(): `List<Notification>`|Persistencia de `Notification`. `findByUser` entrega el historial, `existsByUserAndConditionKey` sostiene la deduplicación y `findRetryable` devuelve las notificaciones FAILED cuyo último intento terminó en PROVIDER_UNAVAILABLE.|
+|NotificationRuleRepository|save(rule: NotificationRule): Void; findById(ruleId: UUID): NotificationRule; findByParkingLot(parkingLotId: UUID): `List<NotificationRule>`; findByParkingLotAndType(parkingLotId: UUID, type: AlertType): NotificationRule?|Persistencia de `NotificationRule`.|
+|NotifiedConditionRepository|save(condition: NotifiedCondition): Void; findByUserAndConditionKey(userId: UUID, conditionKey: ConditionKey): NotifiedCondition?; findActiveByConditionKey(conditionKey: ConditionKey): `List<NotifiedCondition>`; findActiveByParkingLotAndType(parkingLotId: UUID, type: AlertType): `List<NotifiedCondition>`; lastSentAt(userId: UUID, parkingLotId: UUID?, type: AlertType): Instant?|Persistencia de `NotifiedCondition`. Las búsquedas de condiciones activas permiten cerrarlas con los eventos de cierre, y `lastSentAt` sostiene el intervalo mínimo.|
+|DeviceRegistrationRepository|save(device: DeviceRegistration): Void; findById(deviceId: UUID): DeviceRegistration; findByToken(token: DeviceToken): DeviceRegistration?; findUsableByUser(userId: UUID): `List<DeviceRegistration>`; findUsableByTenantAndSegments(tenantId: UUID, segments: `Set<RecipientSegment>`): `List<DeviceRegistration>`; deleteByToken(userId: UUID, token: DeviceToken): Void; deleteByUser(userId: UUID): Void|Persistencia de `DeviceRegistration`. `findByToken` sostiene el upsert, `findUsableByTenantAndSegments` localiza a los operadores y administradores de la institución, `deleteByToken` elimina el token al cerrar sesión y `deleteByUser` elimina los tokens al darse de baja (CON-07, escenario 2).|
+|NotificationRepository|save(notification: Notification): Void; findById(notificationId: UUID): Notification; findByUser(userId: UUID): `List<Notification>`; findRetryable(now: Instant): `List<Notification>`|Persistencia de `Notification`. `findByUser` entrega el historial y `findRetryable` devuelve las notificaciones PENDING cuyo `nextAttemptAt` ya venció.|
 
 **Domain Events publicados**
 
@@ -7514,61 +7534,70 @@ Methods
 |-|-|-|-|
 |SubscriptionCreated|subscriptionId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, timeSlot: TimeSlot, createdAt: Instant|`NotificationSubscription.create`|Suscripción registrada (US33, TS12).|
 |SubscriptionCancelled|subscriptionId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, cancelledAt: Instant|`NotificationSubscription.cancel`|Baja de una suscripción; las demás se conservan.|
-|PreferenceUpdated|userId: UUID, tenantId: UUID, enabled: Boolean, enabledTypes: `Set<AlertType>`, enabledChannels: `Set<Channel>`, updatedAt: Instant|`NotificationPreferences.update`, `enable` y `disable`|Preferencias aplicadas a los envíos posteriores (US24).|
+|PreferenceUpdated|userId: UUID, tenantId: UUID, enabled: Boolean, enabledTypes: `Set<AlertType>`, updatedAt: Instant|`NotificationPreferences.update`, `enable` y `disable`|Preferencias aplicadas a los envíos posteriores (US24).|
 |NotificationRuleConfigured|ruleId: UUID, tenantId: UUID, parkingLotId: UUID, alertType: AlertType, enabled: Boolean, minIntervalMinutes: Integer, updatedAt: Instant|`NotificationRule.define` y `configure`|Regla de alerta guardada por el administrador.|
-|DeviceTokenInvalidated|deviceId: UUID, userId: UUID, tenantId: UUID, invalidatedAt: Instant|`DeviceRegistration.invalidate`|Token rechazado por el proveedor; no se vuelve a usar. No incluye el token.|
-|UserNotificationDelivered|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, channel: Channel, sentAt: Instant|`Notification.markSent`|Alerta entregada al conductor.|
-|PushSent|notificationId: UUID, userId: UUID, tenantId: UUID, sentAt: Instant|`Notification.markSent` (canal PUSH)|Envío confirmado por el proveedor de mensajería push.|
-|EmailSent|notificationId: UUID, userId: UUID, tenantId: UUID, sentAt: Instant|`Notification.markSent` (canal EMAIL)|Envío confirmado por el servicio de correo.|
-|NotificationSkipped|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID, type: AlertType, skippedAt: Instant|`Notification.skip`|Envío omitido, por ejemplo con notificaciones desactivadas (US23, escenario 3).|
+|DeviceTokenInvalidated|deviceId: UUID, userId: UUID, tenantId: UUID, invalidatedAt: Instant|`DeviceRegistration.invalidate`|Token rechazado por FCM; no se vuelve a usar. No incluye el token.|
+|UserNotificationDelivered|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID?, type: AlertType, segment: RecipientSegment, sentAt: Instant|`Notification.markSent`|Alerta entregada al destinatario.|
+|PushSent|notificationId: UUID, userId: UUID, tenantId: UUID, sentAt: Instant|`Notification.markSent`|Envío confirmado por FCM.|
+|NotificationSkipped|notificationId: UUID, userId: UUID, tenantId: UUID, parkingLotId: UUID?, type: AlertType, reason: SkipReason, skippedAt: Instant|`Notification.skipped`|Alerta candidata descartada: notificaciones o tipo desactivados (US23, escenario 3), regla desactivada, condición ya notificada o intervalo mínimo sin cumplir.|
 
 Los atributos de cada evento salen solo de datos que el agregado ya guarda o que recibe en la operación que lo registra (por ejemplo, `now`). Ningún evento incluye el contenido del mensaje, el token del dispositivo ni la ubicación del conductor (CON-07).
 
 ### 5.7.2. Interface Layer
 
-La Interface Layer expone las capacidades de Notifications a la aplicación móvil y a la consola web de operación, recibe el evento `SaturationPredicted` de Prediction & Advisory y dispara el proceso programado de reintentos. Recibe solicitudes o eventos, valida su forma, los transforma en Commands o Queries y delega en la Application Layer. No contiene reglas de negocio. Las rutas HTTP requieren una sesión vigente: el usuario, la institución y el rol se toman del token validado por la capa de seguridad del backend (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08).
+La Interface Layer expone las capacidades de Notifications a la aplicación móvil y a la consola web de operación, recibe los eventos de Prediction & Advisory, Occupancy, Parking Sensing, Parking Configuration e IAM, y dispara el proceso programado de reintentos. Recibe solicitudes o eventos, valida su forma, los transforma en Commands o Queries y delega en la Application Layer. No contiene reglas de negocio. Las rutas HTTP requieren una sesión vigente: el usuario, la institución y el rol se toman del token validado por la capa de seguridad del backend (`UserIdentityProvided`), de modo que las respuestas incluyen solo los datos del propio usuario (CON-08). El idioma de la solicitud (en_US o es_419) se toma de su encabezado `Accept-Language`, con en_US por defecto.
 
 **Controllers REST**
 
 |Controller|Endpoint|Resultado|Origen|
 |-|-|-|-|
-|SubscriptionController|`POST /api/v1/notification-subscriptions`|Envía `CreateSubscriptionCommand`; 201 con la suscripción creada|TS12, US33|
+|SubscriptionController|`POST /api/v1/notification-subscriptions`|Envía `CreateSubscriptionCommand`; 201 con la suscripción creada; 404 si el estacionamiento no pertenece a la institución del usuario|TS12, US33|
 |SubscriptionController|`GET /api/v1/notification-subscriptions`|Ejecuta `GetSubscriptionsQuery`; 200 con las suscripciones del usuario|US33 (ruta propuesta)|
 |SubscriptionController|`DELETE /api/v1/notification-subscriptions/{id}`|Envía `CancelSubscriptionCommand`; 204; conserva las demás suscripciones|US33 (ruta propuesta)|
-|PreferencesController|`PUT /api/v1/notification-preferences`|`PreferenceUpdated`: envía `UpdatePreferencesCommand`; 200 y aplicación a los envíos posteriores|TS12, US24|
+|PreferencesController|`PUT /api/v1/notification-preferences`|`PreferenceUpdated`: envía `UpdatePreferencesCommand`; 200 y aplicación a los envíos posteriores; 400 si incluye un tipo no dirigido a conductores|TS12, US24|
 |PreferencesController|`GET /api/v1/notification-preferences`|Ejecuta `GetPreferencesQuery`; 200 con las preferencias actuales|US24 (ruta propuesta)|
-|DeviceController|`POST /api/v1/notification-devices`|Envía `RegisterDeviceCommand`; 201 y registro del dispositivo como destino de alertas|US33, escenario 2 (ruta propuesta)|
+|DeviceController|`POST /api/v1/notification-devices`|Envía `RegisterDeviceCommand` con el token FCM, la plataforma (ANDROID, IOS o WEB) y el idioma de la solicitud; 201 si registra el token, 200 si ya existía y lo actualiza|US33, escenario 2 (ruta propuesta)|
+|DeviceController|`DELETE /api/v1/notification-devices/{token}`|Envía `DeregisterDeviceCommand`; 204. La aplicación móvil y la consola la invocan al cerrar sesión|US02, CON-07 (ruta propuesta)|
 |RuleController|`PUT /api/v1/notification-rules`|`NotificationRuleConfigured`: envía `ConfigureNotificationRuleCommand`; 200 con la regla guardada; 403 si el rol no es PARKING_ADMIN|Canvas (ruta propuesta)|
 |RuleController|`GET /api/v1/notification-rules?parkingLotId={lotId}`|Ejecuta `GetNotificationRulesQuery`; 200 con las reglas del estacionamiento|Canvas (ruta propuesta)|
 |HistoryController|`GET /api/v1/notifications`|`NotificationHistoryProvided`: ejecuta `GetNotificationHistoryQuery`; 200 con el historial de notificaciones del usuario|Canvas (ruta propuesta)|
 
-**Event Consumer**
+**Event Consumers**
 
-|Nombre|Categoría|Evento|Descripción|
+Cada consumer es un `@ApplicationModuleListener`: recibe el evento después de que el módulo productor confirma su transacción y lo entrega al Event Handler correspondiente.
+
+|Nombre|Evento|Event Handler|Descripción|
 |-|-|-|-|
-|PredictionEventConsumer|Consumer (`@ApplicationModuleListener`)|`SaturationPredicted` (Prediction & Advisory)|Recibe el evento después de que Prediction & Advisory confirma su transacción y ejecuta `SaturationPredictedEventHandler` (mapa de contextos, US23).|
+|PredictionEventConsumer|`SaturationPredicted` (Prediction & Advisory)|SaturationPredictedEventHandler|Alertas SATURATION_FORECAST para los conductores suscritos (mapa de contextos, US23).|
+|OccupancyEventConsumer|`LowAvailabilityStarted`, `LowAvailabilityEnded` y `SpaceMarkedUnknown` (Occupancy)|LowAvailabilityEventHandler, StaleDataEventHandler|Apertura y cierre de LIMITED_AVAILABILITY, y espacios sin datos para STALE_DATA.|
+|SensingEventConsumer|`DeviceFaultDetected`, `SensorCommunicationRestored` e `IngestionInterrupted` (Parking Sensing)|StaleDataEventHandler|Apertura y cierre de STALE_DATA por zona, y alerta de infraestructura por institución.|
+|ConfigurationEventConsumer|`CampusEventProvided` y `CampusEventCancelled` (Parking Configuration)|CampusEventChangedEventHandler|Alertas EVENT_CHANGES para los conductores cuya franja se superpone con el evento.|
+|IamEventConsumer|`RoleAssigned` (IAM)|RoleAssignedEventHandler|Cambio de rol de un usuario, que cambia los tipos de alerta que puede recibir.|
 
 **Proceso programado: NotificationRetryScheduler**
 
 |Método|Frecuencia|Command|Descripción|
 |-|-|-|-|
-|retryFailedNotifications()|Cada 1 min|RetryFailedNotificationsCommand|Reintenta las notificaciones que fallaron por indisponibilidad del proveedor (QAS-06).|
+|retryFailedNotifications()|Cada 1 min|RetryFailedNotificationsCommand|Reenvía las notificaciones PENDING cuyo `nextAttemptAt` venció, con un máximo de 3 envíos por notificación, y expira las que superaron 30 min desde su creación (QAS-06). Se ejecuta en una sola réplica mediante ShedLock (`@SchedulerLock`).|
 
 ### 5.7.3. Application Layer
 
-La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son gestionar suscripciones, preferencias, dispositivos y reglas de alerta, decidir y crear las alertas ante una saturación prevista, enviarlas por el canal elegido y reintentarlas cuando el proveedor no está disponible.
+La Application Layer coordina los casos de uso: carga los agregados, invoca sus operaciones o los Domain Services, guarda el resultado y publica los eventos. No contiene reglas de negocio. Sus capacidades son gestionar suscripciones, preferencias, dispositivos y reglas de alerta, identificar a los destinatarios de cada tipo de alerta, decidir y crear las alertas, enviarlas por FCM y reintentarlas de forma acotada cuando FCM no está disponible.
 
 **Commands y Command Handlers**
 
 |Command|Atributos|Command Handler|Dependencias|Historias|
 |-|-|-|-|-|
-|CreateSubscriptionCommand|userId, tenantId, parkingLotId, timeSlot|CreateSubscriptionCommandHandler|NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationEventPublisher, Clock|US33, TS12|
+|CreateSubscriptionCommand|userId, tenantId, parkingLotId, timeSlot|CreateSubscriptionCommandHandler|NotificationSubscriptionRepository, NotificationPreferencesRepository, ParkingLotDirectory, NotificationEventPublisher, Clock|US33, TS12|
 |CancelSubscriptionCommand|userId, subscriptionId|CancelSubscriptionCommandHandler|NotificationSubscriptionRepository, NotificationPreferencesRepository, DeviceRegistrationRepository, NotificationEventPublisher, Clock|US33, CON-07|
-|UpdatePreferencesCommand|userId, tenantId, enabled, enabledTypes, enabledChannels|UpdatePreferencesCommandHandler|NotificationPreferencesRepository, NotificationEventPublisher, Clock|US24, TS12|
-|RegisterDeviceCommand|userId, tenantId, token, platform|RegisterDeviceCommandHandler|DeviceRegistrationRepository, Clock|US33|
+|UpdatePreferencesCommand|userId, tenantId, enabled, enabledTypes|UpdatePreferencesCommandHandler|NotificationPreferencesRepository, NotificationEventPublisher, Clock|US24, TS12|
+|RegisterDeviceCommand|userId, tenantId, role, token, platform, locale|RegisterDeviceCommandHandler|DeviceRegistrationRepository, Clock|US33|
+|DeregisterDeviceCommand|userId, token|DeregisterDeviceCommandHandler|DeviceRegistrationRepository|US02, CON-07|
 |ConfigureNotificationRuleCommand|tenantId, parkingLotId, alertType, enabled, minIntervalMinutes|ConfigureNotificationRuleCommandHandler|NotificationRuleRepository, NotificationEventPublisher, Clock|Canvas|
-|DispatchNotificationCommand|notificationId|DispatchNotificationCommandHandler|NotificationRepository, DeviceRegistrationRepository, PushSender, EmailSender, NotificationEventPublisher, Clock|US23, TS12, DD-07|
-|RetryFailedNotificationsCommand|now|RetryFailedNotificationsCommandHandler|NotificationRepository, DispatchNotificationCommandHandler|QAS-06|
+|RaiseAlertCommand|tenantId, parkingLotId, type, recipients (userId y segmento), conditionKey, messageParams, occurredAt|RaiseAlertCommandHandler|NotificationPreferencesRepository, NotificationRuleRepository, NotifiedConditionRepository, NotificationRepository, DeviceRegistrationRepository, NotificationMessageCatalog, ParkingLotDirectory, AlertPolicy, DeduplicationPolicy, DispatchNotificationCommandHandler, NotificationEventPublisher, Clock|US23, US24, US33|
+|CloseConditionCommand|conditionKey o (parkingLotId, type)|CloseConditionCommandHandler|NotifiedConditionRepository, Clock|US23|
+|DispatchNotificationCommand|notificationId|DispatchNotificationCommandHandler|NotificationRepository, DeviceRegistrationRepository, PushSender, NotificationEventPublisher, Clock|US23, TS12, DD-07|
+|RetryFailedNotificationsCommand|now|RetryFailedNotificationsCommandHandler|NotificationRepository, DispatchNotificationCommandHandler, Clock|QAS-06|
 
 **Queries y Query Handlers**
 
@@ -7583,25 +7612,29 @@ La Application Layer coordina los casos de uso: carga los agregados, invoca sus 
 
 |Event Handler|Evento|Descripción|
 |-|-|-|
-|SaturationPredictedEventHandler|`SaturationPredicted` (Prediction & Advisory)|Localiza las suscripciones cuya franja contiene la saturación prevista, aplica `AlertPolicy`, `DeduplicationPolicy` y `ChannelPolicy`, renderiza la plantilla, crea las notificaciones y ejecuta `DispatchNotificationCommand` por cada una. Dependencias: NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, NotificationRepository, AlertPolicy, ChannelPolicy, DeduplicationPolicy, DispatchNotificationCommandHandler, Clock.|
+|SaturationPredictedEventHandler|`SaturationPredicted`|Busca con `findActiveByParkingLot` las suscripciones del estacionamiento cuya franja contiene `saturationExpectedAt` en la zona horaria del campus (`covers`) y ejecuta un `RaiseAlertCommand` por franja, con SATURATION_FORECAST, el segmento DRIVERS y la clave `tenantId:lotId:timeSlot:date:SATURATION`. Dependencias: NotificationSubscriptionRepository, ParkingLotDirectory, RaiseAlertCommandHandler.|
+|LowAvailabilityEventHandler|`LowAvailabilityStarted`, `LowAvailabilityEnded`|Con `LowAvailabilityStarted`, reúne a los conductores cuya franja suscrita contiene `at` y a los operadores de la institución (`findUsableByTenantAndSegments` con PARKING_OPERATORS), y ejecuta `RaiseAlertCommand` con LIMITED_AVAILABILITY, la clave `lotId:LOW_AVAILABILITY:startedAt` y los espacios libres. Con `LowAvailabilityEnded`, ejecuta `CloseConditionCommand` para las condiciones activas del estacionamiento y el tipo. Dependencias: NotificationSubscriptionRepository, DeviceRegistrationRepository, ParkingLotDirectory, RaiseAlertCommandHandler, CloseConditionCommandHandler.|
+|StaleDataEventHandler|`DeviceFaultDetected`, `SpaceMarkedUnknown`, `SensorCommunicationRestored`, `IngestionInterrupted`|Ubica la zona afectada: `SpaceMarkedUnknown` la trae y, para `DeviceFaultDetected`, se obtiene del layout con `ParkingLotDirectory`. Los motivos que no indican pérdida de datos (DECOMMISSIONED, NO_SENSOR, NOT_YET_REPORTED) no generan alerta. Cuenta los espacios sin datos de la zona con `OccupancyReader` y ejecuta `RaiseAlertCommand` con STALE_DATA, los operadores y administradores de la institución y la clave `lotId:zoneId:STALE`, de modo que la zona genera una sola alerta. Con `SensorCommunicationRestored`, ejecuta `CloseConditionCommand` para la zona del dispositivo. Con `IngestionInterrupted`, ejecuta un único `RaiseAlertCommand` para la institución, sin estacionamiento, con la clave `tenantId:INGESTION:since` y la causa. Dependencias: DeviceRegistrationRepository, ParkingLotDirectory, OccupancyReader, RaiseAlertCommandHandler, CloseConditionCommandHandler.|
+|CampusEventChangedEventHandler|`CampusEventProvided`, `CampusEventCancelled`|Busca las suscripciones del estacionamiento cuya franja se superpone con la ventana del evento (`overlaps`) y ejecuta `RaiseAlertCommand` con EVENT_CHANGES, el segmento DRIVERS y la clave `campusEventId:REGISTERED` o `campusEventId:CANCELLED`. Dependencias: NotificationSubscriptionRepository, ParkingLotDirectory, RaiseAlertCommandHandler.|
+|RoleAssignedEventHandler|`RoleAssigned`|Elimina los dispositivos del usuario (`deleteByUser`) para que la aplicación o la consola los registre de nuevo con el segmento de su nuevo rol; IAM revoca sus sesiones en el mismo cambio. Dependencias: DeviceRegistrationRepository.|
 
 **Flujos de ejecución**
 
-`SaturationPredictedEventHandler`:
+`RaiseAlertCommandHandler`:
 
-1. Busca con `findActiveByParkingLot` las suscripciones del estacionamiento y conserva las que cubren `saturationExpectedAt` (`covers`).
-2. Para cada suscriptor carga sus preferencias y las reglas del estacionamiento, y evalúa `AlertPolicy.shouldAlert` con el tipo SATURATION_FORECAST. Si la regla del administrador o la franja no lo permiten, no crea ninguna notificación.
-3. Arma la clave de condición (estacionamiento, tipo y momento previsto) y, si `DeduplicationPolicy.isDuplicate` indica que la condición ya se notificó al usuario, termina (US23, escenario 4).
-4. Obtiene los canales con `ChannelPolicy.channelsFor`. Por cada canal obtiene la plantilla con `NotificationTemplateRepository.findFor` (tipo, canal e idioma) y la completa con `render`, que devuelve el `NotificationContent`.
-5. Crea la notificación con `Notification.create`, con el segmento DRIVERS, el contenido renderizado y la referencia `templateId` de la plantilla usada. Si el usuario tiene las notificaciones desactivadas, llama a `skip`, que registra `NotificationSkipped` y conserva la suscripción (US23, escenario 3).
-6. Guarda las notificaciones y, después de confirmar la transacción, ejecuta `DispatchNotificationCommand` por cada notificación pendiente.
+1. Obtiene la regla del estacionamiento para el tipo (`findByParkingLotAndType`) y la zona horaria del campus con `ParkingLotDirectory`.
+2. Para cada destinatario evalúa `AlertPolicy.evaluate`, con sus preferencias si es conductor, y luego `DeduplicationPolicy.check` con su `NotifiedCondition` para la clave (`findByUserAndConditionKey`) y su último envío del mismo tipo y estacionamiento (`lastSentAt`).
+3. Si alguna política devuelve un motivo, registra la alerta candidata con `Notification.skipped`, que publica `NotificationSkipped` con ese motivo; con notificaciones desactivadas, la suscripción se conserva (US23, escenarios 3 y 4).
+4. Si corresponde enviar, toma el idioma del dispositivo del destinatario registrado más recientemente (en_US si no hay otro), obtiene título y cuerpo con `NotificationMessageCatalog.render`, con las horas en la zona horaria del campus, y arma el enlace profundo: la asesoría de llegada del estacionamiento en la aplicación para DRIVERS, o el estacionamiento en la consola para PARKING_OPERATORS y PARKING_ADMINS. Crea la notificación con `Notification.create` y abre la condición con `NotifiedCondition.open` o la reactiva con `reopen`.
+5. Guarda los agregados en una transacción. Si dos eventos concurrentes intentan registrar la misma condición para el mismo usuario, la restricción única (`user_id`, `condition_key`) rechaza el segundo registro, que se trata como duplicado. Después de confirmar la transacción, ejecuta `DispatchNotificationCommand` por cada notificación pendiente.
 
 `DispatchNotificationCommandHandler`:
 
-1. Carga la notificación pendiente. Si el canal es PUSH, obtiene los dispositivos utilizables del usuario (`findUsableByUser`) y envía el contenido con `PushSender` a cada uno; si es EMAIL, lo envía con `EmailSender`.
-2. Registra cada resultado con `recordAttempt`. Si un intento termina en REJECTED, carga el `DeviceRegistration` y llama a `invalidate`, que registra `DeviceTokenInvalidated`; ese token no se vuelve a usar (TS12, escenario 3).
-3. Si algún intento termina en DELIVERED, llama a `markSent`, que registra `PushSent` o `EmailSent` y `UserNotificationDelivered`. Si el proveedor no respondió a tiempo o su circuit breaker está abierto, llama a `markFailed` (QAS-06).
-4. Guarda los agregados y publica los eventos.
+1. Carga la notificación pendiente. Si transcurrieron más de 30 min desde su creación, llama a `expire` y termina.
+2. Obtiene los dispositivos utilizables del usuario (`findUsableByUser`) y envía el contenido con `PushSender` a cada uno: push móvil a ANDROID e IOS y web push a WEB, con el enlace profundo en los datos del mensaje.
+3. Registra cada resultado con `recordAttempt`. Si un intento termina en REJECTED, carga el `DeviceRegistration` y llama a `invalidate`, que registra `DeviceTokenInvalidated`; ese token no se vuelve a usar (TS12, escenario 3).
+4. Si algún intento termina en DELIVERED, llama a `markSent`, que registra `PushSent` y `UserNotificationDelivered`. Si no, llama a `markFailed`: cuando FCM no respondió a tiempo o su circuit breaker está abierto y hubo menos de 3 envíos, la notificación queda PENDING con su `nextAttemptAt`; en otro caso pasa a FAILED (QAS-06).
+5. Guarda los agregados y publica los eventos.
 
 `CancelSubscriptionCommandHandler`:
 
@@ -7611,37 +7644,47 @@ La Application Layer coordina los casos de uso: carga los agregados, invoca sus 
 
 `CreateSubscriptionCommandHandler`:
 
-1. Crea la suscripción con `NotificationSubscription.create`, que registra `SubscriptionCreated`.
-2. Si el usuario aún no tiene preferencias, las crea con `NotificationPreferences.create`.
-3. Guarda ambos agregados y publica los eventos.
+1. Verifica con `ParkingLotDirectory.belongsTo` que el estacionamiento pertenezca a la institución del token; si no, rechaza la solicitud.
+2. Crea la suscripción con `NotificationSubscription.create`, que registra `SubscriptionCreated`.
+3. Si el usuario aún no tiene preferencias, las crea con `NotificationPreferences.create`.
+4. Guarda ambos agregados y publica los eventos.
+
+`RegisterDeviceCommandHandler` y `DeregisterDeviceCommandHandler`:
+
+1. Al registrar, busca el token con `findByToken`: si existe, lo actualiza con `refresh`; si no, lo crea con `register`, con el segmento derivado del rol del token y el idioma de la solicitud (upsert).
+2. Al cerrar sesión, elimina el token del usuario con `deleteByToken`, de modo que ese dispositivo o navegador deja de recibir alertas.
 
 **Puertos de salida**
 
 |Nombre|Categoría|Operaciones|Descripción|
 |-|-|-|-|
-|NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotificationTemplateRepository, DeviceRegistrationRepository, NotificationRepository|Puertos (Domain Layer)|Ver 5.7.1|Persistencia de los agregados.|
-|PushSender|Puerto hacia el proveedor push|send(token: DeviceToken, content: NotificationContent): DeliveryResult|Envía la alerta a un dispositivo y traduce la respuesta del proveedor a `DeliveryResult`.|
-|EmailSender|Puerto hacia el servicio de correo|send(userId: UUID, content: NotificationContent): DeliveryResult|Envía la alerta por correo y traduce la respuesta del servicio a `DeliveryResult`.|
+|NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotifiedConditionRepository, DeviceRegistrationRepository, NotificationRepository|Puertos (Domain Layer)|Ver 5.7.1|Persistencia de los agregados.|
+|PushSender|Puerto hacia FCM|send(token: DeviceToken, platform: Platform, content: NotificationContent, deepLink: String): DeliveryResult|Envía la alerta como push móvil o web push y traduce la respuesta de FCM a `DeliveryResult`.|
+|NotificationMessageCatalog|Puerto hacia los recursos traducidos|render(type: AlertType, segment: RecipientSegment, locale: Locale, params: `Map<String, Object>`, zone: ZoneId): NotificationContent|Obtiene el título y el cuerpo del mensaje por tipo de alerta e idioma, y formatea las horas en la zona horaria del campus.|
+|ParkingLotDirectory|Puerto hacia Parking Configuration|belongsTo(tenantId: UUID, parkingLotId: UUID): Boolean; tenantOf(parkingLotId: UUID): UUID; zoneOf(tenantId: UUID, parkingLotId: UUID, targetId: UUID): UUID?; zoneName(tenantId: UUID, parkingLotId: UUID, zoneId: UUID): String; campusZone(tenantId: UUID): ZoneId|Valida que un estacionamiento pertenezca a la institución, ubica la zona de un espacio y entrega su nombre y la zona horaria del campus.|
+|OccupancyReader|Puerto hacia Occupancy|unknownSpaces(tenantId: UUID, parkingLotId: UUID, zoneId: UUID): Integer|Cuenta los espacios sin datos de una zona para el mensaje de STALE_DATA.|
 |IdentityContext|Puerto hacia IAM|currentUser(): AuthenticatedUser|Entrega el usuario, la institución y el rol del token validado (`UserIdentityProvided`).|
 |NotificationEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
-|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar suscripciones, intentos y envíos.|
+|Clock|Puerto de tiempo|now()|Reloj inyectable para fechar suscripciones, condiciones, intentos y envíos.|
 
-**Tolerancia a fallas.** El envío se ejecuta de forma independiente de la actualización de ocupación. Si un proveedor no responde dentro del tiempo límite, se abre su circuit breaker y las notificaciones pendientes se registran como fallidas, sin afectar la frescura de la ocupación definida en QAS-02 (QAS-06).
+**Tolerancia a fallas.** El envío se ejecuta de forma independiente de la actualización de ocupación. Si FCM no responde dentro del tiempo límite, se abre su circuit breaker y las notificaciones quedan pendientes de reintento, sin afectar la frescura de la ocupación definida en QAS-02 (QAS-06). Los reintentos son acotados: como máximo 3 envíos por notificación, con espera exponencial, y ninguna notificación se reintenta pasados 30 min desde su creación.
 
 ### 5.7.4. Infrastructure Layer
 
-La Infrastructure Layer implementa los repositorios, las capas anticorrupción hacia los proveedores de mensajería y hacia la identidad entregada por IAM, y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
+La Infrastructure Layer implementa los repositorios, la capa anticorrupción hacia FCM, el acceso a los recursos traducidos, las consultas a Parking Configuration y Occupancy, la identidad entregada por IAM y la publicación de eventos. Las capas de dominio y aplicación no dependen de ella.
 
 |Nombre|Categoría|Implementa|Tecnología|Descripción|
 |-|-|-|-|-|
 |NotificationSubscriptionRepositoryAdapter|Repository (implementación)|NotificationSubscriptionRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notification_subscriptions` y los días de su franja en `subscription_days`.|
-|NotificationPreferencesRepositoryAdapter|Repository (implementación)|NotificationPreferencesRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notification_preferences` y sus conjuntos de tipos y canales en `notification_preference_alert_types` y `notification_preference_channels`; `deleteByUser` los elimina en cascada.|
+|NotificationPreferencesRepositoryAdapter|Repository (implementación)|NotificationPreferencesRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notification_preferences` y su conjunto de tipos en `notification_preference_alert_types`; `deleteByUser` los elimina en cascada.|
 |NotificationRuleRepositoryAdapter|Repository (implementación)|NotificationRuleRepository|Spring Data JPA, PostgreSQL|Guarda las reglas en `notification_rules`, una por estacionamiento y tipo de alerta.|
-|NotificationTemplateRepositoryAdapter|Repository (implementación)|NotificationTemplateRepository|Spring Data JPA, PostgreSQL|Guarda las plantillas en `notification_templates`; `findFor` usa el índice único por tipo, canal e idioma.|
-|DeviceRegistrationRepositoryAdapter|Repository (implementación)|DeviceRegistrationRepository|Spring Data JPA, PostgreSQL|Guarda los dispositivos en `device_registrations`.|
+|NotifiedConditionRepositoryAdapter|Repository (implementación)|NotifiedConditionRepository|Spring Data JPA, PostgreSQL|Guarda las condiciones en `notified_conditions`, con una restricción única sobre (`user_id`, `condition_key`).|
+|DeviceRegistrationRepositoryAdapter|Repository (implementación)|DeviceRegistrationRepository|Spring Data JPA, PostgreSQL|Guarda los dispositivos en `device_registrations`; el índice único sobre `device_token` sostiene el upsert.|
 |NotificationRepositoryAdapter|Repository (implementación)|NotificationRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `notifications`, con `NotificationContent` en columnas propias, y sus intentos en `delivery_attempts`.|
-|PushGatewayAdapter|Adapter (anti-corruption)|PushSender|Cliente HTTP del proveedor push, Resilience4j|Capa anticorrupción hacia el proveedor de mensajería push. Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06).|
-|EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo, con timeout y circuit breaker propios.|
+|PushGatewayAdapter|Adapter (anti-corruption)|PushSender|Firebase Admin SDK (FCM HTTP v1), Resilience4j|Capa anticorrupción hacia Firebase Cloud Messaging. Arma el mensaje con título, cuerpo y enlace profundo en los datos, con la configuración de Android, de APNs para iOS y de web push para la consola; interpreta las respuestas (token no registrado o inválido como REJECTED, indisponibilidad como PROVIDER_UNAVAILABLE) y aplica timeout y circuit breaker (DD-07, CON-06).|
+|MessageCatalogAdapter|Adapter|NotificationMessageCatalog|Spring `MessageSource` (i18n message bundles)|Lee los textos por tipo de alerta de `messages_en_US.properties` (por defecto) y `messages_es_419.properties`. Los textos se versionan con el código y no se editan desde la consola.|
+|ParkingLotDirectoryAdapter|Adapter (anti-corruption)|ParkingLotDirectory|Llamada en proceso a `ParkingConfigurationFacade`|Traduce los estacionamientos de la institución (`lotsOf`) y el layout publicado (`layoutOf`) al modelo local.|
+|OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|Llamada en proceso a `OccupancyFacade`|Obtiene los conteos de la zona a partir de la ocupación vigente (`currentOccupancy`).|
 |IdentityContextAdapter|Adapter (anti-corruption)|IdentityContext|Spring Security|Traduce `UserIdentityProvided` (usuario, institución y rol del token) al modelo local, sin consultar la base de IAM (CON-02).|
 |NotificationEventPublisherAdapter|Adapter (eventos)|NotificationEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos propios del contexto después de confirmar la transacción.|
 
@@ -7649,15 +7692,16 @@ La Infrastructure Layer implementa los repositorios, las capas anticorrupción h
 
 |Tema|Decisión|
 |-|-|
-|Propiedad de datos|Este contexto es el único que escribe en el esquema `notifications` (DD-01). Las referencias a usuario, institución y estacionamiento se guardan como identificadores, sin claves foráneas hacia otros contextos (CON-02).|
-|Reintentos|Solo se reintentan las notificaciones fallidas por indisponibilidad del proveedor (último intento PROVIDER_UNAVAILABLE, según `DeliveryAttempt.isRetryable`), nunca los tokens marcados como inválidos.|
-|Deduplicación|La clave de condición evita alertas repetidas en el dominio y el índice único de `notifications` la refuerza ante eventos duplicados.|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `notifications` (DD-01). Las referencias a usuario, institución, estacionamiento y zona se guardan como identificadores, sin claves foráneas hacia otros contextos (CON-02).|
+|Reintentos|Solo se reintentan las notificaciones cuyo último intento terminó en PROVIDER_UNAVAILABLE (`DeliveryAttempt.isRetryable`), nunca los tokens marcados como inválidos. Hay un máximo de 3 envíos con espera exponencial y una vigencia de 30 min, tras la cual la notificación pasa a EXPIRED. El proceso programado corre en una sola réplica con ShedLock, que guarda su bloqueo en la tabla `shedlock`.|
+|Deduplicación|La `ConditionKey` estable y la restricción única (`user_id`, `condition_key`) de `notified_conditions` evitan alertas repetidas, también ante eventos duplicados o concurrentes; `last_sent_at` sostiene el intervalo mínimo.|
+|Idioma y zona horaria|Los mensajes se renderizan en el idioma del dispositivo del destinatario (en_US por defecto, es_419) y las horas se muestran en la zona horaria del campus.|
 |Multi-tenancy|`tenant_id` se guarda en las tablas con datos de una institución y se toma del token o del evento recibido (CON-08).|
 |Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `notifications` de PostgreSQL, según DD-01.|
 
 ### 5.7.6. Bounded Context Software Architecture Component Level Diagrams
  
-El diagrama muestra los componentes internos del módulo Notifications, su integración por eventos con Prediction & Advisory, la identidad recibida desde IAM y su comunicación con el proveedor de mensajería push y el servicio de correo a través de capas anticorrupción.
+El diagrama muestra los componentes internos del módulo Notifications; su integración por eventos con Prediction & Advisory, Occupancy, Parking Sensing y Parking Configuration; la identidad recibida desde IAM, y la entrega, mediante una capa anticorrupción hacia Firebase Cloud Messaging, de push móvil a la aplicación de los conductores y de web push a la consola web de los operadores y administradores.
  
 ![Diagrama de componentes C4 del contexto Notifications](assets/capitulo-05/notificaciones/notif_c4_componentes.png)
  
@@ -7665,19 +7709,19 @@ El diagrama muestra los componentes internos del módulo Notifications, su integ
  
 #### 5.7.7.1. Bounded Context Domain Layer Class Diagrams
  
-El diagrama presenta los seis agregados del contexto (`NotificationSubscription`, `NotificationPreferences`, `NotificationRule`, `NotificationTemplate`, `DeviceRegistration` y `Notification`) con su entidad, sus Value Objects y sus enumeraciones, los Domain Services `AlertPolicy`, `ChannelPolicy` y `DeduplicationPolicy`, una interfaz de repositorio por cada raíz y los eventos que publica el contexto, cada uno con sus atributos. Los atributos son privados (-) y los métodos, públicos (+); los métodos subrayados son fábricas estáticas (`NotificationSubscription.create`, `NotificationPreferences.create`, `NotificationRule.define`, `DeviceRegistration.register` y `Notification.create`). Las composiciones indican qué objetos viven dentro de cada agregado y con qué multiplicidad (por ejemplo, una `Notification` registra de cero a muchos `DeliveryAttempt` y compone exactamente una `ConditionKey` y un `NotificationContent`). `AlertType` y `Channel` se agrupan como enumeraciones compartidas porque las usan varios agregados. Las dependencias punteadas indican qué agregados evalúan los servicios, qué raíz persiste cada repositorio, qué eventos registra cada agregado (`registers`) y que cada `Notification` se renderiza con una `NotificationTemplate` (`rendered with`), a la que referencia por `templateId`. Las referencias a usuario, institución, estacionamiento, dispositivo y plantilla se guardan solo como identificadores `UUID`.
+El diagrama presenta los seis agregados del contexto (`NotificationSubscription`, `NotificationPreferences`, `NotificationRule`, `NotifiedCondition`, `DeviceRegistration` y `Notification`) con su entidad, sus Value Objects y sus enumeraciones, los Domain Services `AlertPolicy` y `DeduplicationPolicy`, una interfaz de repositorio por cada raíz y los eventos que publica el contexto, cada uno con sus atributos. Los atributos son privados (-) y los métodos, públicos (+); los métodos subrayados son fábricas estáticas (`NotificationSubscription.create`, `NotificationPreferences.create`, `NotificationRule.define`, `NotifiedCondition.open`, `DeviceRegistration.register`, `Notification.create` y `Notification.skipped`). Las composiciones indican qué objetos viven dentro de cada agregado y con qué multiplicidad (por ejemplo, una `Notification` registra de cero a muchos `DeliveryAttempt` y compone exactamente una `ConditionKey` y, si no se omitió, un `NotificationContent`). `AlertType` y `Locale` se agrupan como enumeraciones compartidas porque las usan varios agregados. Las dependencias punteadas indican qué agregados evalúan los servicios, qué raíz persiste cada repositorio y qué eventos registra cada agregado (`registers`). Los textos de los mensajes no forman parte del modelo: son recursos traducidos por tipo de alerta e idioma. Las referencias a usuario, institución, estacionamiento, zona y dispositivo se guardan solo como identificadores `UUID`.
 
 ![Diagrama de clases de la capa de dominio del contexto Notifications](assets/capitulo-05/notificaciones/notif_clases.png)
  
 #### 5.7.7.2. Bounded Context Database Design Diagram
 
-El esquema `notifications` de PostgreSQL contiene una tabla por agregado raíz y una tabla hija por cada colección interna: `subscription_days` para los días de `TimeSlot`, `notification_preference_alert_types` y `notification_preference_channels` para los conjuntos `enabledTypes` y `enabledChannels` de `NotificationPreferences`, y `delivery_attempts` para los intentos de cada `Notification`. Las tablas hijas tienen clave primaria compuesta o propia y una clave foránea hacia su raíz con `ON DELETE CASCADE`, de modo que `deleteByUser` elimina también los tipos y canales habilitados (CON-07, escenario 2). Los Value Objects se guardan en columnas de su agregado (`TimeSlot` en `start_time` y `end_time`, `DeviceToken` en `device_token`, `ConditionKey` en `condition_key` y `NotificationContent` en `title` y `body`), y las enumeraciones como `VARCHAR` con una restricción `CHECK` de sus valores.
+El esquema `notifications` de PostgreSQL contiene una tabla por agregado raíz y una tabla hija por cada colección interna: `subscription_days` para los días de `TimeSlot`, `notification_preference_alert_types` para el conjunto `enabledTypes` de `NotificationPreferences` y `delivery_attempts` para los intentos de cada `Notification`. Las tablas hijas tienen clave primaria compuesta o propia y una clave foránea hacia su raíz con `ON DELETE CASCADE`, de modo que `deleteByUser` elimina también los tipos habilitados (CON-07, escenario 2). Los Value Objects se guardan en columnas de su agregado (`TimeSlot` en `start_time` y `end_time`, `DeviceToken` en `device_token`, `ConditionKey` en `condition_key` y `NotificationContent` en `title` y `body`), y las enumeraciones como `VARCHAR` con una restricción `CHECK` de sus valores. El esquema incluye además la tabla `shedlock`, que coordina el proceso programado de reintentos entre réplicas.
 
-Las columnas `user_id`, `tenant_id` y `parking_lot_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02). Dentro del esquema, `notifications.template_id` referencia la plantilla con la que se renderizó el contenido y `delivery_attempts.device_id` el dispositivo del intento; esta última usa `ON DELETE SET NULL` para que eliminar los dispositivos de un usuario no borre el historial de entregas.
+Las columnas `user_id`, `tenant_id`, `parking_lot_id` y `zone_id` guardan identificadores de otros contextos como referencias lógicas, sin claves foráneas, para respetar la independencia de las bases de datos (CON-02). Dentro del esquema, `delivery_attempts.device_id` referencia el dispositivo del intento con `ON DELETE SET NULL`, para que eliminar los dispositivos de un usuario no borre el historial de entregas.
 
 ![Diagrama de base de datos del contexto Notifications](assets/capitulo-05/notificaciones/notif_bd.png)
 
-**Índices relevantes.** Índice único sobre (`user_id`, `condition_key`, `channel`) en `notifications` para sostener la deduplicación sin impedir que una misma alerta salga por push y por correo; índice único sobre (`alert_type`, `channel`, `locale`) en `notification_templates`; índice único sobre (`parking_lot_id`, `alert_type`) en `notification_rules`, una regla por estacionamiento y tipo; índice único sobre `device_token` en `device_registrations`, e índice sobre (`parking_lot_id`, `status`) en `notification_subscriptions` para localizar rápidamente las suscripciones afectadas por una saturación prevista. Los eventos pendientes (`domainEvents`) no se persisten.
+**Índices relevantes.** Índice único sobre (`user_id`, `condition_key`) en `notified_conditions`, que sostiene la deduplicación, e índice sobre (`user_id`, `parking_lot_id`, `alert_type`, `last_sent_at`) para el intervalo mínimo; índice sobre (`status`, `next_attempt_at`) en `notifications` para localizar los reintentos; índice único sobre (`parking_lot_id`, `alert_type`) en `notification_rules`, una regla por estacionamiento y tipo; índice único sobre `device_token` en `device_registrations`, que sostiene el upsert, e índice sobre (`tenant_id`, `segment`, `status`) para localizar a los operadores y administradores de una institución; e índice sobre (`parking_lot_id`, `status`) en `notification_subscriptions` para localizar rápidamente las suscripciones afectadas por cada alerta. Los eventos pendientes (`domainEvents`) no se persisten.
 
  
 
