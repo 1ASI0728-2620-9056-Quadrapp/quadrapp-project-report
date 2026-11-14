@@ -7987,7 +7987,7 @@ Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a
 
 **Forma, espacio y elevación.** Las tarjetas y los modales usan esquinas muy redondeadas (aprox. 16–24 px), los botones y campos esquinas medias (aprox. 12 px) y los chips de estado forma de píldora. La separación entre elementos sigue una escala de múltiplos de 4 u 8 px. La elevación es mínima: las tarjetas se distinguen por un borde fino (`#CEDDDA`) y una sombra muy suave, y los modales se apoyan en un fondo atenuado.
 
-**Voz y tono.** Los textos se redactan en español latinoamericano (es_419) con inglés (en_US) como alternativa, en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la consola ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
+**Voz y tono.** El inglés (en_US) es el idioma por defecto de todos los productos y el español latinoamericano (es_419) es la alternativa, que el usuario elige con un selector de idioma en la aplicación y en la consola. En ambos idiomas los textos se redactan en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la consola ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
 
 **Imágenes y datos.** La Landing Page usa fotografía de campus y de trabajo en equipo en tonos cálidos, con superposiciones oscuras de color petróleo para asegurar la lectura del texto. En las aplicaciones no se usan fotografías; los datos se presentan con cifras grandes, barras de progreso, gráficos de línea simples y planos esquemáticos del estacionamiento.
 
@@ -8002,22 +8002,22 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 | Consola web de operación | Navegador web de escritorio y, durante el turno, del teléfono (responsive) | Administrador de estacionamientos universitarios (roles de administrador y operador) | Panel con barra lateral oscura en escritorio; navegación inferior de cinco destinos en la vista móvil |
 
 **Aplicación móvil del conductor.**
-- *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta.
-- *Pantalla de inicio.* Una tarjeta oscura central responde la pregunta "¿Encontraré espacio al llegar?" con el porcentaje, la categoría, el tiempo de llegada "calculado en tu dispositivo" y la confianza. Debajo se muestran los horizontes de 15, 30, 45 y 60 minutos como fichas coloreadas por categoría.
+- *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta. El ícono de perfil del encabezado abre la hoja "Tu cuenta", con el selector de idioma, el acceso a las notificaciones, el estacionamiento predeterminado y el cierre de sesión. El selector "Elegir estacionamiento" lista los estacionamientos de la institución agrupados por sede (por ejemplo, Monterrico o San Isidro).
+- *Pantalla de inicio.* Una tarjeta oscura central responde la pregunta "¿Encontraré espacio al llegar?" con el porcentaje, la categoría, el tiempo de llegada "calculado en tu dispositivo" y la confianza. Debajo se muestran los horizontes de 15, 30, 45 y 60 minutos como fichas coloreadas por categoría. El botón "Cómo llegar" abre Waze o Google Maps con el estacionamiento como destino. Si el conductor deniega el permiso de ubicación, la aplicación muestra los cuatro horizontes con el aviso "Activa tu ubicación para ver la asesoría de llegada".
 - *Acceso.* El inicio de sesión es de dos pasos: correo institucional y código de verificación de seis dígitos con cuenta regresiva para reenviar. Un aviso explica que, si la conexión se interrumpe, el código se conserva y se reintenta.
 - *Zonas.* Resumen de capacidad, libres y desconocidos, y tarjetas por zona con etiqueta de estado. El detalle de zona ofrece vista de mapa esquemático y vista de lista con filtros (Todas, Libres, Sin datos), siempre con la advertencia de que la vista es una muestra.
 - *Predicción.* Tarjeta con el tiempo de llegada y una tarjeta por horizonte con barra de progreso y categoría. Un panel inferior deslizable muestra el detalle (ocupación prevista, saturación, momento de generación, vigencia, fuente, nivel de confianza y versión del modelo).
-- *Alertas.* Interruptores por tipo de alerta, franjas horarias por estacionamiento con opción de pausar o eliminar, y un aviso de datos desactualizados.
-- *Estados transversales.* Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
+- *Alertas.* El conductor recibe notificaciones push de tres tipos: saturación prevista, poca disponibilidad y cambios por eventos del campus. En "Alertas y preferencias" elige qué tipos recibe con un interruptor por tipo, administra las franjas horarias por estacionamiento con opción de pausar o eliminar, y ve un aviso de datos desactualizados.
+- *Estados transversales.* La disponibilidad y las predicciones se actualizan en tiempo real (WebSocket) sin recargar la pantalla. Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
 - *Interacción.* Objetivos táctiles de al menos 44 × 44 px, acciones principales en la mitad inferior de la pantalla y un único botón primario por vista.
 
 **Consola web de operación (administradores y operadores de cada universidad).**
-- *Navegación.* En escritorio, barra lateral oscura fija con las secciones Inicio, Zonas, Accesos y dispositivos, Analítica y Administración, y contenido en tarjetas de indicadores y tablas con filtros. En la vista móvil, cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más. Un selector de campus en el encabezado indica el ámbito institucional (CON-08).
-- *Roles.* El administrador accede a todas las secciones; el operador accede al monitoreo del turno (inicio, zonas, accesos y alertas) y no ve las acciones de configuración.
-- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos.
+- *Navegación.* Un único menú con las mismas secciones en todos los tamaños de pantalla: Inicio de operación, Estacionamientos y zonas, Accesos, Sensores y gateways, Analítica y Más (calendario del campus, dominios institucionales y equipo). En escritorio se presenta como barra lateral oscura fija con las etiquetas completas (los wireframes de escritorio, centrados en el inventario de dispositivos, muestran Inicio de operación, Estacionamientos y zonas y Sensores y gateways), con contenido en tarjetas de indicadores y tablas con filtros. En el teléfono, la misma consola web se adapta con cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más; dentro de Más se encuentran Dispositivos (sensores y gateways) y la administración del campus y del equipo. Un selector de sede en el encabezado agrupa y filtra los estacionamientos de la institución; el ámbito siempre es la institución del usuario (CON-08). El menú de la cuenta (avatar) incluye el selector de idioma.
+- *Roles.* El administrador accede a todas las secciones; el operador accede al monitoreo del turno (inicio, zonas, accesos y alertas) y no ve las acciones de configuración. Ambos roles trabajan solo en la consola web; la aplicación móvil es exclusiva de los conductores.
+- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos. Los indicadores se actualizan en tiempo real (WebSocket) y la consola recibe notificaciones web push de poca disponibilidad y de datos desactualizados por zona.
 - *Gestión de la distribución.* Plano esquemático por zonas, edición mediante hojas inferiores ("Añadir zona", "Añadir espacio"), borrador con número de versión y publicación con una confirmación que resume los cambios. Las acciones con impacto (deshabilitar un espacio) exigen un diálogo de confirmación con botón rojo.
 - *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways, registro, reemplazo y baja de dispositivos (US32), gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
-- *Administración.* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
+- *Más (campus y equipo).* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
 
 **Landing Page.**
 - *Estructura.* Encabezado con navegación (Cómo funciona, Conductores, Instituciones, Privacidad, Nosotros, FAQ) y botón de contacto; sección principal con titular, subtítulo y llamadas a la acción para conductores e instituciones; franja de beneficios; secciones por segmento con maqueta del producto; sección de señales de la predicción; privacidad por diseño; beneficios; presentación de Integra Labs; formulario de contacto institucional; preguntas frecuentes; y pie de página con enlaces a términos y política de privacidad (CON-18).
@@ -8026,7 +8026,7 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 **Comportamiento responsivo.**
 - Móvil (hasta 600 px): una columna, navegación inferior, tarjetas a todo el ancho con 16 px de margen lateral.
 - Tableta (600–1024 px): dos columnas en tarjetas de resumen, navegación inferior o lateral colapsada.
-- Escritorio (más de 1024 px): barra lateral fija en las consolas, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
+- Escritorio (más de 1024 px): barra lateral fija en la consola, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
 
 **Componentes comunes.**
 
@@ -8055,7 +8055,7 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 **Accesibilidad e internacionalización.**
 - Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page y en la consola de operación, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
 - El estado nunca depende solo del color; se acompaña de texto, ícono o trama.
-- Los textos están disponibles en es_419 y en_US (inglés por defecto), con formatos de fecha y hora según el idioma.
+- Los textos están disponibles en en_US (idioma por defecto) y es_419, con un selector de idioma en la aplicación y en la consola, y con formatos de fecha y hora según el idioma.
 - Los mensajes de error indican qué ocurrió y cómo resolverlo, y los datos desactualizados se señalan siempre con su antigüedad.
 
 **Privacidad en la interfaz.**
@@ -8069,9 +8069,11 @@ Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesi
 
 Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
 
-- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la aplicación web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la consola web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
 - **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
 - **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
+
+Los lugares siguen una misma jerarquía en todos los productos: Institución → Estacionamiento → Zona → Nivel → Espacio. La sede (por ejemplo, Monterrico, San Isidro, San Miguel o Villa) no es un nivel de esta jerarquía: es un atributo del estacionamiento que solo sirve para agrupar los estacionamientos en la interfaz. Norte, Central y Sur son zonas dentro de un estacionamiento.
 
 <br>
 
@@ -8082,11 +8084,11 @@ También se aplican distintos esquemas de categorización:
 - **Cronológica:** Se utiliza en historiales de ocupación, periodos de mayor demanda, eventos del calendario y evaluación de predicciones.
 - **Alfabética:** Puede utilizarse en listas extensas de estacionamientos, zonas o elementos de configuración para facilitar su localización.
 
-En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, su disponibilidad actual y las condiciones esperadas para su llegada.
+En la aplicación móvil, la organización está orientada a permitir que el conductor consulte rápidamente los estacionamientos de su institución, agrupados por sede, su disponibilidad actual y las condiciones esperadas para su llegada.
 
 ### 6.2.2. Labeling Systems
 
-El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la aplicación web y la Landing Page.
+El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la consola web y la Landing Page.
 
 Se evita mostrar términos técnicos internos como nombres de servicios, eventos de dominio o tecnologías IoT cuando no son necesarios para que el usuario complete una tarea.
 
@@ -8102,80 +8104,84 @@ Se evita mostrar términos técnicos internos como nombres de servicios, eventos
 
 **Landing Page:**
 
-Las etiquetas principales son:
-- Inicio
+Las etiquetas de la barra de navegación son:
+- Cómo funciona
 - Conductores
 - Instituciones
-- Funcionalidades
+- Privacidad
 - Nosotros
-- Contacto
-- Descargar app
+- FAQ
+
+La acción principal de la barra es "Hablar con Integra Labs", y las llamadas a la acción por segmento son "Conocer la app" y "Soy una institución".
 
 En el pie de página se mantienen accesos claros a:
 - Política de privacidad
-- Términos y condiciones
+- Términos de uso
 - Contacto
+- Preguntas frecuentes
 
 <br>
 
 **Aplicación móvil:**
 
-Las principales etiquetas utilizadas son:
+Las etiquetas de la barra inferior son:
 - Inicio
-- Estacionamientos
-- Disponibilidad
+- Zonas
 - Predicción
-- Mi llegada
 - Alertas
-- Preferencias
-- Cerrar sesión
 
-Para comunicar el estado de ocupación se utilizarán términos como:
-- Disponible
-- Ocupado
-- Sin información
+Otras etiquetas principales son:
+- Elegir estacionamiento (estacionamientos agrupados por sede)
+- Alertas y preferencias
+- Cómo llegar
+- Tu cuenta: Idioma, Notificaciones, Estacionamiento predeterminado y Cerrar sesión
+
+Para comunicar el estado de ocupación de cada espacio se utilizan los términos:
+- Libre
+- Ocupada
+- Sin datos (estado UNKNOWN, que nunca se cuenta como libre)
 
 Cuando se muestra una predicción, se utilizan etiquetas fáciles de interpretar como:
 - 15 min
 - 30 min
 - 45 min
 - 60 min
-- Confianza baja
+- Buena disponibilidad, Disponibilidad limitada y Poca disponibilidad
+- Confianza: alta, media o baja
 
-Estas etiquetas permiten consultar las predicciones de forma clara y poco confusa para los usuarios, sin exponer detalles internos del modelo utilizado para generarlas.
+Estas etiquetas permiten consultar las predicciones de forma clara para los usuarios. El detalle de cada horizonte muestra además el nivel de confianza, la fuente o método de la estimación (por ejemplo, "Modelo principal") y la versión del modelo, para que el conductor sepa cuánto puede confiar en el dato; no se muestran nombres de servicios ni términos de infraestructura.
 
 <br>
 
-**Aplicación Web:**
+**Consola web:**
 
-Las secciones principales utilizan etiquetas relacionadas con las tareas del administrador:
-- Operación
-- Estacionamientos
-- Zonas
-- Sensores
-- Calendario
+Las secciones del menú utilizan etiquetas relacionadas con las tareas del administrador y del operador:
+- Inicio de operación (Inicio en el teléfono)
+- Estacionamientos y zonas (Zonas en el teléfono)
+- Accesos
+- Sensores y gateways (Dispositivos, dentro de Más en el teléfono)
 - Analítica
-- Usuarios
-- Configuración
+- Más: Calendario del campus, Dominios institucionales y Equipo e invitaciones
 
 Dentro de Analítica se utilizan etiquetas como:
 - Historial
 - Horas pico
 - Precisión
 
-En las acciones se utilizarán:
+En las acciones se utilizan:
 - Ver detalle
 - Guardar cambios
 - Aplicar filtros
-- Invitar usuario
+- Invitar administrador u operador
 - Añadir zona
 - Registrar evento
+- Registrar dispositivo
 
 De esta manera, las etiquetas describen la acción o información disponible sin obligar al usuario a interpretar términos técnicos.
 
 ### 6.2.3. Searching Systems
 
-El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la aplicación web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
+El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la consola web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
 
 Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto de la plataforma, de manera que términos como Estacionamiento, Zona, Disponibilidad, Predicción e Historial se utilicen de forma consistente.
 
@@ -8190,11 +8196,11 @@ Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto 
 <br>
 
 **Consulta de estacionamientos:**
-En la aplicación móvil, la consulta de estacionamientos permite al conductor visualizar los estacionamientos disponibles dentro de su institución y seleccionar aquel que desea revisar. Una vez seleccionado, puede acceder a su información de disponibilidad y consultar las zonas que lo conforman.
+En la aplicación móvil, la consulta de estacionamientos ("Elegir estacionamiento") permite al conductor visualizar los estacionamientos de su institución, agrupados por sede, y seleccionar aquel que desea revisar. Una vez seleccionado, puede acceder a su información de disponibilidad y consultar las zonas que lo conforman.
 
 Cada estacionamiento presenta la información necesaria para que el conductor pueda interpretar rápidamente su situación. Cuando no existen datos de ocupación vigentes, la aplicación lo comunica de forma explícita para evitar que información desactualizada sea interpretada como disponibilidad actual.
 
-Desde el detalle del estacionamiento, el usuario puede profundizar en una zona específica para revisar la cantidad de espacios disponibles, ocupados o sin información confiable.
+Desde el detalle del estacionamiento, el usuario puede profundizar en una zona específica para revisar la cantidad de espacios libres, ocupados o sin datos.
 
 <br>
 
@@ -8223,7 +8229,7 @@ La asesoría de llegada utiliza además el tiempo estimado de llegada calculado 
 
 **Consulta del historial de ocupación:**
 
-En la aplicación web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
+En la consola web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
 
 Cuando corresponde, también puede limitar la consulta a una zona específica. Los resultados permiten revisar el comportamiento de la ocupación durante el periodo seleccionado y pueden organizarse por hora o por día para facilitar su interpretación.
 
@@ -8241,7 +8247,7 @@ La búsqueda utiliza el periodo y el estacionamiento seleccionados para mostrar 
 
 **Consulta de precisión de las predicciones:**
 
-La aplicación web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
+La consola web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
 
 El administrador puede revisar resultados como el error absoluto medio (MAE) y el porcentaje de predicciones que se encuentran dentro del margen configurado. Los resultados se diferencian por versión del modelo para evitar combinar mediciones correspondientes a versiones distintas.
 
@@ -8251,9 +8257,11 @@ Cuando no existen suficientes pronósticos y observaciones para realizar el cál
 
 **Centro de alertas:**
 
-En la aplicación móvil, la sección de alertas concentra las notificaciones relacionadas con la disponibilidad prevista de los estacionamientos a los que el conductor se encuentra suscrito.
+En la aplicación móvil, la sección de alertas concentra las notificaciones push relacionadas con los estacionamientos a los que el conductor se encuentra suscrito. Las alertas son de tres tipos: saturación prevista, poca disponibilidad y cambios por eventos del campus.
 
-El usuario puede gestionar sus preferencias y definir las franjas horarias en las que desea recibir este tipo de información. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes relacionadas con una posible baja disponibilidad, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
+En "Alertas y preferencias", el usuario elige qué tipos de alerta recibe y define las franjas horarias en las que desea recibirlas. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
+
+En la consola web, el administrador y el operador reciben notificaciones web push de poca disponibilidad y de datos desactualizados por zona, que también aparecen en la lista de alertas del inicio de operación.
 
 ### 6.2.4. SEO Tags and Meta Tags
 
@@ -8426,27 +8434,31 @@ Los sistemas de navegación de Quadrapp están diseñados para que conductores, 
 
 | Elemento de Navegación | Descripción |
 |---|---|
-| **Menú inferior (tab bar)** | Mantiene accesos directos a las principales secciones de la aplicación: Inicio, Estacionamientos, Alertas y Preferencias. Permanece disponible durante la navegación principal. |
-| **Navegación jerárquica** | Desde Estacionamientos, el conductor puede seleccionar un estacionamiento y acceder a sus zonas, disponibilidad actual y predicciones. Esto permite avanzar desde información general hacia datos más específicos sin mostrar todo el contenido al mismo tiempo. |
+| **Menú inferior (tab bar)** | Mantiene accesos directos a las cuatro secciones de la aplicación: Inicio, Zonas, Predicción y Alertas. Permanece disponible durante la navegación principal. |
+| **Menú de cuenta** | El ícono de perfil del encabezado abre la hoja "Tu cuenta", con el selector de idioma (inglés por defecto o español), las notificaciones, el estacionamiento predeterminado y el cierre de sesión. |
+| **Navegación jerárquica** | Desde el Inicio, el conductor abre "Elegir estacionamiento", donde los estacionamientos de su institución aparecen agrupados por sede. En Zonas ve las zonas del estacionamiento elegido (por ejemplo, Norte, Central y Sur) y, al tocar una, el estado de sus espacios en vista de mapa o de lista. Esto permite avanzar desde información general hacia datos más específicos sin mostrar todo el contenido al mismo tiempo. |
 | **Selector de horizonte** | Dentro de la consulta predictiva, permite alternar entre los horizontes de 15, 30, 45 y 60 minutos para conocer cómo podría variar la disponibilidad. |
-| **Navegación contextual** | Las acciones relacionadas con un estacionamiento aparecen junto a su información. Desde su detalle, el conductor puede consultar la disponibilidad actual, revisar la predicción y acceder a la asesoría de llegada sin volver al menú principal. |
-| **Indicadores de estado** | Los estados Disponible, Ocupado o Sin información se presentan de forma visible dentro de las consultas. También se informa cuando un dato está desactualizado o una predicción presenta confianza baja. |
-| **Retroalimentación visual** | La interfaz mantiene resaltada la sección seleccionada y actualiza visualmente la información cuando el usuario cambia de estacionamiento, zona u horizonte de predicción. |
+| **Navegación contextual** | Las acciones relacionadas con un estacionamiento aparecen junto a su información. Desde el Inicio, el conductor consulta la disponibilidad actual, revisa la predicción y la asesoría de llegada, y con "Cómo llegar" abre Waze o Google Maps sin volver al menú principal. Las notificaciones push llevan directamente a la pantalla relacionada con la alerta. |
+| **Indicadores de estado** | Los estados Libre, Ocupada y Sin datos se presentan de forma visible dentro de las consultas. También se informa cuando un dato está desactualizado, cuando una predicción presenta confianza baja y, si el permiso de ubicación está denegado, se muestran los cuatro horizontes con el aviso "Activa tu ubicación para ver la asesoría de llegada". |
+| **Retroalimentación visual** | La interfaz mantiene resaltada la sección seleccionada y actualiza la información en tiempo real (WebSocket), así como cuando el usuario cambia de estacionamiento, zona u horizonte de predicción. |
 
 La navegación móvil sigue un recorrido progresivo:
 
-Estacionamientos → Estacionamiento seleccionado → Zona → Disponibilidad → Predicción / Asesoría de llegada
+Inicio → Elegir estacionamiento (agrupado por sede) → Zonas → Zona → Mapa o lista de espacios
+
+Inicio → Predicción → Detalle del horizonte / Asesoría de llegada → Cómo llegar
 
 Esta estructura mantiene como prioridad la información necesaria para que el conductor pueda anticipar las condiciones del estacionamiento antes de llegar al campus.
 
 
-#### Aplicación Web — Administradores y Operadores
+#### Consola Web — Administradores y Operadores
 
 | Elemento de Navegación | Descripción |
 |---|---|
-| **Menú lateral persistente** | Proporciona acceso permanente a las principales áreas de la consola: Operación, Estacionamientos, Dispositivos, Calendario, Analítica y Usuarios. |
-| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista. |
-| **Navegación jerárquica** | Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
+| **Menú de la consola** | Proporciona acceso permanente a las secciones de la consola: Inicio de operación, Estacionamientos y zonas, Accesos, Sensores y gateways, Analítica y Más (calendario del campus, dominios institucionales y equipo). En escritorio es una barra lateral persistente; en el teléfono, la misma consola web responsive muestra cinco destinos inferiores (Inicio, Zonas, Accesos, Analítica y Más), y Sensores y gateways se consulta como Dispositivos dentro de Más. |
+| **Selectores del encabezado** | El selector de sede agrupa y filtra los estacionamientos de la institución, y el menú de la cuenta incluye el selector de idioma (inglés por defecto o español). |
+| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista, actualizada en tiempo real (WebSocket). Las notificaciones web push de poca disponibilidad y de datos desactualizados por zona llevan a esta vista. |
+| **Navegación jerárquica** | La consola sigue la jerarquía Institución → Estacionamiento → Zona → Nivel → Espacio. Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
 | **Navegación contextual** | Las acciones relacionadas con un elemento aparecen dentro de su propia vista. Por ejemplo, desde la configuración de un estacionamiento se puede gestionar su distribución sin trasladarse a una sección independiente. |
 | **Filtros de analítica** | Las vistas históricas permiten ajustar la información mostrada según estacionamiento, zona y periodo. En el análisis de precisión, los resultados también pueden diferenciarse por versión del modelo. |
 | **Estado de la sección activa** | El menú mantiene resaltado el módulo actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la consola. |
@@ -8460,12 +8472,12 @@ Las funcionalidades administrativas se organizan de forma progresiva para evitar
 
 | Elemento de Navegación | Descripción |
 |---|---|
-| **Navbar superior fijo** | Incluye accesos a las principales secciones informativas: Funcionalidades, Conductores, Instituciones, Nosotros y Contacto. Permanece disponible mientras el visitante recorre la página. |
-| **Scroll guiado por secciones** | La Landing Page utiliza una navegación vertical mediante anclas internas, permitiendo pasar rápidamente de la propuesta de valor a funcionalidades, segmentos y contacto. |
+| **Navbar superior fijo** | Incluye accesos a las secciones informativas: Cómo funciona, Conductores, Instituciones, Privacidad, Nosotros y FAQ, y la acción "Hablar con Integra Labs". Permanece disponible mientras el visitante recorre la página. |
+| **Scroll guiado por secciones** | La Landing Page utiliza una navegación vertical mediante anclas internas, permitiendo pasar rápidamente de la propuesta de valor a cómo funciona, segmentos, privacidad y contacto. |
 | **Botones de llamada a la acción (CTA)** | Los botones destacados orientan al visitante hacia el siguiente paso. El conductor dispone de una llamada a la acción para acceder al sitio de descarga de la aplicación, mientras que el visitante institucional puede dirigirse al formulario de contacto. |
 | **Navegación por audiencia** | El contenido diferencia claramente la información destinada a conductores de aquella dirigida a instituciones, permitiendo que cada visitante encuentre la propuesta relacionada con sus necesidades. |
 | **Jerarquía visual** | Los encabezados y bloques de contenido organizan la información desde la propuesta de valor general hacia detalles sobre funcionalidades y beneficios de la solución. |
-| **Footer navegable** | Mantiene accesos secundarios a Política de privacidad, Términos y condiciones y Contacto desde la parte inferior de la página. |
+| **Footer navegable** | Mantiene accesos secundarios a Política de privacidad, Términos de uso, Contacto y Preguntas frecuentes desde la parte inferior de la página. |
 
 La Landing Page permite recorrer las secciones informativas sin abandonar el sitio y separa el contenido de acuerdo con los dos segmentos principales del producto.
 
@@ -8522,7 +8534,7 @@ El mock-up aplica sobre el wireframe el Design System de la sección 6.1, sin ca
 
 ### 6.4.1. Applications Wireframes
 
-Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes y los wireflows se elaboraron en Figma: [https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0). Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
+Los wireframes son bocetos en blanco y negro de baja fidelidad que definen la estructura, la jerarquía visual y la navegación de cada pantalla antes de aplicar la identidad visual. Quadrapp tiene dos tipos de usuario, que corresponden a sus segmentos: el **conductor de la comunidad educativa**, que usa la aplicación móvil, y el **administrador de estacionamientos universitarios** (con los roles de administrador y operador), que usa la consola web de operación. Administradores y operadores trabajan solo en la consola web (Vue y Vuetify); la aplicación móvil (Flutter) es exclusiva de los conductores. La consola es responsive: en escritorio presenta una barra lateral y, durante el turno, se adapta a la pantalla del teléfono con una navegación inferior. Los wireframes y los wireflows se elaboraron en Figma: [https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0](https://www.figma.com/design/orAlXnoI4TJUWComgfZ61m/Quadrapp?node-id=64-5&t=idG1AOA7wCpNoLc5-0). Los wireframes del administrador se presentan en sus dos versiones: la vista móvil, que se usa durante el turno, y la vista de escritorio, para la gestión del inventario de dispositivos.
 
 
 #### VISTA CONDUCTOR (APP MÓVIL)
@@ -8535,15 +8547,15 @@ Acceso institucional: pantalla de ingreso del conductor. Solicita el correo inst
 
 ![Wireframe - Verificación OTP](./assets/capitulo-06/wireframes/Verificación%20OTP.png)
 
-**Inicio y asesoría de llegada**: pantalla principal. Muestra la disponibilidad actual del estacionamiento de la sede elegida y la asesoría de llegada: la probabilidad de encontrar espacio según el tiempo en que el conductor estima llegar.  
+**Inicio y asesoría de llegada**: pantalla principal. Muestra la disponibilidad actual del estacionamiento elegido y la asesoría de llegada: la probabilidad de encontrar espacio según el tiempo en que el conductor estima llegar. Los datos se actualizan en tiempo real. En el producto, esta pantalla incluye además el botón "Cómo llegar", que abre Waze o Google Maps, y, si el permiso de ubicación está denegado, muestra los cuatro horizontes con el aviso "Activa tu ubicación para ver la asesoría de llegada".  
 
 ![Wireframe - Inicio y asesoría de llegada](./assets/capitulo-06/wireframes/Inicio%20y%20asesoría%20de%20llegada.png)
 
-**Detalle por zonas**: desglosa la disponibilidad del estacionamiento por zona, para que el conductor elija hacia dónde dirigirse.  
+**Detalle por zonas**: desglosa la disponibilidad del estacionamiento elegido por zona (Zona Norte, Zona Central y Zona Sur), para que el conductor elija hacia dónde dirigirse.  
 
 ![Wireframe - Detalle por zonas](./assets/capitulo-06/wireframes/Detalle%20por%20zonas.png)
 
-**Detalle de Zona Norte**: detalle de una zona (en el ejemplo, Zona Norte) con el estado de sus espacios.  
+**Detalle de Zona Norte**: detalle de una zona del estacionamiento (en el ejemplo, Zona Norte) con el estado de sus espacios: Libre, Ocupada o Sin datos.  
 
 ![Wireframe - Detalle de Zona Norte](./assets/capitulo-06/wireframes/Detalle%20de%20Zona%20Norte.png)
 
@@ -8555,21 +8567,21 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Predicciones por horizonte](./assets/capitulo-06/wireframes/Predicciones%20por%20horizonte.png)
 
-**Detalle de predicción · 15 min**: detalle del pronóstico de un horizonte: ocupación esperada, confianza, método y vigencia.  
+**Detalle de predicción · 15 min**: detalle del pronóstico de un horizonte: ocupación esperada, saturación, nivel de confianza, método o fuente de la estimación, versión del modelo y vigencia.  
 
 ![Wireframe - Detalle de predicción · 15 min](./assets/capitulo-06/wireframes/Detalle%20de%20predicción%20·%2015%20min.png)
 
-**Alertas y preferencias:** permite activar o desactivar las alertas (saturación y baja disponibilidad al llegar) y administrar las franjas horarias en que se reciben.  
+**Alertas y preferencias:** permite elegir qué tipos de notificación push se reciben (saturación prevista, poca disponibilidad y cambios por eventos del campus) y administrar las franjas horarias en que se reciben.  
 
 ![Wireframe - Alertas y preferencias](./assets/capitulo-06/wireframes/Alertas%20y%20preferencias.png)
 
 #### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, VISTA MÓVIL)
 
-**Inicio de operación**: pantalla principal del turno. Resume el estado operativo del estacionamiento y da acceso rápido a las tareas de operación.  
+**Inicio de operación**: pantalla principal del turno. Resume en tiempo real el estado operativo del estacionamiento y da acceso rápido a las tareas de operación. Las notificaciones web push de poca disponibilidad y de datos desactualizados por zona llevan a esta pantalla.  
 
 ![Wireframe - Inicio de operación](./assets/capitulo-06/wireframes/Inicio%20de%20operación.png)
 
-**Estacionamientos y zonas**: lista los estacionamientos de la universidad y sus zonas, con su estado de ocupación.  
+**Estacionamientos y zonas**: muestra el estacionamiento seleccionado con sus zonas (Norte, Central y Sur) y su estado de ocupación.  
 
 ![Wireframe - Estacionamientos y zonas](./assets/capitulo-06/wireframes/Estacionamientos%20y%20zonas.png)
 
@@ -8581,7 +8593,7 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Accesos y configuración](./assets/capitulo-06/wireframes/Accesos%20y%20configuración.png)
 
-**Salud de dispositivos**: muestra el estado de los dispositivos IoT del estacionamiento y permite reportar un problema.  
+**Salud de dispositivos**: se abre desde Más y muestra el estado de los dispositivos IoT del estacionamiento (nodos ESP32 conectados por Wi-Fi al gateway del campus) y permite reportar un problema.  
 
 ![Wireframe - Salud de dispositivos](./assets/capitulo-06/wireframes/Salud%20de%20dispositivos.png)
 
@@ -8595,15 +8607,15 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 #### VISTA ADMINISTRADOR DE ESTACIONAMIENTOS (CONSOLA WEB, ESCRITORIO)
 
-**Inventario de dispositivos**: lista los sensores y gateways de la institución con su zona, sede, tipo, asociación, salud, última comunicación y batería, y permite filtrarlos por zona, sede, estacionamiento, tipo y salud (US20, US32).  
+**Inventario de dispositivos**: lista los sensores y gateways de la institución con su estacionamiento (agrupado por sede), zona, tipo, asociación, salud, última comunicación y batería, y permite filtrarlos por sede, estacionamiento, zona, tipo y salud (US20, US32).  
 
 ![Wireframe - Inventario de dispositivos](./assets/capitulo-06/wireframes/Inventario%20de%20dispositivos.png)
 
-**Gestión de dispositivo · G-03**: reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
+**Gestión de dispositivo · G-03**: para el gateway G-03, que recibe por Wi-Fi las lecturas de los nodos ESP32, reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
 
 ![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/Gestión%20de%20dispositivo%20·%20G-03.png)
 
-**Registrar dispositivo**: ventana para registrar un sensor o gateway con su número de serie, tipo, estacionamiento, asociación, dirección (en los sensores de paso) e intervalo de reporte esperado (US19, US32). La institución se muestra fija: el administrador solo registra dispositivos de su universidad.  
+**Registrar dispositivo**: ventana para registrar un sensor o gateway con su número de serie, tipo, estacionamiento (elegido dentro de su sede), asociación, dirección (en los sensores de paso) e intervalo de reporte esperado (US19, US32). La institución se muestra fija: el administrador solo registra dispositivos de su universidad.  
 
 ![Wireframe - Registrar dispositivo](./assets/capitulo-06/wireframes/Registrar%20dispositivo.png)
 
@@ -8621,7 +8633,7 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 #### VISTA CONDUCTOR (APP MÓVIL)
 
-**Wireflow 1 · Acceso, ingreso y cierre de sesión**: Parte de Acceso institucional, continúa con la Verificación OTP y llega a Inicio y asesoría de llegada; desde ahí, la ventana Cuenta permite cerrar sesión y volver al acceso.  
+**Wireflow 1 · Acceso, ingreso y cierre de sesión**: Parte de Acceso institucional, continúa con la Verificación OTP y llega a Inicio y asesoría de llegada; desde ahí, la ventana Cuenta permite cambiar el idioma (inglés por defecto o español), revisar las notificaciones y el estacionamiento predeterminado, y cerrar sesión para volver al acceso.  
 
 ![Wireflow 1 - Acceso, ingreso y cierre de sesión](./assets/capitulo-06/wireflows/Wireflow%201%20·%20Acceso,%20ingreso%20y%20cierre%20de%20sesión.png)
 
@@ -8629,11 +8641,11 @@ Los wireflows combinan las pantallas de los wireframes con flechas que indican q
 
 ![Wireflow 2 - Disponibilidad al llegar](./assets/capitulo-06/wireflows/Wireflow%202%20·%20Disponibilidad%20al%20llegar.png)
 
-**Wireflow 3 · Sede y zonas**: Desde el Inicio el conductor elige la sede (Elegir sede) y recorre el Detalle por zonas hasta el Detalle de una zona, en su vista de mapa o de lista.  
+**Wireflow 3 · Estacionamiento y zonas**: Desde el Inicio el conductor elige el estacionamiento (Elegir estacionamiento), con los estacionamientos agrupados por sede, y recorre el Detalle por zonas hasta el Detalle de una zona, en su vista de mapa o de lista.  
 
-![Wireflow 3 - Sede y zonas](./assets/capitulo-06/wireflows/Wireflow%203%20·%20Sede%20y%20zonas.png)
+![Wireflow 3 - Estacionamiento y zonas](./assets/capitulo-06/wireflows/Wireflow%203%20·%20Sede%20y%20zonas.png)
 
-**Wireflow 4 · Alertas por franja horaria**: En Alertas y preferencias, el conductor agrega una Nueva franja horaria y regresa a la pantalla con la franja ya configurada.  
+**Wireflow 4 · Alertas por franja horaria**: En Alertas y preferencias, donde también elige los tipos de notificación push que recibe, el conductor agrega una Nueva franja horaria y regresa a la pantalla con la franja ya configurada.  
 
 ![Wireflow 4 - Alertas por franja horaria](./assets/capitulo-06/wireflows/Wireflow%204%20·%20Alertas%20por%20franja%20horaria.png)
 
