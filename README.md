@@ -3416,7 +3416,7 @@ En el sensado, los sensores de cochera y de paso publican las lecturas, y el gat
 
 *Figura: EventStorming, paso 8 (External Systems), fase de sensado y ocupación.*
 
-En la predicción intervienen el servicio de correo, que entrega al conductor su código de acceso desde IAM, el proveedor de mensajería push, que entrega las alertas, y el servicio de mapas. Este último se consulta solo desde el dispositivo del conductor para calcular el tiempo estimado de llegada; el servidor recibe únicamente los minutos, como establece CON-07.
+En la predicción intervienen el servicio de correo, que entrega al conductor su código de acceso desde IAM, Firebase Cloud Messaging, que entrega las alertas, y OpenRouteService. Este último se consulta solo desde el dispositivo del conductor para calcular el tiempo estimado de llegada; el servidor recibe únicamente los minutos, como establece CON-07.
 
 ![EventStorming paso 8: sistemas externos de la predicción, la asesoría y las alertas](assets/capitulo-04/eventstorming/eventstorming-paso-08c-prediccion.png)
 
@@ -3512,7 +3512,7 @@ El resultado del proceso son siete contextos candidatos, que se resumen en la ta
 | Parking Sensing | Soporte | Traducir la telemetría de los sensores en detecciones confiables y vigilar su salud | Lectura validada, Detección confirmada, Falla de sensor detectada |
 | Occupancy | Soporte | Mantener el estado de cada espacio, la disponibilidad y el flujo vehicular | Espacio marcado como ocupado, Espacio marcado como desconocido, Disponibilidad actualizada |
 | Analytics | Soporte | Consolidar el historial y medir la precisión del modelo | Pronóstico evaluado con la ocupación observada, Precisión del modelo recalculada |
-| Notifications | Soporte | Enviar alertas push de baja disponibilidad según las franjas suscritas, y avisos operativos de fallas, ingesta interrumpida y eventos del campus | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
+| Notifications | Soporte | Enviar alertas push de saturación prevista y de poca disponibilidad según las franjas suscritas, y avisos operativos de fallas, ingesta interrumpida y eventos del campus | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
 | IAM | Genérico | Gestionar instituciones, invitaciones, acceso con código de un solo uso y roles | Institución dada de alta, Sesión iniciada |
 
 ### 4.2.3. Domain Message Flows Modeling
