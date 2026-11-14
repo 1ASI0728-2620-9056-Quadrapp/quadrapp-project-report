@@ -3933,7 +3933,7 @@ El token viaja solo en el enlace del correo y en esta solicitud; IAM guarda úni
 
 |Nombre|Categoría|Evento|Descripción|
 |-|-|-|-|
-|AuditEventListener|Consumer (`@TransactionalEventListener`)|`AccessDenied` (IAM)|Ejecuta `AccessDeniedEventHandler` después de confirmar la transacción que contó el intento fallido.|
+|AuditEventListener|Consumer (`@ApplicationModuleListener`)|`AccessDenied` (IAM)|Ejecuta `AccessDeniedEventHandler` después de confirmar la transacción que contó el intento fallido.|
 
 La capa de seguridad del backend (Spring Security) valida el token, el rol y la institución antes de que la solicitud llegue al controlador (DD-08), de modo que IAM no queda en el camino de cada consulta de los demás módulos.
 
@@ -4037,7 +4037,7 @@ La Infrastructure Layer implementa los repositorios, la emisión de tokens, el c
 |HashingCodeHasher|Adapter (criptografía)|CodeHasher|`SecureRandom`, HMAC-SHA-256|Genera códigos y tokens aleatorios y calcula el hash de los códigos de un solo uso, de los tokens guardados y de los secretos de plataforma.|
 |EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción.|
 |PersistentAuditLog|Adapter (persistencia)|AuditLog|Spring Data JPA, PostgreSQL|Guarda en `audit_log` los accesos rechazados (401, 403 y 429), incluidos los `AccessDenied` del inicio de sesión, sin almacenar datos personales innecesarios.|
-|IamEventPublisherAdapter|Adapter (eventos)|IamEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio; los consumidores, como el de `TenantProvisioned` en Parking Configuration, los reciben con `@TransactionalEventListener` después de confirmar la transacción.|
+|IamEventPublisherAdapter|Adapter (eventos)|IamEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos de dominio; los consumidores, como el de `TenantProvisioned` en Parking Configuration, los reciben con `@ApplicationModuleListener` después de confirmar la transacción.|
 |SecurityFilterChain|Configuración transversal|—|Spring Security|Valida el JWT con las claves de `JwtTokenIssuer`, el rol y la institución antes de cada controlador del backend, y registra en `AuditLog` los rechazos 401 y 403 (DD-08).|
 
 **Consideraciones**
@@ -4402,7 +4402,7 @@ Methods
 
 |Nombre|Categoría|Evento|Descripción|
 |-|-|-|-|
-|TenantProvisionedListener|Consumer (`@TransactionalEventListener`)|`TenantProvisioned` (IAM)|Envía `InitializeTenantConfigurationCommand` para crear el calendario de la institución nueva (TS15, QAS-08).|
+|TenantProvisionedListener|Consumer (`@ApplicationModuleListener`)|`TenantProvisioned` (IAM)|Envía `InitializeTenantConfigurationCommand` para crear el calendario de la institución nueva (TS15, QAS-08).|
 
 ### 5.2.3. Application Layer
 
@@ -4488,7 +4488,7 @@ La Infrastructure Layer implementa los repositorios y la publicación de eventos
 |ParkingLotRepositoryAdapter|Repository (implementación)|ParkingLotRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `parking_lots`, `parking_zones`, `parking_spaces` y `access_points`, y cada versión publicada en `layout_versions`.|
 |DeviceRepositoryAdapter|Repository (implementación)|DeviceRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `devices` y su historial en `device_assignments`. Los índices únicos parciales impiden dos asociaciones activas para el mismo sensor o el mismo espacio, aun con solicitudes simultáneas.|
 |AcademicCalendarRepositoryAdapter|Repository (implementación)|AcademicCalendarRepository|Spring Data JPA, PostgreSQL|Guarda el agregado en `academic_calendars`, `academic_periods` y `campus_events`.|
-|ConfigurationEventPublisherAdapter|Adapter (eventos)|ConfigurationEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio. Los consumidores los reciben con `@TransactionalEventListener` después de confirmar la transacción.|
+|ConfigurationEventPublisherAdapter|Adapter (eventos)|ConfigurationEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos de dominio. Los consumidores los reciben con `@ApplicationModuleListener` después de confirmar la transacción.|
 |TenantFilterConfiguration|Configuración transversal|—|Filtro de Hibernate|Aplica `tenant_id` del token a toda consulta del esquema (CON-08, DD-09).|
 
 **Consideraciones**
@@ -4520,7 +4520,7 @@ El diagrama descompone el módulo Parking Configuration dentro del contenedor Qu
 | Device Inventory Controller | Interface | Registro, asociación, reemplazo y baja de dispositivos. | Spring MVC `@RestController` | DeviceInventoryController |
 | Academic Calendar Controller | Interface | Periodos académicos y eventos del campus. | Spring MVC `@RestController` | AcademicCalendarController |
 | Parking Configuration Facade | Interface | Open Host Service en proceso. | Spring bean | ParkingConfigurationFacade y las vistas `*View` |
-| Tenant Provisioned Listener | Interface | Recibe `TenantProvisioned`. | `@TransactionalEventListener` | TenantProvisionedListener |
+| Tenant Provisioned Listener | Interface | Recibe `TenantProvisioned`. | `@ApplicationModuleListener` | TenantProvisionedListener |
 | Configuration Command Handlers | Application | Casos de uso de escritura y el manejador de `TenantProvisioned`. | Spring `@Service` | Commands, Command Handlers y TenantProvisionedEventHandler |
 | Configuration Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
 | Configuration Aggregates | Domain | Mantienen las invariantes de cada agregado. | Java (dominio puro) | ParkingLot, Device, AcademicCalendar, sus entidades, Value Objects y enumeraciones |
@@ -4612,7 +4612,7 @@ La Domain Layer contiene las reglas que convierten lecturas en detecciones y rep
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|SensorFeed|Aggregate Root|Flujo de lecturas de un sensor. En un sensor de cochera, confirma los cambios de estado que se mantienen el tiempo mínimo; en un sensor de paso, registra cada paso con su dirección. Su identidad es el `deviceId` del dispositivo.|
+|SensorFeed|Aggregate Root|Flujo de lecturas de un sensor. En un sensor de cochera, confirma los cambios de estado que se mantienen el tiempo mínimo; en un sensor de paso, registra cada paso con su dirección. Su identidad es el `deviceId` del dispositivo. Usa bloqueo optimista para que dos réplicas no lo modifiquen a la vez.|
 
 Attributes
 
@@ -4627,6 +4627,7 @@ Attributes
 |confirmedState|DetectionState?|Private|Último estado confirmado; vacío hasta la primera confirmación o tras una recuperación.|
 |pending|PendingDetection?|Private|Cambio en espera de cumplir el tiempo mínimo.|
 |lastReadingAt|Instant|Private|Marca de tiempo del dispositivo de la última lectura aplicada.|
+|version|Long|Private|Versión para el bloqueo optimista. Si dos réplicas modifican el mismo sensor a la vez, una falla, no confirma el mensaje y el broker se lo reentrega.|
 |minimumDetection|MinimumDetectionTime|Private|Tiempo mínimo de detección del estacionamiento, recibido en `ParkingLayoutProvided`.|
 |active|Boolean|Private|Falso cuando el dispositivo fue dado de baja o reemplazado.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
@@ -4766,6 +4767,7 @@ Methods
 |SensorStateChanged|eventId, deviceId, tenantId, parkingLotId, spaceId, state (FREE u OCCUPIED), detectedAt|Occupancy, que actualiza el estado del espacio.|
 |VehiclePassageDetected|eventId, deviceId, tenantId, parkingLotId, accessPointId, direction (IN u OUT), detectedAt|Occupancy, que registra el ingreso o la salida.|
 |DeviceFaultDetected|deviceId, tenantId, parkingLotId, targetId, reason, detectedAt|Occupancy, que marca el espacio como desconocido (UNKNOWN).|
+|IngestionInterrupted|tenantId, since, cause (BROKER_DISCONNECTED o NO_GATEWAY_REPORTS)|Notifications, que avisa una sola vez a los operadores y administradores de la institución.|
 |SensorCommunicationRestored|deviceId, tenantId, parkingLotId, targetId, restoredAt|Occupancy y la consola. El espacio deja de ser desconocido con la siguiente `SensorStateChanged`, no con este evento.|
 |DeviceFlaggedForMaintenance|deviceId, tenantId, parkingLotId, reason, flaggedAt|Consola de operación, mediante la fachada.|
 |BufferedReadingsReceived|gatewayId, tenantId, parkingLotId, readingCount, oldestReadingAt|Consola de operación, mediante la fachada.|
@@ -4778,12 +4780,14 @@ Methods
 2. Una lectura de un sensor sin espacio ni acceso asociado no genera eventos de dominio y registra una incidencia de mapeo (TS04, escenario 4).
 3. Un mensaje con formato inválido se aparta en el registro de rechazados y no genera eventos (TS04, escenario 2).
 4. Cada lectura se aplica una sola vez según su `eventId` (TS06, escenario 1).
-5. Una lectura con marca de tiempo anterior a la última aplicada del mismo sensor se descarta (TS06, escenario 2).
+5. En un sensor de cochera, una lectura con marca de tiempo anterior a la última aplicada se descarta, porque prevalece el último estado (TS06, escenario 2). En un sensor de paso esta regla no se aplica: cada pase cuenta y solo se descartan los duplicados por `eventId`.
 6. Un cambio de estado se confirma solo si se mantiene durante el tiempo mínimo de detección; un cambio más breve se descarta sin emitir eventos (TS06, escenarios 3 y 4).
 7. El contexto informa presencia y dirección, nunca la identidad del vehículo ni de su conductor (CON-16).
 8. Un dispositivo sin reporte dentro de su intervalo o con batería bajo el umbral pasa a falla y se marca para mantenimiento (TS10, QAS-05).
 9. Si el dispositivo no reporta porque su gateway está desconectado, se informa GATEWAY_OFFLINE y no se marca para mantenimiento.
 10. Un dispositivo en falla se recupera con un reporte válido; el espacio deja de ser desconocido solo con la siguiente detección estable (US20, escenarios 3 y 4).
+11. Una lectura sin una hora válida del dispositivo (anterior a su registro o más de 5 minutos adelantada respecto del servidor) se aparta en el registro de rechazados. El nodo publica solo después de sincronizar su hora por NTP con el gateway.
+12. Mientras el backend no está conectado al broker, o ningún gateway de la institución reporta, no se marcan dispositivos por vencimiento del intervalo: se informa una sola interrupción de la ingesta por institución.
 11. Las lecturas que el gateway retuvo durante una desconexión se procesan con las mismas reglas de orden y duplicidad (QAS-03).
 12. El contexto no calcula ocupación ni disponibilidad, y no decide el estado UNKNOWN de un espacio.
 
@@ -4795,7 +4799,7 @@ La Interface Layer recibe las lecturas del broker MQTT, atiende las consultas de
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|MqttInboundListener|Consumer (MQTT)|Recibe las lecturas y el estado de los gateways. Confirma cada mensaje al broker solo después de que su transacción se guardó, por lo que un fallo provoca la reentrega y no la pérdida (TS05).|
+|MqttInboundListener|Consumer (MQTT)|Recibe las lecturas y el estado de los gateways. Confirma cada mensaje al broker solo después de que su transacción se guardó, por lo que un fallo provoca la reentrega y no la pérdida (TS05). Si el procesamiento falla por un motivo distinto del formato, lo reintenta hasta 3 veces; si sigue fallando, guarda el mensaje como rechazado, registra la incidencia y lo confirma, para no bloquear la entrega de los siguientes.|
 
 Attributes
 
@@ -4895,17 +4899,18 @@ La Application Layer coordina el procesamiento de lecturas, la vigilancia de la 
 
 `ProcessSensorReadingCommandHandler`:
 
-1. Registra el `eventId` en `ReadingDeduplicationStore`; si ya existía, descarta la lectura (TS06, escenario 1).
+1. Registra el `eventId` en `ReadingDeduplicationStore`, dentro de la misma transacción que el resto del procesamiento; si ya existía, descarta la lectura (TS06, escenario 1).
 2. Resuelve el dispositivo con `DeviceDirectory`. Si no existe o fue dado de baja, registra la incidencia y termina (TS04, escenario 3). Si no tiene destino, registra la incidencia de mapeo y termina (TS04, escenario 4).
 3. Carga o abre el `SensorFeed` y aplica `accept`. Si la lectura está fuera de orden, termina (TS06, escenario 2).
 4. Registra el reporte en `DeviceHealth`, lo que puede publicar `SensorCommunicationRestored` y reiniciar la confirmación del flujo.
-5. Guarda todo en una transacción. Los eventos (`SensorStateChanged` si hubo confirmación) se publican al confirmarla, y recién entonces el listener confirma el mensaje al broker.
+5. Guarda todo en una transacción. Los eventos (`SensorStateChanged` si hubo confirmación) se guardan en el registro de publicación de Spring Modulith dentro de esa misma transacción, y recién después de confirmarla el listener confirma el mensaje al broker. Si el proceso cae antes de entregar el evento, Spring Modulith lo vuelve a publicar al reiniciar; si cae antes de confirmar el mensaje, el broker lo reentrega y se descarta como duplicado sin perder el evento.
 
 `DetectOverdueDevicesCommandHandler`:
 
-1. Obtiene los dispositivos operativos cuyo intervalo de reporte venció.
-2. Para cada uno, carga el `GatewayLink` de su último gateway y obtiene el motivo con `HealthEvaluationService.evaluateOverdue`.
-3. Marca la falla, guarda y publica `DeviceFaultDetected` y, si corresponde, `DeviceFlaggedForMaintenance`. Con una revisión cada 30 s, la falla se informa en 1 min o menos (QAS-05).
+1. Si el backend no está conectado al broker, o ningún gateway de una institución reportó durante el último intervalo, no evalúa sus dispositivos: publica una sola vez `IngestionInterrupted` para esa institución y continúa con las demás (regla 12).
+2. Obtiene los dispositivos operativos cuyo intervalo de reporte venció.
+3. Para cada uno, carga el `GatewayLink` de su último gateway y obtiene el motivo con `HealthEvaluationService.evaluateOverdue`.
+4. Marca la falla, guarda y publica `DeviceFaultDetected` y, si corresponde, `DeviceFlaggedForMaintenance`. Con una revisión cada 30 s, la falla se informa en 1 min o menos (QAS-05).
 
 **Puertos de salida**
 
@@ -4925,20 +4930,21 @@ La Infrastructure Layer contiene la conexión con el broker, la traducción de l
 
 |Nombre|Categoría|Implementa|Tecnología|Descripción|
 |-|-|-|-|-|
-|MqttInboundConfiguration|Configuración de mensajería|—|Spring Integration MQTT, cliente MQTT v5|Conexión TLS con el broker, sesión persistente (sin inicio limpio y con expiración de sesión) y QoS 1, para recibir también lo publicado durante una desconexión (TS05, escenario 3). Usa una suscripción compartida (`$share/sensing/…`) para que cada mensaje lo procese una sola réplica (QAS-04), y confirmación manual tras guardar.|
+|MqttInboundConfiguration|Configuración de mensajería|—|Spring Integration MQTT, cliente MQTT v5|Conexión TLS con el broker, sesión persistente (sin inicio limpio y con expiración de sesión) y QoS 1, para recibir también lo publicado durante una desconexión (TS05, escenario 3). Usa una suscripción compartida (`$share/sensing/…`) para que cada mensaje lo procese una sola réplica (QAS-04), y confirmación manual tras guardar. Expone el estado de la conexión, que consulta `DetectOverdueDevicesCommandHandler` (regla 12).|
 |SensorReadingTranslator|Adapter (anti-corruption)|—|Jackson, Bean Validation|Valida el JSON (campos obligatorios, tipos, valores permitidos) y lo traduce a `SensorReading`. Es el único componente que conoce el formato del gateway: otra tecnología de sensado solo requiere otro traductor (CON-16).|
 |SensorFeedRepositoryAdapter, DeviceHealthRepositoryAdapter, GatewayLinkRepositoryAdapter|Repository (implementación)|Repositorios del dominio|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`), para que dos lecturas simultáneas del mismo sensor no se sobrescriban.|
-|JdbcReadingDeduplicationStore|Adapter (persistencia)|ReadingDeduplicationStore|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `processed_readings`; un proceso diario elimina las filas con más de 7 días.|
+|JdbcReadingDeduplicationStore|Adapter (persistencia)|ReadingDeduplicationStore|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `processed_readings`; un proceso diario elimina las filas con más de 7 días. Esa retención supera la autonomía de 24 horas del gateway, de modo que ningún reenvío tardío se procesa dos veces.|
 |JpaIncidentLog, JpaRejectedReadingStore|Adapter (persistencia)|IncidentLog, RejectedReadingStore|Spring Data JPA|Guardan incidencias y mensajes rechazados.|
-|DeviceDirectoryAdapter|Adapter (anti-corruption)|DeviceDirectory|Llamada en proceso a `ParkingConfigurationFacade`, caché Caffeine|Consulta `resolveDevice` y guarda el resultado en caché; los eventos de Parking Configuration invalidan las entradas afectadas.|
-|SensingEventPublisherAdapter|Adapter (eventos)|SensingEventPublisher|Eventos de aplicación de Spring|Publica los eventos de dominio; Occupancy los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+|DeviceDirectoryAdapter|Adapter (anti-corruption)|DeviceDirectory|Llamada en proceso a `ParkingConfigurationFacade`, caché Caffeine|Consulta `resolveDevice` y guarda el resultado en caché; los eventos de Parking Configuration invalidan las entradas afectadas en todas las réplicas mediante un mensaje por Redis pub/sub, y cada entrada vence a los 60 s como respaldo.|
+|SensingEventPublisherAdapter|Adapter (eventos)|SensingEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Guarda los eventos de dominio en el registro de publicación dentro de la misma transacción; Occupancy los recibe con `@ApplicationModuleListener` después de confirmarla, y los pendientes se vuelven a publicar al reiniciar.|
 
 **Consideraciones**
 
 |Tema|Decisión|
 |-|-|
-|Entrega de mensajes|Al menos una vez: el broker reentrega todo mensaje no confirmado y el contexto descarta los duplicados por `eventId`. Así se cumple 0 % de lecturas perdidas sin procesar ninguna dos veces (QAS-03, DD-02, DD-03).|
-|Seguridad|Los sensores no se exponen a internet; solo el gateway abre una conexión saliente al broker con credenciales propias y permisos limitados a su prefijo de tópico (CON-05).|
+|Entrega de mensajes|Al menos una vez: el broker reentrega todo mensaje no confirmado y el contexto descarta los duplicados por `eventId`. Así se cumple 0 % de lecturas perdidas sin procesar ninguna dos veces (QAS-03, DD-02, DD-03). Los eventos de dominio tampoco se pierden, porque se guardan en el registro de publicación de Spring Modulith en la misma transacción (outbox).|
+|Seguridad|Los sensores no se exponen a internet; solo el gateway abre una conexión saliente al broker con credenciales propias y permisos limitados a su prefijo de tópico (CON-05). La credencial se crea al registrar el gateway (US32) con el plugin de seguridad dinámica de Mosquitto; en el prototipo es un paso manual documentado. La credencial del backend solo puede suscribirse, y en la red del campus cada nodo tiene su propia credencial en el broker del gateway.|
+|Observabilidad|Micrometer registra la latencia entre la hora del sensor, la recepción y el guardado, y cuenta las lecturas rechazadas y reintentadas. Junto con la latencia de Occupancy hasta el envío por WebSocket, demuestra QAS-02.|
 |Propiedad de datos|Este contexto es el único que escribe en el esquema `sensing`. Obtiene el inventario de Parking Configuration mediante su fachada y sus eventos, nunca leyendo sus tablas.|
 |Multi-tenancy|`tenant_id` se guarda en todas las tablas con datos de una institución. Las consultas de la consola filtran por el tenant del token.|
 |Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `sensing` de PostgreSQL, según DD-01.|
@@ -4964,7 +4970,7 @@ El diagrama descompone el módulo Parking Sensing dentro del contenedor Quadrapp
 | Device Health Controller | Interface | Consultas de salud e incidencias. | Spring MVC `@RestController` | DeviceHealthController |
 | Parking Sensing Facade | Interface | Resumen de salud para la consola. | Spring bean | ParkingSensingFacade |
 | Sensing Schedulers | Interface | Confirmación de detecciones y revisión de intervalos. | Spring `@Scheduled` | SensingSchedulers |
-| Configuration Event Listener | Interface | Cambios del inventario y del layout. | `@TransactionalEventListener` | ConfigurationEventListener |
+| Configuration Event Listener | Interface | Cambios del inventario y del layout. | `@ApplicationModuleListener` | ConfigurationEventListener |
 | Sensing Command Handlers | Application | Procesamiento de lecturas y vigilancia. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
 | Sensing Query Handlers | Application | Consultas de salud e incidencias. | Spring `@Service` | Queries y Query Handlers |
 | Sensing Aggregates | Domain | Reglas de detección y de salud. | Java (dominio puro) | SensorFeed, DeviceHealth, GatewayLink, HealthEvaluationService, Value Objects y enumeraciones |
@@ -5323,7 +5329,7 @@ La Infrastructure Layer implementa la persistencia, el read model, la difusión 
 |RedisAvailabilityReadModel|Adapter (read model)|AvailabilityReadModel|Spring Data Redis, Redis Pub/Sub|Guarda la disponibilidad por estacionamiento y zona y el estado de los espacios. Publica cada cambio en un canal de Redis para que todas las réplicas lo entreguen a sus clientes conectados (QAS-04).|
 |StompRealtimeConfiguration|Configuración de mensajería|—|Spring WebSocket, STOMP|Expone el endpoint de suscripción y entrega a cada cliente los cambios recibidos del canal de Redis.|
 |ConfigurationLayoutReaderAdapter|Adapter (anti-corruption)|LayoutReader|Llamada en proceso a `ParkingConfigurationFacade`|Traduce el layout publicado al modelo de Occupancy.|
-|OccupancyEventPublisherAdapter|Adapter (eventos)|OccupancyEventPublisher|Eventos de aplicación de Spring|Publica los eventos; Analytics los recibe con `@TransactionalEventListener` después de confirmar la transacción.|
+|OccupancyEventPublisherAdapter|Adapter (eventos)|OccupancyEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos; Analytics los recibe con `@ApplicationModuleListener` después de confirmar la transacción.|
 
 **Consideraciones**
 
@@ -5354,8 +5360,8 @@ El diagrama descompone el módulo Occupancy dentro del contenedor Quadrapp Backe
 | Occupancy Query Controller | Interface | Disponibilidad, estado de los espacios y flujo. | Spring MVC `@RestController` | OccupancyQueryController |
 | Occupancy Realtime Endpoint | Interface | Suscripción a los cambios de un estacionamiento. | Spring WebSocket, STOMP | OccupancyRealtimeEndpoint, StompRealtimeConfiguration |
 | Occupancy Facade | Interface | Open Host Service en proceso. | Spring bean | OccupancyFacade y las vistas `*View` |
-| Sensing Event Listener | Interface | Capa anticorrupción de los eventos de Parking Sensing. | `@TransactionalEventListener` | SensingEventListener |
-| Layout Event Listener | Interface | Recibe `ParkingLayoutProvided`. | `@TransactionalEventListener` | LayoutEventListener |
+| Sensing Event Listener | Interface | Capa anticorrupción de los eventos de Parking Sensing. | `@ApplicationModuleListener` | SensingEventListener |
+| Layout Event Listener | Interface | Recibe `ParkingLayoutProvided`. | `@ApplicationModuleListener` | LayoutEventListener |
 | Occupancy Schedulers | Interface | Reconciliación e historial por minuto. | Spring `@Scheduled` | OccupancySchedulers |
 | Occupancy Command Handlers | Application | Casos de uso de escritura y Event Handlers. | Spring `@Service` | Commands, Command Handlers y Event Handlers |
 | Occupancy Query Handlers | Application | Casos de uso de lectura. | Spring `@Service` | Queries y Query Handlers |
@@ -5960,7 +5966,7 @@ Cada estacionamiento se procesa de forma aislada: un fallo se registra y no deti
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|CampusEventListener|Consumer (`@TransactionalEventListener`)|Recibe los eventos del calendario que publica Parking Configuration y los entrega a `CampusEventChangedEventHandler`.|
+|CampusEventListener|Consumer (`@ApplicationModuleListener`)|Recibe los eventos del calendario que publica Parking Configuration y los entrega a `CampusEventChangedEventHandler`.|
 
 Methods
 
@@ -6076,7 +6082,7 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|Llamada en proceso a la fachada de Occupancy|Lee los datos de ocupación.|
 |ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|Llamada en proceso a la fachada de Parking Configuration (Open Host Service)|Lee la configuración del estacionamiento.|
 |PredictionModelClient|Adapter (cliente del modelo)|PredictionModelPort|Cliente HTTP, Resilience4j|Invoca al modelo y traduce su respuesta a `ModelPrediction`.|
-|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring|Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción.|
+|ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción.|
 
 
 **Consideraciones**
@@ -6109,7 +6115,7 @@ El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Qu
 | Arrival Advice Controller | Interface | Recibe `lotId` y `etaMinutes`. | Spring MVC `@RestController` | ArrivalAdviceController, ArrivalAdviceRequest, ArrivalAdviceResponse |
 | Prediction Advisory Facade | Interface | Punto de entrada de los casos de uso para los controladores REST. | Spring bean | PredictionAdvisoryFacade |
 | Forecast Scheduler | Interface | Dispara la generación periódica. | Spring `@Scheduled` | ForecastScheduler |
-| Campus Event Listener | Interface | Recibe los eventos del campus y solicita la regeneración. | `@TransactionalEventListener` | CampusEventListener, CampusEventChangedEventHandler |
+| Campus Event Listener | Interface | Recibe los eventos del campus y solicita la regeneración. | `@ApplicationModuleListener` | CampusEventListener, CampusEventChangedEventHandler |
 | Query Handlers | Application | Casos de uso de consulta. | Spring `@Service` | GetForecast, GetForecasts, GetArrivalAdvice y GetNextAvailability (Query y Handler) |
 | Command Handlers | Application | Caso de uso de comando: generar pronósticos. | Spring `@Service` | GenerateForecastsCommand y GenerateForecastsCommandHandler |
 | Advisory Domain Service | Domain | Deriva la asesoría y la próxima disponibilidad. | Java (dominio puro) | AdvisoryDomainService, ArrivalAdvice, NextAvailability, AdvisoryPolicy |
@@ -6998,7 +7004,7 @@ Los componentes principales son:
 
 El flujo principal comienza cuando un administrador realiza una consulta desde la consola web, a través del módulo de composición. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
 
-Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory llegan como eventos de aplicación de Spring dentro del mismo backend. Los consumidores (`@TransactionalEventListener`) los reciben después de que el módulo emisor confirma su transacción, y los componentes de integración los traducen al modelo de Analytics antes de procesarlos en Analytics Application, de acuerdo con la relación Conformist del Context Map.
+Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory llegan como eventos de aplicación de Spring dentro del mismo backend. Los consumidores (`@ApplicationModuleListener`) los reciben después de que el módulo emisor confirma su transacción, y los componentes de integración los traducen al modelo de Analytics antes de procesarlos en Analytics Application, de acuerdo con la relación Conformist del Context Map.
 
 De esta manera, Analytics mantiene sus responsabilidades y su persistencia separadas de los demás Bounded Contexts.
 
@@ -7530,7 +7536,7 @@ La Interface Layer expone las capacidades de Notifications a la aplicación móv
 
 |Nombre|Categoría|Evento|Descripción|
 |-|-|-|-|
-|PredictionEventConsumer|Consumer (`@TransactionalEventListener`)|`SaturationPredicted` (Prediction & Advisory)|Recibe el evento después de que Prediction & Advisory confirma su transacción y ejecuta `SaturationPredictedEventHandler` (mapa de contextos, US23).|
+|PredictionEventConsumer|Consumer (`@ApplicationModuleListener`)|`SaturationPredicted` (Prediction & Advisory)|Recibe el evento después de que Prediction & Advisory confirma su transacción y ejecuta `SaturationPredictedEventHandler` (mapa de contextos, US23).|
 
 **Proceso programado: NotificationRetryScheduler**
 
@@ -7627,7 +7633,7 @@ La Infrastructure Layer implementa los repositorios, las capas anticorrupción h
 |PushGatewayAdapter|Adapter (anti-corruption)|PushSender|Cliente HTTP del proveedor push, Resilience4j|Capa anticorrupción hacia el proveedor de mensajería push. Traduce la notificación del dominio al formato del proveedor, interpreta sus respuestas (por ejemplo, token rechazado) y aplica timeout y circuit breaker (DD-07, CON-06).|
 |EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo, con timeout y circuit breaker propios.|
 |IdentityContextAdapter|Adapter (anti-corruption)|IdentityContext|Spring Security|Traduce `UserIdentityProvided` (usuario, institución y rol del token) al modelo local, sin consultar la base de IAM (CON-02).|
-|NotificationEventPublisherAdapter|Adapter (eventos)|NotificationEventPublisher|Eventos de aplicación de Spring|Publica los eventos propios del contexto después de confirmar la transacción.|
+|NotificationEventPublisherAdapter|Adapter (eventos)|NotificationEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos propios del contexto después de confirmar la transacción.|
 
 **Consideraciones**
 
