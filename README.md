@@ -5234,7 +5234,7 @@ Respuesta de `GET /api/v1/parking-lots/{lotId}/occupancy`:
 |currentOccupancy(parkingLotId: UUID)|OccupancySnapshotView?|Prediction & Advisory|Disponibilidad y porcentaje de ocupación actuales; vacío si no hay un dato consolidado vigente.|
 |freeSpaces(parkingLotId: UUID)|Integer|Prediction & Advisory|Espacios libres; los desconocidos no cuentan.|
 |exitsInWindow(parkingLotId: UUID, windowMinutes: Integer)|Integer|Prediction & Advisory|Salidas registradas en la ventana.|
-|recentSnapshots(parkingLotId: UUID, from: Instant, to: Instant)|`List<OccupancySnapshotView>`|Prediction & Advisory|Historial por minuto del intervalo (hasta 7 días).|
+|recentSnapshots(parkingLotId: UUID, from: Instant, to: Instant)|`List<OccupancySnapshotView>`|Prediction & Advisory|Historial por minuto del intervalo (hasta 8 semanas), del que sale la heurística de respaldo.|
 |availabilityOf(tenantId: UUID, parkingLotId: UUID)|OccupancyView|Módulo de composición|Disponibilidad por zona para la pantalla de inicio y la consola (TS02, TS17).|
 
 **Event Consumers**
@@ -5328,7 +5328,7 @@ La Infrastructure Layer implementa la persistencia, el read model, la difusión 
 |-|-|-|-|-|
 |SpaceOccupancyRepositoryAdapter, LotOccupancyRepositoryAdapter|Repository (implementación)|SpaceOccupancyRepository, LotOccupancyRepository|Spring Data JPA, PostgreSQL|Persisten los agregados con bloqueo optimista (`version`). `countByZone` es una consulta agrupada por zona y estado.|
 |JdbcVehiclePassageRepository|Repository (implementación)|VehiclePassageRepository|JDBC, PostgreSQL|`INSERT … ON CONFLICT DO NOTHING` sobre `vehicle_passages`; elimina los registros con más de 7 días.|
-|JdbcOccupancySnapshotRepository|Repository (implementación)|OccupancySnapshotRepository|JDBC, PostgreSQL|Guarda una foto por minuto; elimina las de más de 7 días.|
+|JdbcOccupancySnapshotRepository|Repository (implementación)|OccupancySnapshotRepository|JDBC, PostgreSQL|Guarda una foto por minuto; elimina las de más de 8 semanas, el período que usa la heurística de respaldo de Prediction & Advisory.|
 |RedisAvailabilityReadModel|Adapter (read model)|AvailabilityReadModel|Spring Data Redis, Redis Pub/Sub|Guarda la disponibilidad por estacionamiento y zona y el estado de los espacios. Publica cada cambio en un canal de Redis para que todas las réplicas lo entreguen a sus clientes conectados (QAS-04).|
 |StompRealtimeConfiguration|Configuración de mensajería|—|Spring WebSocket, STOMP|Expone el endpoint de suscripción y entrega a cada cliente los cambios recibidos del canal de Redis.|
 |ConfigurationLayoutReaderAdapter|Adapter (anti-corruption)|LayoutReader|Llamada en proceso a `ParkingConfigurationFacade`|Traduce el layout publicado al modelo de Occupancy.|
@@ -5340,7 +5340,7 @@ La Infrastructure Layer implementa la persistencia, el read model, la difusión 
 |-|-|
 |CQRS|Las escrituras actualizan PostgreSQL y luego el read model en Redis; las consultas de la aplicación y la consola leen Redis (DD-04). Si Redis no responde, la consulta se resuelve en PostgreSQL y se informa igual la antigüedad del dato (QAS-06).|
 |Frescura|La cadena detección confirmada, guardado, recálculo, Redis y notificación se hace en el mismo proceso, para cumplir 5 s o menos desde la confirmación hasta la aplicación y la consola (QAS-02).|
-|Propiedad de datos|Este contexto es el único que escribe en el esquema `occupancy` y en el read model. El historial de largo plazo pertenece a Analytics; aquí solo se conservan 7 días.|
+|Propiedad de datos|Este contexto es el único que escribe en el esquema `occupancy` y en el read model. El historial de largo plazo pertenece a Analytics; aquí solo se conservan las fotos por minuto de 8 semanas y los pasos de 7 días. Prediction & Advisory no consulta a Analytics, porque Analytics ya depende de sus eventos y la consulta crearía un ciclo entre módulos que Spring Modulith rechaza.|
 |Multi-tenancy|`tenant_id` se guarda en todas las tablas, y las claves de Redis incluyen la institución. Las consultas filtran por el tenant del token.|
 |Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `occupancy` de PostgreSQL y Redis, según DD-01 y DD-04.|
 
@@ -5481,7 +5481,7 @@ La siguiente tabla resume las clases e interfaces principales requeridas por Pre
 | ForecastRepositoryAdapter | Infrastructure | Implementa la persistencia de pronósticos sobre la tabla `prediction.forecasts`. | Persistence dependency | save(), findById(), findLatest(), findLatestByLot() |
 | OccupancyReaderAdapter | Infrastructure | Capa anticorrupción que consulta la fachada de Occupancy. | Integration dependency | currentOccupancy(), freeSpaces(), exitsInWindow(), recentSnapshots() |
 | ParkingLotSettingsReaderAdapter | Infrastructure | Encapsula el acceso a la configuración del estacionamiento. | Integration dependency | profileOf(), activeLots(), calendarEventsAround() |
-| PredictionModelClient | Infrastructure | Encapsula la comunicación con el modelo de predicción. | Model dependency, timeout | predict() |
+| OnnxModelRunner | Infrastructure | Ejecuta en el proceso el modelo ONNX vigente y traduce su salida a `ModelPrediction`. | ONNX Runtime (Java) | predict() |
 | ForecastEventPublisherAdapter | Infrastructure | Encapsula el mecanismo técnico de publicación de `ForecastGenerated`. | Messaging dependency | publish() |
 
 
@@ -5511,6 +5511,9 @@ Attributes
 |confidence|Confidence|Private|Valor y nivel de confianza del pronóstico.|
 |method|ForecastMethod|Private|Indica si se generó con el modelo principal o con la heurística de respaldo.|
 |modelVersion|String|Private|Versión del modelo o identificador de la política de respaldo.|
+|runId|UUID|Private|Corrida de generación a la que pertenece; los cuatro horizontes de una corrida comparten el mismo valor.|
+|runSlot|Instant|Private|Inicio de la franja de 5 minutos de la corrida. Junto con el disparador, impide que dos réplicas generen dos veces la misma corrida programada.|
+|trigger|ForecastTrigger|Private|SCHEDULED si la generó el programador; CAMPUS_EVENT si la generó un cambio en el calendario.|
 |saturation|Saturation?|Private|Momento esperado de saturación, cuando el pronóstico lo anticipa.|
 |domainEvents|`List<DomainEvent>`|Private|Eventos de dominio pendientes de publicación.|
 
@@ -5768,6 +5771,7 @@ Los valores iniciales de `AdvisoryPolicy` se calibran con los datos del piloto (
 |-|-|-|-|
 |ForecastHorizon|Enumeration|M15, M30, M45, M60|Horizontes admitidos para un pronóstico.|
 |ForecastMethod|Enumeration|PRIMARY_MODEL, FALLBACK|Método con el que se generó un pronóstico.|
+|ForecastTrigger|Enumeration|SCHEDULED, CAMPUS_EVENT|Qué originó la corrida de generación.|
 |ConfidenceLevel|Enumeration|HIGH, MEDIUM, LOW|Nivel cualitativo de confianza.|
 |ArrivalCategory|Enumeration|HIGH, LIMITED, LOW|Categoría de la asesoría de llegada: HIGH (es probable encontrar espacio), LIMITED (la disponibilidad será limitada), LOW (es poco probable).|
 |UnavailabilityReason|Enumeration|HAS_FREE_SPACES, NO_EXITS|Motivo por el que no se entrega un rango: HAS_FREE_SPACES (hay espacios libres) o NO_EXITS (lleno y sin salidas recientes).|
@@ -5842,7 +5846,7 @@ Methods
 3. La ocupación esperada está entre 0 % y 100 %; el valor de confianza, entre 0 y 1.
 4. Todo pronóstico conserva su método y la versión del modelo, también cuando se generó con el respaldo.
 5. Un pronóstico FALLBACK tiene siempre nivel de confianza LOW.
-6. Si el modelo no está disponible, no responde a tiempo, omite un horizonte o no hay historial suficiente, se genera el pronóstico con el método FALLBACK, que asume que la ocupación esperada es la actual.
+6. Si no hay un modelo cargado, la inferencia falla, omite un horizonte o no hay historial suficiente, se genera el pronóstico con el método FALLBACK: la ocupación esperada es el promedio histórico del mismo día de la semana y la misma franja de 15 minutos en las últimas 8 semanas (DD-05). Si hay menos de dos semanas de historial para esa franja, se usa la ocupación actual. En ambos casos la confianza es LOW.
 7. Si no existe una lectura de ocupación utilizable, no se genera ningún pronóstico; el contexto no inventa un valor.
 8. Un pronóstico es vigente hasta su `targetAt` (`validUntil`). Uno vencido se devuelve marcado, junto con la hora del servidor, y no se usa para la asesoría.
 9. Un horizonte para el que nunca se generó un pronóstico se informa como faltante.
@@ -5955,15 +5959,15 @@ Methods
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|ForecastScheduler|Scheduler|Dispara la generación periódica de pronósticos.|
+|ForecastScheduler|Scheduler|Dispara la generación de pronósticos cada 5 minutos.|
 
 Methods
 
 |Nombre|Tipo de retorno|Visibilidad|Descripción|
 |-|-|-|-|
-|generateForecasts()|Void|Public|Envía un `GenerateForecastsCommand` por estacionamiento activo.|
+|generateForecasts()|Void|Public|Envía un `GenerateForecastsCommand` por estacionamiento activo, con el inicio de la franja de 5 minutos como `runSlot` y el disparador SCHEDULED.|
 
-Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias instancias, la ejecución se protege con un bloqueo.
+Cada estacionamiento se procesa de forma aislada: un fallo se registra y no detiene a los demás. Con varias réplicas, la ejecución se protege con un bloqueo en la base de datos (ShedLock), y la restricción única por estacionamiento, horizonte y `runSlot` impide duplicar una corrida aunque el bloqueo falle.
 
 **Consumer 1: CampusEventListener**
 
@@ -5983,7 +5987,7 @@ Methods
 |Nombre|Categoría|Atributos|Descripción|
 |-|-|-|-|
 |ArrivalAdviceRequest|Request DTO|lotId, etaMinutes|Entrada de la asesoría; no admite otros campos.|
-|ForecastResponse|Response DTO|lotId, horizon, expectedOccupancyPct, confidence, method, generatedAt, validUntil, saturation, serverTime|Pronóstico entregado al cliente.|
+|ForecastResponse|Response DTO|lotId, horizon, expectedOccupancyPct, confidence, method, modelVersion, generatedAt, validUntil, saturation, serverTime|Pronóstico entregado al cliente.|
 |ArrivalAdviceResponse|Response DTO|etaMinutes, probabilityOfSpace, category, confidence, horizonUsed, generatedAt, serverTime|Asesoría entregada al cliente.|
 |NextAvailabilityResponse|Response DTO|available, minMinutes, maxMinutes, reason, serverTime|Próxima disponibilidad entregada al cliente.|
 
@@ -6042,8 +6046,8 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 
 1. Obtiene el `ParkingLotProfile` y la ocupación actual; sin lectura utilizable, termina sin generar pronósticos.
 2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
-3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o respuesta incompleta).
-4. Persiste los pronósticos y, ya persistidos, publica `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
+3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o un horizonte sin resultado). Todos los pronósticos de la corrida comparten su `runId`.
+4. Persiste los pronósticos y, en la misma transacción, registra en Spring Modulith `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
 
 `CampusEventChangedEventHandler`:
 
@@ -6084,7 +6088,7 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |ForecastRepositoryAdapter|Repository (implementación)|ForecastRepository|Spring Data JPA, PostgreSQL|Guarda y recupera pronósticos en la tabla `forecasts`.|
 |OccupancyReaderAdapter|Adapter (anti-corruption)|OccupancyReader|Llamada en proceso a la fachada de Occupancy|Lee los datos de ocupación.|
 |ParkingLotSettingsReaderAdapter|Adapter (anti-corruption)|ParkingLotSettingsReader|Llamada en proceso a la fachada de Parking Configuration (Open Host Service)|Lee la configuración del estacionamiento.|
-|PredictionModelClient|Adapter (cliente del modelo)|PredictionModelPort|Cliente HTTP, Resilience4j|Invoca al modelo y traduce su respuesta a `ModelPrediction`.|
+|OnnxModelRunner|Adapter (modelo embebido)|PredictionModelPort|ONNX Runtime para Java|Carga el archivo `model-vN.onnx` más reciente que publicó el entrenamiento, arma las variables de entrada en el orden que declara su metadato y traduce la salida a `ModelPrediction`. Si no hay modelo cargado o la inferencia falla, devuelve un resultado vacío y el handler aplica el respaldo. Cuando aparece una versión nueva, la carga sin reiniciar el backend.|
 |ForecastEventPublisherAdapter|Adapter (eventos)|ForecastEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción.|
 
 
@@ -6096,6 +6100,22 @@ La Infrastructure Layer contiene las implementaciones técnicas que almacenan pr
 |Persistencia|La asesoría y la próxima disponibilidad no se persisten: el servidor no conserva el ETA ni el trayecto del conductor.|
 |Multi-tenancy|`tenant_id` se almacena en `forecasts` como referencia lógica a IAM, sin clave foránea, y se toma siempre del usuario autenticado, nunca de un parámetro.|
 |Tecnología|Módulo del monolito modular en Java 25 y Spring Boot 4, con el esquema `prediction` de PostgreSQL, según DD-01. Domain y Application Layer no dependen de ella.|
+
+**Ciclo de vida del modelo**
+
+El modelo no es un servicio web: se entrena fuera del backend y se ejecuta dentro de él (DD-10).
+
+|Etapa|Decisión|
+|-|-|
+|Datos|Datos públicos reales de sensores por espacio de la ciudad de Melbourne, con varios años de llegadas y salidas, reproducidos por el simulador IoT sobre un campus simulado al que se agregan eventos del campus declarados como sintéticos. Con un piloto real, se usaría el historial del propio campus.|
+|Variables|Estacionamiento, horizonte, ocupación actual y de hace 15, 30 y 60 minutos, ingresos y salidas en la ventana de flujo, día de la semana, franja de 15 minutos, tipo de período académico, impacto del evento del campus y minutos hasta su inicio. Las variables categóricas se convierten en números, porque el conversor a ONNX no admite divisiones categóricas nativas.|
+|Entrenamiento|Un `HistGradientBoostingRegressor` de scikit-learn por horizonte, entrenado cada semana por un trabajo programado en Python.|
+|Validación|Validación temporal: se entrena con un año y se evalúa con el siguiente. El error absoluto medio (MAE) de cada horizonte se guarda con la versión.|
+|Confianza|El valor de confianza de cada horizonte es `1 − MAE / 25`, acotado entre 0 y 1; `AdvisoryPolicy` lo convierte en HIGH, MEDIUM o LOW.|
+|Publicación|El trabajo exporta el modelo con `skl2onnx` como `model-vN.onnx`, junto con un metadato que declara la versión, la fecha, el orden de las variables y el MAE por horizonte. `OnnxModelRunner` carga la versión más reciente sin reiniciar el backend.|
+|Respaldo|Sin modelo cargado o ante un error de inferencia, se aplica la regla 6 con confianza LOW.|
+
+Cuando una corrida termina, el backend publica en `/topic/parking-lots/{lotId}/forecasts` un aviso de que hay pronósticos nuevos. La app vuelve a pedir la asesoría de llegada con el último tiempo estimado, descontando los minutos transcurridos, sin volver a calcular la ruta.
 
 ### 5.5.6. Bounded Context Software Architecture Component Level Diagrams
 
@@ -6127,7 +6147,7 @@ El diagrama descompone el módulo Prediction & Advisory dentro del contenedor Qu
 | Forecast Repository Adapter | Infrastructure | Guarda y recupera pronósticos por institución. | Spring Data JPA | ForecastRepositoryAdapter |
 | Occupancy Reader Adapter | Infrastructure | Lee datos de Occupancy. | Adaptador Java (anti-corruption) | OccupancyReaderAdapter |
 | Parking Lot Settings Adapter | Infrastructure | Lee la configuración de Parking Configuration. | Adaptador Java (anti-corruption) | ParkingLotSettingsReaderAdapter |
-| Prediction Model Client | Infrastructure | Invoca al modelo con timeout y cortacircuitos. | Cliente HTTP, Resilience4j | PredictionModelClient |
+| ONNX Model Runner | Infrastructure | Ejecuta en el proceso el modelo ONNX vigente. | ONNX Runtime (Java) | OnnxModelRunner |
 | Forecast Event Publisher Adapter | Infrastructure | Publica `ForecastGenerated` y `SaturationPredicted` tras confirmar la transacción. | Eventos de aplicación de Spring | ForecastEventPublisherAdapter |
 
 Prediction & Advisory Component Level Diagram: **PredictionAdvisoryComponentLevelDiagram**
@@ -6172,6 +6192,9 @@ Prediction & Advisory es dueño de una sola tabla, `forecasts`, en el esquema `p
 |parking_lot_id|UUID|No|parkingLotId|Estacionamiento; referencia lógica a Parking Configuration, sin clave foránea (CON-02).|
 |horizon_min|SMALLINT|No|horizon|Horizonte en minutos: 15, 30, 45 o 60.|
 |generated_at|TIMESTAMPTZ|No|generatedAt|Momento en que se generó.|
+|run_id|UUID|No|runId|Corrida de generación.|
+|run_slot|TIMESTAMPTZ|No|runSlot|Inicio de la franja de 5 minutos de la corrida.|
+|trigger|VARCHAR(12)|No|trigger|SCHEDULED o CAMPUS_EVENT (restricción CHECK).|
 |target_at|TIMESTAMPTZ|No|targetAt|Momento objetivo; también es `validUntil` (no se almacena).|
 |expected_occupancy_pct|NUMERIC(5,2)|No|expectedOccupancy|Ocupación esperada, entre 0 y 100.|
 |confidence|NUMERIC(4,3)|No|confidence.value|Valor de confianza, entre 0 y 1.|
@@ -6184,7 +6207,9 @@ Prediction & Advisory es dueño de una sola tabla, `forecasts`, en el esquema `p
 
 |Elemento|Definición|Regla que respalda|
 |-|-|-|
-|`uq_forecasts_lot_horizon_time`|UNIQUE (parking_lot_id, horizon_min, generated_at)|Evita duplicados; acelera la búsqueda del más reciente.|
+|`uq_forecasts_lot_horizon_run`|UNIQUE (parking_lot_id, horizon_min, run_id)|Un pronóstico por horizonte en cada corrida.|
+|`uq_forecasts_scheduled_slot`|UNIQUE (parking_lot_id, horizon_min, run_slot) WHERE trigger = 'SCHEDULED'|Impide que dos réplicas generen la misma corrida programada.|
+|`idx_forecasts_lot_horizon_generated`|INDEX (parking_lot_id, horizon_min, generated_at DESC)|Acelera la búsqueda del pronóstico más reciente. Un proceso diario elimina los pronósticos con más de 7 días; Analytics conserva su propia copia para medir la precisión.|
 |`idx_forecasts_tenant_lot_target`|INDEX (tenant_id, parking_lot_id, target_at)|Consultas por institución, estacionamiento y momento objetivo.|
 |`chk_forecasts_horizon`|horizon_min IN (15, 30, 45, 60)|Regla 2.|
 |`chk_forecasts_expected`|expected_occupancy_pct BETWEEN 0 AND 100|Regla 3.|
