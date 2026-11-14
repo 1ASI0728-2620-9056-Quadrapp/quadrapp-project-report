@@ -1333,6 +1333,8 @@ En esta sección se define el Ubiquitous Language del dominio del proyecto, con 
 
 # Capítulo III: Requirements Specification
 
+En este capítulo se especifican los requisitos de Quadrapp a partir del análisis realizado en el capítulo anterior. Primero se presentan los To-Be Scenario Mapping, que describen cómo cambia la experiencia de cada segmento objetivo con la solución. Luego se detallan las épicas, User Stories y Technical Stories con sus criterios de aceptación, el Impact Mapping que las vincula con los Business Outcomes y el Product Backlog ordenado por valor de negocio.
+
 ## 3.1. To-Be Scenario Mapping
 
 El To-Be Scenario Mapping representa cómo se espera que los usuarios vivan el proceso de estacionar en el campus una vez que Quadrapp esté en funcionamiento. Para cada segmento objetivo se elaboró un mapa a partir de su User Persona, con las filas **Phases**, **Doing**, **Thinking** y **Feeling**.
@@ -1414,7 +1416,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>EP07</strong></td>
   <td>Alertas y notificaciones</td>
-  <td>Permitir que el conductor se suscriba a las alertas de un estacionamiento y gestione las preferencias con las que desea recibirlas.</td>
+  <td>Permitir que el conductor se suscriba a las alertas de un estacionamiento, elija los tipos de alerta que desea recibir y las reciba como notificaciones push en la aplicación móvil, y que el personal del estacionamiento reciba en la consola web las alertas operativas que el administrador configura para cada estacionamiento.</td>
   <td>No aplica</td>
   <td>No aplica</td>
 </tr>
@@ -1707,7 +1709,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 3: Historial limitado.</strong><br>
     Dado que el pronóstico utilizado proviene de la heurística de respaldo,<br>
     cuando se genera la asesoría,<br>
-    entonces el sistema la entrega e informa que su nivel de confianza es bajo.
+    entonces el sistema la entrega e informa que su nivel de confianza es bajo.<br><br>
+    <strong>Escenario 4: Sin permiso de ubicación o sin servicio de rutas.</strong><br>
+    Dado que el conductor no concedió el permiso de ubicación o el servicio de rutas OpenRouteService no responde,<br>
+    cuando el conductor solicita la asesoría,<br>
+    entonces la aplicación no calcula el tiempo estimado de llegada, muestra los pronósticos del estacionamiento a 15, 30, 45 y 60 minutos y presenta el mensaje "Activa tu ubicación para ver la asesoría de llegada".
   </td>
   <td>EP03</td>
 </tr>
@@ -1911,7 +1917,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 
 <tr>
   <td><strong>US23</strong></td>
-  <td>Recibir alertas de baja disponibilidad</td>
+  <td>Recibir alertas de saturación prevista</td>
   <td>Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar.</td>
   <td>
     <strong>Escenario 1: Alerta programada por saturación prevista.</strong><br>
@@ -1937,20 +1943,20 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>US24</strong></td>
   <td>Gestionar preferencias de notificaciones</td>
-  <td>Como conductor de la comunidad educativa, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir.</td>
+  <td>Como conductor de la comunidad educativa, quiero elegir los tipos de alerta que deseo recibir para enterarme solo de las situaciones que me interesan.</td>
   <td>
-    <strong>Escenario 1: Activar notificaciones.</strong><br>
-    Dado que el usuario accede a sus preferencias,<br>
-    cuando habilita las notificaciones,<br>
-    entonces el sistema guarda la configuración y permite recibir las alertas correspondientes.<br><br>
-    <strong>Escenario 2: Desactivar notificaciones.</strong><br>
-    Dado que el usuario deshabilita las notificaciones,<br>
-    cuando se genera una alerta posterior,<br>
-    entonces el sistema no envía la notificación push.<br><br>
+    <strong>Escenario 1: Activar tipos de alerta.</strong><br>
+    Dado que el conductor accede a sus preferencias,<br>
+    cuando habilita uno o más tipos de alerta entre saturación prevista (<strong>SATURATION_FORECAST</strong>), disponibilidad limitada (<strong>LIMITED_AVAILABILITY</strong>) y cambios por eventos del campus (<strong>EVENT_CHANGES</strong>),<br>
+    entonces el sistema guarda la selección y le envía como notificación push solo los tipos habilitados para sus franjas suscritas.<br><br>
+    <strong>Escenario 2: Desactivar un tipo de alerta.</strong><br>
+    Dado que el conductor deshabilitó las alertas de disponibilidad limitada y mantiene habilitadas las de saturación prevista,<br>
+    cuando se generan alertas de ambos tipos para su franja suscrita,<br>
+    entonces el sistema le envía solo la alerta de saturación prevista.<br><br>
     <strong>Escenario 3: Modificar preferencias.</strong><br>
-    Dado que el usuario cambia sus preferencias,<br>
+    Dado que el conductor cambia los tipos de alerta seleccionados,<br>
     cuando guarda la configuración,<br>
-    entonces los nuevos valores se aplican a las siguientes notificaciones.
+    entonces la nueva selección se aplica a las siguientes alertas.
   </td>
   <td>EP07</td>
 </tr>
@@ -2191,6 +2197,131 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 </tr>
 
 <tr>
+  <td><strong>US37</strong></td>
+  <td>Recibir alertas de disponibilidad limitada en la franja actual</td>
+  <td>Como conductor de la comunidad educativa, quiero recibir una alerta cuando los espacios libres del estacionamiento al que me suscribí bajen del umbral configurado durante mi franja horaria, para decidir a tiempo si cambio de estacionamiento o de hora de llegada.</td>
+  <td>
+    <strong>Escenario 1: Disponibilidad por debajo del umbral.</strong><br>
+    Dado que el conductor tiene una suscripción vigente a un estacionamiento de 200 espacios, su franja horaria está en curso y el umbral del estacionamiento es 10 %,<br>
+    cuando los espacios libres bajan de 20 a 19,<br>
+    entonces el sistema le envía una notificación push de disponibilidad limitada (<strong>LIMITED_AVAILABILITY</strong>) con la cantidad de espacios libres.<br><br>
+    <strong>Escenario 2: Variaciones cercanas al umbral.</strong><br>
+    Dado que el sistema ya envió la alerta y la disponibilidad sube a 12 % sin alcanzar el 15 % (umbral más 5 puntos porcentuales),<br>
+    cuando la disponibilidad vuelve a bajar a 9 %,<br>
+    entonces el sistema no envía una nueva alerta.<br><br>
+    <strong>Escenario 3: Nueva caída tras la recuperación.</strong><br>
+    Dado que la disponibilidad alcanzó el 15 % y la condición de disponibilidad limitada se cerró,<br>
+    cuando los espacios libres vuelven a bajar del 10 % dentro de la misma franja,<br>
+    entonces el sistema envía una nueva alerta.<br><br>
+    <strong>Escenario 4: Franja suscrita fuera de curso.</strong><br>
+    Dado que la franja suscrita del conductor es de 08:00 a 10:00,<br>
+    cuando la disponibilidad baja del umbral a las 14:00,<br>
+    entonces el sistema no le envía la alerta.
+  </td>
+  <td>EP07</td>
+</tr>
+
+<tr>
+  <td><strong>US38</strong></td>
+  <td>Recibir alertas por cambios en los eventos del campus</td>
+  <td>Como conductor de la comunidad educativa, quiero recibir una alerta cuando se registre o se cancele un evento del campus que coincide con mi franja suscrita, para prever los cambios en la disponibilidad al llegar.</td>
+  <td>
+    <strong>Escenario 1: Evento registrado en la franja suscrita.</strong><br>
+    Dado que el conductor está suscrito a un estacionamiento los lunes de 08:00 a 10:00,<br>
+    cuando el administrador registra para ese estacionamiento un evento el lunes de 09:00 a 12:00,<br>
+    entonces el sistema le envía una notificación push de cambios por eventos (<strong>EVENT_CHANGES</strong>) con la fecha y el horario del evento.<br><br>
+    <strong>Escenario 2: Evento cancelado.</strong><br>
+    Dado que el conductor recibió la alerta de un evento que coincide con su franja suscrita,<br>
+    cuando el administrador cancela ese evento,<br>
+    entonces el sistema le envía una notificación push que informa la cancelación.<br><br>
+    <strong>Escenario 3: Evento sin coincidencia.</strong><br>
+    Dado que el conductor está suscrito a un estacionamiento los lunes de 08:00 a 10:00,<br>
+    cuando el administrador registra un evento para ese estacionamiento el lunes de 14:00 a 16:00,<br>
+    entonces el sistema no le envía la alerta.<br><br>
+    <strong>Escenario 4: Acceso a la asesoría desde la alerta.</strong><br>
+    Dado que el conductor recibió una alerta de cambios por eventos,<br>
+    cuando la abre en su dispositivo,<br>
+    entonces la aplicación muestra la asesoría de llegada para ese estacionamiento.
+  </td>
+  <td>EP07</td>
+</tr>
+
+<tr>
+  <td><strong>US39</strong></td>
+  <td>Recibir alertas operativas en la consola</td>
+  <td>Como operador del estacionamiento, quiero recibir en la consola de operación alertas de disponibilidad limitada y de datos desactualizados agrupadas por zona, para reaccionar a tiempo sin revisar cada sensor por separado.</td>
+  <td>
+    <strong>Escenario 1: Disponibilidad limitada en el estacionamiento.</strong><br>
+    Dado que el operador habilitó las notificaciones web de la consola y el administrador habilitó las alertas de disponibilidad limitada para su estacionamiento,<br>
+    cuando los espacios libres bajan del umbral configurado,<br>
+    entonces el sistema le envía una notificación push web de disponibilidad limitada (<strong>LIMITED_AVAILABILITY</strong>).<br><br>
+    <strong>Escenario 2: Datos desactualizados en una zona.</strong><br>
+    Dado que 12 espacios de la zona Norte dejan de reportar datos dentro del intervalo esperado,<br>
+    cuando el sistema detecta la condición,<br>
+    entonces envía a los operadores y administradores una sola notificación push web de datos desactualizados (<strong>STALE_DATA</strong>) con el mensaje "12 espacios sin datos en la zona Norte", y no una por sensor.<br><br>
+    <strong>Escenario 3: Ingesta interrumpida.</strong><br>
+    Dado que el sistema deja de recibir lecturas de todos los gateways de la institución,<br>
+    cuando detecta la interrupción de la ingesta,<br>
+    entonces envía a los operadores y administradores una sola alerta de datos desactualizados para toda la institución, y no una por zona ni por sensor.<br><br>
+    <strong>Escenario 4: Acceso al estacionamiento desde la alerta.</strong><br>
+    Dado que el operador recibió una alerta operativa,<br>
+    cuando la abre,<br>
+    entonces la consola muestra el estacionamiento correspondiente.
+  </td>
+  <td>EP07</td>
+</tr>
+
+<tr>
+  <td><strong>US40</strong></td>
+  <td>Configurar las reglas de alertas por estacionamiento</td>
+  <td>Como administrador de estacionamientos, quiero configurar para cada estacionamiento los tipos de alerta que recibe el personal, el intervalo mínimo entre alertas y el umbral de disponibilidad limitada, para evitar avisos innecesarios y adaptar las alertas a la operación de cada estacionamiento.</td>
+  <td>
+    <strong>Escenario 1: Configuración válida.</strong><br>
+    Dado que el administrador selecciona un estacionamiento de su institución,<br>
+    cuando habilita las alertas de disponibilidad limitada y de datos desactualizados para el personal, define un intervalo mínimo de 15 minutos y un umbral de 12 %,<br>
+    entonces el sistema guarda la configuración y la aplica a las alertas posteriores de ese estacionamiento.<br><br>
+    <strong>Escenario 2: Umbral fuera de rango.</strong><br>
+    Dado que el umbral de disponibilidad limitada admite valores entre 5 % y 30 %,<br>
+    cuando el administrador ingresa un umbral de 3 % o de 35 %,<br>
+    entonces el sistema rechaza la configuración e informa el rango permitido.<br><br>
+    <strong>Escenario 3: Intervalo mínimo entre alertas.</strong><br>
+    Dado que el intervalo mínimo configurado es de 15 minutos y el personal recibió una alerta de datos desactualizados a las 10:00,<br>
+    cuando se genera otra alerta del mismo tipo para ese estacionamiento a las 10:08,<br>
+    entonces el sistema no la envía hasta que se cumpla el intervalo mínimo.<br><br>
+    <strong>Escenario 4: Tipo de alerta deshabilitado para el personal.</strong><br>
+    Dado que el administrador deshabilitó las alertas de disponibilidad limitada para el personal de un estacionamiento,<br>
+    cuando los espacios libres bajan del umbral configurado,<br>
+    entonces el sistema no envía la alerta a los operadores y la mantiene para los conductores suscritos a la franja en curso.
+  </td>
+  <td>EP07</td>
+</tr>
+
+<tr>
+  <td><strong>US41</strong></td>
+  <td>Consultar cómo llegar al estacionamiento</td>
+  <td>Como conductor de la comunidad educativa, quiero abrir la ubicación del estacionamiento en Waze o Google Maps desde la aplicación, para recibir indicaciones de ruta con la herramienta de navegación que ya utilizo.</td>
+  <td>
+    <strong>Escenario 1: Aplicación de navegación instalada.</strong><br>
+    Dado que el estacionamiento tiene registradas su latitud y su longitud y el dispositivo tiene instalada Waze o Google Maps,<br>
+    cuando el conductor selecciona la opción "Cómo llegar",<br>
+    entonces la aplicación abre la aplicación de navegación con esas coordenadas como destino.<br><br>
+    <strong>Escenario 2: Ambas aplicaciones instaladas.</strong><br>
+    Dado que el dispositivo tiene instaladas Waze y Google Maps,<br>
+    cuando el conductor selecciona la opción "Cómo llegar",<br>
+    entonces la aplicación le permite elegir cuál abrir y la abre con las coordenadas del estacionamiento.<br><br>
+    <strong>Escenario 3: Ninguna aplicación de navegación instalada.</strong><br>
+    Dado que el dispositivo no tiene instalada Waze ni Google Maps,<br>
+    cuando el conductor selecciona la opción "Cómo llegar",<br>
+    entonces la aplicación abre la ubicación del estacionamiento en Google Maps desde el navegador del dispositivo.<br><br>
+    <strong>Escenario 4: Ruta fuera de Quadrapp.</strong><br>
+    Dado que la ruta se calcula en la aplicación de navegación,<br>
+    cuando el conductor sigue las indicaciones hasta el estacionamiento,<br>
+    entonces Quadrapp no recibe ni almacena la ruta ni la ubicación del conductor.
+  </td>
+  <td>EP03</td>
+</tr>
+
+<tr>
   <td><strong>TS01</strong></td>
   <td>Configuración de autenticación y gestión de sesiones</td>
   <td>Como Developer, quiero configurar el mecanismo de autenticación y gestión de sesiones de Quadrapp, para garantizar que los usuarios puedan acceder al sistema de forma segura y que las sesiones puedan validarse y finalizarse correctamente.</td>
@@ -2273,7 +2404,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 1: Mensaje válido consumido.</strong><br>
     Dado que el consumidor mantiene una suscripción activa al tópico del estacionamiento,<br>
     cuando el consumidor recibe del broker un mensaje con identificador de sensor, estado, marca de tiempo e identificador de evento,<br>
-    entonces confirma su recepción al broker, obtiene de Configuración el espacio asociado a ese sensor y registra una lectura validada de Parking Sensing.<br><br>
+    entonces obtiene de Configuración el espacio asociado a ese sensor, persiste la lectura validada de Parking Sensing junto con sus eventos de dominio y solo después confirma la recepción al broker.<br><br>
     <strong>Escenario 2: Mensaje con formato inválido.</strong><br>
     Dado que el consumidor recibe un mensaje del tópico suscrito,<br>
     cuando ese mensaje carece de los campos requeridos o presenta un tipo de dato incorrecto,<br>
@@ -2285,7 +2416,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 4: Sensor sin espacio asociado.</strong><br>
     Dado que un sensor figura en el registro de dispositivos pero no tiene un espacio asignado,<br>
     cuando se recibe uno de sus mensajes,<br>
-    entonces el consumidor no genera un evento de dominio y registra la incidencia de mapeo pendiente.
+    entonces el consumidor no genera un evento de dominio y registra la incidencia de mapeo pendiente.<br><br>
+    <strong>Escenario 5: Fallo al persistir la lectura.</strong><br>
+    Dado que el consumidor recibe un mensaje válido de un sensor con espacio asociado,<br>
+    cuando la persistencia de la lectura o de sus eventos de dominio falla,<br>
+    entonces el consumidor no confirma la recepción al broker y el broker vuelve a entregar el mensaje, sin pérdida de la lectura.
   </td>
   <td>EP02, EP04</td>
 </tr>
@@ -2306,7 +2441,11 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
     <strong>Escenario 3: Suscripción de un consumidor.</strong><br>
     Dado que el consumidor mantiene una sesión persistente en el broker,<br>
     cuando un servicio se suscribe al tópico con credenciales válidas,<br>
-    entonces recibe también los mensajes publicados mientras estuvo desconectado, sin pérdida de eventos.
+    entonces recibe también los mensajes publicados mientras estuvo desconectado, sin pérdida de eventos.<br><br>
+    <strong>Escenario 4: Suscripción compartida entre réplicas.</strong><br>
+    Dado que dos réplicas del backend consumen el tópico mediante una suscripción compartida de MQTT 5 con sesión persistente,<br>
+    cuando el gateway publica 100 lecturas con identificadores de evento distintos y una de las réplicas se detiene durante la publicación,<br>
+    entonces cada lectura es procesada por exactamente una réplica y las lecturas publicadas mientras esa réplica estuvo detenida se entregan a la otra réplica o tras su reconexión, sin pérdida de eventos.
   </td>
   <td>EP02, EP04</td>
 </tr>
@@ -2532,17 +2671,21 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
 <tr>
   <td><strong>TS16</strong></td>
   <td>Accesibilidad e internacionalización de las aplicaciones</td>
-  <td>Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas.</td>
+  <td>Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en inglés, como idioma por defecto, y en español latinoamericano, para que cualquier integrante de la comunidad universitaria pueda utilizarlas.</td>
   <td>
     <strong>Escenario 1: Idioma de la respuesta.</strong><br>
-    Dado que la solicitud declara su idioma preferido entre es_419 y en_US,<br>
+    Dado que la solicitud declara su idioma preferido entre en_US y es_419,<br>
     cuando se consulta cualquier recurso de la API,<br>
     entonces la respuesta entrega los textos y los formatos de fecha en ese idioma.<br><br>
-    <strong>Escenario 2: Idioma no soportado.</strong><br>
-    Dado que la solicitud declara un idioma distinto de los admitidos,<br>
+    <strong>Escenario 2: Idioma no soportado o no declarado.</strong><br>
+    Dado que la solicitud declara un idioma distinto de los admitidos o no declara ninguno,<br>
     cuando se consulta un recurso,<br>
-    entonces la respuesta utiliza el idioma por defecto del producto.<br><br>
-    <strong>Escenario 3: Criterios de accesibilidad.</strong><br>
+    entonces la respuesta utiliza inglés (en_US), el idioma por defecto del producto.<br><br>
+    <strong>Escenario 3: Cambio de idioma desde el selector.</strong><br>
+    Dado que la aplicación presenta sus textos en inglés (en_US) por defecto,<br>
+    cuando el usuario elige español (es_419) en el selector de idioma,<br>
+    entonces la aplicación presenta sus textos en ese idioma y conserva la elección en los siguientes accesos.<br><br>
+    <strong>Escenario 4: Criterios de accesibilidad.</strong><br>
     Dado que la interfaz expone los elementos con sus etiquetas accesibles y una relación de contraste mínima de 4.5:1,<br>
     cuando se ejecuta la validación automatizada de accesibilidad,<br>
     entonces el resultado no reporta incumplimientos de nivel AA.
@@ -2598,7 +2741,7 @@ El Product Backlog reúne las User Stories y las Technical Stories de Quadrapp e
 
 Las Technical Stories representan el trabajo necesario para implementar y sostener las funcionalidades. Algunas apoyan una capacidad específica y otras son transversales porque respaldan varias épicas o aplicaciones. Todas se incluyen en el mismo backlog y se ordenan según el valor que permiten entregar. Como el orden responde al valor y no a la secuencia técnica, las dependencias entre elementos, por ejemplo que la consulta de disponibilidad requiere un layout publicado y la autenticación, se resuelven en cada Sprint Planning incorporando primero los elementos habilitantes.
 
-La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El backlog suma **227 Story Points** distribuidos en **53 elementos**.
+La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El backlog suma **243 Story Points** distribuidos en **58 elementos**.
 
 | # Orden | Story Id | Título | Descripción | Story Points |
 | --- | --- | --- | --- | --- |
@@ -2650,13 +2793,18 @@ La estimación utiliza la escala de Fibonacci de 1, 2, 3, 5 y 8 Story Points. El
 | 46 | US34 | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | 5 |
 | 47 | TS11 | Implementación de procesamiento histórico para analítica de ocupación | Como Developer, quiero implementar un modelo de consulta histórica de ocupación y flujo vehicular, para proporcionar información agregada que permita analizar el comportamiento de los estacionamientos. | 8 |
 | 48 | US33 | Suscribirse a alertas por franja horaria | Como conductor de la comunidad educativa, quiero suscribirme a las alertas de un estacionamiento en las franjas horarias en las que suelo llegar para enterarme con anticipación cuando la disponibilidad prevista sea baja. | 3 |
-| 49 | US23 | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | 5 |
-| 50 | US24 | Gestionar preferencias de notificaciones | Como conductor de la comunidad educativa, quiero configurar mis preferencias de notificaciones para decidir qué alertas deseo recibir. | 2 |
-| 51 | TS12 | Implementación del sistema de notificaciones y preferencias | Como Developer, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de Quadrapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos. | 5 |
-| 52 | TS13 | Implementación de caché y funcionamiento parcial sin conexión | Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad. | 5 |
-| 53 | TS16 | Accesibilidad e internacionalización de las aplicaciones | Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en español e inglés, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | 5 |
+| 49 | US23 | Recibir alertas de saturación prevista | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | 5 |
+| 50 | US37 | Recibir alertas de disponibilidad limitada en la franja actual | Como conductor de la comunidad educativa, quiero recibir una alerta cuando los espacios libres del estacionamiento al que me suscribí bajen del umbral configurado durante mi franja horaria, para decidir a tiempo si cambio de estacionamiento o de hora de llegada. | 3 |
+| 51 | US38 | Recibir alertas por cambios en los eventos del campus | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se registre o se cancele un evento del campus que coincide con mi franja suscrita, para prever los cambios en la disponibilidad al llegar. | 3 |
+| 52 | US24 | Gestionar preferencias de notificaciones | Como conductor de la comunidad educativa, quiero elegir los tipos de alerta que deseo recibir para enterarme solo de las situaciones que me interesan. | 2 |
+| 53 | US39 | Recibir alertas operativas en la consola | Como operador del estacionamiento, quiero recibir en la consola de operación alertas de disponibilidad limitada y de datos desactualizados agrupadas por zona, para reaccionar a tiempo sin revisar cada sensor por separado. | 5 |
+| 54 | US40 | Configurar las reglas de alertas por estacionamiento | Como administrador de estacionamientos, quiero configurar para cada estacionamiento los tipos de alerta que recibe el personal, el intervalo mínimo entre alertas y el umbral de disponibilidad limitada, para evitar avisos innecesarios y adaptar las alertas a la operación de cada estacionamiento. | 3 |
+| 55 | TS12 | Implementación del sistema de notificaciones y preferencias | Como Developer, quiero implementar el envío de notificaciones y la gestión de preferencias de notificación de Quadrapp, para comunicar a los usuarios eventos relevantes relacionados con la disponibilidad de los estacionamientos. | 5 |
+| 56 | TS13 | Implementación de caché y funcionamiento parcial sin conexión | Como Developer, quiero implementar almacenamiento local de información relevante de la aplicación móvil, para que el usuario pueda consultar datos previamente obtenidos cuando exista una interrupción temporal de conectividad. | 5 |
+| 57 | TS16 | Accesibilidad e internacionalización de las aplicaciones | Como Developer, quiero que las aplicaciones cumplan los criterios de accesibilidad y entreguen sus textos en inglés, como idioma por defecto, y en español latinoamericano, para que cualquier integrante de la comunidad universitaria pueda utilizarlas. | 5 |
+| 58 | US41 | Consultar cómo llegar al estacionamiento | Como conductor de la comunidad educativa, quiero abrir la ubicación del estacionamiento en Waze o Google Maps desde la aplicación, para recibir indicaciones de ruta con la herramienta de navegación que ya utilizo. | 2 |
 
-El backlog también se encuentra en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T). En esta etapa, el tablero documenta los 53 elementos del Product Backlog ordenados por valor de negocio. Cada tarjeta incluye el identificador de la historia y su estimación en Story Points.
+El backlog también se encuentra en un tablero público de Trello, disponible en [https://trello.com/b/kbBjDp7T](https://trello.com/b/kbBjDp7T). En esta etapa, el tablero documenta los 58 elementos del Product Backlog ordenados por valor de negocio. Cada tarjeta incluye el identificador de la historia y su estimación en Story Points.
 
 ![Product Backlog de Quadrapp en Trello](assets/capitulo-03/product-backlog-trello.png)
 
@@ -2687,7 +2835,7 @@ Los inputs del proceso ADD son la funcionalidad primaria con impacto en la arqui
 
 #### 4.1.2.1. Primary Functionality (Primary User Stories)
 
-De las siete épicas y las treinta y seis User Stories del Capítulo III, se seleccionaron las que condicionan decisiones de arquitectura: la autenticación multi-institución (US01), la ocupación en tiempo casi real y su confiabilidad (US05, US07, US08), la predicción y la asesoría de llegada (US09, US13, US36), las alertas (US23), la consola de operación (US29), la precisión de las predicciones (US34) y el calendario académico como insumo del modelo (US35). Se incluyen las épicas EP01 a EP05 y EP07 que las agrupan. La épica EP06 (Landing Page) y las historias de configuración, consulta histórica y suscripción no se repiten aquí porque no introducen decisiones arquitectónicas adicionales a las ya cubiertas.
+De las siete épicas y las cuarenta y una User Stories del Capítulo III, se seleccionaron las que condicionan decisiones de arquitectura: la autenticación multi-institución (US01), la ocupación en tiempo casi real y su confiabilidad (US05, US07, US08), la predicción y la asesoría de llegada (US09, US13, US36), las alertas (US23), la consola de operación (US29), la precisión de las predicciones (US34) y el calendario académico como insumo del modelo (US35). Se incluyen las épicas EP01 a EP05 y EP07 que las agrupan. La épica EP06 (Landing Page) y las historias de configuración, consulta histórica y suscripción no se repiten aquí porque no introducen decisiones arquitectónicas adicionales a las ya cubiertas.
 
 | Epic / User Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
 | --- | --- | --- | --- | --- |
@@ -2696,14 +2844,14 @@ De las siete épicas y las treinta y seis User Stories del Capítulo III, se sel
 | **EP03** | Predicción y asesoría de llegada | Proporcionar predicciones de disponibilidad futura y asesoría de llegada considerando el tiempo estimado de llegada del usuario al estacionamiento. | No aplica | No aplica |
 | **EP04** | Gestión e infraestructura de estacionamientos | Gestionar la configuración de estacionamientos, zonas, espacios y accesos vehiculares, además de la integración y monitoreo de los sensores utilizados para detectar la ocupación. | No aplica | No aplica |
 | **EP05** | Analítica histórica | Permitir que la institución consulte la información histórica de ocupación, los periodos de mayor demanda y la precisión de las predicciones. | No aplica | No aplica |
-| **EP07** | Alertas y notificaciones | Permitir que el conductor se suscriba a las alertas de un estacionamiento y gestione las preferencias con las que desea recibirlas. | No aplica | No aplica |
+| **EP07** | Alertas y notificaciones | Permitir que el conductor se suscriba a las alertas de un estacionamiento, elija los tipos de alerta que desea recibir y las reciba como notificaciones push en la aplicación móvil, y que el personal del estacionamiento reciba en la consola web las alertas operativas que el administrador configura para cada estacionamiento. | No aplica | No aplica |
 | **US01** | Iniciar sesión con un correo autorizado | Como usuario autorizado por una institución, quiero iniciar sesión con mi correo verificado y un código de un solo uso para acceder a Quadrapp según el rol que me corresponde. | **Escenario 1: Solicitud del código de verificación.**<br>Dado que el usuario ingresa un correo cuyo dominio pertenece a una universidad registrada,<br>cuando solicita el acceso,<br>entonces el sistema envía un código de un solo uso a ese correo e informa su periodo de vigencia.<br><br>**Escenario 2: Código válido.**<br>Dado que el usuario recibió un código vigente,<br>cuando lo ingresa dentro de su periodo de vigencia,<br>entonces el sistema habilita su sesión con el rol y la universidad que le corresponden.<br><br>**Escenario 3: Código incorrecto o vencido.**<br>Dado que el código ingresado no coincide con el enviado o su vigencia terminó,<br>cuando el usuario intenta continuar,<br>entonces el sistema rechaza el acceso e informa que debe solicitar un nuevo código.<br><br>**Escenario 4: Correo invitado por una institución.**<br>Dado que el correo no pertenece a un dominio habilitado pero cuenta con una invitación vigente o con una cuenta creada previamente,<br>cuando el usuario solicita el acceso,<br>entonces el sistema envía el código y le otorga el rol registrado en su cuenta o invitación.<br><br>**Escenario 5: Correo sin vínculo institucional.**<br>Dado que el correo no pertenece a un dominio habilitado y tampoco tiene invitación ni cuenta previa,<br>cuando el usuario solicita el acceso,<br>entonces el sistema no envía ningún código e informa que el correo no corresponde a una institución habilitada.<br><br>**Escenario 6: Sesión vigente.**<br>Dado que el usuario mantiene una sesión válida,<br>cuando vuelve a utilizar la aplicación,<br>entonces el sistema conserva su acceso sin solicitar un nuevo código. | EP01 |
 | **US05** | Consultar disponibilidad actual | Como conductor de la comunidad educativa, quiero conocer la disponibilidad actual de los espacios de estacionamiento para decidir dónde estacionar. | **Escenario 1: Espacios disponibles.**<br>Dado que existen datos actualizados de los sensores,<br>cuando el usuario consulta un estacionamiento,<br>entonces el sistema muestra los espacios libres y ocupados.<br><br>**Escenario 2: Espacio ocupado.**<br>Dado que Parking Sensing confirma la detección de un vehículo en el espacio tras el tiempo mínimo configurado,<br>cuando se actualiza la información de disponibilidad,<br>entonces el espacio se presenta como ocupado.<br><br>**Escenario 3: Espacio libre.**<br>Dado que Parking Sensing confirma que el espacio quedó libre tras el tiempo mínimo sin detección,<br>cuando se actualiza la información,<br>entonces el espacio se presenta como disponible.<br><br>**Escenario 4: Antigüedad del dato.**<br>Dado que cada consulta corresponde a un estado consolidado en un momento determinado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema informa la antigüedad de esa información. | EP02 |
 | **US07** | Actualizar disponibilidad | Como conductor de la comunidad educativa, quiero recibir actualizaciones de la ocupación de los estacionamientos para consultar información cercana al estado real. | **Escenario 1: Cambio a ocupado.**<br>Dado que un sensor detecta que un espacio cambia de libre a ocupado,<br>cuando el evento es procesado,<br>entonces el sistema actualiza el estado del espacio.<br><br>**Escenario 2: Cambio a libre.**<br>Dado que un sensor detecta que un espacio cambia de ocupado a libre,<br>cuando el evento es procesado,<br>entonces el sistema refleja el nuevo estado.<br><br>**Escenario 3: Sin cambios de estado.**<br>Dado que los sensores continúan reportando su actividad pero ningún espacio cambia de estado,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema conserva el último estado válido e informa la marca de tiempo a la que corresponde. | EP02 |
 | **US08** | Gestionar estado desconocido | Como conductor de la comunidad educativa, quiero identificar cuándo un espacio no tiene información confiable para evitar interpretar un dato desactualizado como disponibilidad real. | **Escenario 1: Sensor sin reportar actividad.**<br>Dado que un sensor tiene configurado un intervalo esperado de comunicación,<br>cuando deja de reportar su actividad y se supera ese intervalo,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 2: Sensor con batería crítica.**<br>Dado que un sensor informa periódicamente su nivel de batería,<br>cuando el nivel reportado se encuentra por debajo del umbral configurado,<br>entonces el espacio pasa al estado **UNKNOWN** y no se contabiliza como disponible.<br><br>**Escenario 3: Espacio desconocido.**<br>Dado que un espacio se encuentra en estado UNKNOWN,<br>cuando el usuario consulta la disponibilidad,<br>entonces el sistema lo presenta como desconocido y lo excluye del conteo de espacios disponibles.<br><br>**Escenario 4: Recuperación del sensor.**<br>Dado que un sensor reanuda el reporte de su actividad,<br>cuando informa una detección estable durante el tiempo mínimo configurado,<br>entonces el espacio abandona el estado UNKNOWN y toma el estado confirmado. | EP02 |
 | **US09** | Consultar predicción de disponibilidad | Como conductor de la comunidad educativa, quiero consultar la disponibilidad futura de los estacionamientos para anticipar si encontraré un espacio al llegar al campus. | **Escenario 1: Predicción disponible.**<br>Dado que existen datos históricos suficientes,<br>cuando el usuario consulta una predicción,<br>entonces el sistema muestra la disponibilidad estimada.<br><br>**Escenario 2: Origen del pronóstico.**<br>Dado que cada pronóstico se genera con una versión de modelo y un nivel de confianza,<br>cuando el usuario consulta la disponibilidad estimada,<br>entonces el sistema informa el momento de su generación y su nivel de confianza.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el estacionamiento no acumula historial suficiente,<br>cuando el usuario realiza la consulta,<br>entonces el sistema presenta la heurística de respaldo e informa que su nivel de confianza es bajo. | EP03 |
 | **US13** | Obtener asesoría de llegada | Como conductor de la comunidad educativa, quiero recibir una asesoría basada en la disponibilidad prevista y en el tiempo estimado de llegada que calcula la aplicación para conocer las condiciones esperadas al llegar. | **Escenario 1: Asesoría para la hora de llegada.**<br>Dado que la aplicación calcula en el dispositivo el tiempo estimado de llegada y envía únicamente los minutos,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema entrega la probabilidad de encontrar espacio a esa hora estimada.<br><br>**Escenario 2: Tiempo de llegada inválido.**<br>Dado que el tiempo estimado calculado es negativo o supera el máximo admitido,<br>cuando el conductor solicita la asesoría,<br>entonces el sistema no genera la asesoría e informa el motivo del rechazo.<br><br>**Escenario 3: Historial limitado.**<br>Dado que el pronóstico utilizado proviene de la heurística de respaldo,<br>cuando se genera la asesoría,<br>entonces el sistema la entrega e informa que su nivel de confianza es bajo. | EP03 |
-| **US23** | Recibir alertas de baja disponibilidad | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | **Escenario 1: Alerta programada por saturación prevista.**<br>Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>entonces el sistema le envía la alerta correspondiente.<br><br>**Escenario 2: Aviso inmediato al consultar la asesoría.**<br>Dado que el conductor tiene habilitadas sus notificaciones,<br>cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>**Escenario 3: Notificaciones deshabilitadas.**<br>Dado que el conductor deshabilitó las notificaciones,<br>cuando se prevé la saturación dentro de su franja suscrita,<br>entonces el sistema conserva la suscripción y omite el envío.<br><br>**Escenario 4: Evitar alertas repetitivas.**<br>Dado que ya se envió una alerta para una condición determinada,<br>cuando la misma condición continúa activa,<br>entonces el sistema evita generar alertas repetitivas innecesarias. | EP07 |
+| **US23** | Recibir alertas de saturación prevista | Como conductor de la comunidad educativa, quiero recibir una alerta cuando se prevea la saturación del estacionamiento en la franja en la que suelo llegar para anticipar posibles dificultades al estacionar. | **Escenario 1: Alerta programada por saturación prevista.**<br>Dado que el conductor mantiene una suscripción vigente para una franja horaria,<br>cuando se prevé la saturación del estacionamiento dentro de esa franja,<br>entonces el sistema le envía la alerta correspondiente.<br><br>**Escenario 2: Aviso inmediato al consultar la asesoría.**<br>Dado que el conductor tiene habilitadas sus notificaciones,<br>cuando la asesoría de llegada recién generada corresponde a la categoría LOW,<br>entonces el sistema le envía el aviso de baja probabilidad para su hora estimada de llegada.<br><br>**Escenario 3: Notificaciones deshabilitadas.**<br>Dado que el conductor deshabilitó las notificaciones,<br>cuando se prevé la saturación dentro de su franja suscrita,<br>entonces el sistema conserva la suscripción y omite el envío.<br><br>**Escenario 4: Evitar alertas repetitivas.**<br>Dado que ya se envió una alerta para una condición determinada,<br>cuando la misma condición continúa activa,<br>entonces el sistema evita generar alertas repetitivas innecesarias. | EP07 |
 | **US29** | Monitorear la operación del estacionamiento desde la consola | Como operador del estacionamiento, quiero monitorear el estado actual del estacionamiento durante mi turno para anticipar la saturación y coordinar el flujo en los accesos. | **Escenario 1: Estado actual del estacionamiento.**<br>Dado que el operador cuenta con una sesión vigente en la consola de operación,<br>cuando consulta el estacionamiento a su cargo,<br>entonces el sistema presenta la capacidad total, los espacios libres, los ocupados, los desconocidos y el flujo de entradas y salidas del periodo.<br><br>**Escenario 2: Aviso de saturación prevista.**<br>Dado que el pronóstico indica que el estacionamiento alcanzará su saturación dentro del horizonte consultado,<br>cuando el operador consulta la consola,<br>entonces el sistema informa el momento previsto de saturación.<br><br>**Escenario 3: Información desactualizada.**<br>Dado que el estacionamiento no recibe eventos dentro del tiempo máximo de vigencia,<br>cuando el operador consulta el estado,<br>entonces el sistema informa la antigüedad del último dato consolidado. | EP02, EP03, EP04 |
 | **US34** | Consultar la precisión de las predicciones | Como administrador de estacionamientos, quiero consultar el error absoluto medio de las predicciones de mi institución y el porcentaje de acierto dentro del margen configurado, para evaluar cuánta confianza depositar en ellas al planificar la operación. | **Escenario 1: Precisión del periodo.**<br>Dado que el sistema conserva los pronósticos generados y la ocupación observada,<br>cuando el administrador consulta un periodo,<br>entonces el sistema presenta, por estacionamiento y horizonte, el error absoluto medio expresado en puntos porcentuales y el porcentaje de pronósticos que quedaron dentro del margen configurado.<br><br>**Escenario 2: Evolución por versión del modelo.**<br>Dado que el modelo de predicción se actualiza periódicamente,<br>cuando el administrador compara los periodos disponibles,<br>entonces el sistema distingue los resultados obtenidos con cada versión del modelo.<br><br>**Escenario 3: Periodo sin comparación posible.**<br>Dado que un periodo no cuenta con pronósticos y ocupación observada suficientes,<br>cuando el administrador lo consulta,<br>entonces el sistema informa que ese periodo no permite calcular la precisión. | EP05 |
 | **US35** | Registrar el calendario académico y los eventos del campus | Como administrador de estacionamientos, quiero registrar el calendario académico y los eventos del campus para que las predicciones consideren los días de mayor demanda. | **Escenario 1: Registro del calendario académico.**<br>Dado que el administrador dispone del calendario del ciclo,<br>cuando registra sus periodos de clases, exámenes y receso,<br>entonces el sistema los incorpora como insumo de las predicciones de su institución.<br><br>**Escenario 2: Registro de un evento especial.**<br>Dado que el campus realizará un evento de alta afluencia,<br>cuando el administrador lo registra con su fecha, su horario y el estacionamiento afectado,<br>entonces el sistema lo considera al generar los pronósticos de esas franjas.<br><br>**Escenario 3: Cancelación de un evento.**<br>Dado que un evento registrado se cancela,<br>cuando el administrador lo retira,<br>entonces el sistema deja de considerarlo y regenera los pronósticos de las franjas afectadas. | EP03, EP04 |
