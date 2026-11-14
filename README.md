@@ -300,7 +300,7 @@ del ABET – EAC - Student Outcome 3.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
-          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondo la arquitectura que seguirá nuestra solución.<br>
+          AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.<br>
           TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.
         </p>
         <p>
@@ -332,7 +332,7 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
-          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola web de operación, manteniendo la trazabilidad con las historias de usuario.
+          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -1030,11 +1030,11 @@ Este segmento vive el problema en primera persona y de forma recurrente, por lo 
 *Preguntas complementarias*
 
 13. ¿Qué cambia en semanas especiales, como el inicio de ciclo, los exámenes o los eventos masivos?
-14. Antes de salir hacia el campus, ¿qué información, si hay alguna, te ayudaría a decidir? ¿Cómo y en qué momento te gustaría obtenerla?
+14. Si pudieras saber una sola cosa antes de salir de casa, ¿cuál sería? ¿Preferirías que la aplicación te avise sola o consultarla tú?
 
 *Pregunta de cierre*
 
-15. Si pudieras cambiar algo de cómo llegas y estacionas hoy en el campus, ¿qué sería y por qué? ¿Hay algo que no te hayamos preguntado y consideres importante?
+15. Si supieras con anticipación la probabilidad de encontrar estacionamiento al llegar, ¿qué cambiaría en tu rutina? ¿Hay algo que no te hayamos preguntado y consideres importante?
 
 #### Segmento 2: Administradores de estacionamientos universitarios
 
@@ -1757,7 +1757,7 @@ Las User Stories dirigidas a la comunidad universitaria y al personal que admini
   <td>Como conductor de la comunidad educativa, quiero que la asesoría se actualice cuando cambie mi tiempo estimado de llegada para consultar información acorde a mi llegada prevista.</td>
   <td>
     <strong>Escenario 1: Cambio del tiempo estimado.</strong><br>
-    Dado que la aplicación recalcula periódicamente el tiempo estimado de llegada mientras el conductor se dirige al campus,<br>
+    Dado que la aplicación recalcula el tiempo estimado de llegada cada 2 minutos o cada 500 m recorridos mientras el conductor se dirige al campus,<br>
     cuando ese tiempo varía respecto del último informado,<br>
     entonces el sistema recalcula la asesoría sin que el conductor deba solicitarla.<br><br>
     <strong>Escenario 2: Nuevo horizonte.</strong><br>
@@ -2764,7 +2764,7 @@ Este mapa se centra en reducir en un 20 % el tiempo promedio de búsqueda. Tambi
 
 ### Administradores de estacionamientos universitarios
 
-Este mapa integra los Business Outcomes relacionados con la implementación de un piloto durante el primer año, la disponibilidad de datos superior al 95 % y el uso del dashboard en cada turno. Los impactos muestran cómo Carlos Mendoza contribuye a la adopción, la configuración del estacionamiento, la supervisión operativa y el análisis de la demanda.
+Este mapa integra los Business Outcomes relacionados con la implementación de un piloto durante el primer año, la disponibilidad de datos superior al 95 % y el uso de la consola web de operación en cada turno. Los impactos muestran cómo Carlos Mendoza contribuye a la adopción, la configuración del estacionamiento, la supervisión operativa y el análisis de la demanda.
 
 ![Impact Mapping de administradores de estacionamientos universitarios](./assets/capitulo-03/impact-mapping-administradores.png)
 
@@ -3037,7 +3037,7 @@ Este diseño protege los datos, pero no la disponibilidad: si el broker cae, no 
 | Heurística por promedios históricos por franja horaria | Simple y explicable; funciona con pocos datos. | Menos precisa ante eventos y cambios de demanda. |
 | Series temporales clásicas | Buen ajuste a patrones estacionales. | Incorpora con dificultad variables externas como eventos y flujo. |
 
-**Decisión:** un modelo `HistGradientBoostingRegressor` de scikit-learn por horizonte, que usa la ocupación actual, el historial, el flujo de entradas y salidas, el calendario académico y los eventos del campus. Como todavía no existe historial del campus, el modelo se entrena con datos públicos reales de sensores por espacio de la ciudad de Melbourne, con varios años de llegadas y salidas. El simulador IoT reproduce esos datos sobre un campus simulado y les agrega eventos del campus (exámenes, inicio de ciclo y actividades), que se declaran como sintéticos. La precisión se mide con una validación temporal: se entrena con un año y se evalúa con el siguiente. La calibración con datos reales de un campus queda como trabajo futuro. Los pronósticos se generan cada 5 minutos por estacionamiento activo y también cuando cambia un evento del campus; cada corrida lleva un identificador de franja (`run_slot`) que impide duplicarla. Cuando el modelo no está disponible, se usa la heurística de respaldo: el promedio histórico por día de la semana y franja horaria, con confianza baja. Cada pronóstico registra su versión de modelo y nivel de confianza, lo que permite medir la precisión por versión.
+**Decisión:** un modelo `HistGradientBoostingRegressor` de scikit-learn por horizonte, que usa la ocupación actual, el historial, el flujo de entradas y salidas, el calendario académico y los eventos del campus. Como todavía no existe historial del campus, el modelo se entrena con datos públicos reales de sensores por espacio de la ciudad de Melbourne (City of Melbourne, s. f.), con varios años de llegadas y salidas. El simulador IoT reproduce esos datos sobre un campus simulado y les agrega eventos del campus (exámenes, inicio de ciclo y actividades), que se declaran como sintéticos. La precisión se mide con una validación temporal: se entrena con un año y se evalúa con el siguiente. La calibración con datos reales de un campus queda como trabajo futuro. Los pronósticos se generan cada 5 minutos por estacionamiento activo y también cuando cambia un evento del campus; cada corrida lleva un identificador de franja (`run_slot`) que impide duplicarla. Cuando el modelo no está disponible, se usa la heurística de respaldo: el promedio histórico por día de la semana y franja horaria, con confianza baja. Cada pronóstico registra su versión de modelo y nivel de confianza, lo que permite medir la precisión por versión.
 
 **Iteración 5b: Cálculo del tiempo estimado de llegada** (Drivers: FD-05, CON-07, QAD-01)
 
@@ -3512,7 +3512,7 @@ El resultado del proceso son siete contextos candidatos, que se resumen en la ta
 | Parking Sensing | Soporte | Traducir la telemetría de los sensores en detecciones confiables y vigilar su salud | Lectura validada, Detección confirmada, Falla de sensor detectada |
 | Occupancy | Soporte | Mantener el estado de cada espacio, la disponibilidad y el flujo vehicular | Espacio marcado como ocupado, Espacio marcado como desconocido, Disponibilidad actualizada |
 | Analytics | Soporte | Consolidar el historial y medir la precisión del modelo | Pronóstico evaluado con la ocupación observada, Precisión del modelo recalculada |
-| Notifications | Soporte | Enviar alertas push de saturación prevista y de poca disponibilidad según las franjas suscritas, y avisos operativos de fallas, ingesta interrumpida y eventos del campus | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
+| Notifications | Soporte | Enviar alertas push de saturación prevista y de poca disponibilidad según las franjas suscritas, avisos de cambios por eventos del campus a los conductores, y avisos operativos de datos desactualizados e ingesta interrumpida al personal | Suscripción a alertas registrada, Alerta de baja disponibilidad enviada |
 | IAM | Genérico | Gestionar instituciones, invitaciones, acceso con código de un solo uso y roles | Institución dada de alta, Sesión iniciada |
 
 ### 4.2.3. Domain Message Flows Modeling
@@ -3525,13 +3525,13 @@ Los escenarios se modelaron siguiendo Domain Storytelling (Hofer y Schwentner, 2
 
 Se modelaron cinco escenarios, elegidos para que cada bounded context participe en al menos uno.
 
-El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory toma el pronóstico vigente, que generó su capacidad de predicción con el modelo que se ejecuta dentro del contexto, consulta a Occupancy la ocupación actual y el flujo, que también sirven para estimar la próxima disponibilidad, y a Parking Configuration el perfil del estacionamiento. Con esos datos calcula la asesoría de llegada (`GetArrivalAdviceQuery`) y la devuelve a la aplicación con la categoría, la probabilidad, la confianza y la próxima disponibilidad. La asesoría es la respuesta de una consulta, no un evento: no se persiste ni se publica, y el tiempo estimado de llegada no se almacena. En el diagrama, la tarjeta 6 aparece en naranja, pero corresponde a esa respuesta.
+El primer escenario corresponde al caso central de Quadrapp. El conductor solicita la asesoría de llegada; la aplicación calcula el tiempo de viaje con el servicio de mapas en el propio dispositivo y envía a Prediction & Advisory solo el estacionamiento y el tiempo estimado en minutos. Prediction & Advisory toma el pronóstico vigente, que generó su capacidad de predicción con el modelo que se ejecuta dentro del contexto, consulta a Occupancy la ocupación actual y el flujo, que también sirven para estimar la próxima disponibilidad, y a Parking Configuration el perfil del estacionamiento. Con esos datos calcula la asesoría de llegada (`GetArrivalAdviceQuery`) y la devuelve a la aplicación con la categoría, la probabilidad, la confianza y la próxima disponibilidad. La asesoría es la respuesta de una consulta, no un evento: no se persiste ni se publica, y el tiempo estimado de llegada no se almacena.
 
 ![Domain Message Flow: conductor solicita asesoría de llegada](assets/capitulo-04/eventstorming/message-flow-asesoria.png)
 
 *Figura: Domain Message Flow del escenario "Conductor solicita asesoría de llegada". Los números indican el orden de los mensajes.*
 
-En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Su capacidad de predicción ejecuta el modelo para cada horizonte y, si el modelo no está disponible o falta historial, aplica la heurística de respaldo con las fotos por minuto de las últimas 8 semanas que entrega Occupancy. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de baja disponibilidad.
+En el segundo escenario, Prediction & Advisory genera un pronóstico a partir de la ocupación reciente y del calendario. Su capacidad de predicción ejecuta el modelo para cada horizonte y, si el modelo no está disponible o falta historial, aplica la heurística de respaldo con las fotos por minuto de las últimas 8 semanas que entrega Occupancy. Publica el evento Pronóstico generado, que Analytics usa para medir la precisión, y, como la ocupación esperada supera el umbral, publica el evento Saturación prevista. Notifications lo recibe, ordena el envío al proveedor de mensajería push y el conductor recibe la alerta de saturación prevista.
 
 ![Domain Message Flow: saturación prevista y alerta al conductor](assets/capitulo-04/eventstorming/message-flow-saturacion.png)
 
@@ -4248,7 +4248,7 @@ La Infrastructure Layer implementa los repositorios, la emisión de tokens, el c
 |PlatformCredentialRepositoryAdapter|Repository (implementación)|PlatformCredentialRepository|Spring Data JPA, PostgreSQL|Guarda las credenciales del equipo de plataforma en `platform_credentials`.|
 |JwtTokenIssuer|Adapter (tokens)|TokenIssuer|Nimbus JOSE + JWT|Firma tokens de acceso con los claims de usuario, institución, rol y permisos (`UserIdentityProvided`, `AuthorizedContextProvided`) y publica las claves de verificación.|
 |HashingCodeHasher|Adapter (criptografía)|CodeHasher|`SecureRandom`, HMAC-SHA-256|Genera códigos y tokens aleatorios y calcula el hash de los códigos de un solo uso, de los tokens guardados y de los secretos de plataforma.|
-|EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente HTTP del servicio de correo, Resilience4j|Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción.|
+|EmailGatewayAdapter|Adapter (anti-corruption)|EmailSender|Cliente SMTP (Spring Mail) hacia Brevo, Resilience4j|Capa anticorrupción hacia el servicio de correo externo; aísla el modelo del proveedor del dominio y permite reemplazarlo (CON-03, CON-06). Si el proveedor falla, no se afecta la consulta de disponibilidad ni la predicción.|
 |PersistentAuditLog|Adapter (persistencia)|AuditLog|Spring Data JPA, PostgreSQL|Guarda en `audit_log` los accesos rechazados (401, 403 y 429), incluidos los `AccessDenied` del inicio de sesión, sin almacenar datos personales innecesarios.|
 |IamEventPublisherAdapter|Adapter (eventos)|IamEventPublisher|Eventos de aplicación de Spring, registro de publicación de Spring Modulith (outbox)|Publica los eventos de dominio; los consumidores, como el de `TenantProvisioned` en Parking Configuration, los reciben con `@ApplicationModuleListener` después de confirmar la transacción.|
 |SecurityFilterChain|Configuración transversal|—|Spring Security|Valida el JWT con las claves de `JwtTokenIssuer`, el rol y la institución antes de cada controlador del backend, y registra en `AuditLog` los rechazos 401 y 403 (DD-08).|
@@ -5002,8 +5002,8 @@ Methods
 10. Un dispositivo en falla se recupera con un reporte válido; el espacio deja de ser desconocido solo con la siguiente detección estable (US20, escenarios 3 y 4).
 11. Una lectura sin una hora válida del dispositivo (anterior a su registro o más de 5 minutos adelantada respecto del servidor) se aparta en el registro de rechazados. El nodo publica solo después de sincronizar su hora por NTP con el gateway.
 12. Mientras el backend no está conectado al broker, o ningún gateway de la institución reporta, no se marcan dispositivos por vencimiento del intervalo: se informa una sola interrupción de la ingesta por institución.
-11. Las lecturas que el gateway retuvo durante una desconexión se procesan con las mismas reglas de orden y duplicidad (QAS-03).
-12. El contexto no calcula ocupación ni disponibilidad, y no decide el estado UNKNOWN de un espacio.
+13. Las lecturas que el gateway retuvo durante una desconexión se procesan con las mismas reglas de orden y duplicidad (QAS-03).
+14. El contexto no calcula ocupación ni disponibilidad, y no decide el estado UNKNOWN de un espacio.
 
 ### 5.3.2. Interface Layer
 
@@ -6260,7 +6260,7 @@ La Application Layer coordina los casos de uso de Prediction & Advisory: orquest
 
 1. Obtiene el `ParkingLotProfile` y la ocupación actual; sin lectura utilizable, termina sin generar pronósticos.
 2. Obtiene muestras recientes y eventos de calendario, y pide las predicciones de los cuatro horizontes a `PredictionModelPort`.
-3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (modelo caído, tiempo agotado, historial insuficiente o un horizonte sin resultado). Todos los pronósticos de la corrida comparten su `runId`.
+3. `ForecastDomainService` construye un `Forecast` PRIMARY_MODEL por cada predicción válida y uno FALLBACK por cada horizonte sin predicción (sin modelo cargado, error de inferencia, historial insuficiente o un horizonte sin resultado). Todos los pronósticos de la corrida comparten su `runId`.
 4. Persiste los pronósticos y, en la misma transacción, registra en Spring Modulith `ForecastGenerated` y, si se prevé saturación, `SaturationPredicted`.
 
 `CampusEventChangedEventHandler`:
@@ -7228,7 +7228,7 @@ Los componentes principales son:
 
 El flujo principal comienza cuando un administrador realiza una consulta desde la consola web, a través del módulo de composición. La solicitud ingresa por Analytics Query API, pasa a Analytics Application, utiliza las reglas de Analytics Domain y accede a los datos mediante Analytics Persistence.
 
-Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory llegan como eventos de aplicación de Spring dentro del mismo backend. Los consumidores (`@ApplicationModuleListener`) los reciben después de que el módulo emisor confirma su transacción, y los componentes de integración los traducen al modelo de Analytics antes de procesarlos en Analytics Application, de acuerdo con la relación Conformist del Context Map.
+Por otro lado, los eventos de Occupancy y los pronósticos de Prediction & Advisory llegan como eventos de aplicación de Spring dentro del mismo backend. Los consumidores (`@ApplicationModuleListener`) los reciben después de que el módulo emisor confirma su transacción, y los componentes de integración los traducen al modelo de Analytics antes de procesarlos en Analytics Application, de acuerdo con la relación Customer/Supplier con Published Language del Context Map.
 
 De esta manera, Analytics mantiene sus responsabilidades y su persistencia separadas de los demás Bounded Contexts.
 
@@ -7418,7 +7418,7 @@ Ambas tablas se implementan en el esquema `analytics` de PostgreSQL, según DD-0
 
 ## 5.7. Bounded Context: Notifications
 
-El contexto Notifications decide a quién avisar, cuándo y con qué mensaje, y entrega las alertas como notificaciones push. Recibe por el lenguaje publicado (Published Language) del mapa de contextos la saturación prevista de Prediction & Advisory, la poca disponibilidad y los espacios sin datos de Occupancy, las fallas de sensores y la interrupción de la ingesta de Parking Sensing, y los eventos del campus de Parking Configuration. Entrega los mensajes mediante Firebase Cloud Messaging (FCM), a través de una capa anticorrupción: push móvil a los conductores en la aplicación Flutter y web push a los operadores y administradores en la consola web en Vue, que no usan la aplicación móvil. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24 y US33 y a la historia técnica TS12.
+El contexto Notifications decide a quién avisar, cuándo y con qué mensaje, y entrega las alertas como notificaciones push. Recibe por el lenguaje publicado (Published Language) del mapa de contextos la saturación prevista de Prediction & Advisory, la poca disponibilidad y los espacios sin datos de Occupancy, las fallas de sensores y la interrupción de la ingesta de Parking Sensing, y los eventos del campus de Parking Configuration. Entrega los mensajes mediante Firebase Cloud Messaging (FCM), a través de una capa anticorrupción: push móvil a los conductores en la aplicación Flutter y web push a los operadores y administradores en la consola web en Vue, que no usan la aplicación móvil. Su dominio es de soporte (Supporting) y no calcula ocupación ni pronósticos. Sostiene los drivers FD-08, QAD-06, CON-06 y CON-07, y la decisión DD-07. Su contenido corresponde a las historias US23, US24, US33, US37, US38, US39 y US40, y a la historia técnica TS12.
  
 ### Class Dictionary
 
@@ -7474,7 +7474,7 @@ La siguiente tabla resume las clases e interfaces principales de Notifications. 
 |EVENT_CHANGES|`CampusEventProvided` (evento registrado) y `CampusEventCancelled` (evento cancelado), de Parking Configuration: campusEventId, tenantId, parkingLotId, startAt, endAt[, impact]|—|DRIVERS con una franja suscrita que se superpone con la ventana del evento.|Conductor: habilita o deshabilita el tipo.|`campusEventId:status` (REGISTERED o CANCELLED).|
  
 **Domain Services.**
-- `AlertPolicy`: decide si corresponde enviar una alerta a un destinatario. A los conductores les aplica sus preferencias (notificaciones habilitadas y tipo habilitado) y la regla del estacionamiento; a los operadores y administradores, solo la regla del estacionamiento.
+- `AlertPolicy`: decide si corresponde enviar una alerta a un destinatario. A los conductores les aplica solo sus preferencias (notificaciones habilitadas y tipo habilitado); a los operadores y administradores, la regla del estacionamiento. Así, desactivar una regla silencia al personal sin afectar a los conductores (US40).
 - `DeduplicationPolicy`: impide enviar una nueva alerta cuando la misma condición ya se notificó al destinatario y sigue activa (US23, escenario 4), o cuando no transcurrió el intervalo mínimo de la regla desde el último envío (`lastSentAt`).
 
 **Domain Events publicados.** `UserNotificationDelivered`, `PushSent`, `NotificationSkipped`, `DeviceTokenInvalidated`, `PreferenceUpdated`, `NotificationRuleConfigured`, `SubscriptionCreated` y `SubscriptionCancelled`. La tabla de eventos del diccionario indica sus atributos y qué agregado registra cada uno.
@@ -7570,7 +7570,7 @@ Methods
 
 |Nombre|Categoría|Descripción|
 |-|-|-|
-|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: si un tipo de alerta está activo en ese estacionamiento y el intervalo mínimo entre alertas. Es la configuración de las alertas dirigidas al personal (STALE_DATA y el aviso de LIMITED_AVAILABILITY a operadores) y permite desactivar cualquier tipo en un estacionamiento.|
+|NotificationRule|Aggregate Root|Regla que define el administrador para un estacionamiento: si un tipo de alerta está activo en ese estacionamiento y el intervalo mínimo entre alertas. Es la configuración de las alertas dirigidas al personal (STALE_DATA y el aviso de LIMITED_AVAILABILITY a operadores) y permite desactivar en un estacionamiento las alertas que recibe el personal, sin afectar las de los conductores (US40).|
 
 Attributes
 
@@ -7727,7 +7727,7 @@ Methods
 
 |Nombre|Categoría|Métodos|Descripción|
 |-|-|-|-|
-|AlertPolicy|Domain Service|evaluate(segment: RecipientSegment, type: AlertType, preferences: NotificationPreferences?, rule: NotificationRule?): SkipReason?|Devuelve vacío si corresponde enviar la alerta o el motivo para omitirla. Para DRIVERS evalúa las preferencias (NOTIFICATIONS_DISABLED, TYPE_DISABLED) y la regla del estacionamiento (RULE_DISABLED); para PARKING_OPERATORS y PARKING_ADMINS, solo la regla.|
+|AlertPolicy|Domain Service|evaluate(segment: RecipientSegment, type: AlertType, preferences: NotificationPreferences?, rule: NotificationRule?): SkipReason?|Devuelve vacío si corresponde enviar la alerta o el motivo para omitirla. Para DRIVERS evalúa solo las preferencias (NOTIFICATIONS_DISABLED, TYPE_DISABLED); para PARKING_OPERATORS y PARKING_ADMINS, la regla del estacionamiento (RULE_DISABLED).|
 |DeduplicationPolicy|Domain Service|check(condition: NotifiedCondition?, lastSentAt: Instant?, rule: NotificationRule?, now: Instant): SkipReason?|Devuelve DUPLICATE si la condición ya se notificó al destinatario y sigue activa (US23, escenario 4), o INTERVAL_NOT_ELAPSED si el último envío del mismo tipo y estacionamiento a ese destinatario ocurrió hace menos de `minIntervalMinutes`. Se apoya en `NotifiedConditionRepository`.|
 
 **Repositories (interfaces del dominio)**
@@ -7772,7 +7772,7 @@ La Interface Layer expone las capacidades de Notifications a la aplicación móv
 |DeviceController|`POST /api/v1/notification-devices`|Envía `RegisterDeviceCommand` con el token FCM, la plataforma (ANDROID, IOS o WEB) y el idioma de la solicitud; 201 si registra el token, 200 si ya existía y lo actualiza|US33, escenario 2 (ruta propuesta)|
 |DeviceController|`DELETE /api/v1/notification-devices/{token}`|Envía `DeregisterDeviceCommand`; 204. La aplicación móvil y la consola la invocan al cerrar sesión|US02, CON-07 (ruta propuesta)|
 |RuleController|`PUT /api/v1/notification-rules`|`NotificationRuleConfigured`: envía `ConfigureNotificationRuleCommand`; 200 con la regla guardada; 403 si el rol no es PARKING_ADMIN|Canvas (ruta propuesta)|
-|RuleController|`GET /api/v1/notification-rules?parkingLotId={lotId}`|Ejecuta `GetNotificationRulesQuery`; 200 con las reglas del estacionamiento|Canvas (ruta propuesta)|
+|RuleController|`GET /api/v1/notification-rules?parkingLotId={lotId}`|Ejecuta `GetNotificationRulesQuery`; 200 con las reglas del estacionamiento|US40|
 |HistoryController|`GET /api/v1/notifications`|`NotificationHistoryProvided`: ejecuta `GetNotificationHistoryQuery`; 200 con el historial de notificaciones del usuario|Canvas (ruta propuesta)|
 
 **Event Consumers**
@@ -7874,7 +7874,7 @@ La Application Layer coordina los casos de uso: carga los agregados, invoca sus 
 |NotificationSubscriptionRepository, NotificationPreferencesRepository, NotificationRuleRepository, NotifiedConditionRepository, DeviceRegistrationRepository, NotificationRepository|Puertos (Domain Layer)|Ver 5.7.1|Persistencia de los agregados.|
 |PushSender|Puerto hacia FCM|send(token: DeviceToken, platform: Platform, content: NotificationContent, deepLink: String): DeliveryResult|Envía la alerta como push móvil o web push y traduce la respuesta de FCM a `DeliveryResult`.|
 |NotificationMessageCatalog|Puerto hacia los recursos traducidos|render(type: AlertType, segment: RecipientSegment, locale: Locale, params: `Map<String, Object>`, zone: ZoneId): NotificationContent|Obtiene el título y el cuerpo del mensaje por tipo de alerta e idioma, y formatea las horas en la zona horaria del campus.|
-|ParkingLotDirectory|Puerto hacia Parking Configuration|belongsTo(tenantId: UUID, parkingLotId: UUID): Boolean; tenantOf(parkingLotId: UUID): UUID; zoneOf(tenantId: UUID, parkingLotId: UUID, targetId: UUID): UUID?; zoneName(tenantId: UUID, parkingLotId: UUID, zoneId: UUID): String; campusZone(tenantId: UUID): ZoneId|Valida que un estacionamiento pertenezca a la institución, ubica la zona de un espacio y entrega su nombre y la zona horaria del campus.|
+|ParkingLotDirectory|Puerto hacia Parking Configuration|belongsTo(tenantId: UUID, parkingLotId: UUID): Boolean; tenantOf(parkingLotId: UUID): UUID; zoneOf(tenantId: UUID, parkingLotId: UUID, targetId: UUID): UUID?; zoneName(tenantId: UUID, parkingLotId: UUID, zoneId: UUID): String; campusZone(tenantId: UUID, parkingLotId: UUID): ZoneId|Valida que un estacionamiento pertenezca a la institución, ubica la zona de un espacio y entrega su nombre y la zona horaria del campus.|
 |OccupancyReader|Puerto hacia Occupancy|unknownSpaces(tenantId: UUID, parkingLotId: UUID, zoneId: UUID): Integer|Cuenta los espacios sin datos de una zona para el mensaje de STALE_DATA.|
 |IdentityContext|Puerto hacia IAM|currentUser(): AuthenticatedUser|Entrega el usuario, la institución y el rol del token validado (`UserIdentityProvided`).|
 |NotificationEventPublisher|Puerto de eventos|publish(events: `List<DomainEvent>`)|Publica los eventos de dominio.|
@@ -8644,7 +8644,7 @@ Lista: variante de la pantalla anterior que presenta los espacios de la zona en 
 
 ![Wireframe - Inventario de dispositivos](./assets/capitulo-06/wireframes/Inventario%20de%20dispositivos.png)
 
-**Gestión de dispositivo · G-03**: para el gateway G-03, que recibe por Wi-Fi las lecturas de los nodos ESP32, reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
+**Gestión de dispositivo · G-03**: para el gateway G-03, reúne en una sola vista el estado del dispositivo, su asociación actual y la incidencia abierta, junto con las acciones de registrar y asignar un dispositivo nuevo, reemplazarlo conservando la asociación y darlo de baja (US18, US32).  
 
 ![Wireframe - Gestión de dispositivo · G-03](./assets/capitulo-06/wireframes/Gestión%20de%20dispositivo%20·%20G-03.png)
 
@@ -8952,6 +8952,8 @@ Flutter. (s. f.). *Build for and integrate with multiple platforms*. Recuperado 
 Gothelf, J., y Seiden, J. (2021). *Lean UX* (3.ª ed.). O'Reilly Media. https://www.oreilly.com/library/view/lean-ux-3rd/9781098116293/
 
 Hofer, S., y Schwentner, H. (2021). *Domain storytelling: A collaborative, visual, and agile way to build domain-driven software*. Addison-Wesley Professional.
+
+City of Melbourne. (s. f.). *On-street parking bay sensors* [Conjunto de datos]. City of Melbourne Open Data. Recuperado el 14 de noviembre de 2026 de https://data.melbourne.vic.gov.au/
 
 Ministerio de Justicia y Derechos Humanos. (2024). *Decreto Supremo N.º 016-2024-JUS, Reglamento de la Ley N.º 29733, Ley de Protección de Datos Personales*. https://www.gob.pe/institucion/smv/normas-legales/6426760-016-2024-jus
 
