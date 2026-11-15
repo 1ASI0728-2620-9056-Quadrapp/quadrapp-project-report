@@ -83,6 +83,7 @@
 | 3.12 | 2026-11-14 | Todos los integrantes | Incorporación de la evidencia de desarrollo (7.2.1.3) y de pruebas (7.2.1.4) del Sprint 1, y de la explicación del trabajo colaborativo del sprint (7.2.1.8). |
 | 3.13 | 2026-11-14 | Todos los integrantes | Actualización del Student Outcome, del Project Report Collaboration Insights y del Registro de Versiones para el tercer hito. |
 | 3.14 | 2026-11-14 | Sulca Sanchez, Piero Angel | Incorporación del Sprint Planning 1 (7.2.1.1) y de la evidencia de despliegue del Sprint 1 (7.2.1.7). |
+| 3.15 | 2026-11-15 | Sulca Sanchez, Piero Angel | Incorporación del Video About-the-Product (7.4) y actualización del avance de conclusiones con los resultados del tercer hito. |
 
 # Project Report Collaboration Insights
 
@@ -9521,7 +9522,82 @@ Al cierre del Sprint 1, la Landing Page está publicada en Netlify y la aplicaci
 
 #### 7.2.1.6. Services Documentation Evidence for Sprint Review
 
+Los Web Services se documentan con OpenAPI 3.1 (CON-12), generado por springdoc a partir de los controladores. Cada endpoint tiene un resumen y un identificador de operación, y la documentación se publica junto con la API desplegada:
+
+- Swagger UI: [https://api.54-198-188-252.sslip.io/swagger-ui/index.html](https://api.54-198-188-252.sslip.io/swagger-ui/index.html)
+- Especificación OpenAPI: [https://api.54-198-188-252.sslip.io/v3/api-docs](https://api.54-198-188-252.sslip.io/v3/api-docs)
+
+![Swagger UI de la API de Quadrapp desplegada](assets/capitulo-07/services-documentation-swagger.png)
+
+*Figura: Swagger UI de la API desplegada en producción.*
+
+La tabla resume los 49 endpoints publicados en el Sprint 1, agrupados por recurso. Todas las rutas exigen un token de acceso, excepto las de autenticación y la aceptación de invitaciones.
+
+| Recurso | Método | Endpoint | Descripción |
+| --- | --- | --- | --- |
+| Authentication | `POST` | `/api/v1/iam/auth/refresh` | Refresh the session |
+| Authentication | `POST` | `/api/v1/iam/auth/request-otp` | Request a one-time sign-in code |
+| Authentication | `POST` | `/api/v1/iam/auth/sign-in` | Sign in with a one-time code |
+| Authentication | `POST` | `/api/v1/iam/auth/sign-out` | Sign out |
+| Users | `GET` | `/api/v1/iam/users` | Find a user by email |
+| Users | `GET` | `/api/v1/iam/users/me` | Get the signed-in user |
+| Users | `GET` | `/api/v1/iam/users/{userId}` | Get a user |
+| Users | `PUT` | `/api/v1/iam/users/{userId}/notification-preferences` | Update the notification preferences of a user |
+| Roles | `GET` | `/api/v1/iam/roles` | List the roles that can be invited |
+| Institutions | `POST` | `/api/v1/iam/institutions` | Create an institution |
+| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}` | Get an institution |
+| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}/domains` | List the email domains of an institution |
+| Institutions | `POST` | `/api/v1/iam/institutions/{institutionId}/domains` | Add an email domain to an institution |
+| Institutions | `PATCH` | `/api/v1/iam/institutions/{institutionId}/domains/{domainId}` | Verify an email domain of an institution |
+| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}/users` | List the users of an institution |
+| Invitations | `POST` | `/api/v1/iam/invitation-acceptances` | Accept an invitation |
+| Invitations | `POST` | `/api/v1/iam/invitations` | Invite a user to an institution |
+| Parking Lots | `GET` | `/api/v1/parking-lots` | List the parking lots of the institution |
+| Parking Lots | `POST` | `/api/v1/parking-lots` | Register a parking lot |
+| Parking Lots | `GET` | `/api/v1/parking-lots/{parkingLotId}` | Get a parking lot |
+| Parking Layout | `GET` | `/api/v1/levels/{levelId}/spaces` | List the parking spaces of a level |
+| Parking Layout | `POST` | `/api/v1/levels/{levelId}/spaces` | Create a parking space in a level |
+| Parking Layout | `GET` | `/api/v1/parking-lots/{parkingLotId}/zones` | List the zones of a parking lot |
+| Parking Layout | `POST` | `/api/v1/parking-lots/{parkingLotId}/zones` | Create a zone in a parking lot |
+| Parking Layout | `GET` | `/api/v1/zones/{zoneId}/levels` | List the levels of a zone |
+| Parking Layout | `POST` | `/api/v1/zones/{zoneId}/levels` | Create a level in a zone |
+| Parking Accesses | `GET` | `/api/v1/parking-lots/{parkingLotId}/accesses` | List the accesses of a parking lot |
+| Parking Accesses | `POST` | `/api/v1/parking-lots/{parkingLotId}/accesses` | Create an access of a parking lot |
+| Calendar Events | `GET` | `/api/v1/calendar-events` | List the calendar events of the institution |
+| Calendar Events | `POST` | `/api/v1/calendar-events` | Schedule a calendar event |
+| Calendar Events | `PATCH` | `/api/v1/calendar-events/{calendarEventId}` | Cancel a calendar event |
+| Devices | `GET` | `/api/v1/devices` | List devices |
+| Devices | `POST` | `/api/v1/devices` | Register an IoT device |
+| Devices | `GET` | `/api/v1/devices/{deviceId}` | Get a device |
+| Devices | `DELETE` | `/api/v1/devices/{deviceId}` | Decommission a device |
+| Devices | `PUT` | `/api/v1/devices/{deviceId}/assignment` | Assign a device to a space or an access |
+| Device Incidents | `GET` | `/api/v1/device-incidents` | List device incidents |
+| Device Incidents | `POST` | `/api/v1/device-incidents` | Report a device incident |
+| Device Incidents | `PATCH` | `/api/v1/device-incidents/{incidentId}` | Resolve a device incident |
+| Occupancy | `GET` | `/api/v1/levels/{levelId}/occupancy` | Get the current occupancy of a level |
+| Occupancy | `GET` | `/api/v1/parking-lots/{parkingLotId}/occupancy` | Get the current occupancy of a parking lot |
+| Occupancy | `GET` | `/api/v1/parking-lots/{parkingLotId}/space-statuses` | List the current status of each space of a parking lot |
+| Occupancy | `GET` | `/api/v1/zones/{zoneId}/occupancy` | Get the current occupancy of a zone |
+| Occupancy | `GET` | `/api/v1/zones/{zoneId}/occupancy-snapshots` | List the occupancy snapshots of a zone |
+| Occupancy | `POST` | `/api/v1/zones/{zoneId}/occupancy-snapshots` | Record an occupancy snapshot of a zone |
+| Prediction & Advisory | `POST` | `/api/v1/arrival-advices` | Request arrival advice |
+| Prediction & Advisory | `GET` | `/api/v1/parking-lots/{parkingLotId}/forecasts` | List the latest forecasts of a parking lot |
+| Prediction & Advisory | `POST` | `/api/v1/parking-lots/{parkingLotId}/forecasts` | Generate the forecasts of a parking lot |
+| Prediction & Advisory | `GET` | `/api/v1/parking-lots/{parkingLotId}/forecasts/metrics` | Get the forecast accuracy metrics of a parking lot |
+
 #### 7.2.1.7. Software Deployment Evidence for Sprint Review
+
+En el Sprint 1 se desplegaron los tres productos según la configuración descrita en la sección 7.1.4:
+
+1. **Web Services.** Se creó la cuenta de AWS del proyecto y una instancia EC2 `t4g.small` con Ubuntu 24.04, una Elastic IP y un security group que solo abre los puertos 443 (HTTPS) y 8883 (MQTT sobre TLS). La instancia ejecuta con Docker Compose el backend, PostgreSQL, el broker Mosquitto y Caddy, que obtiene los certificados de Let's Encrypt. La administración se hace con AWS Systems Manager, sin acceso SSH, y los secretos se guardan en Parameter Store.
+2. **Despliegue continuo.** Cada push a `main` del repositorio `quadrapp-backend` ejecuta el workflow `backend-image` de GitHub Actions: corre las pruebas, publica la imagen en GitHub Container Registry y la despliega en la instancia mediante Systems Manager, con un rol de AWS asumido por OIDC y reversión automática si la nueva versión no responde.
+3. **Landing Page.** El sitio estático en Astro se publicó en Netlify: [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app).
+
+![Ejecución del workflow de despliegue continuo en GitHub Actions](assets/capitulo-07/deployment-github-actions.png)
+
+*Figura: ejecución del workflow `backend-image` que probó, publicó y desplegó en producción la versión de `main` del backend.*
+
+La API desplegada responde en [https://api.54-198-188-252.sslip.io](https://api.54-198-188-252.sslip.io), y la aplicación móvil se compila apuntando a ella con `API_BASE_URL=https://api.54-198-188-252.sslip.io/api/v1`.
 
 En el Sprint 1 se desplegó la primera versión de los productos digitales de Quadrapp siguiendo la configuración de la sección 7.1.4: la Landing Page en Netlify y los Web Services, el broker MQTT y la base de datos en una instancia EC2 de AWS.
 
@@ -9939,6 +10015,12 @@ Recomendación: Evaluar para el Sprint 2 un resumen de las horas de mayor demand
 
 ## 7.4. Video About-the-Product. 
 
+El video About-the-Product presenta Quadrapp desde la experiencia de sus usuarios: el problema de no saber si habrá espacio al llegar al campus, la propuesta de valor y un recorrido por la aplicación móvil, desde la consulta de disponibilidad hasta la predicción por horizontes de 15, 30, 45 y 60 minutos con su nivel de confianza. El video también está incrustado en la Landing Page.
+
+![AboutTheProduct-Quadrapp](assets/capitulo-07/AboutTheProduct_Quadrapp.jpg)
+
+**Enlace:** [https://www.youtube.com/watch?v=J5McKSZXYkY](https://www.youtube.com/watch?v=J5McKSZXYkY)
+
 ---
 
 # Conclusiones
@@ -9963,7 +10045,13 @@ Recomendación: Evaluar para el Sprint 2 un resumen de las horas de mayor demand
 
 9. La revisión del primer hito fortaleció la trazabilidad del informe. Rehacer el EventStorming, los contextos candidatos, los message flows, los canvases y el context map con una misma herramienta, y alinear con ellos los diagramas C4 y el diseño táctico, permitió que los nombres de eventos, fachadas y tablas sean los mismos desde el capítulo IV hasta el capítulo VI. Quedan pendientes ampliar las entrevistas del segmento de administradores y validar el diseño con usuarios.
 
-Al cierre del segundo hito, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar, una arquitectura detallada hasta el nivel de clases y tablas, y una propuesta de experiencia de usuario para sus dos segmentos. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
+10. El primer sprint de implementación convirtió el diseño en productos desplegados. De las 14 historias planificadas (45 story points), 10 se completaron y 4 quedaron en curso, entre ellas la autenticación (TS01), que pasa al siguiente sprint. La Landing Page está publicada en Netlify y los Web Services, el broker MQTT y la base de datos corren en una instancia EC2 de AWS que se actualiza automáticamente con cada merge a `main`, después de que pasan las 256 pruebas automatizadas de los niveles unitario, de integración y de aceptación.
+
+11. Las entrevistas de validación respaldan la comprensión de la propuesta. En las cinco sesiones, tres con conductores y dos con administradores de estacionamientos, los participantes entendieron qué hace Quadrapp y qué no hace, e interpretaron la asesoría de llegada como la probabilidad de encontrar espacio al llegar y no solo como la disponibilidad actual. Con ello también se amplió el segmento de administradores, que en los hitos anteriores contaba con una sola entrevista. Estas respuestas reflejan comprensión y preferencia declarada sobre un prototipo, no uso real, por lo que los Business Outcomes siguen pendientes de validar.
+
+12. La evaluación heurística identificó diez problemas de usabilidad, ninguno crítico: uno de severidad 3, seis de severidad 2 y el resto de severidad 1. Los más relevantes se refieren a la claridad de las alertas cuando una zona está llena, a destacar la zona con mayor probabilidad de encontrar espacio y a explicar el margen de error de las predicciones, lo que confirma que la confianza en la estimación es tan importante como la estimación misma. Las recomendaciones se incorporarán al backlog de los siguientes sprints.
+
+Al cierre del tercer hito, Quadrapp cuenta con una primera versión desplegada de sus productos digitales, una suite de pruebas automatizadas que protege cada despliegue y una validación inicial de su propuesta con ambos segmentos. Las hipótesis de impacto y los criterios cuantitativos, como reducir en 20 % el tiempo de búsqueda o alcanzar 80 % de precisión en la predicción, todavía no se consideran alcanzados: requieren completar la integración con los sensores y el modelo de predicción y probar el producto en un piloto en un entorno universitario real. Este avance se actualizará en la siguiente entrega con los resultados del segundo sprint.
 
 ## Video About-the-Team
 
