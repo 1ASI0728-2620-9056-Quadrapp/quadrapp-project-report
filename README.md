@@ -82,6 +82,7 @@
 | 3.11 | 2026-11-14 | Sulca Sanchez, Piero Angel | Alineación del informe con la vista de administración en la aplicación móvil, la consola web de plataforma, los roles y las rutas REST del backend, con sus diagramas. |
 | 3.12 | 2026-11-14 | Todos los integrantes | Incorporación de la evidencia de desarrollo (7.2.1.3) y de pruebas (7.2.1.4) del Sprint 1, y de la explicación del trabajo colaborativo del sprint (7.2.1.8). |
 | 3.13 | 2026-11-14 | Todos los integrantes | Actualización del Student Outcome, del Project Report Collaboration Insights y del Registro de Versiones para el tercer hito. |
+| 3.14 | 2026-11-14 | Sulca Sanchez, Piero Angel | Incorporación del Sprint Planning 1 (7.2.1.1) y de la evidencia de despliegue del Sprint 1 (7.2.1.7). |
 
 # Project Report Collaboration Insights
 
@@ -9230,6 +9231,23 @@ Al ser un prototipo, la copia de PostgreSQL a S3 (`deploy/scripts/backup-db.sh`)
 
 #### 7.2.1.1. Sprint Planning 1
 
+En el Sprint Planning 1, el equipo definió el objetivo del primer sprint de implementación de Quadrapp y seleccionó del Product Backlog las historias que lo hacen posible: la Landing Page completa, el alta de instituciones con sus dominios de correo y usuarios, y la configuración de estacionamientos, zonas, espacios y accesos. Al ser el primer sprint, no hay un sprint anterior que revisar; en su lugar se toman como punto de partida los resultados y la retroalimentación del segundo hito. A continuación se presenta el resumen de la reunión.
+
+| Sprint # | Sprint 1 |
+| --- | --- |
+| **Sprint Planning Background** | |
+| Date | 2026-10-30 |
+| Time | 08:00 PM |
+| Location | Reunión virtual por Zoom |
+| Prepared By | Sulca Sanchez, Piero Angel |
+| Attendees (to planning meeting) | Becerra Tejeda, Alessandra Nicole / Bejarano Martinez, Alvaro Leandro / Melgarejo Gomez, Marcia Victoria / Nanfuñay Liza, Pedro Jesus / Sulca Sanchez, Piero Angel |
+| Sprint 0 Review Summary | No aplica: es el primer sprint de implementación. Como punto de partida, el segundo hito entregó el diseño táctico de los siete bounded contexts, los wireframes y wireflows de las aplicaciones y el diseño de la Landing Page, que se toman como base para implementar. |
+| Sprint 0 Retrospective Summary | No aplica: es el primer sprint de implementación. De los hitos anteriores, el equipo acordó repartir el trabajo por bounded context, integrar los cambios mediante pull requests revisados y mantener el informe alineado con el código. |
+| **Sprint Goal & User Stories** | |
+| Sprint 1 Goal | Nuestro enfoque es publicar la Landing Page y permitir que las instituciones configuren sus estacionamientos en Quadrapp. Creemos que esto comunica una propuesta de valor clara a los conductores y administradores que visitan el sitio, y permite que los administradores universitarios registren su institución, sus dominios de correo, sus usuarios, sus estacionamientos, zonas y espacios, y sus accesos vehiculares. Esto se confirmará cuando la Landing Page esté desplegada y un administrador pueda aprovisionar una institución y configurar un estacionamiento de principio a fin. |
+| Sprint 1 Velocity | 45 story points |
+| Sum of Story Points | 45 story points (12 user stories y 2 technical stories: US16, US17, US19, US20, US25, US26, US27, US28, US30, US31, US32, US35, TS01 y TS15) |
+
 #### 7.2.1.2. Sprint Backlog 1
 
 Se presenta el sprint backlog del Sprint 1 de Quadrapp, que reúne las historias de usuario y los work items planificados para el desarrollo de las funcionalidades de nuestro alcance. Cada historia se descompone en una tarea con su estimación en story points, el integrante responsable y su estado actual al cierre del sprint.
@@ -9453,6 +9471,24 @@ Quedan para el Sprint 2 los escenarios cuyo comportamiento aún no está impleme
 #### 7.2.1.6. Services Documentation Evidence for Sprint Review
 
 #### 7.2.1.7. Software Deployment Evidence for Sprint Review
+
+En el Sprint 1 se desplegó la primera versión de los productos digitales de Quadrapp siguiendo la configuración de la sección 7.1.4: la Landing Page en Netlify y los Web Services, el broker MQTT y la base de datos en una instancia EC2 de AWS.
+
+**Landing Page.** El sitio estático generado con Astro se publica en Netlify desde la rama `main` del repositorio `Landing_Page`. El primer despliegue a producción se publicó el 9 de octubre de 2026 a partir del commit `1bde5be`.
+
+![Despliegue de la Landing Page en Netlify](assets/capitulo-07/netlify-deploy.jpeg)
+
+**Web Services, broker MQTT y base de datos.** La instancia `quadrapp-prod` (`t4g.small`, región `us-east-1`) está en estado *Running*, con la IP pública `54.198.188.252` y IMDSv2 obligatorio. En ella corren con Docker Compose los contenedores `caddy`, `backend`, `mosquitto` y `postgres`. El backend se despliega automáticamente con GitHub Actions en cada merge a `main`: el primer despliegue automático (run 43660210605, commit `f4cb29f`) tardó unos 6,5 minutos desde el merge.
+
+![Instancia EC2 quadrapp-prod en la consola de AWS](assets/capitulo-07/aws-ec2-quadrapp-prod.png)
+
+| Producto | URL |
+| --- | --- |
+| Landing Page | [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) |
+| API REST | `https://api.54-198-188-252.sslip.io/api/v1` |
+| Documentación de la API | [https://api.54-198-188-252.sslip.io/swagger-ui.html](https://api.54-198-188-252.sslip.io/swagger-ui.html) |
+| WebSocket STOMP | `wss://api.54-198-188-252.sslip.io/ws` |
+| Broker MQTT con TLS | `mqtt.54-198-188-252.sslip.io:8883` |
 
 #### 7.2.1.8. Team Collaboration Insights during Sprint
 
