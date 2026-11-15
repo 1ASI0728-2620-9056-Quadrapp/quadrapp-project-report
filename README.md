@@ -9318,6 +9318,21 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Captura | <img src="assets/capitulo-07/entrevista_gabriel.png" alt="Captura de la entrevista de validación a Gabriel Gordon Salas" width="500"/> |
 | Resumen | Gabriel entendió correctamente qué hace Quadrapp y qué no hace: estima la probabilidad de encontrar espacio al llegar, sin reservas, pagos ni control de acceso. Hoy sale más temprano por precaución y a veces da vueltas hasta quince minutos buscando sitio. Valoró que la asesoría se exprese en palabras y que los horizontes de 15 a 60 minutos le ayuden a decidir si salir de inmediato o esperar. No consideraría libres los espacios sin datos y le dio un 4 de 5 a su confianza, a la espera de comprobar que el pronóstico acierta con el uso. Le pareció positivo que la aplicación no use su ubicación y sugirió calcular el tiempo de llegada de forma automática, siempre que la ubicación se quede en el celular. Usaría los avisos por franja horaria si son pocos al día, y propuso hacer más visible el selector de sede y añadir un historial de ocupación por día y hora. |
 
+**Entrevista de validación 3**
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Joaquin Trujillo Lizarbe |
+| Edad | 21 años |
+| Distrito de residencia | Comas |
+| Ocupación y vínculo con la universidad | Estudiante de Universidad |
+| Fecha y medio | 14/11/2026, por Zoom |
+| Entrevistador | Pedro Nanfuñay |
+| Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQCfzEqqTbcoR668ZzHOfyC0AeDJjfN6pcPOeWBd-xhcZDk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=L1V1AN](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQCfzEqqTbcoR668ZzHOfyC0AeDJjfN6pcPOeWBd-xhcZDk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=L1V1AN)|
+| Duración | 07:30 min |
+| Inicio | 00:00 min |
+| Captura | <img src="assets/capitulo-07/EntrevistaValidacion3-Segmento1-JoaquinTrujillo.png" alt="Captura de la entrevista de validación a Joaquin Trujillo Lizarbe" width="500"/> |
+| Resumen | Joaquin comprendió el propósito y las funcionalidades que ofrece y no ofrece Quadrapp, enfatizando su prioridad por los datos de estimación y probabilidad de conseguir su espacio de estacionamiento disponible al llegar a su punto de destino. Él califica un 3 de 5 respecto a su nivel de confianza, pues realmente valora que los datos garanticen esa probabilidad para poder tomar acciones segun su ubicacion y tiempo de traslado. Considera que nuestra solución ayudaría en su gestión del tiempo y transporte. |
 
 
 #### Segmento 2: Administradores de estacionamientos universitarios
