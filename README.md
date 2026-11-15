@@ -9468,6 +9468,57 @@ Quedan para el Sprint 2 los escenarios cuyo comportamiento aún no está impleme
 
 #### 7.2.1.5. Execution Evidence for Sprint Review
 
+Al cierre del Sprint 1, la Landing Page está publicada en Netlify y la aplicación móvil cubre el recorrido principal del conductor: el acceso con el correo institucional y un código de un solo uso, la elección de la sede, la consulta de disponibilidad por zona y por nivel, el pronóstico a 15, 30, 45 y 60 minutos con la asesoría de llegada, y la configuración de alertas. Las capturas de la aplicación se tomaron con el conjunto de datos de demostración que trae el proyecto.
+
+**Landing Page**
+
+<img src="assets/capitulo-07/execution-l01-hero.png" alt="Sección principal de la Landing Page" width="720"/>
+
+*Figura: sección principal de la Landing Page, con la propuesta de valor y las llamadas a la acción.*
+
+<img src="assets/capitulo-07/execution-l03-video.png" alt="Sección de video de la Landing Page" width="720"/>
+
+*Figura: sección con el video About-the-Product incrustado.*
+
+<img src="assets/capitulo-07/execution-l04-conductores.png" alt="Sección para conductores de la Landing Page" width="720"/>
+
+*Figura: sección dirigida al segmento de conductores.*
+
+**Aplicación móvil**
+
+<table>
+  <tr>
+    <td><img src="assets/capitulo-07/execution-m01-login.png" alt="Inicio de sesión con correo institucional" width="220"/></td>
+    <td><img src="assets/capitulo-07/execution-m02-otp.png" alt="Verificación del código de un solo uso" width="220"/></td>
+    <td><img src="assets/capitulo-07/execution-m04-home.png" alt="Asesoría de llegada en el inicio" width="220"/></td>
+  </tr>
+  <tr>
+    <td>Acceso con el correo institucional.</td>
+    <td>Verificación del código de un solo uso.</td>
+    <td>Inicio con la asesoría de llegada y la disponibilidad actual.</td>
+  </tr>
+  <tr>
+    <td><img src="assets/capitulo-07/execution-m05-zones.png" alt="Disponibilidad por zona" width="220"/></td>
+    <td><img src="assets/capitulo-07/execution-m06-zone-map.png" alt="Mapa de espacios de un nivel" width="220"/></td>
+    <td><img src="assets/capitulo-07/execution-m07-forecast.png" alt="Pronóstico por horizonte" width="220"/></td>
+  </tr>
+  <tr>
+    <td>Disponibilidad por zona de la sede.</td>
+    <td>Mapa de espacios de un nivel.</td>
+    <td>Pronóstico a 15, 30, 45 y 60 minutos.</td>
+  </tr>
+  <tr>
+    <td><img src="assets/capitulo-07/execution-m08-alerts.png" alt="Alertas y preferencias" width="220"/></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Alertas y franjas horarias.</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
 #### 7.2.1.6. Services Documentation Evidence for Sprint Review
 
 #### 7.2.1.7. Software Deployment Evidence for Sprint Review
