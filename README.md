@@ -8902,6 +8902,10 @@ Los user flows muestran, sobre los mock-ups, el camino que sigue un usuario para
 
 ## 6.5. Applications Prototyping
 
+El prototipo de Quadrapp se elaboró en Figma a partir de los mock-ups y permite navegar por las pantallas principales de cada tipo de usuario: el conductor y el administrador de universidad en la aplicación móvil, y el administrador de plataforma en la consola web. En el siguiente video se muestra el recorrido de cada uno.
+![Prototype](./assets/capitulo-07/prototype_video.png)
+
+Link de video: https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQCYMPmvdWVGQ4Q_u47g2kRoAZ9bkfNsJLMCFGAqq43Dkc8?e=a50PmE&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
 
 # Capítulo VII: Product Implementation, Validation & Deployment
 
@@ -9298,6 +9302,24 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Captura | <img src="assets/capitulo-07/entrevistavalidacionmariapaz1.png" alt="Captura de la entrevista de validación a María Paz Pastor" width="500"/> |
 | Resumen | María Paz entendió correctamente qué hace Quadrapp y qué no hace: no reserva espacios, no procesa pagos y no rastrea la ubicación. Interpretó la asesoría de llegada como la probabilidad de encontrar espacio cuando llegue, y no solo como la disponibilidad actual, y usaría los horizontes de predicción para decidir si sale de inmediato o espera. Entiende que los espacios marcados como "Sin datos" no están confirmados y no los consideraría libres. Calificó su confianza con 4 sobre 5, con la salvedad de que se trata de predicciones que pueden cambiar. Valora que la aplicación no use su ubicación porque protege su privacidad, y le servirían los avisos por franja horaria siempre que sean pocos y relevantes. Con lo que vio, saldría antes o cambiaría de zona si hubiera pocas probabilidades de encontrar espacio donde suele estacionar. Le pareció fácil de entender y sugirió destacar con más claridad la zona con mayor probabilidad de encontrar espacio, para decidir más rápido. |
 
+**Entrevista de validación 2**
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Gabriel Gordon Salas |
+| Edad | 21 años |
+| Distrito de residencia | San Miguel|
+| Ocupación y vínculo con la universidad | Estudiante de la universidad|
+| Fecha y medio | 14/11/2026, por Meet |
+| Entrevistador | Marcia Melgarejo |
+| Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
+| Enlace de la grabación | https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQCHrJezy4eRQIhReiU2Fwi_AUv8nfkHKsuAE2_skWO1FyM?e=1koyWg&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D|
+| Duración | 07:08 min |
+| Inicio | 00:00 min |
+| Captura | <img src="assets/capitulo-07/entrevista_gabriel.png" alt="Captura de la entrevista de validación a Gabriel Gordon Salas" width="500"/> |
+| Resumen | Gabriel entendió correctamente qué hace Quadrapp y qué no hace: estima la probabilidad de encontrar espacio al llegar, sin reservas, pagos ni control de acceso. Hoy sale más temprano por precaución y a veces da vueltas hasta quince minutos buscando sitio. Valoró que la asesoría se exprese en palabras y que los horizontes de 15 a 60 minutos le ayuden a decidir si salir de inmediato o esperar. No consideraría libres los espacios sin datos y le dio un 4 de 5 a su confianza, a la espera de comprobar que el pronóstico acierta con el uso. Le pareció positivo que la aplicación no use su ubicación y sugirió calcular el tiempo de llegada de forma automática, siempre que la ubicación se quede en el celular. Usaría los avisos por franja horaria si son pocos al día, y propuso hacer más visible el selector de sede y añadir un historial de ocupación por día y hora. |
+
+
+
 #### Segmento 2: Administradores de estacionamientos universitarios
 
 **Entrevista de validación 4**
@@ -9312,7 +9334,7 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Fecha y medio | 14/11/2026, por Zoom |
 | Entrevistador | Alvaro Bejarano |
 | Material mostrado | Landing Page implementada y mockups de la aplicación web (Figma) |
-| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgCYfImXvYewSbRIPUT72T4GAX_hUCqpMbEi3FuX-GnQnhg?e=UBuCZ4](https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgCYfImXvYewSbRIPUT72T4GAX_hUCqpMbEi3FuX-GnQnhg?e=UBuCZ4) |
+| Enlace de la grabación | https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQCHrJezy4eRQIhReiU2Fwi_AcKCrS2aTFOrAr8v-44tU_k?e=yuwDEX&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D |
 | Duración | 06:19 min |
 | Inicio | 02:57 min |
 | Captura | <img src="assets/capitulo-07/entrevista-validación-ameno.jpeg" alt="Captura de la entrevista de validación a Mario Josue Grandez Salvador" width="500"/> |
@@ -9334,6 +9356,25 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | 9 | Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían? | Sí, especialmente para conocer los horarios de mayor demanda. Preferiría recibir notificaciones importantes y no demasiadas durante el día. | O5 |
 | 10 | Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona? | Sí, podría salir un poco antes o dirigirme a otra zona si veo que hay pocas probabilidades de encontrar espacio donde suelo estacionar. | O1 |
 | 11 | ¿Qué falta, qué sobra o qué te confundió de lo que viste? | Me pareció fácil de entender. Agregaría una indicación más visible de cuál es la zona con mayor probabilidad de encontrar espacio para tomar decisiones más rápido. | O5 |
+
+Calificación de confianza (pregunta 7): **4 de 5**.
+
+**Entrevista de validación 2*
+
+**Respuestas registradas**
+
+| N.º | Pregunta | Respuesta | Objetivo |
+| --- | --- | --- | --- |
+| 2 | ¿Qué entiendes que hace Quadrapp y para quién es? | Indica qué tan probable es encontrar espacio en el estacionamiento de la universidad antes de llegar, no solo cuántos espacios hay en ese momento. Es para alumnos, docentes o trabajadores que van en carro, y también tiene una parte para quienes administran el estacionamiento. | O7 |
+| 3 | ¿Qué crees que Quadrapp no hace? | No reserva espacios ni cobra, y tampoco sirve para entrar al campus, porque igual hay que mostrar el carné. No asegura que haya sitio; da una probabilidad. | O7 |
+| 4 | Si llegaras en 20 minutos, ¿qué te dice la aplicación sobre tus posibilidades de encontrar espacio? | Que es probable encontrar espacio, con un porcentaje alto, confianza alta y la cantidad de espacios libres actuales. Le gustó que lo diga en palabras, porque un número solo no le dice si es bueno o malo. | O1, O2 |
+| 5 | Al comparar cómo estará el estacionamiento dentro de 15 y de 60 minutos, ¿qué te dice cada horizonte? | A 15 minutos casi seguro encuentra espacio, pero a 60 minutos la probabilidad baja bastante. Le sirve para decidir si sale de inmediato o espera. | O2 |
+| 6 | Si la aplicación no tuviera información de algunos espacios, ¿los considerarías libres? ¿Por qué? | No, porque podrían estar ocupados. Prefiere que la aplicación muestre menos espacios libres y encontrar más al llegar, y le pareció bien que los separe. | O3 |
+| 7 | Del 1 al 5, ¿cuánto confiarías en esta información para decidir tu hora de salida? ¿Por qué? | Un 4. Le da confianza que muestre cuándo se actualizó y el nivel de confianza del pronóstico, pero necesitaría usarla unas semanas para comprobar que acierta. | O3 |
+| 8 | La aplicación usa tu tiempo de llegada, pero no tu ubicación. ¿Qué piensas de eso? ¿Cambia tu disposición a usarla? | Le parece bien y le da tranquilidad que solo se envíen los minutos; igual la usaría. Sugirió que calcule los minutos de llegada automáticamente con la ubicación, siempre que esta se quede en el celular y no se guarde. | O4 |
+| 9 | Sobre los avisos por franja horaria, ¿te servirían? ¿Con qué frecuencia te molestarían? | Sí, sobre todo los días con clases temprano; configuraría una franja de lunes a viernes en la mañana. Una o dos alertas al día cuando se vaya a llenar le parecen bien; más que eso lo llevaría a desactivarlas. | O5 |
+| 10 | Con lo que viste, ¿cambiaría en algo tu hora de salida o tu elección de zona? | Sí. Si una zona está limitada y otra tiene más espacios, iría directamente a la que tiene más, y saldría antes si ve que la disponibilidad baja. | O1 |
+| 11 | ¿Qué falta, qué sobra o qué te confundió de lo que viste? | Al inicio no encontró dónde cambiar de sede porque el selector es pequeño; sugirió hacerlo más visible. Le gustó ver los sótanos y propuso un historial de cómo suele estar el estacionamiento por día y hora. No ve nada que sobre. | O5 |
 
 Calificación de confianza (pregunta 7): **4 de 5**.
 
