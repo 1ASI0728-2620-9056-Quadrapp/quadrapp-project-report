@@ -83,6 +83,7 @@
 | 3.12 | 2026-11-14 | Todos los integrantes | Incorporación de la evidencia de desarrollo (7.2.1.3) y de pruebas (7.2.1.4) del Sprint 1, y de la explicación del trabajo colaborativo del sprint (7.2.1.8). |
 | 3.13 | 2026-11-14 | Todos los integrantes | Actualización del Student Outcome, del Project Report Collaboration Insights y del Registro de Versiones para el tercer hito. |
 | 3.14 | 2026-11-14 | Sulca Sanchez, Piero Angel | Incorporación del Sprint Planning 1 (7.2.1.1) y de la evidencia de despliegue del Sprint 1 (7.2.1.7). |
+| 3.15 | 2026-11-15 | Sulca Sanchez, Piero Angel | Incorporación del Video About-the-Product (7.4) y actualización del avance de conclusiones con los resultados del tercer hito. |
 
 # Project Report Collaboration Insights
 
@@ -10014,6 +10015,12 @@ Recomendación: Evaluar para el Sprint 2 un resumen de las horas de mayor demand
 
 ## 7.4. Video About-the-Product. 
 
+El video About-the-Product presenta Quadrapp desde la experiencia de sus usuarios: el problema de no saber si habrá espacio al llegar al campus, la propuesta de valor y un recorrido por la aplicación móvil, desde la consulta de disponibilidad hasta la predicción por horizontes de 15, 30, 45 y 60 minutos con su nivel de confianza. El video también está incrustado en la Landing Page.
+
+![AboutTheProduct-Quadrapp](assets/capitulo-07/AboutTheProduct_Quadrapp.jpg)
+
+**Enlace:** [https://www.youtube.com/watch?v=J5McKSZXYkY](https://www.youtube.com/watch?v=J5McKSZXYkY)
+
 ---
 
 # Conclusiones
@@ -10038,7 +10045,13 @@ Recomendación: Evaluar para el Sprint 2 un resumen de las horas de mayor demand
 
 9. La revisión del primer hito fortaleció la trazabilidad del informe. Rehacer el EventStorming, los contextos candidatos, los message flows, los canvases y el context map con una misma herramienta, y alinear con ellos los diagramas C4 y el diseño táctico, permitió que los nombres de eventos, fachadas y tablas sean los mismos desde el capítulo IV hasta el capítulo VI. Quedan pendientes ampliar las entrevistas del segmento de administradores y validar el diseño con usuarios.
 
-Al cierre del segundo hito, Quadrapp cuenta con una propuesta de valor sustentada de manera preliminar, una arquitectura detallada hasta el nivel de clases y tablas, y una propuesta de experiencia de usuario para sus dos segmentos. Las hipótesis de impacto y los criterios cuantitativos no se consideran alcanzados, puesto que todavía deben contrastarse mediante prototipos, pruebas técnicas y un piloto en un entorno universitario real. Este avance deberá actualizarse en las siguientes entregas con los resultados obtenidos durante el diseño de la experiencia, la implementación y la validación del producto.
+10. El primer sprint de implementación convirtió el diseño en productos desplegados. De las 14 historias planificadas (45 story points), 10 se completaron y 4 quedaron en curso, entre ellas la autenticación (TS01), que pasa al siguiente sprint. La Landing Page está publicada en Netlify y los Web Services, el broker MQTT y la base de datos corren en una instancia EC2 de AWS que se actualiza automáticamente con cada merge a `main`, después de que pasan las 256 pruebas automatizadas de los niveles unitario, de integración y de aceptación.
+
+11. Las entrevistas de validación respaldan la comprensión de la propuesta. En las cinco sesiones, tres con conductores y dos con administradores de estacionamientos, los participantes entendieron qué hace Quadrapp y qué no hace, e interpretaron la asesoría de llegada como la probabilidad de encontrar espacio al llegar y no solo como la disponibilidad actual. Con ello también se amplió el segmento de administradores, que en los hitos anteriores contaba con una sola entrevista. Estas respuestas reflejan comprensión y preferencia declarada sobre un prototipo, no uso real, por lo que los Business Outcomes siguen pendientes de validar.
+
+12. La evaluación heurística identificó diez problemas de usabilidad, ninguno crítico: uno de severidad 3, seis de severidad 2 y el resto de severidad 1. Los más relevantes se refieren a la claridad de las alertas cuando una zona está llena, a destacar la zona con mayor probabilidad de encontrar espacio y a explicar el margen de error de las predicciones, lo que confirma que la confianza en la estimación es tan importante como la estimación misma. Las recomendaciones se incorporarán al backlog de los siguientes sprints.
+
+Al cierre del tercer hito, Quadrapp cuenta con una primera versión desplegada de sus productos digitales, una suite de pruebas automatizadas que protege cada despliegue y una validación inicial de su propuesta con ambos segmentos. Las hipótesis de impacto y los criterios cuantitativos, como reducir en 20 % el tiempo de búsqueda o alcanzar 80 % de precisión en la predicción, todavía no se consideran alcanzados: requieren completar la integración con los sensores y el modelo de predicción y probar el producto en un piloto en un entorno universitario real. Este avance se actualizará en la siguiente entrega con los resultados del segundo sprint.
 
 ## Video About-the-Team
 
