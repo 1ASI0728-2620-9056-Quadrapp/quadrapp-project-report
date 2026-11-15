@@ -3741,7 +3741,7 @@ Las vistas arquitectónicas siguen el modelo C4, que organiza la representación
 
 ### 4.3.1. Software Architecture System Landscape Diagram
 
-El System Landscape Diagram ubica a Quadrapp dentro de su ecosistema antes de detallar su estructura interna. Las personas corresponden a los dos segmentos objetivo definidos en la sección 1.3: los conductores de la comunidad educativa, que consultan la disponibilidad, los pronósticos y la asesoría de llegada, y los administradores de estacionamientos universitarios, que incluyen a los administradores y a los operadores de turno de cada universidad. Alrededor del sistema se encuentran el servicio de correo, Firebase Cloud Messaging para las alertas push y OpenRouteService para calcular la duración del trayecto. Los nodos de sensado no aparecen como un sistema externo, porque su firmware lo desarrolla el equipo y forma parte de Quadrapp. Quadrapp no depende de un proveedor de identidad externo: su gestión de identidad es propia.
+El System Landscape Diagram ubica a Quadrapp dentro de su ecosistema antes de detallar su estructura interna. Dos de las personas corresponden a los dos segmentos objetivo definidos en la sección 1.3: los conductores de la comunidad educativa, que consultan la disponibilidad, los pronósticos y la asesoría de llegada, y los administradores de estacionamientos universitarios, que incluyen a los administradores y a los operadores de turno de cada universidad. La tercera es el equipo interno de Integra Labs, que da de alta cada universidad desde la consola web de plataforma; no es un segmento objetivo, sino quien opera el servicio. Alrededor del sistema se encuentran el servicio de correo, Firebase Cloud Messaging para las alertas push y OpenRouteService para calcular la duración del trayecto. Los nodos de sensado no aparecen como un sistema externo, porque su firmware lo desarrolla el equipo y forma parte de Quadrapp. Quadrapp no depende de un proveedor de identidad externo: su gestión de identidad es propia.
 
 ![System Landscape diagram de Quadrapp](assets/capitulo-04/c4/c4-landscape.png)
 
@@ -8934,7 +8934,7 @@ La selección considera las herramientas utilizadas durante el diseño del proye
 | Software Development | Visual Studio Code | Editor de código para desarrollar, ejecutar y depurar el código de los diferentes componentes. | [https://code.visualstudio.com/](https://code.visualstudio.com/) | ![visualstudiocode-logo](./assets/capitulo-07/visualstudiocode-logo.png) |
 | Mobile Development | Flutter y Dart | Desarrollar la aplicación móvil multiplataforma para Android e iOS. | [https://flutter.dev/](https://flutter.dev/) | ![flutter-logo](./assets/capitulo-07/flutter-logo.png) |
 | Web Development | HTML5, CSS3 y JavaScript | Implementar la Landing Page pública de Quadrapp. | [https://developer.mozilla.org/es/](https://developer.mozilla.org/es/) | ![mdn-logo](./assets/capitulo-07/mdn-logo.webp) |
-| Web Development | Vue y Vuetify | Desarrollar la consola web de operación con componentes de Material Design. | [https://vuejs.org/](https://vuejs.org/) | ![vue-logo](./assets/capitulo-07/vue-logo.svg) |
+| Web Development | Vue y Vuetify | Desarrollar la consola web de plataforma, de uso interno del equipo de Integra Labs, con componentes de Material Design. | [https://vuejs.org/](https://vuejs.org/) | ![vue-logo](./assets/capitulo-07/vue-logo.svg) |
 | Backend Development | Spring Boot | Implementar las APIs REST y los servicios de los Bounded Contexts mediante una arquitectura de monolito modular basada en DDD. | [https://docs.spring.io/spring-boot/index.html](https://docs.spring.io/spring-boot/index.html) | ![springboot-logo](./assets/capitulo-07/springboot-logo.webp) |
 | API Documentation | Swagger | Documentar los endpoints REST, contratos de API, solicitudes y respuestas de los servicios. | [https://swagger.io/](https://swagger.io/) | ![swagger-logo](./assets/capitulo-07/swagger-logo.png) |
 | Database Management | PostgreSQL 18 | Almacenar y relacionar la información de los Bounded Contexts en una base de datos relacional compartida. | [https://www.postgresql.org/](https://www.postgresql.org/) | ![PostgreSQL-logo](./assets/capitulo-07/postgresql-logo.webp) |
@@ -9073,7 +9073,7 @@ El equipo nombra en inglés todos los elementos del código (paquetes, clases, m
 
 **Estructura de la Landing Page.** El código está en `src`, con los componentes en `components` (un archivo `.astro` en PascalCase por sección, como `Hero.astro` y `FaqSection.astro`), las plantillas en `layouts`, la página en `pages/index.astro` y los estilos en `styles/global.css`.
 
-**Servicios web y accesibilidad.** Los servicios siguen el estilo RESTful y se documentan con OpenAPI (CON-12). La Landing Page y la consola web cumplen el nivel AA de la WCAG 2.2 (CON-11).
+**Servicios web y accesibilidad.** Los servicios siguen el estilo RESTful y se documentan con OpenAPI (CON-12). La Landing Page, la aplicación móvil y la consola web de plataforma cumplen el nivel AA de la WCAG 2.2 (CON-11).
 
 **Control de versiones.** El equipo usa GitHub en la organización del proyecto. Cada integrante trabaja en ramas `feature/` o `fix/` por tarea, registra sus cambios con Conventional Commits en inglés y abre Pull Requests hacia `develop`, que se integran mediante merge commit para conservar la autoría de cada aporte. Las entregas se integran en `main`. En el backend, los commits usan como alcance el bounded context, por ejemplo `fix(iam): answer internal errors with 500 instead of a 409 conflict`.
 
@@ -9202,7 +9202,7 @@ Link Trello: [https://trello.com/invite/b/6aaf39688414fee95fc05791/ATTI44d4d18f5
 
 ## 7.3. Validation Interviews
 
-Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los artefactos de diseño de los capítulos V y VI (los wireframes y wireflows de la aplicación móvil y de la consola de operación, y el mock-up y la versión implementada de la Landing Page) y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría.
+Las entrevistas de validación comprueban si la solución propuesta responde al problema que las entrevistas de la sección 2.2 permitieron identificar. Se realizan con las mismas personas entrevistadas en esa sección (tres conductores y un administrador), cuyos datos generales se encuentran en la sección 2.2.2. A diferencia de las primeras entrevistas, que exploraron la situación actual sin mencionar Quadrapp, en estas el entrevistador recorre ante el entrevistado los artefactos de diseño de los capítulos V y VI (los wireframes y wireflows de las vistas del conductor y de administración de la aplicación móvil, y el mock-up y la versión implementada de la Landing Page) y luego le pregunta qué comprendió, qué le pareció útil y qué cambiaría.
 
 Las respuestas se analizan como evidencia de comprensión y de preferencia declarada sobre un prototipo, no como evidencia de uso real. Por ello, no demuestran el cumplimiento de los Business Outcomes del Lean UX, que requieren un piloto con la solución implementada.
 
@@ -9215,7 +9215,7 @@ Las respuestas se analizan como evidencia de comprensión y de preferencia decla
 | O3 | Validar la confianza en los datos | Si el usuario entiende el estado "Sin datos / UNKNOWN", la antigüedad del dato y la advertencia de confianza baja, y cuánta confianza deposita en la estimación. |
 | O4 | Validar el mensaje de privacidad | Si el usuario comprende que el tiempo de llegada se calcula en su dispositivo y que el servidor recibe solo minutos. |
 | O5 | Validar la claridad de los flujos principales | Si el usuario encuentra claro el recorrido de cada flujo mostrado y señala pasos confusos o información que falta o sobra. |
-| O6 | Validar la utilidad de la consola | Si el administrador considera que la información de la consola le permite supervisar el turno, anticipar la saturación y gestionar dispositivos y layout. |
+| O6 | Validar la utilidad de la vista de administración | Si el administrador considera que la información de la vista de administración de la aplicación móvil le permite supervisar el turno, anticipar la saturación y gestionar dispositivos y layout. |
 | O7 | Validar la comunicación de la Landing Page | Si cada visitante entiende qué hace Quadrapp, para quién es y qué no hace (sin reservas, sin pagos, sin rastreo de ubicación). |
 
 #### Hipótesis y criterios de validación
@@ -9229,7 +9229,7 @@ Cada objetivo se relaciona con una hipótesis del Lean UX (sección 1.2.2.3) y c
 | Los conductores confiarán en una estimación que informa su confianza y su antigüedad. | O3 | Al menos 2 de 3 entienden que un espacio sin información no se cuenta como libre (pregunta 6) y declaran una confianza de 3 o más sobre 5 (pregunta 7). |
 | El cálculo del tiempo de llegada en el dispositivo no genera rechazo. | O4 | Ningún entrevistado manifiesta desconfianza y al menos 2 de 3 lo explican con sus palabras (pregunta 8). |
 | Los flujos principales de la aplicación son claros. | O5 | Al menos 2 de 3 conductores no señalan pasos confusos ni información faltante en lo que vieron (preguntas 9 y 11). |
-| El administrador utilizará la consola durante la operación del turno. | O6 | El administrador entiende la saturación prevista y el estado de los datos, y considera útil la información presentada (preguntas 4, 5, 7 y 11). |
+| El administrador utilizará la vista de administración de la aplicación móvil durante la operación del turno. | O6 | El administrador entiende la saturación prevista y el estado de los datos, y considera útil la información presentada (preguntas 4, 5, 7 y 11). |
 | La Landing Page comunica la propuesta y su alcance. | O7 | Al menos 2 de 3 conductores y el administrador explican correctamente qué hace Quadrapp (preguntas 2 y 3 del guion de cada segmento). |
 
 ### 7.3.1. Diseño de Entrevistas
@@ -9260,7 +9260,7 @@ El entrevistador muestra primero la Landing Page y luego recorre la aplicación 
 
 ### Guion para el Segmento 2: Administradores de estacionamientos universitarios
 
-El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre la consola de operación siguiendo los Wireflows 5 a 9 (operación de turno, edición del layout, accesos y analítica, calendario y equipo, y dispositivos). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
+El entrevistador muestra primero la sección de la Landing Page dirigida a instituciones y luego recorre la vista de administración de la aplicación móvil siguiendo los Wireflows 5 a 8 (operación de turno, edición y publicación del layout, accesos, dispositivos y analítica, y calendario, dominios y equipo). Por la disponibilidad limitada del entrevistado, el recorrido se concentra en las situaciones críticas del turno. Las repreguntas entre paréntesis son opcionales.
 
 *Preguntas iniciales*
 
@@ -9271,7 +9271,7 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 2. ¿Qué entiendes que ofrece Quadrapp a una universidad?
 3. ¿Qué crees que Quadrapp no hace?
 
-*Después de recorrer la Consola de Operación*
+*Después de recorrer la vista de administración*
 
 4. ¿Qué información usarías primero durante el turno? ¿Cuál no usarías?
 5. ¿Te serviría saber con anticipación cuándo se llenará el estacionamiento? (¿Con cuánta anticipación? ¿Qué margen de error aceptarías?)
@@ -9280,7 +9280,7 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 8. Sobre la edición y publicación del layout, ¿te pareció claro el proceso? ¿Qué falta?
 9. Sobre el reemplazo, el registro y la baja de dispositivos, ¿qué te falta para hacerlo con seguridad?
 10. Sobre la precisión de las predicciones y la invitación de operadores, ¿lo que viste te resulta comprensible y útil?
-11. Del 1 al 5, ¿qué tan útil sería esta consola durante tu turno? ¿Qué falta o qué te confundió?
+11. Del 1 al 5, ¿qué tan útil sería esta vista durante tu turno? ¿Qué falta o qué te confundió?
 
 
 ### 7.3.2. Registro de Entrevistas
