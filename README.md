@@ -68,7 +68,20 @@
 | 2.19 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión del capítulo II según la retroalimentación del docente: User Task Matrix con las tareas de cada User Persona y sus subcolumnas de frecuencia e importancia, y registro de entrevistas con el distrito de residencia, la duración unificada y el inicio de la entrevista del segundo segmento. |
 | 2.20 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los Bounded Contexts IAM y Notifications: diccionario de clases del dominio a partir de sus diagramas de clases y alineación de la persistencia con PostgreSQL. |
 | 2.21 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del avance de conclusiones con los resultados del segundo hito. |
-| 2.22 | 2026-11-13 | IntegraLabs | Adición de los puntos 6.4.2. Applications Mock-ups, 6.4.3. Applications User Flow Diagrams, 6.5. Applications Prototyping y Cap VII. Desarrollo de artefactos Landing Page, Frontend Mobile y Backend. |
+| 3.0 | 2026-10-27 | Nanfuñay Liza, Pedro Jesus | Incorporación de la estructura del tercer hito en el informe. |
+| 3.1 | 2026-10-30 | Nanfuñay Liza, Pedro Jesus | Incorporación de la configuración del entorno de desarrollo (7.1.1) y de la gestión del código fuente (7.1.2). |
+| 3.2 | 2026-11-13 | Sulca Sanchez, Piero Angel | Actualización de la tecnología de la Landing Page y de las versiones del backend en las restricciones, en la arquitectura de contenedores y despliegue y en el capítulo V, con sus diagramas C4. |
+| 3.3 | 2026-11-13 | Sulca Sanchez, Piero Angel | Revisión del informe según la segunda revisión y la implementación: historias de alertas, rutas e ingesta; decisiones de arquitectura y diagramas C4; diseño táctico; Impact Maps, Domain Message Flows y wireflows del conductor. |
+| 3.4 | 2026-11-13 | Nanfuñay Liza, Pedro Jesus | Actualización de la configuración del entorno de desarrollo (7.1.1) y de la gestión del código fuente (7.1.2). |
+| 3.5 | 2026-11-14 | Becerra Tejeda, Alessandra Nicole | Incorporación del diseño y los objetivos de las entrevistas de validación (7.3.1), de la versión inicial de la guía de estilo y convenciones de código (7.1.3) y de la configuración de despliegue (7.1.4), y de la entrevista de validación a María Paz Pastor. |
+| 3.6 | 2026-11-14 | Melgarejo Gomez, Marcia Victoria | Incorporación de los mock-ups (6.4.3) y de los user flows (6.4.4) de las aplicaciones. |
+| 3.7 | 2026-11-14 | Bejarano Martinez, Alvaro Leandro | Incorporación del Sprint Backlog 1 y de la evidencia del tablero del equipo (7.2.1.2), y de las entrevistas de validación a Mario Josue Grandez Salvador y Angel Jesus Lazo Panduro. |
+| 3.8 | 2026-11-14 | Sulca Sanchez, Piero Angel | Versión final de la guía de estilo y convenciones de código (7.1.3) y de la configuración de despliegue (7.1.4), y actualización del diagrama de despliegue a la instancia t4g.small. |
+| 3.9 | 2026-11-14 | Melgarejo Gomez, Marcia Victoria | Incorporación del prototipo de las aplicaciones (6.5) y de la entrevista de validación a Gabriel Gordon Salas. |
+| 3.10 | 2026-11-14 | Nanfuñay Liza, Pedro Jesus | Incorporación de la entrevista de validación a Joaquin Trujillo Lizarbe. |
+| 3.11 | 2026-11-14 | Sulca Sanchez, Piero Angel | Alineación del informe con la vista de administración en la aplicación móvil, la consola web de plataforma, los roles y las rutas REST del backend, con sus diagramas. |
+| 3.12 | 2026-11-14 | Todos los integrantes | Incorporación de la evidencia de desarrollo (7.2.1.3) y de pruebas (7.2.1.4) del Sprint 1, y de la explicación del trabajo colaborativo del sprint (7.2.1.8). |
+| 3.13 | 2026-11-14 | Todos los integrantes | Actualización del Student Outcome, del Project Report Collaboration Insights y del Registro de Versiones para el tercer hito. |
 
 # Project Report Collaboration Insights
 
@@ -9418,6 +9431,26 @@ Quedan para el Sprint 2 los escenarios cuyo comportamiento aún no está impleme
 #### 7.2.1.7. Software Deployment Evidence for Sprint Review
 
 #### 7.2.1.8. Team Collaboration Insights during Sprint
+
+Durante el Sprint 1, el equipo implementó los tres productos en repositorios separados de la organización de GitHub, con GitFlow (ramas de trabajo integradas en `develop`, principalmente mediante Pull Requests, y releases hacia `main`) y Conventional Commits. En los Web Services se construyeron los módulos IAM, Parking Configuration, Parking Sensing, Occupancy y Prediction & Advisory, con la ingesta de lecturas por MQTT, el modelo de predicción y el despliegue automático en AWS. En la aplicación móvil se implementó la vista del conductor y se conectó con la API desplegada. La Landing Page se publicó en Netlify. Las siguientes capturas muestran los analíticos de colaboración de cada repositorio.
+
+**Web Services (`quadrapp-backend`).**
+
+![Analítico de Contributors del repositorio quadrapp-backend](assets/capitulo-07/team-collaboration-backend.png)
+
+*Figura: Contributors de la rama `main` del repositorio de los Web Services al cierre del Sprint 1.*
+
+**Aplicación móvil (`quadrapp-frontend-mobile`).**
+
+![Analítico de Contributors del repositorio quadrapp-frontend-mobile](assets/capitulo-07/team-collaboration-mobile.png)
+
+*Figura: Contributors de la rama `main` del repositorio de la aplicación móvil al cierre del Sprint 1.*
+
+**Landing Page (`Landing_Page`).**
+
+![Analítico de Contributors del repositorio Landing_Page](assets/capitulo-07/team-collaboration-landing.png)
+
+*Figura: Contributors de la rama `main` del repositorio de la Landing Page al cierre del Sprint 1.*
 
 ## 7.3. Validation Interviews
 
