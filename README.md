@@ -9351,13 +9351,29 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Fecha y medio | 14/11/2026, por Zoom |
 | Entrevistador | Alvaro Bejarano |
 | Material mostrado | Landing Page implementada y mockups de la aplicación web (Figma) |
-| Enlace de la grabación | https://upcedupe-my.sharepoint.com/:v:/g/personal/u20231c505_upc_edu_pe/IQCHrJezy4eRQIhReiU2Fwi_AcKCrS2aTFOrAr8v-44tU_k?e=yuwDEX&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D |
+| Enlace de la grabación | ([https://upcedupe-my.sharepoint.com/:v:/g/personal/u202311640_upc_edu_pe/IQB3tVunDqVIR6o_FmzECahJAfQn4sZGw_IVoGNi_QDE-Kg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=FKDGSl](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202311640_upc_edu_pe/IQB3tVunDqVIR6o_FmzECahJAfQn4sZGw_IVoGNi_QDE-Kg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=FKDGSl) |
 | Duración | 06:19 min |
 | Inicio | 02:57 min |
 | Captura | <img src="assets/capitulo-07/entrevista-validación-ameno.jpeg" alt="Captura de la entrevista de validación a Mario Josue Grandez Salvador" width="500"/> |
 | Resumen | Mario Josue entendió correctamente qué hace Quadrapp y qué no hace: no realiza reservas ni procesa pagos, sino que gestiona la ocupación en tiempo real mediante sensores IoT y algoritmos de predicción. Considera que la herramienta sería útil para reducir las filas en los accesos, ya que actualmente controla la ocupación de forma manual mediante recorridos y comunicación por radio. Durante su turno, priorizaría conocer la ocupación actual por zonas y el estado de los accesos, y considera que las predicciones de 30 a 60 minutos le permitirían organizar al personal antes de que las áreas se saturen. Ante sensores sin señal, enviaría a personal a verificar su estado y no confiaría en esos datos hasta que se resuelva la incidencia. Además, sugirió incorporar una previsualización de los cambios en el layout, un registro de quién da de baja los sensores, alertas visuales más claras cuando una zona esté llena y explicaciones más sencillas de los términos técnicos. |
 
-**Entrevista de validación 1**
+**Entrevista de validación 5**
+
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Angel Jesus Lazo Panduro |
+| Edad | 24 años |
+| Distrito de residencia | Lince |
+| Ocupación y vínculo con la universidad | Encargado de estacionamientos |
+| Fecha y medio | 14/11/2026, por Zoom |
+| Entrevistador | Alvaro Bejarano |
+| Material mostrado | Landing Page implementada y mockups de la aplicación web (Figma) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202311640_upc_edu_pe/IQB3tVunDqVIR6o_FmzECahJAfQn4sZGw_IVoGNi_QDE-Kg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=FKDGSl](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202311640_upc_edu_pe/IQB3tVunDqVIR6o_FmzECahJAfQn4sZGw_IVoGNi_QDE-Kg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=FKDGSl) |
+| Duración | 06:24 min |
+| Inicio | 02:46 min |
+| Captura | <img src="assets/capitulo-07/entrevistavalidacionangel.jpeg" alt="Captura de la entrevista de validación a Angel Jesus Lazo Panduro" width="500"/> |
+| Resumen | El entrevistado entendió correctamente el propósito de Quadrapp y consideró que la herramienta sería útil para conocer la disponibilidad de estacionamientos y anticipar las condiciones al momento de llegar a la universidad. Calificó su utilidad con 4 sobre 5, ya que le permitiría decidir si adelanta su llegada o cambia de zona cuando existan pocas probabilidades de encontrar un espacio. Además, valoró la posibilidad de visualizar la ocupación de las diferentes zonas y contar con predicciones que faciliten su decisión. Respecto a la interfaz, sugirió resaltar con mayor claridad las zonas con mayor disponibilidad e incluir una explicación sobre el margen de error de las predicciones, para comprender mejor qué tan confiable es la información mostrada. |
+
 
 **Respuestas registradas**
 
