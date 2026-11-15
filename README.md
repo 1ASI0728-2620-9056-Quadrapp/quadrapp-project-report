@@ -68,7 +68,7 @@
 | 2.19 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión del capítulo II según la retroalimentación del docente: User Task Matrix con las tareas de cada User Persona y sus subcolumnas de frecuencia e importancia, y registro de entrevistas con el distrito de residencia, la duración unificada y el inicio de la entrevista del segundo segmento. |
 | 2.20 | 2026-10-09 | Sulca Sanchez, Piero Angel | Revisión de los Bounded Contexts IAM y Notifications: diccionario de clases del dominio a partir de sus diagramas de clases y alineación de la persistencia con PostgreSQL. |
 | 2.21 | 2026-10-09 | Sulca Sanchez, Piero Angel | Actualización del avance de conclusiones con los resultados del segundo hito. |
-| 2.22 | 2026-11-13 | Sulca Sanchez, Piero Angel | Actualización de la tecnología de la Landing Page y de las versiones del backend en las restricciones, en la arquitectura de contenedores y despliegue y en el capítulo V, con sus diagramas C4. |
+| 2.22 | 2026-11-13 | IntegraLabs | Adición de los puntos 6.4.2. Applications Mock-ups, 6.4.3. Applications User Flow Diagrams, 6.5. Applications Prototyping y Cap VII. Desarrollo de artefactos Landing Page, Frontend Mobile y Backend. |
 
 # Project Report Collaboration Insights
 
@@ -9662,7 +9662,11 @@ Al cierre del segundo hito, Quadrapp cuenta con una propuesta de valor sustentad
 
 ## Video About-the-Team
 
-*Pendiente de elaboración.*
+En esta sección se realiza la presentación de los integrantes del equipo donde exponen sus responsabilidades, actividades y roles que cumplieron durante el desarrollo de Quadrapp.
+
+![AboutTheTeam-Quadrapp](assets/capitulo-07/AboutTheTeam_Quadrapp.png)
+
+**Enlace:** [https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQC8IOrjFOVyTIV2yvOkoe6jAdnMcjUo-314UZz80Vhi_4A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=mV7jor](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202215462_upc_edu_pe/IQC8IOrjFOVyTIV2yvOkoe6jAdnMcjUo-314UZz80Vhi_4A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=mV7jor)
 
 ---
 
