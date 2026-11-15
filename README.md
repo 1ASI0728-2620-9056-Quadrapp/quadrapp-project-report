@@ -84,6 +84,7 @@
 | 3.13 | 2026-11-14 | Todos los integrantes | Actualización del Student Outcome, del Project Report Collaboration Insights y del Registro de Versiones para el tercer hito. |
 | 3.14 | 2026-11-14 | Sulca Sanchez, Piero Angel | Incorporación del Sprint Planning 1 (7.2.1.1) y de la evidencia de despliegue del Sprint 1 (7.2.1.7). |
 | 3.15 | 2026-11-15 | Sulca Sanchez, Piero Angel | Incorporación del Video About-the-Product (7.4) y actualización del avance de conclusiones con los resultados del tercer hito. |
+| 3.16 | 2026-11-15 | Sulca Sanchez, Piero Angel | Incorporación de la evidencia de colaboración del tercer hito en el Project Report Collaboration Insights. |
 
 # Project Report Collaboration Insights
 
@@ -136,6 +137,12 @@ El informe se elabora de forma colaborativa en el repositorio [https://github.co
 | Melgarejo Gomez, Marcia Victoria | Mock-ups (6.4.3), user flows (6.4.4) y prototipo (6.5) de la aplicación móvil y de la consola web de plataforma; entrevista de validación a Gabriel Gordon Salas. |
 | Nanfuñay Liza, Pedro Jesus | Estructura del tercer hito; configuración del entorno de desarrollo (7.1.1) y gestión del código fuente (7.1.2); entrevista de validación a Joaquin Trujillo Lizarbe. |
 | Sulca Sanchez, Piero Angel | Corrección de los capítulos I a VII para alinearlos con la implementación (vista de administración en la aplicación móvil, roles, rutas REST y diagramas); versión final de la guía de estilo (7.1.3) y de la configuración de despliegue (7.1.4). |
+
+**Evidencias de colaboración del tercer hito.** Entre el 27 de octubre y el 15 de noviembre de 2026, hasta la integración del tercer hito en `main`, el repositorio del informe registra commits de los cinco integrantes, realizados con su propia identidad de Git: 42 de Sulca Sanchez, 7 de Becerra Tejeda, 7 de Bejarano Martinez, 6 de Nanfuñay Liza y 3 de Melgarejo Gomez, integrados mediante 12 Pull Requests. Estos commits corresponden a las versiones 3.0 a 3.15 del Registro de Versiones del Informe. El trabajo de implementación del Sprint 1 se registra en los repositorios de los productos, como se muestra en la sección 7.2.1.8.
+
+![Analítico de contribuciones del repositorio del informe al cierre del tercer hito](assets/capitulo-07/collaboration-contributors-hito3.png)
+
+*Figura: analítico de Contributors del repositorio después de integrar el tercer hito en `main`. Registra 113 commits de Sulca Sanchez, 50 de Becerra Tejeda, 29 de Nanfuñay Liza, 16 de Bejarano Martinez y 15 de Melgarejo Gomez, acumulados desde el primer hito.*
 
 # Contenido
 
@@ -9531,59 +9538,1125 @@ Los Web Services se documentan con OpenAPI 3.1 (CON-12), generado por springdoc 
 
 *Figura: Swagger UI de la API desplegada en producción.*
 
-La tabla resume los 49 endpoints publicados en el Sprint 1, agrupados por recurso. Todas las rutas exigen un token de acceso, excepto las de autenticación y la aceptación de invitaciones.
+Las tablas siguientes presentan los 49 endpoints publicados en el Sprint 1, agrupados por bounded context. Para cada acción se indica el verbo HTTP, la sintaxis de llamada, los parámetros de ruta, de consulta y del cuerpo, el código de respuesta exitoso con su explicación y los errores posibles, y un ejemplo del response. Todas las rutas exigen un token de acceso, excepto las marcadas como públicas. La columna Documentación lleva al Swagger UI desplegado, donde cada acción se identifica por su operationId.
 
-| Recurso | Método | Endpoint | Descripción |
-| --- | --- | --- | --- |
-| Authentication | `POST` | `/api/v1/iam/auth/refresh` | Refresh the session |
-| Authentication | `POST` | `/api/v1/iam/auth/request-otp` | Request a one-time sign-in code |
-| Authentication | `POST` | `/api/v1/iam/auth/sign-in` | Sign in with a one-time code |
-| Authentication | `POST` | `/api/v1/iam/auth/sign-out` | Sign out |
-| Users | `GET` | `/api/v1/iam/users` | Find a user by email |
-| Users | `GET` | `/api/v1/iam/users/me` | Get the signed-in user |
-| Users | `GET` | `/api/v1/iam/users/{userId}` | Get a user |
-| Users | `PUT` | `/api/v1/iam/users/{userId}/notification-preferences` | Update the notification preferences of a user |
-| Roles | `GET` | `/api/v1/iam/roles` | List the roles that can be invited |
-| Institutions | `POST` | `/api/v1/iam/institutions` | Create an institution |
-| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}` | Get an institution |
-| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}/domains` | List the email domains of an institution |
-| Institutions | `POST` | `/api/v1/iam/institutions/{institutionId}/domains` | Add an email domain to an institution |
-| Institutions | `PATCH` | `/api/v1/iam/institutions/{institutionId}/domains/{domainId}` | Verify an email domain of an institution |
-| Institutions | `GET` | `/api/v1/iam/institutions/{institutionId}/users` | List the users of an institution |
-| Invitations | `POST` | `/api/v1/iam/invitation-acceptances` | Accept an invitation |
-| Invitations | `POST` | `/api/v1/iam/invitations` | Invite a user to an institution |
-| Parking Lots | `GET` | `/api/v1/parking-lots` | List the parking lots of the institution |
-| Parking Lots | `POST` | `/api/v1/parking-lots` | Register a parking lot |
-| Parking Lots | `GET` | `/api/v1/parking-lots/{parkingLotId}` | Get a parking lot |
-| Parking Layout | `GET` | `/api/v1/levels/{levelId}/spaces` | List the parking spaces of a level |
-| Parking Layout | `POST` | `/api/v1/levels/{levelId}/spaces` | Create a parking space in a level |
-| Parking Layout | `GET` | `/api/v1/parking-lots/{parkingLotId}/zones` | List the zones of a parking lot |
-| Parking Layout | `POST` | `/api/v1/parking-lots/{parkingLotId}/zones` | Create a zone in a parking lot |
-| Parking Layout | `GET` | `/api/v1/zones/{zoneId}/levels` | List the levels of a zone |
-| Parking Layout | `POST` | `/api/v1/zones/{zoneId}/levels` | Create a level in a zone |
-| Parking Accesses | `GET` | `/api/v1/parking-lots/{parkingLotId}/accesses` | List the accesses of a parking lot |
-| Parking Accesses | `POST` | `/api/v1/parking-lots/{parkingLotId}/accesses` | Create an access of a parking lot |
-| Calendar Events | `GET` | `/api/v1/calendar-events` | List the calendar events of the institution |
-| Calendar Events | `POST` | `/api/v1/calendar-events` | Schedule a calendar event |
-| Calendar Events | `PATCH` | `/api/v1/calendar-events/{calendarEventId}` | Cancel a calendar event |
-| Devices | `GET` | `/api/v1/devices` | List devices |
-| Devices | `POST` | `/api/v1/devices` | Register an IoT device |
-| Devices | `GET` | `/api/v1/devices/{deviceId}` | Get a device |
-| Devices | `DELETE` | `/api/v1/devices/{deviceId}` | Decommission a device |
-| Devices | `PUT` | `/api/v1/devices/{deviceId}/assignment` | Assign a device to a space or an access |
-| Device Incidents | `GET` | `/api/v1/device-incidents` | List device incidents |
-| Device Incidents | `POST` | `/api/v1/device-incidents` | Report a device incident |
-| Device Incidents | `PATCH` | `/api/v1/device-incidents/{incidentId}` | Resolve a device incident |
-| Occupancy | `GET` | `/api/v1/levels/{levelId}/occupancy` | Get the current occupancy of a level |
-| Occupancy | `GET` | `/api/v1/parking-lots/{parkingLotId}/occupancy` | Get the current occupancy of a parking lot |
-| Occupancy | `GET` | `/api/v1/parking-lots/{parkingLotId}/space-statuses` | List the current status of each space of a parking lot |
-| Occupancy | `GET` | `/api/v1/zones/{zoneId}/occupancy` | Get the current occupancy of a zone |
-| Occupancy | `GET` | `/api/v1/zones/{zoneId}/occupancy-snapshots` | List the occupancy snapshots of a zone |
-| Occupancy | `POST` | `/api/v1/zones/{zoneId}/occupancy-snapshots` | Record an occupancy snapshot of a zone |
-| Prediction & Advisory | `POST` | `/api/v1/arrival-advices` | Request arrival advice |
-| Prediction & Advisory | `GET` | `/api/v1/parking-lots/{parkingLotId}/forecasts` | List the latest forecasts of a parking lot |
-| Prediction & Advisory | `POST` | `/api/v1/parking-lots/{parkingLotId}/forecasts` | Generate the forecasts of a parking lot |
-| Prediction & Advisory | `GET` | `/api/v1/parking-lots/{parkingLotId}/forecasts/metrics` | Get the forecast accuracy metrics of a parking lot |
+**Bounded Context IAM**
+
+<table>
+  <thead>
+    <tr><th>Acción</th><th>Verbo</th><th>Sintaxis de llamada</th><th>Parámetros</th><th>Response</th><th>Documentación</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Solicitar un código de acceso de un solo uso (público)</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/auth/request-otp</code></td>
+      <td>Body: <code>email</code></td>
+      <td>202 Accepted: devuelve un mensaje genérico, sin revelar si el correo existe. Errores: 400 Bad Request, 429 Too Many Requests.<pre>{
+  "message": "If the email is authorized, a code was sent."
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Authentication/requestOtp">requestOtp</a></td>
+    </tr>
+    <tr>
+      <td>Iniciar sesión con el código de un solo uso (público)</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/auth/sign-in</code></td>
+      <td>Body: <code>email</code>, <code>otpCode</code></td>
+      <td>200 OK: devuelve el usuario con su access token y refresh token. Errores: 400 Bad Request, 401 Unauthorized.<pre>{
+  "user": {
+    "id": 1,
+    "institutionId": 1,
+    "email": "conductor@upc.edu.pe",
+    "fullName": "Camila Rojas",
+    "role": "DRIVER",
+    "status": "ACTIVE",
+    "verifiedAt": "2026-11-14T13:30:00Z",
+    "lastLoginAt": "2026-11-14T13:30:00Z",
+    "locale": "es-419",
+    "notificationPreferences": {
+      "pushEnabled": true,
+      "saturationAlerts": true,
+      "lowArrivalAlerts": true,
+      "staleDataAlerts": true,
+      "eventAlerts": true
+    },
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  },
+  "accessToken": "eyJhbGciOi...",
+  "refreshToken": "eyJhbGciOi...",
+  "expiresIn": 900,
+  "expiresAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Authentication/signIn">signIn</a></td>
+    </tr>
+    <tr>
+      <td>Renovar la sesión (público)</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/auth/refresh</code></td>
+      <td>Body: <code>refreshToken</code></td>
+      <td>200 OK: devuelve el usuario con su access token y refresh token. Errores: 400 Bad Request, 401 Unauthorized.<pre>{
+  "user": {
+    "id": 1,
+    "institutionId": 1,
+    "email": "conductor@upc.edu.pe",
+    "fullName": "Camila Rojas",
+    "role": "DRIVER",
+    "status": "ACTIVE",
+    "verifiedAt": "2026-11-14T13:30:00Z",
+    "lastLoginAt": "2026-11-14T13:30:00Z",
+    "locale": "es-419",
+    "notificationPreferences": {
+      "pushEnabled": true,
+      "saturationAlerts": true,
+      "lowArrivalAlerts": true,
+      "staleDataAlerts": true,
+      "eventAlerts": true
+    },
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  },
+  "accessToken": "eyJhbGciOi...",
+  "refreshToken": "eyJhbGciOi...",
+  "expiresIn": 900,
+  "expiresAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Authentication/refreshSession">refreshSession</a></td>
+    </tr>
+    <tr>
+      <td>Cerrar sesión (público)</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/auth/sign-out</code></td>
+      <td>Body: <code>refreshToken</code></td>
+      <td>204 No Content: sin contenido. Errores: 400 Bad Request.</td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Authentication/signOut">signOut</a></td>
+    </tr>
+    <tr>
+      <td>Crear una institución</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/institutions</code></td>
+      <td>Body: <code>name</code></td>
+      <td>201 Created: devuelve la institución. Errores: 400 Bad Request, 403 Forbidden, 409 Conflict.<pre>{
+  "id": 1,
+  "name": "Universidad Peruana de Ciencias Aplicadas",
+  "active": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/createInstitution">createInstitution</a></td>
+    </tr>
+    <tr>
+      <td>Obtener una institución</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/institutions/{institutionId}</code></td>
+      <td><code>institutionId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la institución. Errores: 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "name": "Universidad Peruana de Ciencias Aplicadas",
+  "active": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/getInstitution">getInstitution</a></td>
+    </tr>
+    <tr>
+      <td>Listar los dominios de correo de una institución</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/institutions/{institutionId}/domains</code></td>
+      <td><code>institutionId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el dominio de correo. Errores: 403 Forbidden.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "domain": "upc.edu.pe",
+    "verified": true,
+    "verifiedBy": 1,
+    "verifiedAt": "2026-11-14T13:30:00Z",
+    "createdAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/listInstitutionDomains">listInstitutionDomains</a></td>
+    </tr>
+    <tr>
+      <td>Agregar un dominio de correo a una institución</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/institutions/{institutionId}/domains</code></td>
+      <td><code>institutionId</code> (path, obligatorio)<br>Body: <code>domain</code></td>
+      <td>201 Created: devuelve el dominio de correo. Errores: 400 Bad Request, 403 Forbidden, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "domain": "upc.edu.pe",
+  "verified": true,
+  "verifiedBy": 1,
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "createdAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/addInstitutionDomain">addInstitutionDomain</a></td>
+    </tr>
+    <tr>
+      <td>Verificar un dominio de correo</td>
+      <td>PATCH</td>
+      <td><code>PATCH /api/v1/iam/institutions/{institutionId}/domains/{domainId}</code></td>
+      <td><code>institutionId</code> (path, obligatorio)<br><code>domainId</code> (path, obligatorio)<br>Body: <code>status</code></td>
+      <td>200 OK: devuelve el dominio de correo. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "domain": "upc.edu.pe",
+  "verified": true,
+  "verifiedBy": 1,
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "createdAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/verifyInstitutionDomain">verifyInstitutionDomain</a></td>
+    </tr>
+    <tr>
+      <td>Listar los usuarios de una institución</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/institutions/{institutionId}/users</code></td>
+      <td><code>institutionId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el usuario. Errores: 403 Forbidden.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "email": "conductor@upc.edu.pe",
+    "fullName": "Camila Rojas",
+    "role": "DRIVER",
+    "status": "ACTIVE",
+    "verifiedAt": "2026-11-14T13:30:00Z",
+    "lastLoginAt": "2026-11-14T13:30:00Z",
+    "locale": "es-419",
+    "notificationPreferences": {
+      "pushEnabled": true,
+      "saturationAlerts": true,
+      "lowArrivalAlerts": true,
+      "staleDataAlerts": true,
+      "eventAlerts": true
+    },
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Institutions/listInstitutionUsers">listInstitutionUsers</a></td>
+    </tr>
+    <tr>
+      <td>Aceptar una invitación (público)</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/invitation-acceptances</code></td>
+      <td>Body: <code>invitationToken</code>, <code>fullName</code></td>
+      <td>200 OK: devuelve el usuario. Errores: 400 Bad Request, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Invitations/acceptInvitation">acceptInvitation</a></td>
+    </tr>
+    <tr>
+      <td>Invitar a un usuario a la institución</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/iam/invitations</code></td>
+      <td>Body: <code>institutionId</code>, <code>email</code>, <code>role</code></td>
+      <td>201 Created: devuelve el usuario. Errores: 400 Bad Request, 403 Forbidden, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Invitations/inviteUser">inviteUser</a></td>
+    </tr>
+    <tr>
+      <td>Buscar un usuario por correo</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/users</code></td>
+      <td><code>email</code> (query, obligatorio)</td>
+      <td>200 OK: devuelve el usuario. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Users/findUserByEmail">findUserByEmail</a></td>
+    </tr>
+    <tr>
+      <td>Obtener el usuario autenticado</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/users/me</code></td>
+      <td>Ninguno</td>
+      <td>200 OK: devuelve el usuario. Errores: 403 Forbidden.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Users/getCurrentUser">getCurrentUser</a></td>
+    </tr>
+    <tr>
+      <td>Obtener un usuario</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/users/{userId}</code></td>
+      <td><code>userId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve el usuario. Errores: 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Users/getUser">getUser</a></td>
+    </tr>
+    <tr>
+      <td>Actualizar las preferencias de notificación</td>
+      <td>PUT</td>
+      <td><code>PUT /api/v1/iam/users/{userId}/notification-preferences</code></td>
+      <td><code>userId</code> (path, obligatorio)<br>Body: <code>pushEnabled</code>, <code>saturationAlerts</code>, <code>lowArrivalAlerts</code>, <code>staleDataAlerts</code>, <code>eventAlerts</code></td>
+      <td>200 OK: devuelve el usuario. Errores: 400 Bad Request, 403 Forbidden, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "email": "conductor@upc.edu.pe",
+  "fullName": "Camila Rojas",
+  "role": "DRIVER",
+  "status": "ACTIVE",
+  "verifiedAt": "2026-11-14T13:30:00Z",
+  "lastLoginAt": "2026-11-14T13:30:00Z",
+  "locale": "es-419",
+  "notificationPreferences": {
+    "pushEnabled": true,
+    "saturationAlerts": true,
+    "lowArrivalAlerts": true,
+    "staleDataAlerts": true,
+    "eventAlerts": true
+  },
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Users/updateNotificationPreferences">updateNotificationPreferences</a></td>
+    </tr>
+    <tr>
+      <td>Listar los roles que se pueden invitar</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/iam/roles</code></td>
+      <td>Ninguno</td>
+      <td>200 OK: devuelve la lista con el rol. Errores: 403 Forbidden.<pre>[
+  {
+    "name": "OPERATOR"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Roles/listInvitationRoles">listInvitationRoles</a></td>
+    </tr>
+  </tbody>
+</table>
+
+**Bounded Context Parking Configuration**
+
+<table>
+  <thead>
+    <tr><th>Acción</th><th>Verbo</th><th>Sintaxis de llamada</th><th>Parámetros</th><th>Response</th><th>Documentación</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Listar los estacionamientos de la institución</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots</code></td>
+      <td>Ninguno</td>
+      <td>200 OK: devuelve la lista con el estacionamiento. Errores: 403 Forbidden.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "createdBy": 1,
+    "name": "Monterrico",
+    "address": "Av. Prolongación Primavera 2390",
+    "latitude": -12.1041,
+    "longitude": -76.9629,
+    "opensAt": "07:00:00",
+    "closesAt": "07:00:00",
+    "saturationThresholdPct": 85,
+    "lowBatteryThresholdPct": 85,
+    "staleAfterSeconds": 60,
+    "flowWindowMinutes": 30,
+    "accuracyMarginPct": 85,
+    "occupiedDebounceS": 60,
+    "freedDebounceS": 60,
+    "lowAvailabilityPct": 85,
+    "layoutVersion": 1,
+    "layoutPublishedAt": "2026-11-14T13:30:00Z",
+    "active": true,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Lots/listParkingLots">listParkingLots</a></td>
+    </tr>
+    <tr>
+      <td>Registrar un estacionamiento</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/parking-lots</code></td>
+      <td>Body: <code>name</code>, <code>address</code>, <code>latitude</code>, <code>longitude</code>, <code>opensAt</code>, <code>closesAt</code>, <code>saturationThresholdPct</code>, <code>lowBatteryThresholdPct</code>, <code>staleAfterSeconds</code>, <code>flowWindowMinutes</code>, <code>accuracyMarginPct</code>, <code>occupiedDebounceS</code>, <code>freedDebounceS</code>, <code>lowAvailabilityPct</code></td>
+      <td>201 Created: devuelve el estacionamiento. Errores: 400 Bad Request, 403 Forbidden, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "createdBy": 1,
+  "name": "Monterrico",
+  "address": "Av. Prolongación Primavera 2390",
+  "latitude": -12.1041,
+  "longitude": -76.9629,
+  "opensAt": "07:00:00",
+  "closesAt": "07:00:00",
+  "saturationThresholdPct": 85,
+  "lowBatteryThresholdPct": 85,
+  "staleAfterSeconds": 60,
+  "flowWindowMinutes": 30,
+  "accuracyMarginPct": 85,
+  "occupiedDebounceS": 60,
+  "freedDebounceS": 60,
+  "lowAvailabilityPct": 85,
+  "layoutVersion": 1,
+  "layoutPublishedAt": "2026-11-14T13:30:00Z",
+  "active": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Lots/registerParkingLot">registerParkingLot</a></td>
+    </tr>
+    <tr>
+      <td>Obtener un estacionamiento</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve el estacionamiento. Errores: 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "createdBy": 1,
+  "name": "Monterrico",
+  "address": "Av. Prolongación Primavera 2390",
+  "latitude": -12.1041,
+  "longitude": -76.9629,
+  "opensAt": "07:00:00",
+  "closesAt": "07:00:00",
+  "saturationThresholdPct": 85,
+  "lowBatteryThresholdPct": 85,
+  "staleAfterSeconds": 60,
+  "flowWindowMinutes": 30,
+  "accuracyMarginPct": 85,
+  "occupiedDebounceS": 60,
+  "freedDebounceS": 60,
+  "lowAvailabilityPct": 85,
+  "layoutVersion": 1,
+  "layoutPublishedAt": "2026-11-14T13:30:00Z",
+  "active": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Lots/getParkingLot">getParkingLot</a></td>
+    </tr>
+    <tr>
+      <td>Listar los espacios de un nivel</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/levels/{levelId}/spaces</code></td>
+      <td><code>levelId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el espacio. Errores: 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "levelId": 1,
+    "label": "A-012",
+    "type": "STANDARD",
+    "posX": 72.5,
+    "posY": 72.5,
+    "status": "FREE",
+    "unknownReason": null,
+    "statusSince": "2026-11-14T13:30:00Z",
+    "lastEventAt": "2026-11-14T13:30:00Z",
+    "active": true,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/listSpaces">listSpaces</a></td>
+    </tr>
+    <tr>
+      <td>Crear un espacio</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/levels/{levelId}/spaces</code></td>
+      <td><code>levelId</code> (path, obligatorio)<br>Body: <code>label</code>, <code>type</code>, <code>posX</code>, <code>posY</code></td>
+      <td>201 Created: devuelve el espacio. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "levelId": 1,
+  "label": "A-012",
+  "type": "STANDARD",
+  "posX": 72.5,
+  "posY": 72.5,
+  "status": "FREE",
+  "unknownReason": null,
+  "statusSince": "2026-11-14T13:30:00Z",
+  "lastEventAt": "2026-11-14T13:30:00Z",
+  "active": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/createSpace">createSpace</a></td>
+    </tr>
+    <tr>
+      <td>Listar las zonas de un estacionamiento</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/zones</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con la zona. Errores: 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "parkingLotId": 1,
+    "name": "Pabellón A",
+    "description": "Edificios A–C",
+    "sortOrder": 1,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/listZones">listZones</a></td>
+    </tr>
+    <tr>
+      <td>Crear una zona</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/parking-lots/{parkingLotId}/zones</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)<br>Body: <code>name</code>, <code>description</code>, <code>sortOrder</code></td>
+      <td>201 Created: devuelve la zona. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "parkingLotId": 1,
+  "name": "Pabellón A",
+  "description": "Edificios A–C",
+  "sortOrder": 1,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/createZone">createZone</a></td>
+    </tr>
+    <tr>
+      <td>Listar los niveles de una zona</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/zones/{zoneId}/levels</code></td>
+      <td><code>zoneId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el nivel. Errores: 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "zoneId": 1,
+    "name": "Sótano 1",
+    "sortOrder": 1,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/listLevels">listLevels</a></td>
+    </tr>
+    <tr>
+      <td>Crear un nivel</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/zones/{zoneId}/levels</code></td>
+      <td><code>zoneId</code> (path, obligatorio)<br>Body: <code>name</code>, <code>sortOrder</code></td>
+      <td>201 Created: devuelve el nivel. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "zoneId": 1,
+  "name": "Sótano 1",
+  "sortOrder": 1,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Layout/createLevel">createLevel</a></td>
+    </tr>
+    <tr>
+      <td>Listar los accesos de un estacionamiento</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/accesses</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el acceso. Errores: 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "parkingLotId": 1,
+    "name": "Ingreso principal",
+    "type": "ENTRY",
+    "flowCountingEnabled": true,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Accesses/listParkingAccesses">listParkingAccesses</a></td>
+    </tr>
+    <tr>
+      <td>Crear un acceso vehicular</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/parking-lots/{parkingLotId}/accesses</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)<br>Body: <code>name</code>, <code>type</code>, <code>flowCountingEnabled</code></td>
+      <td>201 Created: devuelve el acceso. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "parkingLotId": 1,
+  "name": "Ingreso principal",
+  "type": "ENTRY",
+  "flowCountingEnabled": true,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Parking%20Accesses/createParkingAccess">createParkingAccess</a></td>
+    </tr>
+    <tr>
+      <td>Listar los eventos del calendario académico</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/calendar-events</code></td>
+      <td><code>from</code> (query, obligatorio)<br><code>to</code> (query, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el evento. Errores: 400 Bad Request, 403 Forbidden.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "parkingLotId": 1,
+    "zoneId": 1,
+    "createdBy": 1,
+    "name": "Semana de exámenes parciales",
+    "startAt": "2026-11-14T13:30:00Z",
+    "endAt": "2026-11-14T13:30:00Z",
+    "type": "CLASSES",
+    "impact": "LOW",
+    "cancelledAt": null,
+    "createdAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Calendar%20Events/listCalendarEvents">listCalendarEvents</a></td>
+    </tr>
+    <tr>
+      <td>Programar un evento del campus</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/calendar-events</code></td>
+      <td>Body: <code>parkingLotId</code>, <code>zoneId</code>, <code>name</code>, <code>startAt</code>, <code>endAt</code>, <code>type</code>, <code>impact</code></td>
+      <td>201 Created: devuelve el evento. Errores: 400 Bad Request, 403 Forbidden.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "zoneId": 1,
+  "createdBy": 1,
+  "name": "Semana de exámenes parciales",
+  "startAt": "2026-11-14T13:30:00Z",
+  "endAt": "2026-11-14T13:30:00Z",
+  "type": "CLASSES",
+  "impact": "LOW",
+  "cancelledAt": null,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Calendar%20Events/scheduleCalendarEvent">scheduleCalendarEvent</a></td>
+    </tr>
+    <tr>
+      <td>Cancelar un evento del campus</td>
+      <td>PATCH</td>
+      <td><code>PATCH /api/v1/calendar-events/{calendarEventId}</code></td>
+      <td><code>calendarEventId</code> (path, obligatorio)<br>Body: <code>status</code></td>
+      <td>200 OK: devuelve el evento. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "zoneId": 1,
+  "createdBy": 1,
+  "name": "Semana de exámenes parciales",
+  "startAt": "2026-11-14T13:30:00Z",
+  "endAt": "2026-11-14T13:30:00Z",
+  "type": "CLASSES",
+  "impact": "LOW",
+  "cancelledAt": null,
+  "createdAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Calendar%20Events/cancelCalendarEvent">cancelCalendarEvent</a></td>
+    </tr>
+  </tbody>
+</table>
+
+**Bounded Context Parking Sensing**
+
+<table>
+  <thead>
+    <tr><th>Acción</th><th>Verbo</th><th>Sintaxis de llamada</th><th>Parámetros</th><th>Response</th><th>Documentación</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Listar dispositivos</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/devices</code></td>
+      <td><code>parkingLotId</code> (query)<br><code>hardwareId</code> (query)</td>
+      <td>200 OK: devuelve la lista con el dispositivo. Errores: 400 Bad Request.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "parkingLotId": 1,
+    "hardwareId": "SNS-A-001",
+    "type": "SPACE_SENSOR",
+    "reportIntervalSeconds": 60,
+    "status": "OPERATIONAL",
+    "gatewayId": 1,
+    "spaceId": 1,
+    "accessId": null,
+    "replacedBy": null,
+    "registeredBy": 1,
+    "directional": true,
+    "batteryPct": 85,
+    "firmwareVersion": "1.2.0",
+    "lastSeenAt": "2026-11-14T13:30:00Z",
+    "decommissionedAt": null,
+    "registeredAt": "2026-11-14T13:30:00Z",
+    "updatedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Devices/listDevices">listDevices</a></td>
+    </tr>
+    <tr>
+      <td>Registrar un dispositivo IoT</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/devices</code></td>
+      <td>Body: <code>parkingLotId</code>, <code>hardwareId</code>, <code>type</code>, <code>reportIntervalSeconds</code>, <code>gatewayId</code>, <code>directional</code>, <code>firmwareVersion</code></td>
+      <td>201 Created: devuelve el dispositivo. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "SPACE_SENSOR",
+  "reportIntervalSeconds": 60,
+  "status": "OPERATIONAL",
+  "gatewayId": 1,
+  "spaceId": 1,
+  "accessId": null,
+  "replacedBy": null,
+  "registeredBy": 1,
+  "directional": true,
+  "batteryPct": 85,
+  "firmwareVersion": "1.2.0",
+  "lastSeenAt": "2026-11-14T13:30:00Z",
+  "decommissionedAt": null,
+  "registeredAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Devices/registerDevice">registerDevice</a></td>
+    </tr>
+    <tr>
+      <td>Obtener un dispositivo</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/devices/{deviceId}</code></td>
+      <td><code>deviceId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve el dispositivo. Errores: 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "SPACE_SENSOR",
+  "reportIntervalSeconds": 60,
+  "status": "OPERATIONAL",
+  "gatewayId": 1,
+  "spaceId": 1,
+  "accessId": null,
+  "replacedBy": null,
+  "registeredBy": 1,
+  "directional": true,
+  "batteryPct": 85,
+  "firmwareVersion": "1.2.0",
+  "lastSeenAt": "2026-11-14T13:30:00Z",
+  "decommissionedAt": null,
+  "registeredAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Devices/getDevice">getDevice</a></td>
+    </tr>
+    <tr>
+      <td>Dar de baja un dispositivo</td>
+      <td>DELETE</td>
+      <td><code>DELETE /api/v1/devices/{deviceId}</code></td>
+      <td><code>deviceId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve el dispositivo. Errores: 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "SPACE_SENSOR",
+  "reportIntervalSeconds": 60,
+  "status": "OPERATIONAL",
+  "gatewayId": 1,
+  "spaceId": 1,
+  "accessId": null,
+  "replacedBy": null,
+  "registeredBy": 1,
+  "directional": true,
+  "batteryPct": 85,
+  "firmwareVersion": "1.2.0",
+  "lastSeenAt": "2026-11-14T13:30:00Z",
+  "decommissionedAt": null,
+  "registeredAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Devices/decommissionDevice">decommissionDevice</a></td>
+    </tr>
+    <tr>
+      <td>Asignar un dispositivo a un espacio o acceso</td>
+      <td>PUT</td>
+      <td><code>PUT /api/v1/devices/{deviceId}/assignment</code></td>
+      <td><code>deviceId</code> (path, obligatorio)<br>Body: <code>spaceId</code>, <code>accessId</code></td>
+      <td>200 OK: devuelve el dispositivo. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "SPACE_SENSOR",
+  "reportIntervalSeconds": 60,
+  "status": "OPERATIONAL",
+  "gatewayId": 1,
+  "spaceId": 1,
+  "accessId": null,
+  "replacedBy": null,
+  "registeredBy": 1,
+  "directional": true,
+  "batteryPct": 85,
+  "firmwareVersion": "1.2.0",
+  "lastSeenAt": "2026-11-14T13:30:00Z",
+  "decommissionedAt": null,
+  "registeredAt": "2026-11-14T13:30:00Z",
+  "updatedAt": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Devices/assignDevice">assignDevice</a></td>
+    </tr>
+    <tr>
+      <td>Listar incidentes de dispositivos</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/device-incidents</code></td>
+      <td><code>parkingLotId</code> (query)<br><code>status</code> (query)</td>
+      <td>200 OK: devuelve la lista con el incidente. Errores: 400 Bad Request.<pre>[
+  {
+    "id": 1,
+    "institutionId": 1,
+    "parkingLotId": 1,
+    "deviceId": 1,
+    "hardwareId": "SNS-A-001",
+    "type": "NO_HEARTBEAT",
+    "category": "NO_COMMUNICATION",
+    "reportedBy": 1,
+    "resolvedBy": null,
+    "details": "Sin latido en los últimos 10 minutos.",
+    "occurredAt": "2026-11-14T13:30:00Z",
+    "resolvedAt": null,
+    "open": true
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Device%20Incidents/listDeviceIncidents">listDeviceIncidents</a></td>
+    </tr>
+    <tr>
+      <td>Reportar un incidente de dispositivo</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/device-incidents</code></td>
+      <td>Body: <code>parkingLotId</code>, <code>deviceId</code>, <code>hardwareId</code>, <code>category</code>, <code>details</code></td>
+      <td>201 Created: devuelve el incidente. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "deviceId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "NO_HEARTBEAT",
+  "category": "NO_COMMUNICATION",
+  "reportedBy": 1,
+  "resolvedBy": null,
+  "details": "Sin latido en los últimos 10 minutos.",
+  "occurredAt": "2026-11-14T13:30:00Z",
+  "resolvedAt": null,
+  "open": true
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Device%20Incidents/reportDeviceIncident">reportDeviceIncident</a></td>
+    </tr>
+    <tr>
+      <td>Resolver un incidente de dispositivo</td>
+      <td>PATCH</td>
+      <td><code>PATCH /api/v1/device-incidents/{incidentId}</code></td>
+      <td><code>incidentId</code> (path, obligatorio)<br>Body: <code>status</code></td>
+      <td>200 OK: devuelve el incidente. Errores: 400 Bad Request, 403 Forbidden, 404 Not Found, 409 Conflict.<pre>{
+  "id": 1,
+  "institutionId": 1,
+  "parkingLotId": 1,
+  "deviceId": 1,
+  "hardwareId": "SNS-A-001",
+  "type": "NO_HEARTBEAT",
+  "category": "NO_COMMUNICATION",
+  "reportedBy": 1,
+  "resolvedBy": null,
+  "details": "Sin latido en los últimos 10 minutos.",
+  "occurredAt": "2026-11-14T13:30:00Z",
+  "resolvedAt": null,
+  "open": true
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Device%20Incidents/resolveDeviceIncident">resolveDeviceIncident</a></td>
+    </tr>
+  </tbody>
+</table>
+
+**Bounded Context Occupancy**
+
+<table>
+  <thead>
+    <tr><th>Acción</th><th>Verbo</th><th>Sintaxis de llamada</th><th>Parámetros</th><th>Response</th><th>Documentación</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Obtener la ocupación actual de un nivel</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/levels/{levelId}/occupancy</code></td>
+      <td><code>levelId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve los conteos de espacios libres, ocupados y sin datos. Errores: 404 Not Found.<pre>{
+  "scopeType": "PARKING_LOT",
+  "scopeId": 1,
+  "takenAt": "2026-11-14T13:30:00Z",
+  "totalSpaces": 60,
+  "freeCount": 42,
+  "occupiedCount": 42,
+  "unknownCount": 42
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/getLevelOccupancy">getLevelOccupancy</a></td>
+    </tr>
+    <tr>
+      <td>Obtener la ocupación actual de un estacionamiento</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/occupancy</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve los conteos de espacios libres, ocupados y sin datos. Errores: 404 Not Found.<pre>{
+  "scopeType": "PARKING_LOT",
+  "scopeId": 1,
+  "takenAt": "2026-11-14T13:30:00Z",
+  "totalSpaces": 60,
+  "freeCount": 42,
+  "occupiedCount": 42,
+  "unknownCount": 42
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/getLotOccupancy">getLotOccupancy</a></td>
+    </tr>
+    <tr>
+      <td>Listar el estado actual de cada espacio</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/space-statuses</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el estado de cada espacio. Errores: 404 Not Found.<pre>[
+  {
+    "spaceId": 1,
+    "zoneId": 1,
+    "levelId": 1,
+    "status": "FREE",
+    "unknownReason": null,
+    "statusSince": "2026-11-14T13:30:00Z",
+    "lastDetectedAt": "2026-11-14T13:30:00Z"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/listLotSpaceStatuses">listLotSpaceStatuses</a></td>
+    </tr>
+    <tr>
+      <td>Obtener la ocupación actual de una zona</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/zones/{zoneId}/occupancy</code></td>
+      <td><code>zoneId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve los conteos de espacios libres, ocupados y sin datos. Errores: 404 Not Found.<pre>{
+  "scopeType": "PARKING_LOT",
+  "scopeId": 1,
+  "takenAt": "2026-11-14T13:30:00Z",
+  "totalSpaces": 60,
+  "freeCount": 42,
+  "occupiedCount": 42,
+  "unknownCount": 42
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/getZoneOccupancy">getZoneOccupancy</a></td>
+    </tr>
+    <tr>
+      <td>Listar los snapshots de ocupación de una zona</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/zones/{zoneId}/occupancy-snapshots</code></td>
+      <td><code>zoneId</code> (path, obligatorio)<br><code>from</code> (query)<br><code>to</code> (query)</td>
+      <td>200 OK: devuelve la lista con el snapshot de ocupación. Errores: 400 Bad Request, 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "zoneId": 1,
+    "takenAt": "2026-11-14T13:30:00Z",
+    "totalSpaces": 60,
+    "freeCount": 42,
+    "occupiedCount": 42,
+    "unknownCount": 42
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/listZoneOccupancySnapshots">listZoneOccupancySnapshots</a></td>
+    </tr>
+    <tr>
+      <td>Registrar un snapshot de ocupación de una zona</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/zones/{zoneId}/occupancy-snapshots</code></td>
+      <td><code>zoneId</code> (path, obligatorio)</td>
+      <td>201 Created: devuelve el snapshot de ocupación. Errores: 404 Not Found.<pre>{
+  "id": 1,
+  "zoneId": 1,
+  "takenAt": "2026-11-14T13:30:00Z",
+  "totalSpaces": 60,
+  "freeCount": 42,
+  "occupiedCount": 42,
+  "unknownCount": 42
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Occupancy/createZoneOccupancySnapshot">createZoneOccupancySnapshot</a></td>
+    </tr>
+  </tbody>
+</table>
+
+**Bounded Context Prediction & Advisory**
+
+<table>
+  <thead>
+    <tr><th>Acción</th><th>Verbo</th><th>Sintaxis de llamada</th><th>Parámetros</th><th>Response</th><th>Documentación</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Solicitar la asesoría de llegada</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/arrival-advices</code></td>
+      <td>Body: <code>lotId</code>, <code>etaMinutes</code></td>
+      <td>200 OK: devuelve la probabilidad de encontrar espacio, su categoría y la confianza. Errores: 400 Bad Request, 404 Not Found.<pre>{
+  "etaMinutes": 30,
+  "probabilityOfSpace": 0.87,
+  "category": "HIGH",
+  "confidence": {
+    "value": 72.5,
+    "level": "HIGH"
+  },
+  "horizonUsed": 1,
+  "generatedAt": "2026-11-14T13:30:00Z",
+  "serverTime": "2026-11-14T13:30:00Z"
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Prediction%20%26%20Advisory/requestArrivalAdvice">requestArrivalAdvice</a></td>
+    </tr>
+    <tr>
+      <td>Listar los pronósticos más recientes</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/forecasts</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la lista con el pronóstico. Errores: 404 Not Found.<pre>[
+  {
+    "id": 1,
+    "parkingLotId": 1,
+    "horizonMinutes": 30,
+    "generatedAt": "2026-11-14T13:30:00Z",
+    "targetAt": "2026-11-14T13:30:00Z",
+    "expectedOccupancyPct": 72.5,
+    "confidence": 0.87,
+    "confidenceLevel": "HIGH",
+    "method": "PRIMARY_MODEL",
+    "modelVersion": "v1",
+    "saturationExpectedAt": "2026-11-14T13:30:00Z",
+    "observedOccupancyPct": null,
+    "absoluteError": null,
+    "runId": "3f2b8c1e-7a4d-4c2b-9e1f-5d6a7b8c9d0e",
+    "runSlot": "2026-11-14T13:30:00Z",
+    "trigger": "SCHEDULED"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Prediction%20%26%20Advisory/listLatestForecasts">listLatestForecasts</a></td>
+    </tr>
+    <tr>
+      <td>Generar los pronósticos de un estacionamiento</td>
+      <td>POST</td>
+      <td><code>POST /api/v1/parking-lots/{parkingLotId}/forecasts</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>201 Created: devuelve la lista con el pronóstico. Errores: 404 Not Found, 409 Conflict.<pre>[
+  {
+    "id": 1,
+    "parkingLotId": 1,
+    "horizonMinutes": 30,
+    "generatedAt": "2026-11-14T13:30:00Z",
+    "targetAt": "2026-11-14T13:30:00Z",
+    "expectedOccupancyPct": 72.5,
+    "confidence": 0.87,
+    "confidenceLevel": "HIGH",
+    "method": "PRIMARY_MODEL",
+    "modelVersion": "v1",
+    "saturationExpectedAt": "2026-11-14T13:30:00Z",
+    "observedOccupancyPct": null,
+    "absoluteError": null,
+    "runId": "3f2b8c1e-7a4d-4c2b-9e1f-5d6a7b8c9d0e",
+    "runSlot": "2026-11-14T13:30:00Z",
+    "trigger": "SCHEDULED"
+  }
+]</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Prediction%20%26%20Advisory/generateForecasts">generateForecasts</a></td>
+    </tr>
+    <tr>
+      <td>Obtener las métricas de precisión de los pronósticos</td>
+      <td>GET</td>
+      <td><code>GET /api/v1/parking-lots/{parkingLotId}/forecasts/metrics</code></td>
+      <td><code>parkingLotId</code> (path, obligatorio)</td>
+      <td>200 OK: devuelve la cantidad de pronósticos evaluados y su error absoluto medio. Errores: 404 Not Found.<pre>{
+  "evaluatedForecasts": 60,
+  "meanAbsoluteErrorPct": 72.5
+}</pre></td>
+      <td><a href="https://api.54-198-188-252.sslip.io/swagger-ui/index.html#/Prediction%20%26%20Advisory/getForecastAccuracyMetrics">getForecastAccuracyMetrics</a></td>
+    </tr>
+  </tbody>
+</table>
 
 #### 7.2.1.7. Software Deployment Evidence for Sprint Review
 
