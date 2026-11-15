@@ -110,6 +110,18 @@ El informe se elabora de forma colaborativa en el repositorio [https://github.co
 
 *Figura: analítico de Contributors del repositorio después de integrar el segundo hito en `main`. Registra 69 commits de Sulca Sanchez, 43 de Becerra Tejeda, 23 de Nanfuñay Liza, 12 de Melgarejo Gomez y 9 de Bejarano Martinez. Frente al primer hito, los commits agregados por cada integrante corresponden a los descritos en el Registro de Versiones del Informe.*
 
+**Organización del trabajo en el tercer hito (TP1).** El equipo se repartió el capítulo VII (configuración del entorno de desarrollo, Sprint 1 y entrevistas de validación) y el cierre del capítulo VI (mock-ups, user flows y prototipo), y corrigió los artefactos de las entregas anteriores para alinearlos con la implementación y el despliegue de los productos. El trabajo se integró en la rama `develop`.
+
+**Aportes por integrante en el tercer hito.**
+
+| Integrante | Secciones elaboradas o corregidas |
+| --- | --- |
+| Becerra Tejeda, Alessandra Nicole | Versión inicial de la guía de estilo y convenciones de código (7.1.3) y de la configuración de despliegue (7.1.4); diseño y objetivos de las entrevistas de validación (7.3.1); entrevista de validación a María Paz Pastor. |
+| Bejarano Martinez, Alvaro Leandro | Sprint Backlog 1 y evidencia del tablero del equipo (7.2.1.2); entrevistas de validación a Mario Josue Grandez Salvador y Angel Jesus Lazo Panduro. |
+| Melgarejo Gomez, Marcia Victoria | Mock-ups (6.4.3), user flows (6.4.4) y prototipo (6.5) de la aplicación móvil y de la consola web de plataforma; entrevista de validación a Gabriel Gordon Salas. |
+| Nanfuñay Liza, Pedro Jesus | Estructura del tercer hito; configuración del entorno de desarrollo (7.1.1) y gestión del código fuente (7.1.2); entrevista de validación a Joaquin Trujillo Lizarbe. |
+| Sulca Sanchez, Piero Angel | Corrección de los capítulos I a VII para alinearlos con la implementación (vista de administración en la aplicación móvil, roles, rutas REST y diagramas); versión final de la guía de estilo (7.1.3) y de la configuración de despliegue (7.1.4). |
+
 # Contenido
 
 - [Registro de Versiones del Informe](#registro-de-versiones-del-informe)
@@ -286,34 +298,41 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Logré sustentar los principales aspectos del proyecto de forma clara, ordenada y objetiva, utilizando las User Stories, el Product Backlog y la arquitectura como soporte para transmitir las ideas y resultados del proyecto.<br>
-          TB1: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.
+          TB1: Logré sustentar con claridad y objetividad el diseño táctico de los Bounded Contexts IAM y Notifications, con sus aggregates, capas y diagramas C4, de clases y de base de datos, y las Style Guidelines de la solución, explicando cómo las decisiones de arquitectura y de diseño se traducen en una solución implementable y consistente.<br>
+          TP1: Conduje la entrevista de validación a María Paz Pastor, conductora de la comunidad educativa: le presenté la propuesta de Quadrapp en un lenguaje no técnico y recogí de forma objetiva sus impresiones sobre la disponibilidad y la predicción.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
           AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
-          TB1: Logré sustentar el diseño de la Landing Page, explicando cómo su estructura por segmento y sus llamadas a la acción comunican la propuesta de valor de Quadrapp a conductores y a instituciones, y cómo el diseño se llevó a la versión implementada.
+          TB1: Logré sustentar el diseño de la Landing Page, explicando cómo su estructura por segmento y sus llamadas a la acción comunican la propuesta de valor de Quadrapp a conductores y a instituciones, y cómo el diseño se llevó a la versión implementada.<br>
+          TP1: Conduje las entrevistas de validación a Mario Josue Grandez Salvador y a Angel Jesus Lazo Panduro: les presenté la Landing Page y la aplicación móvil sin recurrir a términos técnicos y registré con objetividad su comprensión del producto.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.<br>
-          TB1: Logré sustentar el diseño táctico del Bounded Context Prediction & Advisory, explicando cómo se generan los pronósticos, cómo se deriva la asesoría de llegada a partir del tiempo estimado y cómo los wireframes y wireflows llevan esas capacidades a la experiencia del conductor y del administrador.
+          TB1: Logré sustentar el diseño táctico del Bounded Context Prediction & Advisory, explicando cómo se generan los pronósticos, cómo se deriva la asesoría de llegada a partir del tiempo estimado y cómo los wireframes y wireflows llevan esas capacidades a la experiencia del conductor y del administrador.<br>
+          TP1: Entrevisté a Gabriel Gordon Salas, administrador de estacionamientos: presenté la vista de administración de la aplicación móvil a un perfil de gestión y recogí su valoración sobre su utilidad durante el turno.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
           AV1: Logré comunicarme eficazmente con mis compañeros para delimitar el alcance del proyecto, exponer las características de la solución, aplicando buenas prácticas en artefactos como Lean UX Process, Análisis Competitivo y Bounded Context Canvases, lo que me permitió dar a conocer a fondos la arquitectura que seguirá nuestra solución.<br>
-          TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.
+          TB1: Logré sustentar el diseño táctico del Bounded Context Analytics y la Information Architecture de la solución, explicando cómo se mide la precisión de las predicciones y cómo los sistemas de organización, etiquetado, búsqueda y navegación orientan a cada tipo de usuario.<br>
+          TP1: Entrevisté a Joaquin Trujillo Lizarbe, conductor de la comunidad educativa: le expliqué la predicción y la asesoría de llegada en un lenguaje cercano y recogí con objetividad su retroalimentación.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
           AV1: Logré exponer de forma clara y objetiva el alcance del producto y su priorización, presentando el Diseño y Análisis de Entrevistas, las User Stories, el Impact Mapping y el Product Backlog, de modo que el equipo comprendiera por qué el orden del backlog responde al valor para el negocio.<br>
-          TB1: Logré sustentar el diseño táctico de Parking Configuration, Parking Sensing y Occupancy y la revisión del diseño estratégico según la retroalimentación del primer hito, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.
+          TB1: Logré sustentar el diseño táctico de Parking Configuration, Parking Sensing y Occupancy y la revisión del diseño estratégico según la retroalimentación del primer hito, explicando cómo una lectura de un sensor se convierte en disponibilidad y por qué la arquitectura de monolito modular mantiene coherentes los capítulos IV y V.<br>
+          TP1: Como líder del equipo, coordiné la distribución del tercer hito y comuniqué a cada integrante las decisiones técnicas que afectaban su parte (la vista de administración en la aplicación móvil, el despliegue en AWS y las rutas REST del backend), adaptando la explicación a perfiles de diseño, desarrollo y documentación para que el informe, la aplicación y el backend se mantuvieran coherentes.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
         La sustentación oral de la problemática, los requerimientos y la propuesta arquitectónica de Quadrapp permitió comunicar de manera clara y objetiva los avances del proyecto. La exposición de los artefactos elaborados facilitó que audiencias técnicas y de negocio comprendieran las necesidades de los usuarios, el alcance de la solución y las decisiones de diseño adoptadas, además de permitir la resolución de dudas mediante la retroalimentación del equipo.<br><br>
         <strong>TB1:</strong><br>
-        La sustentación del diseño táctico permitió explicar, contexto por contexto, cómo se implementan las capacidades de Quadrapp, desde la lectura de un sensor hasta la asesoría de llegada que recibe el conductor. Atender la retroalimentación del primer hito obligó a explicar con mayor precisión la técnica aplicada en cada artefacto del diseño estratégico y a justificar la decisión de arquitectura ante una audiencia técnica.
+        La sustentación del diseño táctico permitió explicar, contexto por contexto, cómo se implementan las capacidades de Quadrapp, desde la lectura de un sensor hasta la asesoría de llegada que recibe el conductor. Atender la retroalimentación del primer hito obligó a explicar con mayor precisión la técnica aplicada en cada artefacto del diseño estratégico y a justificar la decisión de arquitectura ante una audiencia técnica.<br><br>
+        <strong>TP1:</strong><br>
+        La validación con usuarios reales de los dos segmentos obligó al equipo a explicar el producto sin lenguaje técnico y a contrastar la propuesta con la experiencia de cada entrevistado, mientras que la coordinación interna permitió comunicar las decisiones técnicas a integrantes con perfiles distintos.
       </td>
     </tr>
     <tr>
@@ -322,34 +341,41 @@ del ABET – EAC - Student Outcome 3.
         <p>
           <strong>Becerra Tejeda, Alessandra Nicole</strong><br>
           AV1: Redacté y organicé parte de la información del proyecto de forma clara, coherente y objetiva, contribuyendo a la documentación de los requerimientos, la planificación del trabajo y la definición de la solución propuesta.<br>
-          TB1: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.
+          TB1: Redacté de forma clara y precisa el diseño táctico de los Bounded Contexts IAM y Notifications (capítulo 5) y las Style Guidelines de la solución (sección 6.1), manteniendo la trazabilidad con las historias de usuario, los drivers y los constraints, de modo que audiencias técnicas y de negocio comprendan tanto el diseño interno de los contextos como la identidad visual del producto.<br>
+          TP1: Redacté el guion y los objetivos de las entrevistas de validación de forma comprensible para cada segmento, y la versión inicial de la guía de estilo de código y de la configuración de despliegue para el equipo de desarrollo.
         </p>
         <p>
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
           AV1: Logré documentar por escrito, de manera clara y objetiva, los resultados del análisis del usuario y del dominio en el Segmento Objetivo, los User Personas, la User Task Matrix, el Empathy Mapping, el EventStorming, el Candidate Context Discovery y los Domain Message Flows, de modo que los lectores comprendan tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
-          TB1: Diseñé el wireframe y el mock-up de la Landing Page y redacté su contenido para comunicar el alcance real del producto (sin reservas, sin pagos y sin rastreo de ubicación) a públicos de distinto perfil, e implementé la primera versión de la página.
+          TB1: Diseñé el wireframe y el mock-up de la Landing Page y redacté su contenido para comunicar el alcance real del producto (sin reservas, sin pagos y sin rastreo de ubicación) a públicos de distinto perfil, e implementé la primera versión de la página.<br>
+          TP1: Documenté el Sprint Backlog 1 y la evidencia del tablero del equipo para que el docente y los integrantes sigan el avance del sprint, y registré las entrevistas de validación que conduje.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
-          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.
+          TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.<br>
+          TP1: Describí los mock-ups, los user flows y el prototipo de la aplicación móvil para que lectores de diseño y de negocio entiendan cada recorrido, y registré la entrevista de validación al administrador.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
           AV1: Logré redactar adecuadamente los artefactos asignados de forma coherente y clara, de manera que permita comprender a diferentes tipos de público desde el valor que ofrece nuestra solución hasta la arquitectura del proyecto.<br>
-          TB1: Redacté el diseño táctico del Bounded Context Analytics y la Information Architecture, y corregí los Bounded Context Canvases, el Context Mapping y el registro de entrevistas a partir de la retroalimentación del primer hito.
+          TB1: Redacté el diseño táctico del Bounded Context Analytics y la Information Architecture, y corregí los Bounded Context Canvases, el Context Mapping y el registro de entrevistas a partir de la retroalimentación del primer hito.<br>
+          TP1: Documenté el entorno de desarrollo y el flujo de trabajo del equipo (GitFlow y Conventional Commits) para un público técnico, organicé la estructura del tercer hito y registré la entrevista de validación que conduje.
         </p>
         <p>
           <strong>Sulca Sanchez, Piero Angel</strong><br>
           AV1: Logré redactar de forma clara y precisa la Descripción de la Startup, el Diseño, Registro y Análisis de Entrevistas, las User Stories con sus criterios de aceptación, el Impact Mapping, el Product Backlog, los Constraints y el Architectural Drivers Backlog, de modo que audiencias con distinta especialidad comprendan los requisitos y las restricciones del proyecto.<br>
-          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y revisé la coherencia entre los capítulos IV y V, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.
+          TB1: Redacté el diseño táctico de Parking Configuration, Parking Sensing y Occupancy, con sus diccionarios de clases, capas, reglas de negocio y diagramas, y revisé la coherencia entre los capítulos IV y V, de modo que el lector pueda seguir la trazabilidad desde el EventStorming hasta las clases y tablas de cada contexto.<br>
+          TP1: Documenté el despliegue de los productos y alineé el informe con la implementación (roles, rutas REST, vistas de la aplicación y diagramas), para que el docente y los desarrolladores puedan verificar lo construido contra el diseño.
         </p>
       </td>
       <td>
         <strong>AV1:</strong><br>
         La documentación escrita y estructurada de la investigación, los requerimientos y el diseño estratégico de Quadrapp permitió mantener la trazabilidad entre las necesidades identificadas y la arquitectura propuesta. El uso de un lenguaje claro, artefactos consistentes y evidencias organizadas facilitó la comprensión del proyecto tanto para audiencias técnicas como de negocio.<br><br>
         <strong>TB1:</strong><br>
-        La redacción del diseño táctico como diccionario de clases, con sus capas, reglas de negocio y diagramas, permitió documentar la solución con un nivel de detalle implementable. Mantener los mismos nombres de eventos, fachadas y tablas entre el capítulo IV y el capítulo V, y entre los diagramas y el texto, aseguró que lectores con distinta especialidad encuentren una misma versión coherente del sistema.
+        La redacción del diseño táctico como diccionario de clases, con sus capas, reglas de negocio y diagramas, permitió documentar la solución con un nivel de detalle implementable. Mantener los mismos nombres de eventos, fachadas y tablas entre el capítulo IV y el capítulo V, y entre los diagramas y el texto, aseguró que lectores con distinta especialidad encuentren una misma versión coherente del sistema.<br><br>
+        <strong>TP1:</strong><br>
+        Documentar lo implementado y desplegado exigió alinear el texto del informe con el código, de modo que lectores técnicos y no técnicos encuentren la misma información sobre roles, servicios, vistas y despliegue.
       </td>
     </tr>
   </tbody>
