@@ -7935,7 +7935,7 @@ Las Style Guidelines establecen los criterios visuales y de interacción que dan
 | Primario (marca) | <img src="assets/capitulo-06/colores/087F83.png" width="28" alt="#087F83"> | `#087F83` | Botones principales, enlaces, ítem activo de navegación, ícono de marca |
 | Primario oscuro | <img src="assets/capitulo-06/colores/052B39.png" width="28" alt="#052B39"> | `#052B39` | Texto principal, encabezados, tarjetas destacadas (resultado de la asesoría de llegada), sidebar |
 | Superficie oscura | <img src="assets/capitulo-06/colores/073B4C.png" width="28" alt="#073B4C"> | `#073B4C` | Tarjetas de resumen y secciones oscuras de la Landing Page |
-| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola web de operación |
+| Fondo oscuro profundo | <img src="assets/capitulo-06/colores/031B25.png" width="28" alt="#031B25"> | `#031B25` | Barra lateral de la consola web de plataforma |
 | Acento suave | <img src="assets/capitulo-06/colores/DDF3F1.png" width="28" alt="#DDF3F1"> | `#DDF3F1` | Avisos informativos, chips activos, fondos de íconos |
 | Fondo de pantalla | <img src="assets/capitulo-06/colores/F3F7F6.png" width="28" alt="#F3F7F6"> | `#F3F7F6` | Fondo general de las aplicaciones |
 | Superficie | <img src="assets/capitulo-06/colores/FFFFFF.png" width="28" alt="#FFFFFF"> | `#FFFFFF` | Tarjetas, formularios, modales |
@@ -7998,7 +7998,7 @@ Los textos se alinean a la izquierda, con línea de altura cómoda (aprox. 1.4 a
 
 **Forma, espacio y elevación.** Las tarjetas y los modales usan esquinas muy redondeadas (aprox. 16–24 px), los botones y campos esquinas medias (aprox. 12 px) y los chips de estado forma de píldora. La separación entre elementos sigue una escala de múltiplos de 4 u 8 px. La elevación es mínima: las tarjetas se distinguen por un borde fino (`#CEDDDA`) y una sombra muy suave, y los modales se apoyan en un fondo atenuado.
 
-**Voz y tono.** El inglés (en_US) es el idioma por defecto de todos los productos y el español latinoamericano (es_419) es la alternativa, que el usuario elige con un selector de idioma en la aplicación y en la consola. En ambos idiomas los textos se redactan en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la consola ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
+**Voz y tono.** El inglés (en_US) es el idioma por defecto de todos los productos y el español latinoamericano (es_419) es la alternativa, que el usuario elige con un selector de idioma en la aplicación y en la consola de plataforma. En ambos idiomas los textos se redactan en segunda persona y con frases cortas. Se evita el lenguaje técnico en la aplicación del conductor ("¿Encontraré espacio al llegar?") y se usa vocabulario operativo preciso en la vista de administración ("Aforo", "Saturación prevista", "Incidencias"). Las estimaciones se presentan siempre como estimaciones: incluyen el nivel de confianza, la antigüedad del dato y, cuando corresponde, la advertencia de historial limitado. Los mensajes de privacidad son explícitos y breves.
 
 **Imágenes y datos.** La Landing Page usa fotografía de campus y de trabajo en equipo en tonos cálidos, con superposiciones oscuras de color petróleo para asegurar la lectura del texto. En las aplicaciones no se usan fotografías; los datos se presentan con cifras grandes, barras de progreso, gráficos de línea simples y planos esquemáticos del estacionamiento.
 
@@ -8009,10 +8009,10 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 | Producto | Dispositivo principal | Usuario | Patrón de diseño |
 |---|---|---|---|
 | Landing Page | Navegador web (escritorio y móvil) | Visitante: conductor o institución | Página de desplazamiento vertical con secciones, llamadas a la acción por segmento y formulario de contacto |
-| Aplicación móvil del conductor | Teléfono (Android e iOS, Flutter) | Conductor de la comunidad educativa | Navegación inferior de cuatro destinos |
-| Consola web de operación | Navegador web de escritorio y, durante el turno, del teléfono (responsive) | Administrador de estacionamientos universitarios (roles de administrador y operador) | Panel con barra lateral oscura en escritorio; navegación inferior de cinco destinos en la vista móvil |
+| Aplicación móvil | Teléfono (Android e iOS, Flutter) | Conductor de la comunidad educativa (vista del conductor) y administrador de estacionamientos universitarios, con los roles de administrador y operador (vista de administración) | Navegación inferior de cuatro destinos en la vista del conductor y de cinco en la vista de administración |
+| Consola web de plataforma | Navegador web de escritorio | Equipo de Integra Labs (rol PLATFORM_ADMIN); herramienta interna, no es un segmento objetivo | Panel con barra lateral oscura, tarjetas de indicadores y tablas con filtros |
 
-**Aplicación móvil del conductor.**
+**Aplicación móvil: vista del conductor.**
 - *Navegación.* Barra inferior con cuatro destinos: Inicio, Zonas, Predicción y Alertas. El destino activo se resalta en teal con ícono y etiqueta. El ícono de perfil del encabezado abre la hoja "Tu cuenta", con el selector de idioma, el acceso a las notificaciones, el estacionamiento predeterminado y el cierre de sesión. El selector "Elegir estacionamiento" lista los estacionamientos de la institución agrupados por sede (por ejemplo, Monterrico o San Isidro).
 - *Pantalla de inicio.* Una tarjeta oscura central responde la pregunta "¿Encontraré espacio al llegar?" con el porcentaje, la categoría, el tiempo de llegada "calculado en tu dispositivo" y la confianza. Debajo se muestran los horizontes de 15, 30, 45 y 60 minutos como fichas coloreadas por categoría. El botón "Cómo llegar" abre Waze o Google Maps con el estacionamiento como destino. Si el conductor deniega el permiso de ubicación, la aplicación muestra los cuatro horizontes con el aviso "Activa tu ubicación para ver la asesoría de llegada".
 - *Acceso.* El inicio de sesión es de dos pasos: correo institucional y código de verificación de seis dígitos con cuenta regresiva para reenviar. Un aviso explica que, si la conexión se interrumpe, el código se conserva y se reintenta.
@@ -8022,12 +8022,17 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 - *Estados transversales.* La disponibilidad y las predicciones se actualizan en tiempo real (WebSocket) sin recargar la pantalla. Indicador "En línea", aviso ámbar con la antigüedad cuando los datos están desactualizados, y modo sin conexión que conserva la última consulta con su marca de tiempo (TS13).
 - *Interacción.* Objetivos táctiles de al menos 44 × 44 px, acciones principales en la mitad inferior de la pantalla y un único botón primario por vista.
 
-**Consola web de operación (administradores y operadores de cada universidad).**
-- *Navegación.* Un único menú con las mismas secciones en todos los tamaños de pantalla: Inicio de operación, Estacionamientos y zonas, Accesos, Sensores y gateways, Analítica y Más (calendario del campus, dominios institucionales y equipo). En escritorio se presenta como barra lateral oscura fija con las etiquetas completas (los wireframes de escritorio, centrados en el inventario de dispositivos, muestran Inicio de operación, Estacionamientos y zonas y Sensores y gateways), con contenido en tarjetas de indicadores y tablas con filtros. En el teléfono, la misma consola web se adapta con cinco destinos inferiores: Inicio, Zonas, Accesos, Analítica y Más; dentro de Más se encuentran Dispositivos (sensores y gateways) y la administración del campus y del equipo. Un selector de sede en el encabezado agrupa y filtra los estacionamientos de la institución; el ámbito siempre es la institución del usuario (CON-08). El menú de la cuenta (avatar) incluye el selector de idioma.
-- *Roles.* El administrador accede a todas las secciones; el operador accede al monitoreo del turno (inicio, zonas, accesos y alertas) y no ve las acciones de configuración. Ambos roles trabajan solo en la consola web; la aplicación móvil es exclusiva de los conductores.
-- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos. Los indicadores se actualizan en tiempo real (WebSocket) y la consola recibe notificaciones web push de poca disponibilidad y de datos desactualizados por zona.
+**Aplicación móvil: vista de administración (administradores y operadores de cada universidad).**
+- *Navegación.* Barra inferior con cinco destinos: Inicio (turno), Zonas, Accesos, Analítica y Más; dentro de Más se encuentran Dispositivos (sensores y gateways) y la administración del campus y del equipo (calendario del campus, dominios institucionales e invitaciones). Un selector de sede en el encabezado agrupa y filtra los estacionamientos de la institución; el ámbito siempre es la institución del usuario (CON-08). El menú de la cuenta (avatar) incluye el selector de idioma. La aplicación abre la vista del conductor o la de administración según el rol de la sesión.
+- *Roles.* El administrador accede a todas las secciones; el operador accede al monitoreo del turno (inicio, zonas, accesos y alertas) y no ve las acciones de configuración, como el editor de distribución. El conductor solo ve su propia vista.
+- *Inicio de turno.* Tarjeta de aforo con libres, ocupados y desconocidos; tarjeta de saturación prevista con la zona, la franja y la confianza; lista de alertas por gravedad (rojo para pérdida de señal, ámbar para sensores UNKNOWN) y resumen del flujo de los últimos 15 minutos. Los indicadores se actualizan en tiempo real (WebSocket) y la aplicación recibe notificaciones push de poca disponibilidad y de datos desactualizados por zona.
 - *Gestión de la distribución.* Plano esquemático por zonas, edición mediante hojas inferiores ("Añadir zona", "Añadir espacio"), borrador con número de versión y publicación con una confirmación que resume los cambios. Las acciones con impacto (deshabilitar un espacio) exigen un diálogo de confirmación con botón rojo.
 - *Accesos, dispositivos y analítica.* Flujo en vivo con barras, estado por acceso, salud de sensores y gateways, registro, reemplazo y baja de dispositivos (US32), gráfico de ocupación observada frente a pronóstico, precisión por horizonte y exportación de reporte.
+
+**Consola web de plataforma (equipo de Integra Labs).**
+- *Uso.* Herramienta interna del rol PLATFORM_ADMIN; no forma parte de la oferta a los segmentos objetivo.
+- *Navegación.* Barra lateral oscura fija con Dashboard general, Universidades e Inventario IoT global, y contenido en tarjetas de indicadores y tablas con filtros.
+- *Tareas.* Directorio de universidades con su estado (Activa u Onboarding), alta de una universidad en tres pasos (datos y dominios, primer administrador, crear e invitar) y ficha de cada universidad con sus sedes, estacionamientos, dominios y el estado de la invitación de su primer administrador.
 - *Más (campus y equipo).* Calendario del campus, dominios institucionales con estado de verificación y gestión de invitaciones al equipo.
 
 **Landing Page.**
@@ -8037,7 +8042,7 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 **Comportamiento responsivo.**
 - Móvil (hasta 600 px): una columna, navegación inferior, tarjetas a todo el ancho con 16 px de margen lateral.
 - Tableta (600–1024 px): dos columnas en tarjetas de resumen, navegación inferior o lateral colapsada.
-- Escritorio (más de 1024 px): barra lateral fija en la consola, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
+- Escritorio (más de 1024 px): barra lateral fija en la consola de plataforma, cuadrículas de hasta cuatro columnas, tablas con todas las columnas y ancho máximo de lectura en la Landing Page.
 
 **Componentes comunes.**
 
@@ -8064,9 +8069,9 @@ La solución se compone de tres productos con contextos de uso distintos. Esta s
 *Modales y hojas inferiores.* Hoja deslizable para formularios y detalles en móvil; diálogo centrado para confirmaciones; fondo atenuado y botón de cierre visible.
 
 **Accesibilidad e internacionalización.**
-- Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page y en la consola de operación, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
+- Cumplimiento objetivo de WCAG 2.2 nivel AA en la Landing Page, la aplicación móvil y la consola de plataforma, con atributos ARIA en los elementos interactivos, foco visible y orden de tabulación lógico.
 - El estado nunca depende solo del color; se acompaña de texto, ícono o trama.
-- Los textos están disponibles en en_US (idioma por defecto) y es_419, con un selector de idioma en la aplicación y en la consola, y con formatos de fecha y hora según el idioma.
+- Los textos están disponibles en en_US (idioma por defecto) y es_419, con un selector de idioma en la aplicación y en la consola de plataforma, y con formatos de fecha y hora según el idioma.
 - Los mensajes de error indican qué ocurrió y cómo resolverlo, y los datos desactualizados se señalan siempre con su antigüedad.
 
 **Privacidad en la interfaz.**
@@ -8080,7 +8085,7 @@ Los mensajes sobre el tratamiento de la ubicación aparecen en el inicio de sesi
 
 Quadrapp combina diferentes sistemas de organización de acuerdo con el tipo de información y la tarea que realiza el usuario.
 
-- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la consola web se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
+- **Organización jerárquica:** Prioriza la información más relevante. En la aplicación móvil se muestra primero la disponibilidad actual y la información relacionada con la llegada del conductor. En la vista de administración se prioriza el estado general del estacionamiento antes de presentar información más detallada por zona, historial o analítica.
 - **Organización secuencial:** Se utiliza en procesos que requieren completar pasos en un orden determinado, como el inicio de sesión mediante correo institucional, la configuración de un estacionamiento y sus zonas, la incorporación de sensores o el registro de información del calendario académico.
 - **Organización matricial:** Se utiliza principalmente en las vistas de analítica, donde la información puede analizarse combinando diferentes dimensiones como estacionamiento, zona, periodo y versión del modelo de predicción.
 
@@ -8099,7 +8104,7 @@ En la aplicación móvil, la organización está orientada a permitir que el con
 
 ### 6.2.2. Labeling Systems
 
-El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre la aplicación móvil, la consola web y la Landing Page.
+El sistema de etiquetado de Quadrapp busca utilizar términos simples, directos y consistentes entre las vistas de la aplicación móvil, la consola de plataforma y la Landing Page.
 
 Se evita mostrar términos técnicos internos como nombres de servicios, eventos de dominio o tecnologías IoT cuando no son necesarios para que el usuario complete una tarea.
 
@@ -8164,15 +8169,14 @@ Estas etiquetas permiten consultar las predicciones de forma clara para los usua
 
 <br>
 
-**Consola web:**
+**Aplicación móvil, vista de administración:**
 
 Las secciones del menú utilizan etiquetas relacionadas con las tareas del administrador y del operador:
-- Inicio de operación (Inicio en el teléfono)
-- Estacionamientos y zonas (Zonas en el teléfono)
+- Inicio (turno)
+- Zonas
 - Accesos
-- Sensores y gateways (Dispositivos, dentro de Más en el teléfono)
 - Analítica
-- Más: Calendario del campus, Dominios institucionales y Equipo e invitaciones
+- Más: Dispositivos (sensores y gateways), Calendario del campus, Dominios institucionales y Equipo e invitaciones
 
 Dentro de Analítica se utilizan etiquetas como:
 - Historial
@@ -8188,11 +8192,15 @@ En las acciones se utilizan:
 - Registrar evento
 - Registrar dispositivo
 
+**Consola web de plataforma:**
+
+La barra lateral utiliza las etiquetas Dashboard general, Universidades e Inventario IoT global, y las acciones Registrar universidad, Invitar primer administrador y Ver ficha.
+
 De esta manera, las etiquetas describen la acción o información disponible sin obligar al usuario a interpretar términos técnicos.
 
 ### 6.2.3. Searching Systems
 
-El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la consola web se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
+El sistema de búsqueda de Quadrapp está pensado para que conductores y administradores encuentren rápidamente la información que necesitan sin tener que recorrer grandes cantidades de datos. En la aplicación móvil, la búsqueda se centra en localizar estacionamientos, consultar zonas y revisar la disponibilidad actual o futura. En la vista de administración se orienta principalmente a consultar información histórica y analítica mediante filtros relacionados con el estacionamiento, la zona y el periodo de análisis.
 
 Las opciones de búsqueda mantienen las mismas etiquetas utilizadas en el resto de la plataforma, de manera que términos como Estacionamiento, Zona, Disponibilidad, Predicción e Historial se utilicen de forma consistente.
 
@@ -8240,7 +8248,7 @@ La asesoría de llegada utiliza además el tiempo estimado de llegada calculado 
 
 **Consulta del historial de ocupación:**
 
-En la consola web, el módulo de analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
+En la vista de administración, la sección Analítica permite realizar consultas temporales sobre la información histórica de los estacionamientos. El administrador puede establecer un rango de fechas y seleccionar el estacionamiento que desea analizar.
 
 Cuando corresponde, también puede limitar la consulta a una zona específica. Los resultados permiten revisar el comportamiento de la ocupación durante el periodo seleccionado y pueden organizarse por hora o por día para facilitar su interpretación.
 
@@ -8258,7 +8266,7 @@ La búsqueda utiliza el periodo y el estacionamiento seleccionados para mostrar 
 
 **Consulta de precisión de las predicciones:**
 
-La consola web también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
+La vista de administración también permite consultar la precisión de las predicciones generadas por Quadrapp. Esta consulta compara los pronósticos almacenados con la ocupación posteriormente observada.
 
 El administrador puede revisar resultados como el error absoluto medio (MAE) y el porcentaje de predicciones que se encuentran dentro del margen configurado. Los resultados se diferencian por versión del modelo para evitar combinar mediciones correspondientes a versiones distintas.
 
@@ -8272,7 +8280,7 @@ En la aplicación móvil, la sección de alertas concentra las notificaciones pu
 
 En "Alertas y preferencias", el usuario elige qué tipos de alerta recibe y define las franjas horarias en las que desea recibirlas. De esta manera, la sección funciona como un punto central para revisar las alertas relevantes, sin mezclarlas con las consultas normales de estacionamientos y predicciones.
 
-En la consola web, el administrador y el operador reciben notificaciones web push de poca disponibilidad y de datos desactualizados por zona, que también aparecen en la lista de alertas del inicio de operación.
+En la aplicación móvil, el administrador y el operador reciben notificaciones push de poca disponibilidad y de datos desactualizados por zona, que también aparecen en la lista de alertas del inicio de turno.
 
 ### 6.2.4. SEO Tags and Meta Tags
 
@@ -8377,13 +8385,13 @@ La etiqueta canonical permitirá señalar la dirección oficial de la Landing Pa
 
 
 #### Web Application Meta Tags
-La consola administrativa de Quadrapp es una aplicación destinada al personal autorizado de cada institución, por lo que sus vistas privadas no están orientadas al posicionamiento público en buscadores.
+La consola web de plataforma de Quadrapp es una herramienta interna del equipo de Integra Labs, por lo que sus vistas privadas no están orientadas al posicionamiento público en buscadores.
 
 <br>
 
 **Title Tag:**
 
-`<title>Quadrapp Console | Gestión de estacionamientos</title>`
+`<title>Quadrapp Platform Console | Gestión de universidades</title>`
 
 <br>
 
@@ -8392,7 +8400,7 @@ La consola administrativa de Quadrapp es una aplicación destinada al personal a
 ```html
 <meta
   name="description"
-  content="Consola de Quadrapp para supervisar la ocupación, gestionar la configuración y analizar el comportamiento de los estacionamientos universitarios."
+  content="Consola interna de Quadrapp para dar de alta universidades, sus dominios de correo y su primer administrador."
 />
 ```
 
@@ -8439,7 +8447,7 @@ Para esta sección pueden utilizarse etiquetas enfocadas en la aplicación:
 
 ### 6.2.5. Navigation Systems
 
-Los sistemas de navegación de Quadrapp están diseñados para que conductores, administradores y operadores accedan de forma rápida a las funcionalidades que necesitan según su contexto de uso. La aplicación móvil prioriza la consulta de disponibilidad y predicciones antes de llegar al campus, mientras que la consola web facilita el monitoreo y la gestión de los estacionamientos. Por su parte, la Landing Page guía a los visitantes desde la propuesta de valor hacia la descarga de la aplicación o el contacto institucional.
+Los sistemas de navegación de Quadrapp están diseñados para que conductores, administradores y operadores accedan de forma rápida a las funcionalidades que necesitan según su contexto de uso. La aplicación móvil prioriza la consulta de disponibilidad y predicciones antes de llegar al campus, y su vista de administración facilita el monitoreo y la gestión de los estacionamientos; la consola web de plataforma permite al equipo de Integra Labs dar de alta las universidades. Por su parte, la Landing Page guía a los visitantes desde la propuesta de valor hacia la descarga de la aplicación o el contacto institucional.
 
 #### Aplicación Móvil — Conductores de la Comunidad Educativa
 
@@ -8462,22 +8470,31 @@ Inicio → Predicción → Detalle del horizonte / Asesoría de llegada → Cóm
 Esta estructura mantiene como prioridad la información necesaria para que el conductor pueda anticipar las condiciones del estacionamiento antes de llegar al campus.
 
 
-#### Consola Web — Administradores y Operadores
+#### Aplicación Móvil — Administradores y Operadores
 
 | Elemento de Navegación | Descripción |
 |---|---|
-| **Menú de la consola** | Proporciona acceso permanente a las secciones de la consola: Inicio de operación, Estacionamientos y zonas, Accesos, Sensores y gateways, Analítica y Más (calendario del campus, dominios institucionales y equipo). En escritorio es una barra lateral persistente; en el teléfono, la misma consola web responsive muestra cinco destinos inferiores (Inicio, Zonas, Accesos, Analítica y Más), y Sensores y gateways se consulta como Dispositivos dentro de Más. |
+| **Barra de navegación** | Proporciona acceso permanente a las secciones de la vista de administración con cinco destinos inferiores: Inicio (turno), Zonas, Accesos, Analítica y Más; dentro de Más se encuentran Dispositivos (sensores y gateways), el calendario del campus, los dominios institucionales y el equipo. |
 | **Selectores del encabezado** | El selector de sede agrupa y filtra los estacionamientos de la institución, y el menú de la cuenta incluye el selector de idioma (inglés por defecto o español). |
-| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista, actualizada en tiempo real (WebSocket). Las notificaciones web push de poca disponibilidad y de datos desactualizados por zona llevan a esta vista. |
-| **Navegación jerárquica** | La consola sigue la jerarquía Institución → Estacionamiento → Zona → Nivel → Espacio. Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
+| **Dashboard de operación** | Funciona como vista principal durante la operación del estacionamiento. Presenta información como capacidad total, espacios libres, ocupados y desconocidos, flujo de entradas y salidas y saturación prevista, actualizada en tiempo real (WebSocket). Las notificaciones push de poca disponibilidad y de datos desactualizados por zona llevan a esta vista. |
+| **Navegación jerárquica** | La vista de administración sigue la jerarquía Institución → Estacionamiento → Zona → Nivel → Espacio. Desde un estacionamiento se puede acceder progresivamente a su configuración, zonas, espacios, accesos y dispositivos asociados, manteniendo clara la relación entre los elementos. |
 | **Navegación contextual** | Las acciones relacionadas con un elemento aparecen dentro de su propia vista. Por ejemplo, desde la configuración de un estacionamiento se puede gestionar su distribución sin trasladarse a una sección independiente. |
 | **Filtros de analítica** | Las vistas históricas permiten ajustar la información mostrada según estacionamiento, zona y periodo. En el análisis de precisión, los resultados también pueden diferenciarse por versión del modelo. |
-| **Estado de la sección activa** | El menú mantiene resaltado el módulo actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la consola. |
+| **Estado de la sección activa** | La barra de navegación mantiene resaltado el destino actual para que el administrador pueda reconocer fácilmente dónde se encuentra dentro de la aplicación. |
 
 El dashboard concentra la información necesaria para supervisar el estacionamiento durante la operación, incluyendo disponibilidad, flujo y posibles situaciones de saturación.
 
 Las funcionalidades administrativas se organizan de forma progresiva para evitar mezclar la operación diaria con tareas de configuración. El administrador puede registrar estacionamientos y posteriormente configurar los elementos que pertenecen a ellos, como zonas, espacios y dispositivos.
 
+
+#### Consola Web de Plataforma — Equipo de Integra Labs
+
+| Elemento de Navegación | Descripción |
+|---|---|
+| **Barra lateral** | Proporciona acceso permanente a Dashboard general, Universidades e Inventario IoT global. |
+| **Directorio de universidades** | Lista las universidades con su estado (Activa u Onboarding) y permite buscar, filtrar por estado y abrir la ficha de cada una. |
+| **Alta de universidad** | Formulario en tres pasos (datos y dominios, primer administrador, crear e invitar) que valida que ningún dominio pertenezca a otra universidad. |
+| **Ficha de universidad** | Muestra las sedes, los estacionamientos, los dominios con su validación y el estado de la invitación del primer administrador. |
 
 #### Landing Page — Visitantes
 
