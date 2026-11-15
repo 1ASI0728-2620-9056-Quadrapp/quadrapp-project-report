@@ -9082,6 +9082,29 @@ El equipo adopta convenciones comunes para que el código de los distintos compo
 
 #### 7.2.1.2. Sprint Backlog 1
 
+Se presenta el sprint backlog del Sprint 1 de Quadrapp, que reúne las historias de usuario y los work items planificados para el desarrollo de las funcionalidades de nuestro alcance. Cada historia se descompone en una tarea con su estimación en story points, el integrante responsable y su estado actual al cierre del sprint.
+
+| US ID | US Title | Task ID | Task Title | Estimation | Assigned | Status |
+|---|---|---|---|---|---|---|
+| US25 | Conocer la propuesta de valor en la Landing Page | T01 | Implementar sección de propuesta de valor en la Landing Page | 3 | Alessandra Becerra | Done |
+| US26 | Acceder a la aplicación como visitante del segmento conductores | T02 | Implementar acceso a la aplicación para visitantes conductores | 2 | Alessandra Becerra | Done |
+| US27 | Conocer la propuesta institucional como visitante del segmento administradores | T03 | Implementar sección institucional para administradores | 2 | Marcia Melgarejo | Done |
+| US28 | Consultar los términos y la política de privacidad | T04 | Implementar páginas de términos y política de privacidad | 2 | Marcia Melgarejo | Done |
+| US16 | Registrar estacionamiento universitario | T05 | Implementar registro de estacionamientos | 3 | Alvaro Bejarano | Done |
+| US17 | Configurar zonas y espacios | T06 | Implementar configuración de zonas y espacios | 5 | Alvaro Bejarano | Done |
+| US19 | Configurar accesos vehiculares | T07 | Implementar configuración de accesos de entrada y salida | 3 | Pedro Nanfuñay | Done |
+| US30 | Gestionar los dominios de correo habilitados | T08 | Implementar gestión de dominios de correo institucional | 3 | Pedro Nanfuñay | Done |
+| US31 | Invitar administradores y operadores | T09 | Implementar invitación de administradores y operadores | 3 | Piero Sulca | Done |
+| TS15 | Aprovisionamiento de una institución | T10 | Implementar proceso de aprovisionamiento de instituciones | 5 | Piero Sulca | Done |
+| TS01 | Configuración de autenticación y gestión de sesiones | T11 | Implementar autenticación y gestión de sesiones | 5 | Marcia Melgarejo | In Progress |
+| US35 | Registrar el calendario académico y los eventos del campus | T12 | Implementar registro de calendario académico y eventos | 3 | Alessandra Becerra | In Progress |
+| US32 | Registrar y dar de baja dispositivos | T13 | Implementar registro, reemplazo y baja de dispositivos | 3 | Pedro Nanfuñay | In Progress |
+| US20 | Monitorear salud de sensores | T14 | Implementar visualización del estado de salud de sensores | 3 | Alessandra Becerra | In Progress |
+
+<img src="assets/capitulo-07/trellosprint.jpeg" alt="Foto trello del sprint1" width="500"/>
+
+Link Trello: [https://trello.com/invite/b/6aaf39688414fee95fc05791/ATTI44d4d18f5ffd5940f736b452f231860eE96CB025/quadrapp-product-backlog](https://trello.com/invite/b/6aaf39688414fee95fc05791/ATTI44d4d18f5ffd5940f736b452f231860eE96CB025/quadrapp-product-backlog)
+
 #### 7.2.1.3. Development Evidence for Sprint Review
 
 #### 7.2.1.4. Testing Suite Evidence for Sprint Review
