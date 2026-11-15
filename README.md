@@ -9051,28 +9051,105 @@ Con estas prácticas, Quadrapp busca mantener un desarrollo colaborativo y orden
 
 ### 7.1.3. Source Code Style Guide & Conventions
 
-El equipo adopta convenciones comunes para que el código de los distintos componentes sea uniforme y fácil de revisar. Las tecnologías siguen las restricciones CON-12 a CON-14 del capítulo IV.
+El equipo nombra en inglés todos los elementos del código (paquetes, clases, métodos, variables, tablas, columnas, endpoints y archivos) y adopta una guía estándar por lenguaje. Los textos que ve el usuario no forman parte de esta regla: se gestionan como traducciones (en_US por defecto y es_419). Las tecnologías siguen las restricciones CON-12 a CON-14 del capítulo IV.
 
-| Componente | Repositorio | Tecnología |
-| --- | --- | --- |
-| Backend | `quadrapp-backend` | Java 21 y Spring Boot 3, construido con Maven |
-| Aplicación móvil | `quadrapp-frontend-mobile` | Dart y Flutter |
-| Landing Page | `Landing_Page` | Astro, con salida estática en HTML5, CSS3 y JavaScript |
-
-**Estructura del backend.** El paquete base es `com.upc.quadrapp`. Cada bounded context es un módulo con su propio paquete (`iam`, `occupancy`, `parkingconfiguration`, `parkingsensing` y `prediction`), y existe un paquete `shared` para lo común. Dentro de cada módulo el código se separa por capas, por ejemplo `application` y `domain`, y en el dominio se distinguen `model/aggregates` y `model/commands`.
-
-**Nomenclatura.** Las clases usan PascalCase y los comandos del dominio se nombran con la forma verbo + sustantivo + `Command`, por ejemplo `InviteUserCommand`, `RequestOtpCommand` y `SignInCommand`. Los agregados llevan el nombre del concepto del dominio (`Institution`, `User`). `[completar: convención para variables, métodos, pruebas y base de datos]`
+| Lenguaje | Dónde se usa | Guía adoptada | Convenciones del proyecto |
+| --- | --- | --- | --- |
+| Java | Web Services (Spring Boot) | [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) | Un paquete por Bounded Context (`com.upc.quadrapp.<context>`) con las capas `domain`, `application`, `infrastructure` e `interfaces`. Clases en PascalCase con el sufijo de su rol (`CommandService`, `QueryService`, `Controller`, `Resource`, `Assembler`, `Adapter`, `Port`); comandos, consultas y eventos con nombres del lenguaje ubicuo (`ScheduleCalendarEventCommand`, `GetZonesByParkingLotQuery`, `SensorStateChanged`). Los módulos solo se comunican por su fachada (`interfaces.acl`) y sus eventos publicados (`domain.model.events`). |
+| SQL | Migraciones de PostgreSQL (Flyway) | [SQL Style Guide (Simon Holywell)](https://www.sqlstyle.guide/) | Un esquema por Bounded Context; tablas y columnas en snake_case y en plural para las tablas; restricciones e índices nuevos con prefijo según su tipo (`fk_`, `uk_`, `ck_`, `idx_`), mientras las heredadas del esquema inicial conservan el nombre que les dio PostgreSQL; archivos `V<n>__<descripcion>.sql` que nunca se editan una vez aplicados. |
+| Dart | Mobile Application (Flutter) | [Effective Dart](https://dart.dev/effective-dart/style) | Reglas de análisis de `very_good_analysis`; archivos y carpetas en snake_case, tipos en UpperCamelCase y miembros en lowerCamelCase; código organizado por Bounded Context (`lib/contexts/<context>`) y composición de pantallas en `lib/composition`. |
+| TypeScript y Astro | Landing Page | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) | Componentes `.astro` en PascalCase; utilidades en camelCase. |
+| HTML y CSS | Landing Page | [Google HTML/CSS Style Guide](https://google.github.io/styleguide/htmlcssguide.html) | HTML semántico con atributos de accesibilidad; clases CSS en kebab-case. |
+| TypeScript y Vue | Web Application (consola de plataforma) | [Vue Style Guide](https://vuejs.org/style-guide/) y [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) | Componentes de varias palabras en PascalCase, props en camelCase dentro del script y en kebab-case en las plantillas. |
+| Python | Simulador IoT y entrenamiento del modelo | [PEP 8](https://peps.python.org/pep-0008/) | Módulos y funciones en snake_case, clases en PascalCase y constantes en mayúsculas. |
+| C++ | Firmware de los nodos ESP32 | [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) | Tipos en PascalCase, funciones en PascalCase y variables en snake_case, según la guía. |
+| Gherkin | Escenarios de aceptación (`.feature`) | [Gherkin Conventions for Readable Specifications](https://specflow.org/gherkin/gherkin-conventions-for-readable-specifications/) | Un `Feature` por User Story; escenarios declarativos con `Given`, `When` y `Then` en tercera persona y en presente; un solo `When` por escenario y `Scenario Outline` con `Examples` cuando cambian solo los datos. |
 
 **Estructura de la Landing Page.** El código está en `src`, con los componentes en `components` (un archivo `.astro` en PascalCase por sección, como `Hero.astro` y `FaqSection.astro`), las plantillas en `layouts`, la página en `pages/index.astro` y los estilos en `styles/global.css`.
 
-**Servicios web, idioma y accesibilidad.** Los servicios siguen el estilo RESTful y se documentan con OpenAPI (CON-12). Los textos se entregan en inglés y en español latinoamericano, y la Landing Page y la consola cumplen el nivel AA de la WCAG 2.2 (CON-11).
+**Servicios web y accesibilidad.** Los servicios siguen el estilo RESTful y se documentan con OpenAPI (CON-12). La Landing Page y la consola web cumplen el nivel AA de la WCAG 2.2 (CON-11).
 
-**Control de versiones.** El equipo usa GitHub en la organización del proyecto. Cada integrante trabaja en ramas `feature/` o `fix/` por tarea, registra sus cambios con Conventional Commits en inglés y abre Pull Requests hacia `develop`, que se integran mediante merge commit para conservar la autoría de cada aporte. Las entregas se integran en `main`. En el backend, los commits usan como alcance el bounded context, por ejemplo `fix(iam): answer internal errors with 500 instead of a 409 conflict`. `[completar: herramientas de formato o linter, si las usan]`
+**Control de versiones.** El equipo usa GitHub en la organización del proyecto. Cada integrante trabaja en ramas `feature/` o `fix/` por tarea, registra sus cambios con Conventional Commits en inglés y abre Pull Requests hacia `develop`, que se integran mediante merge commit para conservar la autoría de cada aporte. Las entregas se integran en `main`. En el backend, los commits usan como alcance el bounded context, por ejemplo `fix(iam): answer internal errors with 500 instead of a 409 conflict`.
 
 ---
 
 ### 7.1.4. Software Deployment Configuration
 
+La primera versión desplegada sigue la arquitectura de despliegue de la sección 4.3.4 y la decisión D7b, con un cambio: la instancia es una `t4g.small` (ARM64) en lugar de la `c7i-flex.large`, porque cubre la carga del prototipo a menos de un tercio del costo. Se despliegan tres productos: la Landing Page, los Web Services con el broker MQTT y la base de datos, y la aplicación móvil.
+
+#### Landing Page
+
+| Elemento | Configuración |
+| --- | --- |
+| Repositorio | `Landing_Page` (Astro) |
+| Plataforma | Netlify, como sitio estático |
+| Build | `npm run build` (`astro build`); Netlify publica la carpeta `dist` |
+| URL | [https://tubular-chebakia-191aa8.netlify.app](https://tubular-chebakia-191aa8.netlify.app) |
+
+#### Web Services, broker MQTT y base de datos
+
+Todo el backend corre en una sola instancia EC2 de AWS con Docker Compose. Los archivos de despliegue están en la carpeta `deploy/` del repositorio `quadrapp-backend`.
+
+| Recurso de AWS | Configuración |
+| --- | --- |
+| Región | `us-east-1` |
+| Instancia EC2 | `t4g.small` (AWS Graviton, ARM64, 2 vCPU, 2 GiB), Ubuntu Server 24.04 LTS, disco gp3 de 30 GB cifrado, IMDSv2 obligatorio, créditos de CPU en modo estándar y 2 GB de swap |
+| Elastic IP | `54.198.188.252`, para que los nombres de host no cambien al detener la instancia |
+| Nombres de host | `api.54-198-188-252.sslip.io` (API REST y WebSocket) y `mqtt.54-198-188-252.sslip.io` (broker), resueltos por el servicio sslip.io sin dominio propio |
+| Security group | Entrada solo por 443/tcp (HTTPS, IPv4 e IPv6) y 8883/tcp (MQTT con TLS). Los puertos 22 y 80 están cerrados: la administración se hace con AWS Systems Manager Session Manager y Caddy valida los certificados con el desafío TLS-ALPN en el puerto 443 |
+| Rol de la instancia | Session Manager, lectura de los parámetros `/quadrapp/prod/*` y escritura en el bucket de respaldos |
+| SSM Parameter Store | Siete parámetros `SecureString` bajo `/quadrapp/prod/`: `POSTGRES_PASSWORD`, `JWT_SECRET_BASE64`, `OTP_HASH_PEPPER_BASE64`, `MQTT_ADMIN_PASSWORD`, `MQTT_BACKEND_PASSWORD`, `MAIL_USERNAME` y `MAIL_PASSWORD`. Los valores que no son secretos (dominios, correo de Let's Encrypt, remitente y bucket) quedan en el archivo `.env` de la instancia |
+| S3 | Bucket privado para los respaldos de PostgreSQL, con una regla que elimina los archivos de `postgres/` a los 30 días |
+| AWS Budgets | Presupuesto mensual de US$20 con alerta por correo |
+
+Contenedores definidos en `deploy/docker-compose.yml`:
+
+| Servicio | Imagen | Puerto publicado | Límite de memoria | Función |
+| --- | --- | --- | --- | --- |
+| `caddy` | `caddy:2.11-alpine` | 443/tcp | 128 MB | HTTPS con certificados de Let's Encrypt y proxy inverso hacia el backend |
+| `backend` | `ghcr.io/1asi0728-2620-9056-quadrapp/quadrapp-backend:sha-<commit>` | ninguno | 896 MB | Web Services (Spring Boot), API REST en `/api/v1`, WebSocket STOMP en `/ws` y documentación OpenAPI en `/swagger-ui.html` |
+| `mosquitto` | `eclipse-mosquitto:2.1-alpine` | 8883/tcp | 128 MB | Broker MQTT 5 con TLS, plugin de seguridad dinámica y persistencia en SQLite |
+| `postgres` | `postgres:16-alpine` | ninguno | 512 MB | Base de datos, con un esquema por Bounded Context creado por Flyway |
+
+- **Una sola instancia del backend.** El almacén de códigos OTP y el estado de los sensores todavía se guardan en memoria, así que el backend corre con el perfil `dev` y sin réplicas. La segunda réplica (QAS-04) llega en el Sprint 2, cuando esos almacenes sean persistentes.
+- **Credenciales MQTT por gateway (D7a).** El script `deploy/scripts/add-gateway.sh <tenantId> <gatewayId>` crea un cliente que solo puede publicar en `quadrapp/<tenantId>/<gatewayId>/#` y que debe conectarse con el client id `gw-<tenantId>-<gatewayId>`. El backend tiene su propio cliente, que solo se suscribe. Mosquitto usa el certificado que Caddy obtiene para el nombre del broker.
+- **Correo.** Los códigos de acceso y las invitaciones salen por el relay SMTP de Brevo (`smtp-relay.brevo.com:587` con STARTTLS). El remitente verificado es una dirección de Gmail, así que algunos correos pueden llegar a spam.
+
+#### Integración y despliegue continuos
+
+El workflow `.github/workflows/backend-image.yml` de GitHub Actions construye y despliega el backend:
+
+1. **Pruebas.** Cada push a `develop` o `main` ejecuta `./mvnw test`, con PostgreSQL en Testcontainers.
+2. **Imagen.** Si las pruebas pasan, construye la imagen para `linux/arm64` y `linux/amd64` y la publica en GitHub Container Registry con las etiquetas `sha-<commit>` y el nombre de la rama.
+3. **Despliegue.** Solo en `main`: GitHub Actions obtiene credenciales temporales de AWS por OIDC para el rol `quadrapp-github-deploy`, sin claves guardadas. El rol solo puede ejecutar comandos en la instancia mediante Systems Manager. En la instancia, `deploy/scripts/deploy.sh` vuelca los secretos de Parameter Store al `.env`, descarga la imagen nueva, levanta los contenedores y espera hasta 180 segundos a que `/v3/api-docs` responda 200. Si no responde, vuelve a la imagen anterior y el job falla.
+
+El trust policy del rol solo acepta la rama `main` de este repositorio, con el identificador inmutable `repo:1ASI0728-2620-9056-Quadrapp@328915374/quadrapp-backend@1450555298:ref:refs/heads/main`. Solo se despliega un commit a la vez y siempre el último de `main`. El rollback solo revierte la imagen: las migraciones de Flyway quedan aplicadas, así que cada migración debe seguir funcionando con la versión anterior.
+
+El primer despliegue automático (run 43660210605, commit `f4cb29f`) tardó unos 6,5 minutos desde el merge: 2 min 37 s de pruebas, 3 min 2 s de imagen y 41 s de despliegue. La rama `develop` solo construye su imagen y no se despliega.
+
+#### Aplicación móvil
+
+La aplicación Flutter se compila apuntando a la API desplegada; la URL base incluye `/api/v1` y la conexión STOMP se deriva de ella (`wss://api.54-198-188-252.sslip.io/ws`):
+
+```bash
+flutter build apk --release --dart-define=API_BASE_URL=https://api.54-198-188-252.sslip.io/api/v1
+```
+
+#### Costo estimado
+
+| Concepto | Costo mensual aproximado (on-demand, `us-east-1`) |
+| --- | --- |
+| EC2 `t4g.small` | US$12,3 |
+| EBS gp3 de 30 GB | US$2,4 |
+| Dirección IPv4 pública (Elastic IP) | US$3,6 |
+| S3, Parameter Store y transferencia de datos | Despreciable a esta escala |
+| **Total** | **≈ US$18,4** (con una `c7i-flex.large` sería ≈ US$62) |
+
+El costo se cubre con los créditos del plan gratuito de la cuenta nueva de AWS.
+
+#### Operación manual
+
+Al ser un prototipo, la copia de PostgreSQL a S3 (`deploy/scripts/backup-db.sh`) y el reinicio del broker tras renovar su certificado (`deploy/scripts/renew-mqtt-cert.sh`) se ejecutan a mano cuando hacen falta, sin tareas programadas. La consola web de plataforma, de uso interno de Integra Labs (S3 y CloudFront), y la segunda réplica del backend llegan en el Sprint 2.
 
 ## 7.2. Solution Implementation
 
