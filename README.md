@@ -9081,6 +9081,10 @@ El equipo nombra en inglés todos los elementos del código (paquetes, clases, m
 
 La primera versión desplegada sigue la arquitectura de despliegue de la sección 4.3.4 y la decisión D7b, con un cambio: la instancia es una `t4g.small` (ARM64) en lugar de la `c7i-flex.large`, porque cubre la carga del prototipo a menos de un tercio del costo. Se despliegan tres productos: la Landing Page, los Web Services con el broker MQTT y la base de datos, y la aplicación móvil.
 
+El Deployment Diagram del C4 Model (sección 4.3.4) muestra dónde se ejecuta cada contenedor:
+
+![Deployment diagram de Quadrapp - Producción](assets/capitulo-04/c4/c4-deployment.png)
+
 #### Landing Page
 
 | Elemento | Configuración |
@@ -9188,7 +9192,196 @@ Link Trello: [https://trello.com/invite/b/6aaf39688414fee95fc05791/ATTI44d4d18f5
 
 #### 7.2.1.3. Development Evidence for Sprint Review
 
+En el Sprint 1 se implementaron la primera versión desplegada de los Web Services, la conexión de la aplicación móvil con ellos y la Landing Page:
+
+- **Web Services (`quadrapp-backend`).** Spring Boot con un módulo por Bounded Context (IAM, Parking Configuration, Parking Sensing, Occupancy y Prediction & Advisory), verificados con Spring Modulith y comunicados por eventos. Incluye el acceso sin contraseña con códigos de un solo uso, el aprovisionamiento de instituciones, dominios e invitaciones, la configuración de estacionamientos, zonas, niveles, espacios y accesos, el registro de dispositivos, la ingesta de lecturas por MQTT, la ocupación en tiempo real por WebSocket y las predicciones con el modelo ONNX. También incluye el despliegue continuo en AWS, el script de datos iniciales y el simulador de sensores.
+- **Aplicación móvil (`quadrapp-frontend-mobile`).** La vista del conductor (mapa, ocupación, predicción y asesoría de llegada) conectada a la API desplegada, con actualización en tiempo real.
+- **Landing Page (`Landing_Page`).** El sitio estático en Astro publicado en Netlify.
+
+La tabla agrupa los commits por unidad de trabajo integrada mediante Pull Request: cada fila muestra el commit principal de la rama y resume en el cuerpo lo que reúne. Los repositorios pertenecen a la organización [1ASI0728-2620-9056-Quadrapp](https://github.com/1ASI0728-2620-9056-Quadrapp).
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on (Date) |
+| --- | --- | --- | --- | --- | --- |
+| quadrapp-backend | develop | f6eabb5 | chore: initial setup | Proyecto Spring Boot con Maven y la estructura base por capas. | 08/11/2026 |
+| quadrapp-backend | develop | 4e68ef9 | feat(develop): add iam bounded context. | Instituciones, usuarios, invitaciones y autenticación por código de un solo uso. | 09/11/2026 |
+| quadrapp-backend | feature/parking-configuration | 9549b85 | feat(parking-configuration): add parking configuration bounded context. | Estacionamientos, zonas, niveles, espacios, accesos y calendario académico. | 09/11/2026 |
+| quadrapp-backend | feature/parking-sensing | 61b1845 | feat(parking-sensing): add parking sensing bounded context. | Dispositivos, lecturas de sensores e incidentes. | 10/11/2026 |
+| quadrapp-backend | develop | 0a151a3 | fead add: bonded occupancy | Estructura inicial del Bounded Context Occupancy. | 13/11/2026 |
+| quadrapp-backend | develop | 9ed9508 | fead add: bounded prediction | Estructura inicial del Bounded Context Prediction & Advisory. | 13/11/2026 |
+| quadrapp-backend | feature/module-schemas-flyway | 9a816c7 | feat(persistence): add per-module schemas with flyway migrations | Un esquema de PostgreSQL por Bounded Context con migraciones de Flyway (4 commits). | 13/11/2026 |
+| quadrapp-backend | feature/modulith-base | 03cbb71 | feat(modulith): verify module boundaries with spring modulith | Verificación de los límites entre módulos, publicación de eventos con outbox y tareas programadas en una sola réplica con ShedLock (6 commits). | 14/11/2026 |
+| quadrapp-backend | fix/code-review-iam | d5bed8d | fix(iam): revoke the whole session when a rotated refresh token is reused | Correcciones de la revisión de código de IAM: límite de solicitudes de código, revocación de sesiones, invitaciones pendientes y dominios únicos (8 commits). | 14/11/2026 |
+| quadrapp-backend | fix/code-review-configuration-sensing | a05aaee | fix(configuration): answer not found for parking resources of another institution | Aislamiento por institución, respuestas 404 y rangos de configuración del informe (8 commits). | 14/11/2026 |
+| quadrapp-backend | feature/mqtt-ingestion | 10c3823 | feat(sensing): subscribe to gateway readings over an MQTT 5 shared subscription | Traducción de las lecturas del gateway, procesamiento con reintentos y almacén de mensajes rechazados (6 commits). | 14/11/2026 |
+| quadrapp-backend | feature/occupancy-state | 402e53b | feat(occupancy): own space and lot state with low availability, events and realtime topic | Estado por espacio y estacionamiento, baja disponibilidad, snapshots por minuto y difusión por WebSocket (8 commits). | 14/11/2026 |
+| quadrapp-backend | feature/prediction-runs | 460d906 | feat(prediction): generate forecast runs per slot with weekly fallback, campus-event regeneration, arrival advice and realtime notice | Modelo ONNX en proceso, predicciones cada 5 minutos con respaldo semanal, regeneración por eventos del campus y asesoría de llegada (5 commits). | 14/11/2026 |
+| quadrapp-backend | feature/demo-seed-simulator | 49972fc | feat(tools): add MQTT sensor simulator with campus day curve and confirmed changes | Script de datos iniciales por la API y simulador de sensores por MQTT (3 commits). | 14/11/2026 |
+| quadrapp-backend | feature/deployment | 9885941 | feat(deploy): add docker compose stack with caddy, mosquitto and postgres | Dockerfile multiplataforma, stack de Docker Compose e imagen publicada en GitHub Container Registry (5 commits). | 14/11/2026 |
+| quadrapp-backend | feature/cd | 7a3bf28 | ci(deploy): deploy main to the ec2 instance through ssm with rollback | Despliegue automático de `main` en la EC2 con OIDC, Systems Manager y rollback (2 commits). | 14/11/2026 |
+| quadrapp-frontend-mobile | feature/drivers-view | 6f9f5fe | feat: drivers view | Vistas del conductor con datos simulados. | 30/10/2026 |
+| quadrapp-frontend-mobile | feature/connect-backend | 5dd7eb7 | feat(iam): connect OTP sign-in, token refresh and sign-out to the backend API | Conexión con la API: acceso por código, estacionamientos y layout, ocupación por REST y STOMP, predicciones y asesoría de llegada (5 commits). | 14/11/2026 |
+| Landing_Page | main | 1bde5be | feat: Quadrapp Astro Landing Page | Landing Page en Astro con las secciones de conductores, instituciones y preguntas frecuentes. | 09/10/2026 |
+
 #### 7.2.1.4. Testing Suite Evidence for Sprint Review
+
+Las pruebas automatizadas de los Web Services están en el repositorio [quadrapp-backend](https://github.com/1ASI0728-2620-9056-Quadrapp/quadrapp-backend), junto al código: las clases de prueba en `src/test/java` y los archivos `.feature` en `src/test/resources/features`. Se ejecutan con `./mvnw test`, y GitHub Actions las corre en cada push antes de construir la imagen que se despliega. Al cierre del Sprint 1, la suite tiene **256 pruebas en verde**, organizadas en tres niveles:
+
+| Nivel | Herramientas | Cantidad | Qué cubren |
+| --- | --- | --- | --- |
+| Unit Tests | JUnit 6, AssertJ y Mockito | 23 clases | Reglas de los agregados y servicios de dominio, traducción de mensajes MQTT, seguridad de WebSocket y difusión en tiempo real |
+| Integration Tests | Spring Boot Test, MockMvc y Testcontainers (PostgreSQL 16) | 35 clases | Endpoints REST, persistencia por esquema con Flyway, eventos entre módulos, ingesta MQTT y tareas programadas, contra una base de datos real |
+| Acceptance Tests (BDD) | Cucumber-JVM 8 y Gherkin | 9 escenarios | Criterios de aceptación de las User Stories del Sprint 1 ejecutados contra la API |
+
+Además, `ModularityTest` verifica con Spring Modulith que cada Bounded Context solo use las interfaces publicadas de los demás.
+
+**Unit Tests principales**
+
+| Clase de prueba | Clase probada | Comportamientos verificados |
+| --- | --- | --- |
+| `LotOccupancyTest` | `LotOccupancy` | La disponibilidad se calcula sobre los espacios conocidos; la baja disponibilidad se activa por debajo del umbral y se desactiva cinco puntos por encima; los conteos son la suma de las zonas |
+| `SpaceOccupancyTest` | `SpaceOccupancy` | Un espacio nuevo empieza en estado desconocido; una detección más antigua o repetida no cambia nada; un espacio inactivo nunca cambia de estado |
+| `ParkingLotSettingsTest` | `ParkingLotSettings` | El umbral de baja disponibilidad solo acepta valores entre 5 % y 30 % |
+| `RegisterDeviceCommandTest` | `RegisterDeviceCommand` | Un sensor sin gateway se rechaza |
+| `SensorReadingTranslatorTest` | `SensorReadingTranslator` | Traduce las lecturas de espacio, paso y latido; el gateway se toma del tópico y nunca del contenido del mensaje |
+| `MqttInboundListenerTest` | `MqttInboundListener` | Confirma el mensaje solo después de procesarlo; reintenta los fallos y guarda los mensajes inválidos como rechazados |
+| `ArrivalAdvisorTest` | `ArrivalAdvisor` | Usa el horizonte más corto que cubre el tiempo de llegada; una predicción de respaldo da confianza baja; el tiempo de llegada debe estar entre 0 y 120 minutos |
+| `ForecastDomainServiceTest` | `ForecastDomainService` | La confianza es 1 − MAE/25 acotada entre 0 y 1; una predicción de respaldo siempre tiene confianza baja |
+| `OnnxModelRunnerTest` | `OnnxModelRunner` | Ejecuta el modelo con las variables en el orden de su metadata y carga una versión nueva sin reiniciar |
+| `InMemoryOtpChallengeStoreTest` | `InMemoryOtpChallengeStore` | Rechaza los códigos tras agotar los intentos y limita las solicitudes por ventana de tiempo |
+| `StompAuthorizationInterceptorTest` | `StompAuthorizationInterceptor` | Autentica las tramas STOMP con el token y rechaza las suscripciones con token vencido |
+| `ThrottledOccupancyBroadcasterTest` | `ThrottledOccupancyBroadcaster` | Envía como máximo un cambio por zona y por segundo, y un cambio antiguo nunca reemplaza al estado más reciente |
+
+**Integration Tests principales**
+
+| Clase de prueba | Bounded Context | Comportamientos verificados |
+| --- | --- | --- |
+| `IamResourceEndpointsIntegrationTest` | IAM | Aceptar una invitación sin sesión, verificar dominios solo como administrador de plataforma y filtrar usuarios por correo |
+| `ReinviteUserIntegrationTest`, `RefreshTokenReuseIntegrationTest`, `OtpRequestLimitIntegrationTest` | IAM | Renovar invitaciones pendientes, revocar la sesión si se reutiliza un refresh token y limitar las solicitudes de código |
+| `OtherInstitutionConfigurationIntegrationTest`, `ParkingLotSettingsConstraintIntegrationTest` | Parking Configuration | Aislamiento entre instituciones y rangos válidos de la configuración |
+| `MqttReadingIngestionIntegrationTest`, `SensingEventOutboxIntegrationTest` | Parking Sensing | Lecturas MQTT de punta a punta y entrega de eventos a Occupancy mediante el outbox |
+| `OccupancyStateIntegrationTest`, `OccupancyRestIntegrationTest`, `OccupancyRealtimeIntegrationTest` | Occupancy | Estado por espacio y estacionamiento, consultas REST y difusión por WebSocket |
+| `ForecastRunsIntegrationTest`, `ForecastRunIsolationIntegrationTest`, `ModelForecastAndArrivalAdviceIntegrationTest` | Prediction & Advisory | Predicciones por franja de 5 minutos, aislamiento por estacionamiento, respaldo cuando falla el modelo y asesoría de llegada |
+| `ModuleSchemaMigrationIntegrationTest` | Shared | Un esquema de PostgreSQL por Bounded Context con sus migraciones aplicadas |
+
+**Acceptance Tests (BDD)**
+
+Los archivos `.feature` usan los criterios de aceptación de la sección 3.2 tal como están redactados, en Gherkin en español. Los Steps están en Java (paquete `com.upc.quadrapp.acceptance`) y llaman a la API real con una base de datos PostgreSQL de prueba. En este Sprint se automatizaron el escenario principal y la regla de negocio más importante de cada historia implementada.
+
+| User Story | Archivo `.feature` | Steps | Escenarios |
+| --- | --- | --- | --- |
+| US16 Registrar estacionamiento universitario | `parkingconfiguration/us16_register_parking_lot.feature` | `RegisterParkingLotSteps` | 1 y 3 |
+| US17 Configurar zonas y espacios | `parkingconfiguration/us17_configure_zones_and_spaces.feature` | `ConfigureZonesAndSpacesSteps` | 1 y 3 |
+| US19 Configurar accesos vehiculares | `parkingconfiguration/us19_configure_vehicle_accesses.feature` | `ConfigureVehicleAccessesSteps` | 1 |
+| US30 Gestionar los dominios de correo habilitados | `iam/us30_manage_email_domains.feature` | `ManageEmailDomainsSteps` | 1 y 3 |
+| US31 Invitar administradores y operadores | `iam/us31_invite_administrators_and_operators.feature` | `InviteAdministratorsAndOperatorsSteps` | 1 y 3 |
+
+`parkingconfiguration/us16_register_parking_lot.feature`:
+
+```gherkin
+# language: es
+@US16 @EP04
+Característica: Registrar estacionamiento universitario
+  Como administrador de estacionamientos, quiero registrar los estacionamientos de la universidad para que puedan ser utilizados por Quadrapp.
+
+  Escenario: Escenario 1: Registro exitoso.
+    Dado que el administrador proporciona los datos obligatorios
+    Cuando registra un estacionamiento
+    Entonces el sistema crea el estacionamiento correctamente.
+
+  Escenario: Escenario 3: Registro duplicado.
+    Dado que la institución ya tiene un estacionamiento registrado con el mismo nombre
+    Cuando el administrador intenta registrar otro con ese nombre
+    Entonces el sistema impide la duplicación dentro de esa institución.
+```
+
+`parkingconfiguration/us17_configure_zones_and_spaces.feature`:
+
+```gherkin
+# language: es
+@US17 @EP04
+Característica: Configurar zonas y espacios
+  Como administrador de estacionamientos, quiero configurar las zonas y espacios de cada estacionamiento para representar su distribución física en Quadrapp.
+
+  Escenario: Escenario 1: Crear zona.
+    Dado un estacionamiento registrado en la institución
+    Cuando el administrador crea una nueva zona
+    Entonces la zona queda asociada a ese estacionamiento.
+
+  Escenario: Escenario 3: Espacio duplicado.
+    Dado que un espacio con la misma etiqueta ya existe dentro de la zona
+    Cuando el administrador intenta registrarlo nuevamente
+    Entonces el sistema impide la duplicación.
+```
+
+`parkingconfiguration/us19_configure_vehicle_accesses.feature`:
+
+```gherkin
+# language: es
+@US19 @EP04
+Característica: Configurar accesos vehiculares
+  Como administrador de estacionamientos, quiero configurar los accesos de entrada y salida para registrar los movimientos de vehículos dentro del estacionamiento.
+
+  Escenario: Escenario 1: Registrar acceso.
+    Dado que el administrador configura un nuevo acceso
+    Cuando proporciona sus datos
+    Entonces el acceso queda asociado al estacionamiento correspondiente.
+```
+
+`iam/us30_manage_email_domains.feature`:
+
+```gherkin
+# language: es
+@US30 @EP01
+Característica: Gestionar los dominios de correo habilitados
+  Como administrador de estacionamientos, quiero gestionar los dominios de correo institucional habilitados para mi universidad para controlar quién puede registrarse en Quadrapp.
+
+  Escenario: Escenario 1: Agregar un dominio.
+    Dado que el administrador pertenece a una institución registrada
+    Cuando agrega un dominio de correo institucional
+    Entonces el sistema lo habilita para el registro de nuevos usuarios de esa institución.
+
+  Escenario: Escenario 3: Dominio en uso por otra institución.
+    Dado que el dominio ya está habilitado para otra institución
+    Cuando el administrador intenta agregarlo
+    Entonces el sistema rechaza la solicitud e informa el conflicto.
+```
+
+`iam/us31_invite_administrators_and_operators.feature`:
+
+```gherkin
+# language: es
+@US31 @EP01
+Característica: Invitar administradores y operadores
+  Como administrador de estacionamientos, quiero invitar a otros administradores y a los operadores de mi institución para que accedan a la consola con el rol que les corresponde.
+
+  Escenario: Escenario 1: Invitación enviada.
+    Dado que el administrador indica el correo y el rol de la persona invitada
+    Cuando envía la invitación
+    Entonces el sistema registra la invitación con su vigencia y envía el enlace de acceso a ese correo.
+
+  Escenario: Escenario 3: Invitación vencida.
+    Dado que la invitación superó su periodo de vigencia
+    Cuando la persona invitada intenta utilizarla
+    Entonces el sistema rechaza el acceso e informa que debe solicitar una nueva invitación.
+```
+
+Quedan para el Sprint 2 los escenarios cuyo comportamiento aún no está implementado: la publicación versionada de la distribución (US17, escenario 4), la validación de los sensores direccionales de un acceso (US19, escenarios 2 y 3), el retiro de un dominio (US30, escenario 2) y el aprovisionamiento en una sola operación (TS15).
+
+**Commits relacionados con testing**
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on (Date) |
+| --- | --- | --- | --- | --- | --- |
+| quadrapp-backend | develop | 0a151a3 | fead add: bonded occupancy | Primeras pruebas del Bounded Context Occupancy. | 13/11/2026 |
+| quadrapp-backend | develop | 9ed9508 | fead add: bounded prediction | Primeras pruebas del Bounded Context Prediction & Advisory. | 13/11/2026 |
+| quadrapp-backend | feature/module-schemas-flyway | 9a816c7 | feat(persistence): add per-module schemas with flyway migrations | Pruebas de migración por esquema con Testcontainers. | 13/11/2026 |
+| quadrapp-backend | feature/modulith-base | 03cbb71 | feat(modulith): verify module boundaries with spring modulith | `ModularityTest`, que verifica los límites entre módulos. | 14/11/2026 |
+| quadrapp-backend | fix/code-review-iam | c0b84ae | fix(iam): limit access code requests per email and keep the lockout after failed attempts | Pruebas de los límites de solicitudes de código y del bloqueo tras intentos fallidos. | 14/11/2026 |
+| quadrapp-backend | feature/mqtt-ingestion | c487152 | feat(sensing): process gateway readings with retries and store rejected messages | Pruebas unitarias y de integración de la ingesta MQTT. | 14/11/2026 |
+| quadrapp-backend | feature/occupancy-state | 402e53b | feat(occupancy): own space and lot state with low availability, events and realtime topic | Pruebas de los agregados de ocupación, la baja disponibilidad y la difusión en tiempo real. | 14/11/2026 |
+| quadrapp-backend | feature/prediction-runs | 460d906 | feat(prediction): generate forecast runs per slot with weekly fallback, campus-event regeneration, arrival advice and realtime notice | Pruebas de las corridas de predicción, el respaldo semanal y la asesoría de llegada. | 14/11/2026 |
+| quadrapp-backend | refactor/rest-endpoint-alignment | bd50532 | refactor(iam): align invitation, domain and user endpoints with resource-oriented design | `IamResourceEndpointsIntegrationTest` para las rutas orientadas a recursos. | 14/11/2026 |
+| quadrapp-backend | test/bdd-acceptance | 5468f38 | test(acceptance): add cucumber suite and parking configuration features | Suite de Cucumber y features de US16, US17 y US19. | 14/11/2026 |
+| quadrapp-backend | test/bdd-acceptance | fff558c | test(acceptance): add iam features for email domains and invitations | Features de US30 y US31. | 14/11/2026 |
 
 #### 7.2.1.5. Execution Evidence for Sprint Review
 
