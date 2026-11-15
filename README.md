@@ -342,13 +342,13 @@ del ABET – EAC - Student Outcome 3.
           <strong>Bejarano Martinez, Alvaro Leandro</strong><br>
           AV1: Logré comunicar oralmente de manera clara y objetiva los resultados obtenidos en el análisis del usuario y del dominio, presentando artefactos como Segmento Objetivo, User Persona, User Task Matrix, Empathy Mapping, Event Storming, Candidate Context Discovery y Domain Message Flows Modeling, de modo que mis compañeros pudieran comprender tanto las necesidades de los usuarios como la estructura del dominio y sus principales interacciones.<br>
           TB1: Logré sustentar el diseño de la Landing Page, explicando cómo su estructura por segmento y sus llamadas a la acción comunican la propuesta de valor de Quadrapp a conductores y a instituciones, y cómo el diseño se llevó a la versión implementada.<br>
-          Hito 3: Conduje las entrevistas de validación a Mario Josue Grandez Salvador y a Angel Jesus Lazo Panduro: les presenté la Landing Page y la aplicación móvil sin recurrir a términos técnicos y registré con objetividad su comprensión del producto.
+          Hito 3: Conduje las entrevistas de validación a Mario Josue Grandez Salvador y a Angel Jesus Lazo Panduro: les presenté la Landing Page y los mockups de la aplicación a administradores de estacionamientos, sin recurrir a términos técnicos y registré con objetividad su comprensión del producto.
         </p>
         <p>
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré exponer de forma clara y objetiva el recorrido de los usuarios con los As-is y To-Be Scenario Mapping, el lenguaje común del dominio con el Ubiquitous Language y las decisiones del Attribute-Driven Design, explicando cómo las necesidades de conductores y administradores se traducen en la arquitectura de Quadrapp.<br>
           TB1: Logré sustentar el diseño táctico del Bounded Context Prediction & Advisory, explicando cómo se generan los pronósticos, cómo se deriva la asesoría de llegada a partir del tiempo estimado y cómo los wireframes y wireflows llevan esas capacidades a la experiencia del conductor y del administrador.<br>
-          Hito 3: Entrevisté a Gabriel Gordon Salas, administrador de estacionamientos: presenté la vista de administración de la aplicación móvil a un perfil de gestión y recogí su valoración sobre su utilidad durante el turno.
+          Hito 3: Entrevisté a Gabriel Gordon Salas, conductor de la comunidad educativa: le presenté la Landing Page y los mockups de la aplicación móvil en un lenguaje no técnico y recogí su valoración de la asesoría de llegada y de los avisos por franja horaria.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -391,7 +391,7 @@ del ABET – EAC - Student Outcome 3.
           <strong>Melgarejo Gomez, Marcia Victoria</strong><br>
           AV1: Logré redactar de forma coherente y precisa el As-is y el To-Be Scenario Mapping, el glosario del Ubiquitous Language y el Strategic-Level Attribute-Driven Design, con sus escenarios de calidad, restricciones, drivers y decisiones, de modo que audiencias con distinta especialidad puedan entender tanto el problema como la solución propuesta.<br>
           TB1: Redacté el diseño táctico del Bounded Context Prediction & Advisory, con su diccionario de clases, sus capas y sus diagramas, y documenté los wireframes y wireflows de la aplicación móvil y de la consola de operación, manteniendo la trazabilidad con las historias de usuario.<br>
-          Hito 3: Describí los mock-ups, los user flows y el prototipo de la aplicación móvil para que lectores de diseño y de negocio entiendan cada recorrido, y registré la entrevista de validación al administrador.
+          Hito 3: Describí los mock-ups, los user flows y el prototipo de la aplicación móvil para que lectores de diseño y de negocio entiendan cada recorrido, y registré la entrevista de validación a un conductor.
         </p>
         <p>
           <strong>Nanfuñay Liza, Pedro Jesus</strong><br>
@@ -9688,6 +9688,167 @@ Calificación de confianza (pregunta 7): **4 de 5**.
 Calificación de confianza (pregunta 7): **4 de 5**.
 
 ### 7.3.3. Evaluaciones según heurísticas.
+
+La evaluación aplica el formato de UX Heuristics & Principles Evaluation (Anexo D del enunciado) a las cinco sesiones de validación registradas en la sección 7.3.2. Cada problema proviene de lo que los entrevistados comentaron o sugirieron durante la sesión, y se clasifica según la heurística de usabilidad, el principio de diseño inclusivo o el criterio de arquitectura de información que afecta.
+
+**UX Heuristics & Principles Evaluation**
+**Usability – Inclusive Design – Information Architecture**
+
+| Campo | Información |
+| --- | --- |
+| Carrera | Ingeniería de Software |
+| Curso | Arquitecturas de Software Emergentes |
+| Sección | 9056 |
+| Profesor | Enrique Alejandro Valdivia Verde |
+| Auditor | Integra Labs |
+| Clientes | María Paz Pastor, Gabriel Gordon Salas y Joaquin Trujillo Lizarbe (conductores); Mario Josue Grandez Salvador y Angel Jesus Lazo Panduro (administradores de estacionamientos) |
+
+**Site o app a evaluar:** Quadrapp: Landing Page implementada y mockups de la aplicación móvil (vista del conductor y vista de administración).
+
+**Tareas a evaluar.** El alcance de esta evaluación incluye la revisión de la usabilidad de las siguientes tareas:
+
+1. Comprender la propuesta de valor y el alcance del producto en la Landing Page.
+2. Ingresar con el correo institucional y el código de verificación.
+3. Consultar la disponibilidad al llegar y los horizontes de predicción.
+4. Elegir el estacionamiento y revisar el detalle por zonas.
+5. Configurar los avisos por franja horaria.
+6. Supervisar la operación del turno y la ocupación por zona.
+7. Editar y publicar el layout de un estacionamiento.
+8. Revisar los accesos, el estado de los dispositivos y la analítica.
+
+No están incluidas en esta versión de la evaluación las siguientes tareas:
+
+1. Alta de universidades en la consola web de plataforma, de uso interno del equipo de Integra Labs.
+2. Aceptación de una invitación por correo.
+3. Uso de la aplicación sin conexión.
+4. Exportación de reportes de analítica.
+
+**Escala de severidad.** Los errores se puntúan con la siguiente escala:
+
+| Nivel | Descripción |
+| --- | --- |
+| 1 | Problema superficial: puede ser fácilmente superado por el usuario u ocurre con muy poca frecuencia. No necesita ser arreglado a no ser que exista disponibilidad de tiempo. |
+| 2 | Problema menor: puede ocurrir un poco más frecuentemente o es un poco más difícil de superar para el usuario. Se le debería asignar una prioridad baja de cara al siguiente release. |
+| 3 | Problema mayor: ocurre frecuentemente o los usuarios no son capaces de resolverlo. Es importante que sea corregido y se le debe asignar una prioridad alta. |
+| 4 | Problema muy grave: un error de gran impacto que impide al usuario continuar con el uso de la herramienta. Es imperativo que sea corregido antes del lanzamiento. |
+
+**Tabla resumen**
+
+| # | Problema | Escala de severidad | Heurística o principio violado |
+| --- | --- | --- | --- |
+| 1 | Las alertas visuales no destacan con suficiente claridad cuando una zona está llena | 3 | Usability: Visibilidad del estado del sistema |
+| 2 | La zona con mayor probabilidad de encontrar espacio no se destaca | 2 | Inclusive Design: Prioriza el contenido |
+| 3 | El selector de sede es pequeño y difícil de encontrar | 2 | Information Architecture: Is it findable? |
+| 4 | No se explica el margen de error de las predicciones | 2 | Usability: Ayuda y documentación |
+| 5 | La vista de administración usa términos técnicos sin una explicación sencilla | 2 | Usability: Coincidencia entre el sistema y el mundo real |
+| 6 | No hay una previsualización de los cambios del layout antes de publicarlo | 2 | Usability: Prevención de errores |
+| 7 | No se registra quién da de baja un sensor | 2 | Information Architecture: Is it credible? |
+| 8 | Los avisos podrían volverse excesivos y llevar a desactivarlos | 1 | Inclusive Design: Da el control |
+| 9 | El tiempo de llegada se ingresa a mano en el recorrido mostrado | 1 | Usability: Flexibilidad y eficiencia de uso |
+| 10 | No existe un historial de ocupación por día y hora para el conductor | 1 | Information Architecture: Is it useful? |
+
+**Descripción de problemas**
+
+**Problema #1: Las alertas visuales no destacan con suficiente claridad cuando una zona está llena**
+
+Severidad: 3
+
+Heurística violada: Usability - Visibilidad del estado del sistema
+
+Problema: Mario Josue Grandez Salvador, encargado de estacionamientos, sugirió alertas visuales más claras cuando una zona esté llena. Durante el turno, el operador decide a dónde enviar al personal según la ocupación; si la saturación no se distingue a simple vista, puede reaccionar tarde, que es justamente lo que la herramienta busca evitar.
+
+Recomendación: Destacar las zonas llenas en el inicio de operación con un color y un ícono de alerta propios, y mantener la alerta visible hasta que la ocupación baje del umbral configurado.
+
+**Problema #2: La zona con mayor probabilidad de encontrar espacio no se destaca**
+
+Severidad: 2
+
+Principio violado: Inclusive Design - Prioriza el contenido
+
+Problema: María Paz Pastor y Angel Jesus Lazo Panduro sugirieron, por separado, resaltar con más claridad la zona con mayor disponibilidad para decidir más rápido. Hoy el conductor debe comparar las tarjetas de cada zona para encontrarla.
+
+Recomendación: Mostrar en la pantalla de inicio una recomendación destacada con la zona de mayor probabilidad, antes de la lista de zonas.
+
+**Problema #3: El selector de sede es pequeño y difícil de encontrar**
+
+Severidad: 2
+
+Criterio violado: Information Architecture - Is it findable?
+
+Problema: Gabriel Gordon Salas no encontró al inicio dónde cambiar de sede porque el selector es pequeño. Sin cambiar de sede, el conductor no puede consultar el estacionamiento al que realmente se dirige.
+
+Recomendación: Aumentar el tamaño del selector, darle una etiqueta visible ("Sede") y ubicarlo en el encabezado de la pantalla de inicio.
+
+**Problema #4: No se explica el margen de error de las predicciones**
+
+Severidad: 2
+
+Heurística violada: Usability - Ayuda y documentación
+
+Problema: Angel Jesus Lazo Panduro pidió una explicación del margen de error para entender qué tan confiable es la información. Joaquin Trujillo Lizarbe calificó su confianza con 3 de 5 porque espera que los datos garanticen la probabilidad mostrada. El nivel de confianza aparece, pero no se explica qué significa.
+
+Recomendación: Añadir junto al nivel de confianza una ayuda breve que explique cómo leerlo y la precisión observada en las últimas semanas.
+
+**Problema #5: La vista de administración usa términos técnicos sin una explicación sencilla**
+
+Severidad: 2
+
+Heurística violada: Usability - Coincidencia entre el sistema y el mundo real
+
+Problema: Mario Josue Grandez Salvador pidió explicaciones más sencillas de los términos técnicos. El personal del estacionamiento no necesariamente conoce términos como gateway o UNKNOWN.
+
+Recomendación: Usar el vocabulario del turno (por ejemplo, "sensor sin señal" en lugar de UNKNOWN) y añadir descripciones breves en los términos que no puedan reemplazarse.
+
+**Problema #6: No hay una previsualización de los cambios del layout antes de publicarlo**
+
+Severidad: 2
+
+Heurística violada: Usability - Prevención de errores
+
+Problema: Mario Josue Grandez Salvador sugirió previsualizar los cambios del layout. Publicar un layout incorrecto afecta la ocupación que ven los conductores de toda la institución.
+
+Recomendación: Mostrar una vista previa del plano con los cambios resaltados antes de la confirmación de publicación.
+
+**Problema #7: No se registra quién da de baja un sensor**
+
+Severidad: 2
+
+Criterio violado: Information Architecture - Is it credible?
+
+Problema: Mario Josue Grandez Salvador sugirió registrar quién da de baja los sensores. Sin ese registro, el equipo no puede explicar después por qué un espacio quedó sin sensor.
+
+Recomendación: Mostrar en el detalle del dispositivo el historial de cambios con el responsable, la fecha y el motivo de cada baja o reasignación.
+
+**Problema #8: Los avisos podrían volverse excesivos y llevar a desactivarlos**
+
+Severidad: 1
+
+Principio violado: Inclusive Design - Da el control
+
+Problema: María Paz Pastor usaría los avisos solo si son pocos y relevantes, y Gabriel Gordon Salas los desactivaría si recibiera más de una o dos alertas al día. El conductor elige los tipos de aviso y las franjas, pero no cuántos recibe.
+
+Recomendación: Permitir elegir un máximo de avisos por día en "Alertas y preferencias".
+
+**Problema #9: El tiempo de llegada se ingresa a mano en el recorrido mostrado**
+
+Severidad: 1
+
+Heurística violada: Usability - Flexibilidad y eficiencia de uso
+
+Problema: Gabriel Gordon Salas sugirió calcular el tiempo de llegada de forma automática, siempre que la ubicación se quede en el celular. El diseño ya lo calcula en el dispositivo cuando el conductor concede el permiso de ubicación, pero el recorrido mostrado en la sesión solo presentaba el ingreso manual.
+
+Recomendación: Mostrar en la pantalla de inicio que el tiempo de llegada se calcula en el dispositivo y dejar el ingreso manual como alternativa.
+
+**Problema #10: No existe un historial de ocupación por día y hora para el conductor**
+
+Severidad: 1
+
+Criterio violado: Information Architecture - Is it useful?
+
+Problema: Gabriel Gordon Salas propuso un historial de cómo suele estar el estacionamiento por día y hora. Hoy la analítica histórica solo está disponible en la vista de administración.
+
+Recomendación: Evaluar para el Sprint 2 un resumen de las horas de mayor demanda por día de la semana en la vista del conductor.
+
 
 ## 7.4. Video About-the-Product. 
 
