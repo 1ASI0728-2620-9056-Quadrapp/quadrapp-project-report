@@ -9215,11 +9215,33 @@ El entrevistador muestra primero la sección de la Landing Page dirigida a insti
 | Fecha y medio | 14/11/2026, por Zoom |
 | Entrevistador | Alessandra Becerra |
 | Material mostrado | Landing Page implementada y mockups de la aplicación móvil (Figma) |
-| Enlace de la grabación | [https://1drv.ms/f/c/ad69326b0def8050/IgCqYGRpxuJOQZk-vXhK-h0EAaTQ3Hozy_MlkhwzEPGFf28?e=zjGTuW](https://1drv.ms/f/c/ad69326b0def8050/IgCqYGRpxuJOQZk-vXhK-h0EAaTQ3Hozy_MlkhwzEPGFf28?e=zjGTuW) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgB0ZZqXccF-T6xjVR0_EKd6AVFmC92Dsd6dLZGlfdu5q14?e=dqQ7eS](https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgB0ZZqXccF-T6xjVR0_EKd6AVFmC92Dsd6dLZGlfdu5q14?e=dqQ7eS) |
 | Duración | 07:06 min|
 | Inicio | 02:46 min |
 | Captura | <img src="assets/capitulo-07/entrevistavalidacionmariapaz1.png" alt="Captura de la entrevista de validación a María Paz Pastor" width="500"/> |
 | Resumen | María Paz entendió correctamente qué hace Quadrapp y qué no hace: no reserva espacios, no procesa pagos y no rastrea la ubicación. Interpretó la asesoría de llegada como la probabilidad de encontrar espacio cuando llegue, y no solo como la disponibilidad actual, y usaría los horizontes de predicción para decidir si sale de inmediato o espera. Entiende que los espacios marcados como "Sin datos" no están confirmados y no los consideraría libres. Calificó su confianza con 4 sobre 5, con la salvedad de que se trata de predicciones que pueden cambiar. Valora que la aplicación no use su ubicación porque protege su privacidad, y le servirían los avisos por franja horaria siempre que sean pocos y relevantes. Con lo que vio, saldría antes o cambiaría de zona si hubiera pocas probabilidades de encontrar espacio donde suele estacionar. Le pareció fácil de entender y sugirió destacar con más claridad la zona con mayor probabilidad de encontrar espacio, para decidir más rápido. |
+
+#### Segmento 2: Administradores de estacionamientos universitarios
+
+**Entrevista de validación 4**
+
+
+| Campo | Información |
+| --- | --- |
+| Nombres y apellidos | Mario Josue Grandez Salvador |
+| Edad | 26 años |
+| Distrito de residencia | Magdalena del Mar |
+| Ocupación y vínculo con la universidad | Encargado de estacionamientos |
+| Fecha y medio | 14/11/2026, por Zoom |
+| Entrevistador | Alvaro Bejarano |
+| Material mostrado | Landing Page implementada y mockups de la aplicación web (Figma) |
+| Enlace de la grabación | [https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgCYfImXvYewSbRIPUT72T4GAX_hUCqpMbEi3FuX-GnQnhg?e=UBuCZ4](https://upcedupe-my.sharepoint.com/:f:/g/personal/u202311640_upc_edu_pe/IgCYfImXvYewSbRIPUT72T4GAX_hUCqpMbEi3FuX-GnQnhg?e=UBuCZ4) |
+| Duración | 06:19 min |
+| Inicio | 02:57 min |
+| Captura | <img src="assets/capitulo-07/entrevista-validación-ameno.jpeg" alt="Captura de la entrevista de validación a Mario Josue Grandez Salvador" width="500"/> |
+| Resumen | Mario Josue entendió correctamente qué hace Quadrapp y qué no hace: no realiza reservas ni procesa pagos, sino que gestiona la ocupación en tiempo real mediante sensores IoT y algoritmos de predicción. Considera que la herramienta sería útil para reducir las filas en los accesos, ya que actualmente controla la ocupación de forma manual mediante recorridos y comunicación por radio. Durante su turno, priorizaría conocer la ocupación actual por zonas y el estado de los accesos, y considera que las predicciones de 30 a 60 minutos le permitirían organizar al personal antes de que las áreas se saturen. Ante sensores sin señal, enviaría a personal a verificar su estado y no confiaría en esos datos hasta que se resuelva la incidencia. Además, sugirió incorporar una previsualización de los cambios en el layout, un registro de quién da de baja los sensores, alertas visuales más claras cuando una zona esté llena y explicaciones más sencillas de los términos técnicos. |
+
+**Entrevista de validación 1**
 
 **Respuestas registradas**
 
